@@ -16,3 +16,4 @@ librelane_rtl2gds_gf180/runs/
 # Common junk
 __pycache__/
 *.log
+CLAUDE.md
