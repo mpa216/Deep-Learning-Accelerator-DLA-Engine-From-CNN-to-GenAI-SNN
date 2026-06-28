@@ -1,0 +1,134 @@
+{
+  "sources": [
+    "APIC_A\\weights\\mnist_gan_mlp\\D--300.ckpt",
+    "APIC_A\\weights\\mnist_gan_mlp\\G--300.ckpt"
+  ],
+  "tensors": {
+    "D300_0_weight": {
+      "original_name": "0.weight",
+      "shape": [
+        256,
+        784
+      ],
+      "scale": 0.011932632115882212,
+      "memh": "D300_0_weight.memh",
+      "vh": "D300_0_weight.vh",
+      "dtype": "int8"
+    },
+    "D300_0_bias": {
+      "original_name": "0.bias",
+      "shape": [
+        256
+      ],
+      "scale": 0.011188526791850412,
+      "memh": "D300_0_bias.memh",
+      "vh": "D300_0_bias.vh",
+      "dtype": "int8"
+    },
+    "D300_2_weight": {
+      "original_name": "2.weight",
+      "shape": [
+        256,
+        256
+      ],
+      "scale": 0.006587257066110927,
+      "memh": "D300_2_weight.memh",
+      "vh": "D300_2_weight.vh",
+      "dtype": "int8"
+    },
+    "D300_2_bias": {
+      "original_name": "2.bias",
+      "shape": [
+        256
+      ],
+      "scale": 0.012826556295860471,
+      "memh": "D300_2_bias.memh",
+      "vh": "D300_2_bias.vh",
+      "dtype": "int8"
+    },
+    "D300_4_weight": {
+      "original_name": "4.weight",
+      "shape": [
+        1,
+        256
+      ],
+      "scale": 0.0024597482887778696,
+      "memh": "D300_4_weight.memh",
+      "vh": "D300_4_weight.vh",
+      "dtype": "int8"
+    },
+    "D300_4_bias": {
+      "original_name": "4.bias",
+      "shape": [
+        1
+      ],
+      "scale": 0.012192740215091254,
+      "memh": "D300_4_bias.memh",
+      "vh": "D300_4_bias.vh",
+      "dtype": "int8"
+    },
+    "G300_0_weight": {
+      "original_name": "0.weight",
+      "shape": [
+        256,
+        64
+      ],
+      "scale": 0.008383775320578747,
+      "memh": "G300_0_weight.memh",
+      "vh": "G300_0_weight.vh",
+      "dtype": "int8"
+    },
+    "G300_0_bias": {
+      "original_name": "0.bias",
+      "shape": [
+        256
+      ],
+      "scale": 0.011787274691063589,
+      "memh": "G300_0_bias.memh",
+      "vh": "G300_0_bias.vh",
+      "dtype": "int8"
+    },
+    "G300_2_weight": {
+      "original_name": "2.weight",
+      "shape": [
+        256,
+        256
+      ],
+      "scale": 0.028844245775478092,
+      "memh": "G300_2_weight.memh",
+      "vh": "G300_2_weight.vh",
+      "dtype": "int8"
+    },
+    "G300_2_bias": {
+      "original_name": "2.bias",
+      "shape": [
+        256
+      ],
+      "scale": 0.007673112426217147,
+      "memh": "G300_2_bias.memh",
+      "vh": "G300_2_bias.vh",
+      "dtype": "int8"
+    },
+    "G300_4_weight": {
+      "original_name": "4.weight",
+      "shape": [
+        784,
+        256
+      ],
+      "scale": 0.03370054500309501,
+      "memh": "G300_4_weight.memh",
+      "vh": "G300_4_weight.vh",
+      "dtype": "int8"
+    },
+    "G300_4_bias": {
+      "original_name": "4.bias",
+      "shape": [
+        784
+      ],
+      "scale": 0.006360630350788747,
+      "memh": "G300_4_bias.memh",
+      "vh": "G300_4_bias.vh",
+      "dtype": "int8"
+    }
+  }
+}

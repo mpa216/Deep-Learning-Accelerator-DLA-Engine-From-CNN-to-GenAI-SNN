@@ -1,0 +1,458 @@
+* NGSPICE file created from gf180mcu_ocd_io__bi_24t.ext - technology: gf180mcuD
+
+.subckt lv_nand a_16960_50788# w_16870_51136# a_17113_51095# a_17024_51222# a_17252_51095#
+X0 a_17204_50930# a_17113_51095# a_16960_50788# a_16960_50788# nfet_03v3 ad=0.114p pd=0.98u as=0.267p ps=2.09u w=0.6u l=0.28u
+X1 a_17024_51222# a_17252_51095# a_17204_50930# a_16960_50788# nfet_03v3 ad=0.264p pd=2.08u as=0.114p ps=0.98u w=0.6u l=0.28u
+X2 w_16870_51136# a_17113_51095# a_17024_51222# w_16870_51136# pfet_03v3 ad=0.333p pd=1.755u as=0.534p ps=3.29u w=1.2u l=0.28u
+X3 a_17024_51222# a_17252_51095# w_16870_51136# w_16870_51136# pfet_03v3 ad=0.528p pd=3.28u as=0.333p ps=1.755u w=1.2u l=0.28u
+.ends
+
+.subckt pmos_6p0_esd w_0_12# a_278_42# a_974_132# a_222_132#
+X0 a_974_132# a_278_42# a_222_132# w_0_12# pfet_06v0_dss d_sab=2.78u s_sab=0.28u ad=0.1668n pd=0.12556m as=16.8p ps=0.12056m w=60u l=0.7u
+.ends
+
+.subckt comp018green_out_drv_pleg_6T_X pmos_6p0_esd_0/a_278_42# pmos_6p0_esd_0/a_222_132#
++ pmos_6p0_esd_1/a_974_132# pmos_6p0_esd_1/a_222_132# pmos_6p0_esd_1/w_0_12# pmos_6p0_esd_1/a_278_42#
+Xpmos_6p0_esd_0 pmos_6p0_esd_1/w_0_12# pmos_6p0_esd_0/a_278_42# pmos_6p0_esd_1/a_974_132#
++ pmos_6p0_esd_0/a_222_132# pmos_6p0_esd
+Xpmos_6p0_esd_1 pmos_6p0_esd_1/w_0_12# pmos_6p0_esd_1/a_278_42# pmos_6p0_esd_1/a_974_132#
++ pmos_6p0_esd_1/a_222_132# pmos_6p0_esd
+.ends
+
+.subckt comp018green_out_drv_pleg_6T_Y pmos_6p0_esd_0/w_0_12# pmos_6p0_esd_0/a_974_132#
++ pmos_6p0_esd_0/a_278_42# pmos_6p0_esd_0/a_222_132#
+Xpmos_6p0_esd_0 pmos_6p0_esd_0/w_0_12# pmos_6p0_esd_0/a_278_42# pmos_6p0_esd_0/a_974_132#
++ pmos_6p0_esd_0/a_222_132# pmos_6p0_esd
+.ends
+
+.subckt comp018green_out_paddrv_6T_PMOS_GROUP PMOS_metal_stack_1/m1_340_0# PMOS_metal_stack_5/m1_n44_0#
++ PMOS_metal_stack_1/m1_n44_0# a_9815_322# a_6280_322# a_4511_322# PMOS_metal_stack_5/m1_340_0#
++ a_7662_322# PMOS_metal_stack_2/m1_n44_0# PMOS_metal_stack_6/m1_340_0# a_11201_322#
++ a_5892_322# PMOS_metal_stack_2/m1_340_0# PMOS_metal_stack_3/m1_n44_0# a_4120_322#
++ a_974_322# a_8049_322# PMOS_metal_stack_3/m1_340_0# a_9428_322# PMOS_metal_stack_4/m1_n44_0#
++ w_0_n878# a_2360_322# a_2746_322# PMOS_metal_stack_4/m1_340_0#
+Xcomp018green_out_drv_pleg_6T_X_0 a_9815_322# PMOS_metal_stack_1/m1_n44_0# PMOS_metal_stack_1/m1_340_0#
++ w_0_n878# w_0_n878# a_11201_322# comp018green_out_drv_pleg_6T_X
+Xcomp018green_out_drv_pleg_6T_X_1 a_4511_322# PMOS_metal_stack_4/m1_n44_0# PMOS_metal_stack_4/m1_340_0#
++ PMOS_metal_stack_2/m1_n44_0# w_0_n878# a_5892_322# comp018green_out_drv_pleg_6T_X
+Xcomp018green_out_drv_pleg_6T_X_2 a_7662_322# PMOS_metal_stack_3/m1_n44_0# PMOS_metal_stack_2/m1_340_0#
++ PMOS_metal_stack_2/m1_n44_0# w_0_n878# a_6280_322# comp018green_out_drv_pleg_6T_X
+Xcomp018green_out_drv_pleg_6T_X_3 a_2360_322# PMOS_metal_stack_5/m1_n44_0# PMOS_metal_stack_6/m1_340_0#
++ w_0_n878# w_0_n878# a_974_322# comp018green_out_drv_pleg_6T_X
+Xcomp018green_out_drv_pleg_6T_Y_0 w_0_n878# PMOS_metal_stack_3/m1_340_0# a_9428_322#
++ PMOS_metal_stack_1/m1_n44_0# comp018green_out_drv_pleg_6T_Y
+Xcomp018green_out_drv_pleg_6T_Y_1 w_0_n878# PMOS_metal_stack_5/m1_340_0# a_4120_322#
++ PMOS_metal_stack_4/m1_n44_0# comp018green_out_drv_pleg_6T_Y
+Xcomp018green_out_drv_pleg_6T_Y_2 w_0_n878# PMOS_metal_stack_3/m1_340_0# a_8049_322#
++ PMOS_metal_stack_3/m1_n44_0# comp018green_out_drv_pleg_6T_Y
+Xcomp018green_out_drv_pleg_6T_Y_3 w_0_n878# PMOS_metal_stack_5/m1_340_0# a_2746_322#
++ PMOS_metal_stack_5/m1_n44_0# comp018green_out_drv_pleg_6T_Y
+.ends
+
+.subckt comp018green_out_drv_nleg_6T a_2010_42# a_206_42# a_366_132# a_48_132# a_2226_132#
++ VSUBS
+X0 a_366_132# a_206_42# a_48_132# VSUBS nfet_06v0_dss d_sab=3.78u s_sab=0.28u ad=0.13986n pd=81.56u as=10.36p ps=74.56u w=37u l=0.8u
+X1 a_2226_132# a_2010_42# a_366_132# VSUBS nfet_06v0_dss d_sab=0.28u s_sab=3.78u ad=10.36p pd=74.56u as=0.13986n ps=81.56u w=37u l=0.8u
+.ends
+
+.subckt comp018green_out_paddrv_6T_NMOS_GROUP a_9222_638# GR_NMOS_0/w_n1789_n834#
++ nmos_metal_stack_3/m1_360_0# nmos_metal_stack_2/m1_n44_0# a_7014_638# nmos_metal_stack_4/m1_360_0#
++ nmos_metal_stack_3/m1_n44_0# nmos_metal_stack_1/m1_360_0# a_7417_638# a_794_638#
++ VSUBS a_3002_638# a_5210_8312# a_2598_638# a_4806_638# nmos_metal_stack_1/m1_n44_0#
++ nmos_metal_stack_2/m1_360_0#
+Xcomp018green_out_drv_nleg_6T_0 a_9222_638# a_7417_638# nmos_metal_stack_1/m1_360_0#
++ nmos_metal_stack_1/m1_n44_0# VSUBS VSUBS comp018green_out_drv_nleg_6T
+Xcomp018green_out_drv_nleg_6T_1 a_7014_638# a_5210_8312# nmos_metal_stack_2/m1_360_0#
++ nmos_metal_stack_2/m1_n44_0# nmos_metal_stack_1/m1_n44_0# VSUBS comp018green_out_drv_nleg_6T
+Xcomp018green_out_drv_nleg_6T_2 a_4806_638# a_3002_638# nmos_metal_stack_3/m1_360_0#
++ nmos_metal_stack_3/m1_n44_0# nmos_metal_stack_2/m1_n44_0# VSUBS comp018green_out_drv_nleg_6T
+Xcomp018green_out_drv_nleg_6T_3 a_2598_638# a_794_638# nmos_metal_stack_4/m1_360_0#
++ VSUBS nmos_metal_stack_3/m1_n44_0# VSUBS comp018green_out_drv_nleg_6T
+.ends
+
+.subckt comp018green_out_paddrv_24T comp018green_out_paddrv_6T_PMOS_GROUP_0/a_2360_322#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_3/m1_n44_0# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_2746_322#
++ m1_1417_9446# m1_11881_9446# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_974_322#
++ comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_3/m1_n44_0# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_4/m1_n44_0#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_9815_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_4511_322#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_6280_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/w_0_n878#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_7662_322# comp018green_out_paddrv_6T_NMOS_GROUP_0/VSUBS
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_11201_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_5/m1_n44_0#
++ m1_1417_9278# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_1/m1_n44_0#
++ m1_11881_9278# m1_1417_8952# m1_1417_9118# m1_11881_8952# m1_11881_9118# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_5892_322#
++ comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_1/m1_n44_0# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_4120_322#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_2/m1_n44_0# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_8049_322#
++ m1_n360_8482# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_6/VSUBS m2_1697_8943#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_9428_322# comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_2/m1_n44_0#
+Xcomp018green_out_paddrv_6T_PMOS_GROUP_0 m2_1697_8943# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_5/m1_n44_0#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_1/m1_n44_0# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_9815_322#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_6280_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_4511_322#
++ m2_1697_8943# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_7662_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_2/m1_n44_0#
++ m2_1697_8943# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_11201_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_5892_322#
++ m2_1697_8943# comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_3/m1_n44_0#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_4120_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_974_322#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_8049_322# m2_1697_8943# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_9428_322#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_4/m1_n44_0# comp018green_out_paddrv_6T_PMOS_GROUP_0/w_0_n878#
++ comp018green_out_paddrv_6T_PMOS_GROUP_0/a_2360_322# comp018green_out_paddrv_6T_PMOS_GROUP_0/a_2746_322#
++ m2_1697_8943# comp018green_out_paddrv_6T_PMOS_GROUP
+Xcomp018green_out_paddrv_6T_NMOS_GROUP_0 m1_11881_8952# m1_n360_8482# m2_1697_8943#
++ comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_2/m1_n44_0# m1_11881_9278#
++ m2_1697_8943# comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_3/m1_n44_0#
++ m2_1697_8943# m1_11881_9118# m1_1417_8952# comp018green_out_paddrv_6T_NMOS_GROUP_0/VSUBS
++ m1_1417_9278# m1_11881_9446# m1_1417_9118# m1_1417_9446# comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_1/m1_n44_0#
++ m2_1697_8943# comp018green_out_paddrv_6T_NMOS_GROUP
+.ends
+
+.subckt tie_poly_res2 a_n3224_54512# a_n3504_54512# w_n3898_53704#
+X0 a_n3224_54512# w_n3898_53704# w_n3898_53704# ppolyf_u r_width=0.8u r_length=1.6u
+X1 a_n3504_54512# w_n3898_53704# w_n3898_53704# ppolyf_u r_width=0.8u r_length=1.6u
+.ends
+
+.subckt lvlshift_up a_18491_55181# a_18216_53410# a_18479_54386# a_18481_54667# w_18130_54691#
+X0 w_18130_54691# a_18491_55181# a_18403_53764# w_18130_54691# pfet_06v0 ad=0.39p pd=2.02u as=0.66p ps=3.88u w=1.5u l=0.7u
+X1 a_18491_55181# a_18403_53764# w_18130_54691# w_18130_54691# pfet_06v0 ad=0.675p pd=3.9u as=0.39p ps=2.02u w=1.5u l=0.7u
+X2 a_18216_53410# a_18479_54386# a_18403_53764# a_18216_53410# nfet_06v0 ad=0.39p pd=2.02u as=0.66p ps=3.88u w=1.5u l=0.7u
+X3 a_18491_55181# a_18481_54667# a_18216_53410# a_18216_53410# nfet_06v0 ad=0.675p pd=3.9u as=0.39p ps=2.02u w=1.5u l=0.7u
+.ends
+
+.subckt comp018green_sigbuf_1 Z DVSS DVDD ZB lvlshift_up_0/a_18479_54386# lvlshift_up_0/a_18481_54667#
+Xlvlshift_up_0 a_1605_310# DVSS lvlshift_up_0/a_18479_54386# lvlshift_up_0/a_18481_54667#
++ DVDD lvlshift_up
+X0 DVSS Z ZB DVSS nfet_06v0 ad=0.66p pd=3.88u as=0.39p ps=2.02u w=1.5u l=0.7u
+X1 Z a_1605_310# DVDD DVDD pfet_06v0 ad=0.78p pd=3.52u as=1.32p ps=6.88u w=3u l=0.7u
+X2 ZB Z DVDD DVDD pfet_06v0 ad=0.78p pd=3.52u as=0.78p ps=3.52u w=3u l=0.7u
+X3 DVDD Z ZB DVDD pfet_06v0 ad=1.32p pd=6.88u as=0.78p ps=3.52u w=3u l=0.7u
+X4 ZB Z DVSS DVSS nfet_06v0 ad=0.39p pd=2.02u as=0.39p ps=2.02u w=1.5u l=0.7u
+X5 DVDD a_1605_310# Z DVDD pfet_06v0 ad=0.78p pd=3.52u as=0.78p ps=3.52u w=3u l=0.7u
+X6 Z a_1605_310# DVSS DVSS nfet_06v0 ad=0.39p pd=2.02u as=0.66p ps=3.88u w=1.5u l=0.7u
+X7 DVSS a_1605_310# Z DVSS nfet_06v0 ad=0.39p pd=2.02u as=0.39p ps=2.02u w=1.5u l=0.7u
+.ends
+
+.subckt comp018green_out_predrv SL SLB NDRIVE_X ENB DVSS A DVDD NDRIVE_Y PDRIVE_Y
++ PDRIVE_X EN
+X0 a_1395_3267# ENB DVSS DVSS nfet_06v0 ad=1.56p pd=6.52u as=1.56p ps=6.52u w=6u l=0.7u
+X1 DVDD a_1395_3267# PDRIVE_Y DVDD pfet_06v0 ad=3.12p pd=12.52u as=3.12p ps=12.52u w=12u l=0.7u
+X2 NDRIVE_X a_335_226# DVSS DVSS nfet_06v0 ad=1.56p pd=6.52u as=2.64p ps=12.88u w=6u l=0.7u
+X3 a_335_226# EN a_1395_3267# DVSS nfet_06v0 ad=2.64p pd=12.88u as=1.56p ps=6.52u w=6u l=0.7u
+X4 NDRIVE_Y SL NDRIVE_X DVDD pfet_06v0 ad=5.28p pd=24.88u as=3.12p ps=12.52u w=12u l=0.7u
+X5 DVSS a_335_226# NDRIVE_X DVSS nfet_06v0 ad=1.56p pd=6.52u as=1.56p ps=6.52u w=6u l=0.7u
+X6 a_335_226# A DVDD DVDD pfet_06v0 ad=5.28p pd=24.88u as=3.12p ps=12.52u w=12u l=0.7u
+X7 DVDD a_335_226# NDRIVE_Y DVDD pfet_06v0 ad=3.12p pd=12.52u as=5.28p ps=24.88u w=12u l=0.7u
+X8 PDRIVE_X a_1395_3267# DVDD DVDD pfet_06v0 ad=3.12p pd=12.52u as=3.12p ps=12.52u w=12u l=0.7u
+X9 PDRIVE_X DVDD PDRIVE_Y DVSS nfet_06v0 ad=0.528p pd=3.28u as=0.528p ps=3.28u w=1.2u l=0.7u
+X10 PDRIVE_Y SLB PDRIVE_X DVSS nfet_06v0 ad=1.56p pd=6.52u as=2.64p ps=12.88u w=6u l=0.7u
+X11 NDRIVE_Y a_335_226# DVSS DVSS nfet_06v0 ad=1.56p pd=6.52u as=1.56p ps=6.52u w=6u l=0.7u
+X12 PDRIVE_X SLB PDRIVE_Y DVSS nfet_06v0 ad=2.64p pd=12.88u as=1.56p ps=6.52u w=6u l=0.7u
+X13 NDRIVE_Y a_335_226# DVDD DVDD pfet_06v0 ad=3.12p pd=12.52u as=3.12p ps=12.52u w=12u l=0.7u
+X14 a_335_226# ENB a_1395_3267# DVDD pfet_06v0 ad=3.12p pd=12.52u as=5.28p ps=24.88u w=12u l=0.7u
+X15 DVDD EN a_335_226# DVDD pfet_06v0 ad=3.12p pd=12.52u as=3.12p ps=12.52u w=12u l=0.7u
+X16 NDRIVE_Y DVSS NDRIVE_X DVDD pfet_06v0 ad=0.528p pd=3.28u as=0.528p ps=3.28u w=1.2u l=0.7u
+X17 DVSS A a_1395_3267# DVSS nfet_06v0 ad=1.56p pd=6.52u as=2.64p ps=12.88u w=6u l=0.7u
+X18 DVSS a_335_226# NDRIVE_Y DVSS nfet_06v0 ad=1.56p pd=6.52u as=1.56p ps=6.52u w=6u l=0.7u
+X19 DVDD a_1395_3267# PDRIVE_X DVDD pfet_06v0 ad=5.28p pd=24.88u as=3.12p ps=12.52u w=12u l=0.7u
+X20 PDRIVE_Y a_1395_3267# DVDD DVDD pfet_06v0 ad=3.12p pd=12.52u as=5.28p ps=24.88u w=12u l=0.7u
+X21 PDRIVE_Y a_1395_3267# DVSS DVSS nfet_06v0 ad=1.56p pd=6.52u as=1.56p ps=6.52u w=6u l=0.7u
+X22 DVSS a_1395_3267# PDRIVE_Y DVSS nfet_06v0 ad=2.64p pd=12.88u as=1.56p ps=6.52u w=6u l=0.7u
+X23 NDRIVE_X SL NDRIVE_Y DVDD pfet_06v0 ad=3.12p pd=12.52u as=3.12p ps=12.52u w=12u l=0.7u
+.ends
+
+.subckt comp018green_out_sigbuf_a AB DVSS DVDD lvlshift_up_0/a_18479_54386# lvlshift_up_0/a_18481_54667#
+Xlvlshift_up_0 a_1697_1072# DVSS lvlshift_up_0/a_18479_54386# lvlshift_up_0/a_18481_54667#
++ DVDD lvlshift_up
+X0 AB a_1825_270# DVSS DVSS nfet_06v0 ad=1.32p pd=6.88u as=0.78p ps=3.52u w=3u l=0.7u
+X1 AB a_1825_270# DVDD DVDD pfet_06v0 ad=2.64p pd=12.88u as=1.56p ps=6.52u w=6u l=0.7u
+X2 DVSS a_1697_1072# a_1825_270# DVSS nfet_06v0 ad=0.78p pd=3.52u as=1.32p ps=6.88u w=3u l=0.7u
+X3 DVDD a_1697_1072# a_1825_270# DVDD pfet_06v0 ad=1.56p pd=6.52u as=2.64p ps=12.88u w=6u l=0.7u
+.ends
+
+.subckt comp018green_out_sigbuf_oe ENB DVDD DVSS EN lvlshift_up_0/a_18479_54386# lvlshift_up_0/a_18481_54667#
+Xlvlshift_up_0 a_1783_1072# DVSS lvlshift_up_0/a_18479_54386# lvlshift_up_0/a_18481_54667#
++ DVDD lvlshift_up
+X0 DVDD a_1783_1072# EN DVDD pfet_06v0 ad=1.56p pd=6.52u as=2.64p ps=12.88u w=6u l=0.7u
+X1 DVSS a_1783_1072# EN DVSS nfet_06v0 ad=0.78p pd=3.52u as=1.32p ps=6.88u w=3u l=0.7u
+X2 ENB EN DVDD DVDD pfet_06v0 ad=2.64p pd=12.88u as=1.56p ps=6.52u w=6u l=0.7u
+X3 ENB EN DVSS DVSS nfet_06v0 ad=1.32p pd=6.88u as=0.78p ps=3.52u w=3u l=0.7u
+.ends
+
+.subckt lv_inv w_15980_51147# a_16280_50941# a_16119_51106# a_16066_50799#
+X0 a_16280_50941# a_16119_51106# a_16066_50799# a_16066_50799# nfet_03v3 ad=0.264p pd=2.08u as=0.267p ps=2.09u w=0.6u l=0.28u
+X1 a_16280_50941# a_16119_51106# w_15980_51147# w_15980_51147# pfet_03v3 ad=0.528p pd=3.28u as=0.558p ps=3.33u w=1.2u l=0.28u
+.ends
+
+.subckt comp018green_in_pupd A DVDD DVSS PU_B PD w_n83_53# a_6234_n7404#
+X0 DVSS PD a_6278_n7492# DVSS nfet_06v0 ad=0.66p pd=3.88u as=0.66p ps=3.88u w=1.5u l=0.7u
+X1 a_404_1044# a_7646_1324# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+X2 a_404_2164# a_6278_n7492# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+X3 DVDD a_6234_n7404# a_6278_n7492# DVDD pfet_06v0 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.7u
+X4 a_404_484# a_7646_764# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+X5 a_404_1044# a_7646_764# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+X6 a_404_2164# a_7646_1884# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+X7 a_404_484# A w_n83_53# ppolyf_u r_width=0.8u r_length=23u
+X8 a_404_1604# a_7646_1884# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+X9 a_404_1604# a_7646_1324# w_n83_53# ppolyf_u r_width=0.8u r_length=35.7u
+.ends
+
+.subckt lv_passgate a_15637_45872# a_15397_45912# w_15280_46078# a_15366_45730# a_15492_45872#
++ a_15396_46108#
+X0 a_15637_45872# a_15397_45912# a_15492_45872# a_15366_45730# nfet_03v3 ad=0.264p pd=2.08u as=0.267p ps=2.09u w=0.6u l=0.28u
+X1 a_15637_45872# a_15396_46108# a_15492_45872# w_15280_46078# pfet_03v3 ad=0.528p pd=3.28u as=0.528p ps=3.28u w=1.2u l=0.28u
+.ends
+
+.subckt comp018green_in_logic_pupd m1_1586_653# m1_1573_n494# m1_1324_578# m1_1842_n2708#
++ m1_1316_n577# a_1638_n204# a_1648_203# m1_1455_n1573#
+Xlv_nand_4 a_1638_n204# a_1648_203# m1_1842_n2708# m1_1921_n496# m1_1909_n1494# lv_nand
+Xlv_inv_0 a_1648_203# m1_1573_n494# m1_1921_n496# a_1638_n204# lv_inv
+Xlv_inv_1 a_1648_203# m1_1586_653# m1_1910_652# a_1638_n204# lv_inv
+Xlv_inv_2 a_1648_203# m1_1455_n1773# m1_1455_n1573# a_1638_n204# lv_inv
+Xlv_passgate_0 m1_1909_n1494# m1_1455_n1573# a_1648_203# a_1638_n204# m1_1580_n1918#
++ m1_1455_n1773# lv_passgate
+Xlv_inv_3 a_1648_203# m1_1580_n1918# m1_1842_n2708# a_1638_n204# lv_inv
+Xlv_passgate_1 m1_1909_n1494# m1_1455_n1773# a_1648_203# a_1638_n204# m1_1842_n2708#
++ m1_1455_n1573# lv_passgate
+Xlv_inv_5 a_1648_203# m1_1324_578# m1_1586_653# a_1638_n204# lv_inv
+Xlv_inv_7 a_1648_203# m1_1316_n577# m1_1573_n494# a_1638_n204# lv_inv
+Xlv_nand_0 a_1638_n204# a_1648_203# m1_1455_n1573# m1_1910_652# m1_1909_n1494# lv_nand
+.ends
+
+.subckt comp018green_sigbuf Z DVSS DVDD ZB INB IN
+Xlvlshift_up_0 a_1561_310# DVSS IN INB DVDD lvlshift_up
+X0 ZB Z DVSS DVSS nfet_06v0 ad=0.39p pd=2.02u as=0.39p ps=2.02u w=1.5u l=0.7u
+X1 DVSS Z ZB DVSS nfet_06v0 ad=0.66p pd=3.88u as=0.39p ps=2.02u w=1.5u l=0.7u
+X2 DVDD Z ZB DVDD pfet_06v0 ad=1.32p pd=6.88u as=0.78p ps=3.52u w=3u l=0.7u
+X3 DVSS a_1561_310# Z DVSS nfet_06v0 ad=0.39p pd=2.02u as=0.39p ps=2.02u w=1.5u l=0.7u
+X4 ZB Z DVDD DVDD pfet_06v0 ad=0.78p pd=3.52u as=0.78p ps=3.52u w=3u l=0.7u
+X5 Z a_1561_310# DVSS DVSS nfet_06v0 ad=0.39p pd=2.02u as=0.66p ps=3.88u w=1.5u l=0.7u
+X6 Z a_1561_310# DVDD DVDD pfet_06v0 ad=0.78p pd=3.52u as=1.32p ps=6.88u w=3u l=0.7u
+X7 DVDD a_1561_310# Z DVDD pfet_06v0 ad=0.78p pd=3.52u as=0.78p ps=3.52u w=3u l=0.7u
+.ends
+
+.subckt comp018green_in_drv DVDD A DVSS VDD VSS Z A_uq0 a_1167_270# a_923_1522# a_3067_747#
+X0 DVSS A_uq0 a_n180_263# DVSS nfet_06v0 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.7u
+X1 a_n180_263# A DVSS DVSS nfet_06v0 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.7u
+X2 Z a_n180_263# a_1167_270# DVSS nfet_06v0 ad=0.325p pd=1.77u as=0.55p ps=3.38u w=1.25u l=0.7u
+X3 a_1167_270# a_n180_263# Z DVSS nfet_06v0 ad=0.55p pd=3.38u as=0.325p ps=1.77u w=1.25u l=0.7u
+X4 VDD Z a_3067_747# VDD pfet_03v3 ad=0.378p pd=1.94u as=0.378p ps=1.94u w=1.4u l=0.28u
+X5 a_923_1522# a_n180_263# Z DVDD pfet_06v0 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.7u
+X6 VSS Z a_3067_747# VSS nfet_03v3 ad=0.162p pd=1.14u as=0.162p ps=1.14u w=0.6u l=0.28u
+X7 a_3067_747# Z VDD VDD pfet_03v3 ad=0.378p pd=1.94u as=0.644p ps=3.72u w=1.4u l=0.28u
+X8 a_3067_747# Z VSS VSS nfet_03v3 ad=0.162p pd=1.14u as=0.276p ps=2.12u w=0.6u l=0.28u
+X9 a_3067_747# Z VSS VSS nfet_03v3 ad=0.162p pd=1.14u as=0.162p ps=1.14u w=0.6u l=0.28u
+X10 a_3067_747# Z VSS VSS nfet_03v3 ad=0.162p pd=1.14u as=0.162p ps=1.14u w=0.6u l=0.28u
+X11 VSS Z a_3067_747# VSS nfet_03v3 ad=0.276p pd=2.12u as=0.162p ps=1.14u w=0.6u l=0.28u
+X12 VSS Z a_3067_747# VSS nfet_03v3 ad=0.162p pd=1.14u as=0.162p ps=1.14u w=0.6u l=0.28u
+X13 Z a_n180_263# a_923_1522# DVDD pfet_06v0 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.7u
+X14 VDD Z a_3067_747# VDD pfet_03v3 ad=0.644p pd=3.72u as=0.378p ps=1.94u w=1.4u l=0.28u
+X15 a_n180_263# A DVDD DVDD pfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X16 a_3067_747# Z VDD VDD pfet_03v3 ad=0.378p pd=1.94u as=0.378p ps=1.94u w=1.4u l=0.28u
+X17 a_923_1522# a_n180_263# Z DVDD pfet_06v0 ad=1.1p pd=5.88u as=0.65p ps=3.02u w=2.5u l=0.7u
+X18 VDD Z a_3067_747# VDD pfet_03v3 ad=0.378p pd=1.94u as=0.378p ps=1.94u w=1.4u l=0.28u
+X19 a_3067_747# Z VDD VDD pfet_03v3 ad=0.378p pd=1.94u as=0.378p ps=1.94u w=1.4u l=0.28u
+X20 Z a_n180_263# a_923_1522# DVDD pfet_06v0 ad=0.65p pd=3.02u as=1.1p ps=5.88u w=2.5u l=0.7u
+.ends
+
+.subckt comp018green_in_cms_smt IE CS DVDD A DVSS Z a_5355_608# m2_5364_1052#
+X0 a_1887_280# IE DVSS DVSS nfet_06v0 ad=0.832p pd=3.72u as=0.832p ps=3.72u w=3.2u l=0.7u
+X1 a_3115_338# a_1082_620# a_5355_608# DVSS nfet_06v0 ad=0.572p pd=3.48u as=0.572p ps=3.48u w=1.3u l=0.7u
+X2 a_1082_620# a_599_280# Z DVDD pfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X3 DVSS CS a_599_280# DVSS nfet_06v0 ad=0.88p pd=4.88u as=0.52p ps=2.52u w=2u l=0.7u
+X4 DVSS a_1809_1797# a_3227_1730# DVDD pfet_06v0 ad=0.494p pd=2.42u as=0.836p ps=4.68u w=1.9u l=0.7u
+X5 DVSS IE a_1887_280# DVSS nfet_06v0 ad=0.832p pd=3.72u as=0.832p ps=3.72u w=3.2u l=0.7u
+X6 Z CS a_1809_1797# DVSS nfet_06v0 ad=0.66p pd=3.88u as=0.66p ps=3.88u w=1.5u l=0.7u
+X7 Z IE DVDD DVDD pfet_06v0 ad=0.88p pd=4.88u as=0.52p ps=2.52u w=2u l=0.7u
+X8 Z a_599_280# a_1809_1797# DVDD pfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X9 a_1887_280# A a_3115_338# DVSS nfet_06v0 ad=0.689p pd=3.17u as=1.166p ps=6.18u w=2.65u l=0.7u
+X10 DVDD CS a_1809_1797# DVDD pfet_06v0 ad=0.66p pd=3.88u as=0.39p ps=2.02u w=1.5u l=0.7u
+X11 a_3115_338# A a_1887_280# DVSS nfet_06v0 ad=0.689p pd=3.17u as=0.689p ps=3.17u w=2.65u l=0.7u
+X12 Z A a_3227_1730# DVDD pfet_06v0 ad=0.559p pd=2.67u as=0.946p ps=5.18u w=2.15u l=0.7u
+X13 a_3227_1730# A Z DVDD pfet_06v0 ad=0.946p pd=5.18u as=0.559p ps=2.67u w=2.15u l=0.7u
+X14 DVSS a_599_280# a_1082_620# DVSS nfet_06v0 ad=0.66p pd=3.88u as=0.66p ps=3.88u w=1.5u l=0.7u
+X15 a_1887_280# A a_3115_338# DVSS nfet_06v0 ad=0.689p pd=3.17u as=0.689p ps=3.17u w=2.65u l=0.7u
+X16 DVDD A a_3227_1730# DVDD pfet_06v0 ad=0.494p pd=2.42u as=0.836p ps=4.68u w=1.9u l=0.7u
+X17 a_1887_280# IE DVSS DVSS nfet_06v0 ad=1.408p pd=7.28u as=0.832p ps=3.72u w=3.2u l=0.7u
+X18 Z A a_3115_338# DVSS nfet_06v0 ad=0.78p pd=3.52u as=1.32p ps=6.88u w=3u l=0.7u
+X19 a_599_280# CS DVDD DVDD pfet_06v0 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.7u
+X20 Z IE DVDD DVDD pfet_06v0 ad=0.52p pd=2.52u as=0.88p ps=4.88u w=2u l=0.7u
+X21 a_3115_338# A Z DVSS nfet_06v0 ad=0.78p pd=3.52u as=0.78p ps=3.52u w=3u l=0.7u
+X22 DVDD IE Z DVDD pfet_06v0 ad=0.52p pd=2.52u as=0.52p ps=2.52u w=2u l=0.7u
+X23 a_3115_338# A a_1887_280# DVSS nfet_06v0 ad=1.166p pd=6.18u as=0.689p ps=3.17u w=2.65u l=0.7u
+X24 a_1082_620# CS Z DVSS nfet_06v0 ad=0.66p pd=3.88u as=0.66p ps=3.88u w=1.5u l=0.7u
+X25 a_3227_1730# A DVDD DVDD pfet_06v0 ad=0.836p pd=4.68u as=0.494p ps=2.42u w=1.9u l=0.7u
+X26 a_3115_338# A Z DVSS nfet_06v0 ad=1.32p pd=6.88u as=0.78p ps=3.52u w=3u l=0.7u
+X27 a_3227_1730# a_1809_1797# DVSS DVDD pfet_06v0 ad=0.836p pd=4.68u as=0.494p ps=2.42u w=1.9u l=0.7u
+X28 a_599_280# CS DVSS DVSS nfet_06v0 ad=0.52p pd=2.52u as=0.88p ps=4.88u w=2u l=0.7u
+X29 DVDD CS a_599_280# DVDD pfet_06v0 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.7u
+X30 a_1887_280# IE DVSS DVSS nfet_06v0 ad=0.832p pd=3.72u as=1.408p ps=7.28u w=3.2u l=0.7u
+X31 Z A a_3115_338# DVSS nfet_06v0 ad=0.78p pd=3.52u as=0.78p ps=3.52u w=3u l=0.7u
+X32 a_1809_1797# CS DVDD DVDD pfet_06v0 ad=0.39p pd=2.02u as=0.66p ps=3.88u w=1.5u l=0.7u
+X33 DVSS IE a_1887_280# DVSS nfet_06v0 ad=0.832p pd=3.72u as=0.832p ps=3.72u w=3.2u l=0.7u
+.ends
+
+.subckt comp018green_inpath_cms_smt PAD CS PU comp018green_in_cms_smt_0/a_5355_608#
++ a_1390_1224# comp018green_in_logic_pupd_0/a_1648_203# comp018green_in_pupd_0/w_n83_53#
++ comp018green_in_pupd_0/A m3_9619_4882# m3_9619_3696# comp018green_in_pupd_0/DVSS
++ comp018green_in_pupd_0/DVDD comp018green_in_drv_0/DVDD comp018green_in_drv_0/DVSS
++ m1_12910_4326# VSUBS comp018green_in_drv_0/VDD a_1390_2124# w_n13_970# comp018green_sigbuf_3/DVSS
++ comp018green_sigbuf_3/DVDD
+Xlv_inv_14 w_n13_970# comp018green_sigbuf_1/IN a_1390_1224# VSUBS lv_inv
+Xlv_inv_15 w_n13_970# comp018green_sigbuf_1/INB comp018green_sigbuf_1/IN VSUBS lv_inv
+Xcomp018green_in_pupd_0 comp018green_in_pupd_0/A comp018green_in_pupd_0/DVDD comp018green_in_pupd_0/DVSS
++ comp018green_sigbuf_2/Z comp018green_sigbuf_0/ZB comp018green_in_pupd_0/w_n83_53#
++ comp018green_sigbuf_2/Z comp018green_in_pupd
+Xcomp018green_in_logic_pupd_0 comp018green_sigbuf_0/IN comp018green_sigbuf_2/IN comp018green_sigbuf_0/INB
++ PU comp018green_sigbuf_2/INB VSUBS comp018green_in_logic_pupd_0/a_1648_203# a_1390_2124#
++ comp018green_in_logic_pupd
+Xcomp018green_sigbuf_0 comp018green_sigbuf_0/Z comp018green_sigbuf_3/DVSS comp018green_sigbuf_3/DVDD
++ comp018green_sigbuf_0/ZB comp018green_sigbuf_0/INB comp018green_sigbuf_0/IN comp018green_sigbuf
+Xlv_inv_18 w_n13_970# comp018green_sigbuf_3/IN CS VSUBS lv_inv
+Xlv_inv_19 w_n13_970# comp018green_sigbuf_3/INB comp018green_sigbuf_3/IN VSUBS lv_inv
+Xcomp018green_sigbuf_1 comp018green_sigbuf_1/Z comp018green_sigbuf_3/DVSS comp018green_sigbuf_3/DVDD
++ comp018green_sigbuf_1/ZB comp018green_sigbuf_1/INB comp018green_sigbuf_1/IN comp018green_sigbuf
+Xcomp018green_sigbuf_2 comp018green_sigbuf_2/Z comp018green_sigbuf_3/DVSS comp018green_sigbuf_3/DVDD
++ comp018green_sigbuf_2/ZB comp018green_sigbuf_2/INB comp018green_sigbuf_2/IN comp018green_sigbuf
+Xcomp018green_sigbuf_3 comp018green_sigbuf_3/Z comp018green_sigbuf_3/DVSS comp018green_sigbuf_3/DVDD
++ comp018green_sigbuf_3/ZB comp018green_sigbuf_3/INB comp018green_sigbuf_3/IN comp018green_sigbuf
+Xcomp018green_in_drv_0 comp018green_in_drv_0/DVDD comp018green_in_drv_0/A comp018green_in_drv_0/DVSS
++ comp018green_in_drv_0/VDD VSUBS comp018green_in_drv_0/Z comp018green_in_drv_0/A
++ VSUBS comp018green_in_drv_0/VDD m1_12910_4326# comp018green_in_drv
+Xcomp018green_in_cms_smt_0 comp018green_sigbuf_1/Z comp018green_sigbuf_3/Z comp018green_in_drv_0/DVDD
++ PAD comp018green_in_drv_0/DVSS comp018green_in_drv_0/A comp018green_in_cms_smt_0/a_5355_608#
++ PAD comp018green_in_cms_smt
+D0 CS w_n13_970# diode_pd2nw_03v3 pj=4u area=1p
+D1 a_1390_1224# w_n13_970# diode_pd2nw_03v3 pj=4u area=1p
+D2 PU w_n13_970# diode_pd2nw_03v3 pj=4u area=1p
+D3 a_1390_2124# w_n13_970# diode_pd2nw_03v3 pj=4u area=1p
+.ends
+
+.subckt comp018green_esd_cdm IP_IN PAD DVDD DVSS w_n86_n86# w_454_3720#
+X0 PAD IP_IN DVDD ppolyf_u r_width=2.5u r_length=2.8u
+D0 DVSS IP_IN diode_nd2ps_06v0 pj=42u area=20p
+D1 IP_IN w_454_3720# diode_pd2nw_06v0 pj=42u area=20p
+D2 DVSS IP_IN diode_nd2ps_06v0 pj=42u area=20p
+X1 PAD IP_IN DVDD ppolyf_u r_width=2.5u r_length=2.8u
+X2 PAD IP_IN DVDD ppolyf_u r_width=2.5u r_length=2.8u
+X3 PAD IP_IN DVDD ppolyf_u r_width=2.5u r_length=2.8u
+D3 IP_IN w_454_3720# diode_pd2nw_06v0 pj=42u area=20p
+.ends
+
+.subckt GF_NI_BI_24T_BASE PD IE SL A OE CS PU Y ndrive_y_<0> ndrive_x_<0> ndrive_x_<1>
++ ndrive_Y_<1> ndrive_x_<2> ndrive_y_<2> ndrive_x_<3> ndrive_Y_<3> pdrive_x_<0> pdrive_y_<0>
++ pdrive_y_<1> pdrive_x_<1> pdrive_x_<2> pdrive_y_<2> pdrive_y_<3> pdrive_x_<3> m3_1771_39126#
++ w_11000_43887# comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_5/m1_n44_0#
++ comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_1/m1_n44_0#
++ m2_1886_52816# comp018green_inpath_cms_smt_0/m3_9619_4882# w_835_53274# comp018green_inpath_cms_smt_0/m3_9619_3696#
++ comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_1/m1_n44_0#
++ comp018green_esd_cdm_0/w_454_3720# comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_2/m1_n44_0#
++ m3_10025_37504# comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_2/m1_n44_0#
++ a_12390_41548# a_14178_1021# m1_3608_46684# comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_3/m1_n44_0#
++ comp018green_esd_cdm_0/DVDD PAD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVDD
++ tie_poly_res2_0/VSUBS comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_6/VSUBS
++ comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_3/m1_n44_0#
++ comp018green_sigbuf_1_0/DVSS comp018green_esd_cdm_0/DVSS comp018green_inpath_cms_smt_0/comp018green_in_drv_0/DVDD
++ comp018green_sigbuf_1_0/DVDD comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_4/m1_n44_0#
++ comp018green_inpath_cms_smt_0/comp018green_in_drv_0/VDD comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/VSUBS
++ comp018green_inpath_cms_smt_0/VSUBS w_11042_41027# m3_12947_24050# comp018green_out_predrv_3/DVDD
++ a_13720_39292# comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS
+Xlv_nand_2 tie_poly_res2_0/VSUBS a_13720_39292# OE m1_5236_36986# a_13720_39292# lv_nand
+Xlv_nand_3 tie_poly_res2_0/VSUBS a_13720_39292# OE m1_4812_38523# w_11184_44921# lv_nand
+Xcomp018green_out_paddrv_24T_0 pdrive_x_<0> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_3/m1_n44_0#
++ pdrive_y_<0> ndrive_Y_<1> ndrive_x_<2> pdrive_x_<0> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_3/m1_n44_0#
++ comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_4/m1_n44_0#
++ pdrive_x_<3> pdrive_x_<1> pdrive_x_<2> m3_12947_24050# pdrive_x_<2> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/VSUBS
++ pdrive_x_<3> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_5/m1_n44_0#
++ ndrive_x_<1> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_1/m1_n44_0#
++ ndrive_y_<2> ndrive_x_<0> ndrive_y_<0> ndrive_Y_<3> ndrive_x_<3> pdrive_x_<1> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_1/m1_n44_0#
++ pdrive_y_<1> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_2/m1_n44_0#
++ pdrive_y_<2> comp018green_out_predrv_3/DVDD comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_PMOS_GROUP_0/PMOS_metal_stack_6/VSUBS
++ PAD pdrive_y_<3> comp018green_out_paddrv_24T_0/comp018green_out_paddrv_6T_NMOS_GROUP_0/nmos_metal_stack_2/m1_n44_0#
++ comp018green_out_paddrv_24T
+Xtie_poly_res2_0 w_11184_44921# w_11184_45921# w_835_53274# tie_poly_res2
+Xcomp018green_sigbuf_1_0 comp018green_sigbuf_1_0/Z comp018green_sigbuf_1_0/DVSS comp018green_sigbuf_1_0/DVDD
++ comp018green_sigbuf_1_0/ZB m1_9774_36986# m1_9537_37107# comp018green_sigbuf_1
+Xcomp018green_out_predrv_0 comp018green_sigbuf_1_0/Z comp018green_sigbuf_1_0/ZB ndrive_x_<0>
++ comp018green_out_predrv_0/ENB comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_3/A
++ comp018green_out_predrv_3/DVDD ndrive_y_<0> pdrive_y_<0> pdrive_x_<0> comp018green_out_predrv_0/EN
++ comp018green_out_predrv
+Xcomp018green_out_sigbuf_a_0 comp018green_out_predrv_3/A comp018green_sigbuf_1_0/DVSS
++ comp018green_sigbuf_1_0/DVDD m1_9178_38525# m1_9257_38818# comp018green_out_sigbuf_a
+Xcomp018green_out_predrv_2 comp018green_sigbuf_1_0/Z comp018green_sigbuf_1_0/ZB ndrive_x_<2>
++ comp018green_out_predrv_3/ENB comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_3/A
++ comp018green_out_predrv_3/DVDD ndrive_y_<2> pdrive_y_<2> pdrive_x_<2> comp018green_out_predrv_3/EN
++ comp018green_out_predrv
+Xcomp018green_out_predrv_1 comp018green_sigbuf_1_0/Z comp018green_sigbuf_1_0/ZB ndrive_x_<3>
++ comp018green_out_predrv_1/ENB comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_3/A
++ comp018green_out_predrv_3/DVDD ndrive_Y_<3> pdrive_y_<3> pdrive_x_<3> comp018green_out_predrv_1/EN
++ comp018green_out_predrv
+Xcomp018green_out_sigbuf_oe_0 comp018green_out_predrv_0/ENB comp018green_sigbuf_1_0/DVDD
++ comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_0/EN m1_1178_38534# m1_1183_38806#
++ comp018green_out_sigbuf_oe
+Xcomp018green_out_predrv_3 comp018green_sigbuf_1_0/Z comp018green_sigbuf_1_0/ZB ndrive_x_<1>
++ comp018green_out_predrv_3/ENB comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_3/A
++ comp018green_out_predrv_3/DVDD ndrive_Y_<1> pdrive_y_<1> pdrive_x_<1> comp018green_out_predrv_3/EN
++ comp018green_out_predrv
+Xcomp018green_inpath_cms_smt_0 comp018green_esd_cdm_0/IP_IN CS PU comp018green_inpath_cms_smt_0/comp018green_in_drv_0/DVDD
++ IE w_11000_43887# m1_3608_46684# comp018green_esd_cdm_0/IP_IN comp018green_inpath_cms_smt_0/m3_9619_4882#
++ comp018green_inpath_cms_smt_0/m3_9619_3696# comp018green_esd_cdm_0/DVSS comp018green_inpath_cms_smt_0/comp018green_in_drv_0/DVDD
++ comp018green_inpath_cms_smt_0/comp018green_in_drv_0/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS
++ Y comp018green_inpath_cms_smt_0/VSUBS comp018green_inpath_cms_smt_0/comp018green_in_drv_0/VDD
++ PD w_835_53274# comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVDD
++ comp018green_inpath_cms_smt
+Xcomp018green_out_sigbuf_oe_2 comp018green_out_predrv_1/ENB comp018green_sigbuf_1_0/DVDD
++ comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_1/EN m1_5236_36986# m1_5084_37107#
++ comp018green_out_sigbuf_oe
+Xcomp018green_out_sigbuf_oe_1 comp018green_out_predrv_3/ENB comp018green_sigbuf_1_0/DVDD
++ comp018green_sigbuf_1_0/DVSS comp018green_out_predrv_3/EN m1_4812_38523# m1_4626_36747#
++ comp018green_out_sigbuf_oe
+Xlv_inv_0 a_13720_39292# m1_1183_38806# m1_1178_38534# tie_poly_res2_0/VSUBS lv_inv
+Xlv_inv_1 a_13720_39292# m1_9257_38818# m1_9178_38525# tie_poly_res2_0/VSUBS lv_inv
+Xlv_inv_2 a_13720_39292# m1_9537_37107# m1_9774_36986# tie_poly_res2_0/VSUBS lv_inv
+Xlv_inv_3 a_13720_39292# m1_4626_36747# m1_4812_38523# tie_poly_res2_0/VSUBS lv_inv
+Xlv_inv_4 a_13720_39292# m1_9774_36986# SL tie_poly_res2_0/VSUBS lv_inv
+Xlv_inv_6 a_13720_39292# m1_5084_37107# m1_5236_36986# tie_poly_res2_0/VSUBS lv_inv
+Xcomp018green_esd_cdm_0 comp018green_esd_cdm_0/IP_IN PAD comp018green_esd_cdm_0/DVDD
++ comp018green_esd_cdm_0/DVSS comp018green_inpath_cms_smt_0/comp018green_in_drv_0/DVDD
++ comp018green_esd_cdm_0/w_454_3720# comp018green_esd_cdm
+Xlv_nand_0 tie_poly_res2_0/VSUBS a_13720_39292# OE m1_9178_38525# A lv_nand
+Xlv_nand_1 tie_poly_res2_0/VSUBS a_13720_39292# OE m1_1178_38534# w_11184_45921# lv_nand
+X0 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+X1 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+X2 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+X3 a_12390_41548# comp018green_esd_cdm_0/DVSS cap_nmos_06v0 c_width=3u c_length=3u
+X4 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+X5 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+X6 a_12390_41548# comp018green_esd_cdm_0/DVSS cap_nmos_06v0 c_width=3u c_length=3u
+X7 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+X8 a_12390_41548# comp018green_esd_cdm_0/DVSS cap_nmos_06v0 c_width=3u c_length=3u
+X9 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+D0 comp018green_inpath_cms_smt_0/VSUBS OE diode_pd2nw_03v3 pj=1.92u area=0.2304p
+D1 comp018green_inpath_cms_smt_0/VSUBS OE diode_pd2nw_03v3 pj=1.92u area=0.2304p
+D2 comp018green_inpath_cms_smt_0/VSUBS OE diode_pd2nw_03v3 pj=1.92u area=0.2304p
+D3 comp018green_inpath_cms_smt_0/VSUBS w_11000_43887# diode_pd2nw_03v3 pj=1.92u area=0.2304p
+D4 A w_11042_41027# diode_pd2nw_03v3 pj=4u area=1p
+D5 SL w_11042_41027# diode_pd2nw_03v3 pj=4u area=1p
+X10 a_12390_41548# comp018green_esd_cdm_0/DVSS cap_nmos_06v0 c_width=3u c_length=3u
+D6 comp018green_inpath_cms_smt_0/VSUBS w_11184_45921# diode_pd2nw_03v3 pj=1.92u area=0.2304p
+D7 comp018green_inpath_cms_smt_0/VSUBS w_11184_44921# diode_pd2nw_03v3 pj=1.92u area=0.2304p
+X11 comp018green_out_predrv_3/DVDD comp018green_inpath_cms_smt_0/comp018green_sigbuf_3/DVSS cap_nmos_06v0 c_width=5u c_length=1.5u
+.ends
+
+.subckt x5LM_METAL_RAIL_PAD_60 VSUBS Bondpad_5LM_0/m2_n400_0# 5LM_METAL_RAIL_0/VDD_uq0
++ 5LM_METAL_RAIL_0/VDD 5LM_METAL_RAIL_0/VSS 5LM_METAL_RAIL_0/DVDD 5LM_METAL_RAIL_0/DVDD_uq4
++ 5LM_METAL_RAIL_0/DVDD_uq3 5LM_METAL_RAIL_0/DVSS 5LM_METAL_RAIL_0/DVDD_uq2 5LM_METAL_RAIL_0/DVDD_uq0
++ 5LM_METAL_RAIL_0/DVSS_uq0 5LM_METAL_RAIL_0/DVDD_uq1 5LM_METAL_RAIL_0/DVSS_uq6 5LM_METAL_RAIL_0/VSS_uq0
++ 5LM_METAL_RAIL_0/DVSS_uq5 5LM_METAL_RAIL_0/DVSS_uq4 5LM_METAL_RAIL_0/DVSS_uq3 5LM_METAL_RAIL_0/DVSS_uq2
++ 5LM_METAL_RAIL_0/DVSS_uq1
+.ends
+
+.subckt gf180mcu_ocd_io__bi_24t A CS DVDD DVSS IE OE PAD PD PU SL VDD VSS Y
+XGF_NI_BI_24T_BASE_0 PD IE SL A OE CS PU Y GF_NI_BI_24T_BASE_0/ndrive_y_<0> GF_NI_BI_24T_BASE_0/ndrive_x_<0>
++ GF_NI_BI_24T_BASE_0/ndrive_x_<1> GF_NI_BI_24T_BASE_0/ndrive_Y_<1> GF_NI_BI_24T_BASE_0/ndrive_x_<2>
++ GF_NI_BI_24T_BASE_0/ndrive_y_<2> GF_NI_BI_24T_BASE_0/ndrive_x_<3> GF_NI_BI_24T_BASE_0/ndrive_Y_<3>
++ GF_NI_BI_24T_BASE_0/pdrive_x_<0> GF_NI_BI_24T_BASE_0/pdrive_y_<0> GF_NI_BI_24T_BASE_0/pdrive_y_<1>
++ GF_NI_BI_24T_BASE_0/pdrive_x_<1> GF_NI_BI_24T_BASE_0/pdrive_x_<2> GF_NI_BI_24T_BASE_0/pdrive_y_<2>
++ GF_NI_BI_24T_BASE_0/pdrive_y_<3> GF_NI_BI_24T_BASE_0/pdrive_x_<3> VDD VDD DVDD DVDD
++ DVSS VDD VDD VSS DVSS DVDD DVDD VSS DVSS DVDD VSS DVDD DVDD DVDD PAD DVDD VSS DVSS
++ DVSS DVSS DVSS DVDD DVDD DVDD VDD DVSS VSS VDD DVDD DVDD VDD DVSS GF_NI_BI_24T_BASE
+X5LM_METAL_RAIL_PAD_60_0 VSS PAD VDD VDD VSS DVDD DVDD DVDD DVSS DVDD DVDD DVSS DVDD
++ DVSS VSS DVSS DVSS DVSS DVSS DVSS x5LM_METAL_RAIL_PAD_60
+.ends
+

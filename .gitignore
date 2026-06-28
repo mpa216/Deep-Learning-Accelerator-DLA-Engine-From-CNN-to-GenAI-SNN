@@ -1,0 +1,18 @@
+# LibreLane / OpenLane flow output (regenerable, huge)
+librelane/runs/
+librelane_rtl2gds_gf180/runs/
+**/runs/
+
+# Simulation waveforms & dumps
+*.vcd
+*.fst
+*.vpd
+
+# Archives & large binaries
+*.zip
+*.tar
+*.tar.gz
+
+# Common junk
+__pycache__/
+*.log

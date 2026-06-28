@@ -1,0 +1,243 @@
+# LibreLane Classic config to harden dla_engine_top WITH the GF180
+# SRAM macro kept as a hard block (not flattened into flip-flops).
+#
+# Paths are resolved relative to THIS file (dir::). Layout assumed:
+#   APIC_A/
+#     librelane/config.yaml          <-- this file
+#     rtl/*.v
+#     gf180mcu_ocd_ip_sram__sram256x8m8wm1/   (foundry GDS/LEF/LIB)
+meta:
+  version: 3
+  flow: Classic
+
+DESIGN_NAME: dla_engine_top
+
+# GF180MCU 5V std-cell PDK (fetched automatically by ciel/volare).
+PDK: gf180mcuD
+
+# --- Synthesizable RTL ONLY ------------------------------------------
+# g300_pipeline_top.v + testbenches are the sim-only verification
+# harness (they use $readmemh and huge flop arrays) -- DO NOT list them.
+VERILOG_FILES:
+  - dir::../rtl/dla_engine_top.v
+  - dir::../rtl/dla_controller.v
+  - dir::../rtl/dla_pe.v
+  - dir::../rtl/dla_pe_array.v
+  - dir::../rtl/dla_a_buffer_bank.v
+  - dir::../rtl/dla_b_buffer_bank.v
+  - dir::../rtl/dla_c_buffer_bank.v
+  - dir::../rtl/gf180_sram_1rw_256x8.v
+
+# >>>>>>>>>>>>>>>>>>>>  THE ACTUAL FIX  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# Force the `ifdef SYNTHESIS` branch in gf180_sram_1rw_256x8.v so the
+# SRAM elaborates as an empty (* blackbox *) instead of its behavioral
+# `reg [7:0] mem [0:255]` model. Without this, Yosys synthesizes ~22k
+# flip-flops and NO macro ever appears in the layout.
+VERILOG_DEFINES:
+  - SYNTHESIS
+
+CLOCK_PORT: clk
+# 75 ns (~13.3 MHz). The 3-macro variant closed at 60 ns (critical path was
+# the PE-array MAC), but making the A/B buffers SRAM puts the SRAM READ on the
+# combinational MAC path. At the slow corner (ss_125C; the SRAM is a 3V IP) the
+# read alone is ~13 ns clk-to-Q, and the high-fanout SRAM data nets now span
+# the spread-out macros through a long repair-buffer chain -- so the
+# SRAM->mux->PE-MAC->accumulator path overran 60 ns by ~5.9 ns (setup WS
+# -5.93). 75 ns closes all 9 corners with ~9 ns margin. To recover throughput,
+# register/pipeline the SRAM read or cluster the A/B macros nearer the PE array.
+CLOCK_PERIOD: 75
+
+# --- Pre-hardened GF180 SRAM macro (foundry views) -------------------
+# Registered via the unified MACROS variable (the modern LibreLane way;
+# EXTRA_LEFS/EXTRA_GDS_FILES/EXTRA_LIBS + MACRO_PLACEMENT_CFG are
+# deprecated). One macro module, eleven instances (4 A + 4 B + 3 C),
+# each placed explicitly. The .lef gives the abstract + power pins, the
+# .gds carries the real geometry merged at stream-out, the .lib gives
+# timing for STA. Instance names verified by Yosys elaboration of the
+# current RTL (flatten + select t:gf180mcu_ocd_ip_sram__sram256x8m8wm1).
+MACROS:
+  gf180mcu_ocd_ip_sram__sram256x8m8wm1:
+    gds:
+      - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.gds
+    lef:
+      - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.lef
+    # Map the SRAM's 3.3V-family libs onto the 5V std-cell STA corners by
+    # PROCESS + TEMPERATURE (tt/ss_125C/ff_n40C). The SRAM is a 3.3V IP so
+    # there is no 5V lib -- the voltage label differs but the SRAM physically
+    # runs at 3.3V (see voltage-domain note below). Registering all three
+    # stops the SRAM being black-boxed at non-tt corners (ORD-2011) so
+    # multi-corner STA is meaningful.
+    lib:
+      "*_tt_025C_5v00":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__tt_025C_3v30.lib
+      "*_ss_125C_4v50":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ss_125C_3v00.lib
+      "*_ff_n40C_5v50":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib
+    instances:
+      # 11-MACRO VARIANT, 4x3 GRID -- reverted from the clustered floorplan
+      # (2026-06-14) for Alternative B. Clustering + density-packing both made
+      # antennas WORSE (iter-3: 1->4, iter-4: ->3), so this restores the
+      # signed-off grid (RUN_2026-06-13_18-57-23, 1 antenna) and instead splits
+      # the lone survivor's net via MAX_FANOUT_CONSTRAINT (below). Die 1600x1500;
+      # macro 301.3(W) x 224.93(H). 4 cols x=90/460/830/1200 (~69um channels),
+      # 3 rows y= A:150 B:640 C:1130 (~265um). Names Yosys-verified vs the RTL.
+      #
+      # --- A buffer: 4 macros (one per matrix row), bottom row y=150 ---
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
+        location: [90.0, 640.0]
+        orientation: N
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
+        location: [460.0, 640.0]
+        orientation: N
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
+        location: [830.0, 640.0]
+        orientation: N
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
+        location: [1200.0, 640.0]
+        orientation: N
+      # --- B buffer: 4 macros (one per matrix col), middle row y=640 ---
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
+        location: [90.0, 150.0]
+        orientation: N
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
+        location: [460.0, 150.0]
+        orientation: N
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
+        location: [830.0, 150.0]
+        orientation: N
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
+        location: [1200.0, 150.0]
+        orientation: N
+      # --- C buffer: 3 macros (24-bit acc = 3x8-bit), top row y=1130 ---
+      u_c_buffer.GEN_SRAM.u_sram0.u_sram:
+        location: [90.0, 1130.0]
+        orientation: N
+      u_c_buffer.GEN_SRAM.u_sram1.u_sram:
+        location: [460.0, 1130.0]
+        orientation: N
+      u_c_buffer.GEN_SRAM.u_sram2.u_sram:
+        location: [830.0, 1130.0]
+        orientation: N
+
+# --- Floorplan -------------------------------------------------------
+# 11-MACRO VARIANT, 4x3 GRID (signed-off baseline RUN_2026-06-13_18-57-23, the
+# best antenna result = 1 net). A+B+C buffers all SRAM (USE_SRAM(1)), each
+# 301.3 x 224.93 um, on a 4x3 grid (see MACROS.instances). The dataflow-clustered
+# variant + density-packing both made antennas WORSE (iter-3: 4, iter-4: 3), so
+# we reverted to this grid for Alternative B (split the survivor's net instead).
+#
+# DIE SIZING: 11 macros (~745k um2) + ~375k um2 std cells = ~1.12M um2 inst area.
+# 1600x1500 core ~2.40M um2 -> ~47% util (proven band; denser failed [DPL-0036]).
+FP_SIZING: absolute
+DIE_AREA: [0, 0, 1600, 1500]
+PL_TARGET_DENSITY_PCT: 55
+
+# MAX_FANOUT_CONSTRAINT left at the DEFAULT (10) = the signed-off grid baseline.
+# Alternative B tried MAX_FANOUT_CONSTRAINT:4 (iter-5, RUN_2026-06-13_21-22-45) to
+# split the lone antenna net -> BACKFIRED: over-buffering created 6 NEW buffer-net
+# antennas AND blew setup timing to -13.8ns. Reverted. The literal-0 antenna chase
+# is CLOSED: clustering (iter-3: 4), cluster+density (iter-4: 3) and max-fanout
+# (iter-5: 6) all did WORSE than this grid's single net. SETTLED on the grid
+# baseline RUN_2026-06-13_18-57-23 as final: 1 mild non-gating Metal2 antenna
+# (_03807_, side-area 1.17x), DRC=0/LVS=0, setup +9.07ns, hold +0.24ns, 11 macros.
+
+# Cell padding. The gf180 default GPL_CELL_PADDING is 0, so cells abut with no
+# gap; antenna-repair diodes get jammed in with no pin access -> "[DRT-0073] No
+# access point". 1/2 keeps pins reachable for the (ITERS:0) flow. NOTE: raising
+# this to 3/4 was tried to enable in-DRT repair (RUN_2026-06-13_19-23-12) and did
+# NOT help -- it only shuffled WHICH clock-tree cells the repair re-route fails on
+# (see the DRT_ANTENNA_REPAIR_ITERS note below). So kept at the baseline 1/2.
+GPL_CELL_PADDING: 1
+DPL_CELL_PADDING: 2
+
+# (Macro placement now lives in MACROS.<cell>.instances above; the old
+#  standalone macro_placement.cfg / MACRO_PLACEMENT_CFG is deprecated.)
+
+# --- Power / ground --------------------------------------------------
+VDD_NETS:
+  - VDD
+GND_NETS:
+  - VSS
+# Connect each SRAM instance's physical VDD/VSS pins to the chip PDN.
+# Format: "<instance-regex> <vdd_net> <vss_net> <macro_vdd_pin> <macro_vss_pin>"
+PDN_MACRO_CONNECTIONS:
+  - ".*u_sram.* VDD VSS VDD VSS"
+
+# --- PDN straps (proven gf180 values from the chipathon counter cfg) --
+PDN_MULTILAYER: false
+PDN_VWIDTH: 5
+PDN_HWIDTH: 5
+PDN_VSPACING: 1
+PDN_HSPACING: 1
+PDN_VPITCH: 75
+PDN_HPITCH: 75
+PDN_EXTEND_TO: boundary
+
+# Custom PDN script. The stock LibreLane macro grid connects the macro
+# power pins on PDN_VERTICAL_LAYER<->PDN_HORIZONTAL_LAYER (Metal4<->Metal5),
+# but the gf180 OCD SRAM pins top out at Metal3 -> the macro grid gets no
+# shapes/vias ([PDN-0232]) and PDN aborts ([PDN-0233]). pdn_cfg.tcl is a
+# copy of the proven chipathon padring script with the macro connect
+# changed to "Metal3 <vertical strap>" so the SRAM pins hook into the grid.
+PDN_CFG: dir::pdn_cfg.tcl
+
+# --- Routing / signoff ----------------------------------------------
+# Allow routing up to Metal5. Base detailed routing is DRC-clean, but with
+# only 4 layers the long clock-tree nets (720 flops) could not break antenna
+# charge by jumping to a higher layer, so antenna repair piled on diodes it
+# then could not route to -> "[GRT-0243] Unable to repair antennas on net
+# with diodes" + "[DRT-0073] No access point" on clkbuf/diode pins. Metal5 is
+# unused by the PDN (PDN_MULTILAYER=false, straps are Metal4), so freeing it
+# for signal routing gives the antenna repair an escape route + more
+# resources. (Was Metal4.)
+RT_MAX_LAYER: Metal5
+
+# --- Antenna mitigation (target: ZERO violating nets) ----------------
+# The previous 3-macro signoff left 20 violating nets / 24 pins on
+# Metal2/Metal3 -- mostly datapath/fanout nets (a_row_vector, b_col_vector,
+# net*) plus a couple of output pins, NOT the clock tree. Root cause: the
+# ONLY diode source was the post-GRT antenna repair, whose wirelength
+# ESTIMATE under-counted the final detailed-route metal, so ~20 nets slipped
+# past it. Re-enabling the in-detailed-router repair is NOT the fix: it
+# inserts diodes it then cannot find pin access for -> "[DRT-0073] No access
+# point", crashing DRT on iteration 1. So keep DRT repair at 0 and instead
+# attack antennas PRE-route, where diodes are placed + legalised next to
+# their load pin and therefore always have access:
+#
+#   RUN_HEURISTIC_DIODE_INSERTION -- inserts a protection diode on load pins
+#     during global placement, before routing exists. This is the canonical
+#     OpenLane/LibreLane antenna fix and sidesteps the DRT access problem
+#     entirely. ~43% utilisation leaves ample room for the extra diodes.
+#   GRT_ANTENNA_REPAIR_MARGIN 25 (was 10) -- the post-GRT diode pass now
+#     inserts with a larger safety margin, so nets sitting near the 400x
+#     limit also get a diode, covering the estimate-vs-actual gap that let
+#     20 nets through last time.
+#
+# RESULT on the 11-macro route: heuristic diodes + GRT margin drive antennas to
+# 0 net / 0 pin PRE-route (confirmed at the post-GRT check_antennas). After
+# detailed routing a SINGLE mild Metal2 datapath net remains (_03807_, ~1.2x),
+# because the real metal exceeds the GRT wirelength estimate by a hair on one net.
+#
+# IN-DRT REPAIR IS A CONFIRMED DEAD END ON THIS DESIGN -- KEEP DRT_ANTENNA_
+# REPAIR_ITERS AT 0. Any ITERS>=1 triggers the repair's verification RE-ROUTE,
+# whose pin-access phase cannot reach clock-tree cells -> "[DRT-0073] No access
+# point" and DRT aborts. Tested to exhaustion:
+#   - padding 1, ITERS:1            (RUN_2026-06-13_18-04-16): crash on 2 ANTENNA_clkbuf_* diodes
+#   - padding 1, ITERS:1, Metal4    (earlier run): same crash
+#   - padding 3, ITERS:1, jumper_only (RUN_2026-06-13_19-23-12): crash AGAIN, now on 2
+#     ACTUAL clock buffers (clkbuf_2_0/2_3__f_clk_regs) + 1 diode. Padding only SHUFFLED
+#     which cells fail; jumper_only does NOT dodge it (the re-route runs regardless of
+#     mode). => padding-5 / diode-mode / all-jumper are all dead too -- do not retry.
+# The lone residual net _03807_ (Metal2 side-area 1.17x) ALREADY carries 5 antenna
+# diodes and still violates -> it is a wire-LENGTH problem, not diode coverage, so more
+# pre-route diodes (GRT margin) is also futile. The only real fix is to shorten / layer-
+# hop that route = MACRO CLUSTERING (root cause; also recovers throughput), not antenna
+# tuning. ITERS:0 signs off clean (RUN_2026-06-13_18-57-23: DRC=0/LVS=0, setup +9ns, 1
+# non-gating antenna; on gf180 Magic DRC is authoritative + KLayout antenna check off).
+RUN_HEURISTIC_DIODE_INSERTION: true
+GRT_ANTENNA_REPAIR_MARGIN: 25
+DRT_ANTENNA_REPAIR_ITERS: 0      # KEEP 0 -- ITERS>=1 = confirmed DRT-0073 dead end (see above)
+DRT_ANTENNA_REPAIR_JUMPER_ONLY: true   # moot at ITERS:0 (no in-DRT repair runs)
+DIODE_ON_PORTS: in
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout

@@ -1,0 +1,182 @@
+name: CI
+
+on: [ push, workflow_dispatch ]
+
+jobs:
+  views:
+    runs-on: ubuntu-latest
+    name: Generate various views from MAG
+    steps:
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+      - name: Install required packages
+        run: |
+          sudo apt-get update && sudo apt-get install -y klayout
+          pip3 install klayout
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build_magic
+      - name: Clone PDK
+        working-directory: ./example_project
+        run: make clone-pdk
+      - name: Setup environment variables for magic
+        run: |
+          echo "PDK_ROOT=$(pwd)/example_project/gf180mcu_pdk" >> $GITHUB_ENV
+          echo "PDK=gf180mcuD" >> $GITHUB_ENV
+      - name: Generate views
+        working-directory: ./pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3
+        run: make views
+      - name: Upload SCL artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: views
+          path: pdk/*
+  characterize_ff:
+    needs: [views]
+    runs-on: ubuntu-latest
+    name: Characterize at the fast corner
+    steps:
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+      - name: Install required packages
+        run: |
+          sudo apt-get update && sudo apt-get install ngspice
+          pip3 install git+https://codeberg.org/TholinVali/lctime
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build_magic
+      - name: Clone PDK
+        working-directory: ./example_project
+        run: make clone-pdk
+      - name: Setup environment variables for magic
+        run: |
+          echo "PDK_ROOT=$(pwd)/example_project/gf180mcu_pdk" >> $GITHUB_ENV
+          echo "PDK=gf180mcuD" >> $GITHUB_ENV
+      - name: Characterize
+        working-directory: ./pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3
+        run: make characterize_ff
+      - name: Upload lib artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: lib-ff
+          path: pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/gf180mcu_as_sc_mcu7t3v3__ff_n40C_3v60.lib
+  characterize_tt:
+    needs: [views]
+    runs-on: ubuntu-latest
+    name: Characterize at the typical corner
+    steps:
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+      - name: Install required packages
+        run: |
+          sudo apt-get update && sudo apt-get install ngspice
+          pip3 install git+https://codeberg.org/TholinVali/lctime
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build_magic
+      - name: Clone PDK
+        working-directory: ./example_project
+        run: make clone-pdk
+      - name: Setup environment variables for magic
+        run: |
+          echo "PDK_ROOT=$(pwd)/example_project/gf180mcu_pdk" >> $GITHUB_ENV
+          echo "PDK=gf180mcuD" >> $GITHUB_ENV
+      - name: Characterize
+        working-directory: ./pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3
+        run: make characterize_tt
+      - name: Upload lib artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: lib-tt
+          path: pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/gf180mcu_as_sc_mcu7t3v3__tt_025C_3v30.lib
+  characterize_ss:
+    needs: [views]
+    runs-on: ubuntu-latest
+    name: Characterize at the slow corner
+    steps:
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+      - name: Install required packages
+        run: |
+          sudo apt-get update && sudo apt-get install ngspice
+          pip3 install git+https://codeberg.org/TholinVali/lctime
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build_magic
+      - name: Clone PDK
+        working-directory: ./example_project
+        run: make clone-pdk
+      - name: Setup environment variables for magic
+        run: |
+          echo "PDK_ROOT=$(pwd)/example_project/gf180mcu_pdk" >> $GITHUB_ENV
+          echo "PDK=gf180mcuD" >> $GITHUB_ENV
+      - name: Characterize
+        working-directory: ./pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3
+        run: make characterize_ss
+      - name: Upload lib artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: lib-ss
+          path: pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/gf180mcu_as_sc_mcu7t3v3__ss_125C_3v00.lib
+  final_out:
+    needs: [characterize_tt, characterize_ff, characterize_ss]
+    runs-on: ubuntu-latest
+    name: Generate final output
+    steps:
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+      - uses: actions/checkout@v6
+      - name: Create output directory
+        run: mkdir scl
+      - uses: actions/download-artifact@v8
+        with:
+          name: views
+          path: scl
+      - name: Remove old lib files
+        run: rm -rf scl/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/*
+      - uses: actions/download-artifact@v8
+        with:
+          name: lib-tt
+          path: scl/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/
+      - uses: actions/download-artifact@v8
+        with:
+          name: lib-ss
+          path: scl/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/
+      - uses: actions/download-artifact@v8
+        with:
+          name: lib-ff
+          path: scl/libs.ref/gf180mcu_as_sc_mcu7t3v3/lib/
+      - name: Remove unneeded files
+        working-directory: ./scl/libs.ref/gf180mcu_as_sc_mcu7t3v3
+        run: rm automated.magicrc *.sh *.py *.java Makefile
+      - name: Upload final build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: scl-release
+          path: scl/*
