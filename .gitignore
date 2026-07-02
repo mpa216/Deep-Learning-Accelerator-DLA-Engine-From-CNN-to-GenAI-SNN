@@ -21,5 +21,5 @@ CLAUDE.md
 # Nested PDK git clone (separate repo, ~1.2GB, not part of this project's history)
 stage2_padring/gf180mcu/
 
-# Local-only Claude Code settings
-.claude/settings.local.json
+# Claude Code settings (local only, not part of project history)
+.claude/
