@@ -6,7 +6,13 @@
 // - Exposes C matrix elements through a read address/data interface.
 module dla_engine_top #(
     parameter N         = 4,
-    parameter K         = 4,
+    // K=256 matches the deepest contraction in the G300 GAN (layers 2 and 4 both take a
+    // 256-wide input) so a single `start` computes a full dot product natively -- no
+    // external K-tiling/accumulation needed. The A/B SRAM macros are already 256-deep
+    // (dla_a/b_buffer_bank hardcode SRAM_ADDR_W=8), so this uses existing macro capacity,
+    // not new ones. 2026-07-02: was K=4 through the first 3.3V signoff (as3v3_d61); that
+    // build could not run the real GAN workload in one `start` (see CLAUDE.md).
+    parameter K         = 256,
     parameter DATA_W    = 8,
     parameter ACC_W     = 24,
     parameter AB_ADDR_W = (N*K <= 1) ? 1 : $clog2(N*K),

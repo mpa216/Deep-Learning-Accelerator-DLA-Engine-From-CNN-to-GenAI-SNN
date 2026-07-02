@@ -1,0 +1,4 @@
+# low power flow (power domain isolation)
+sky130_fd_sc_hd__lpflow_*
+# probe
+sky130_fd_sc_hd__probe*

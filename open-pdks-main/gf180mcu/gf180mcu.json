@@ -1,0 +1,117 @@
+{
+#define DESCRIPTION Global Foundries 0.18um MCU CMOS, 2fF MiM + 1k high sheet rho poly
+#ifdef METALS3
+#define OPTION1 + 3 metal layer backend stack
+#elseif defined (METALS4)
+#define OPTION1 + 4 metal layer backend stack
+#elseif defined (METALS5)
+#define OPTION1 + 5 metal layer backend stack
+#elseif defined (METALS6)
+#define OPTION1 + 6 metal layer backend stack
+#else
+#define OPTION1 + 2 metal layer backend stack
+#endif
+#ifdef THICKMET3P0
+#define OPTION2 + 3um thick top metal
+#elseif defined (THICKMET1P1)
+#define OPTION2 + 1.1um thick top metal
+#elseif defined (THICKMET0P9)
+#define OPTION2 + 0.9um thick top metal
+#else
+#define OPTION2 + 0.6um thick top metal
+#endif
+#ifdef MIM
+#define OPTION3 + 2fF/um^2 MiM caps
+#else
+#define OPTION3
+#endif (MIM)
+#ifdef HRES1K
+#define OPTION4 + 1k high sheet rho poly
+#else
+#define OPTION4
+#endif (HRES1K)
+#ifdef REDISTRIBUTION
+#define OPTION5 + redistribution layer
+#else
+#define OPTION5
+#endif (REDISTRIBUTION)
+    "foundry": "GF",
+    "foundry-name": "Global Foundries",
+    "node": "TECHNAME",
+    "feature-size": "180nm",
+    "status": "active",
+    "description": "DESCRIPTION OPTION1 OPTION2 OPTION3 OPTION4 OPTION5",
+    "options": [
+#ifdef THICKMET3P0
+        "THICKMET",
+#endif
+#ifdef MIM
+#undef MIM
+        "MIM_2P0",
+#endif
+#ifdef HRES1K
+        "HIRES_POLY_1K",
+#endif
+#ifdef METALS3
+        "METAL3"
+#elseif defined (METALS4)
+        "METAL4"
+#elseif defined (METALS5)
+        "METAL5"
+#elseif defined (METALS6)
+        "METAL6"
+#endif
+    ],
+    "stdcells": {
+        "gf180mcu_fd_sc_mcu9t5v0": "FD_SC_MCU9T5V0_COMMIT",
+        "gf180mcu_fd_sc_mcu7t5v0": "FD_SC_MCU7T5V0_COMMIT",
+        "gf180mcu_osu_sc_gf12t3v3": "OSU_SC_COMMIT",
+        "gf180mcu_osu_sc_gf9t3v3": "OSU_SC_COMMIT",
+        "gf180mcu_as_sc_mcu7t3v3": "AS_SC_MCU7T3V3_COMMIT"
+    },
+    "iocells": {
+        "gf180mcu_fd_io": "FD_IO_COMMIT",
+        "gf180mcu_ocd_io": "OCD_IO_COMMIT"
+    },
+    "primitive": {
+        "gf180mcu_fd_pr": "FD_PR_COMMIT"
+    },
+    "verification": {
+        "gf180mcu_fd_pv": "FD_PV_COMMIT",
+        "gf180mcu_ws_klayout": "WS_KLAYOUT_COMMIT"
+    },
+    "memory": {
+        "gf180mcu_fd_ip_sram": "FD_IP_SRAM_COMMIT",
+        "gf180mcu_ocd_ip_sram": "OCD_IP_SRAM_COMMIT",
+        "gf180mcu_re_efuse": "RE_EFUSE_COMMIT"
+    },
+    "other": {
+        "gf180mcu_ocd_alpha": "OCD_ALPHA_COMMIT"
+    },
+    "build": {
+        "open_pdks": "OPEN_PDKS_VERSION",
+        "magic": "MAGIC_VERSION"
+    },
+    "commit": {
+        "open_pdks": "OPEN_PDKS_COMMIT",
+        "magic": "MAGIC_COMMIT"
+    },
+    "reference": {
+        "open_pdks": "02c781174f49a976796a6719c7d20888b58343d3",
+        "magic": "e7b8e89d2fe4eed1d51ee6a66a3d818c2095b024",
+        "gf180mcu_pdk": "a897aa30369d3bcec87d9d50ce9b01f320f854ef",
+        "gf180mcu_fd_pr": "a0c31bd71c2084a5283204dc4e80f1f901d2d5d0",
+        "gf180mcu_fd_pv": "440fe9b995a3967fcdc3e694d8d61a83dd218b59",
+        "gf180mcu_fd_io": "40cdef6d74ec5c9b7d596c147df94c98366afc5b",
+        "gf180mcu_fd_sc_mcu7t5v0": "0ef8889a8df0acf959683fbe73013f342a2206a2",
+        "gf180mcu_fd_sc_mcu9t5v0": "02b7af3f8d88c0b014d9af3db6a17f02aa983305",
+        "gf180mcu_fd_ip_sram": "b98653230f05be17867c70870ecacfa6a6bca7ff",
+        "gf180mcu_as_sc_mcu7t3v3": "c4648471c023690478e97c998edb6f2eac673298",
+        "gf180mcu_re_efuse": "9941e38e7670a12f3f3a744bea4f9d2f04e6a669",
+        "gf180mcu_ocd_io": "6e0e354a78793339a4a004a6d9c08990d0eee3e4",
+        "gf180mcu_ocd_alpha": "0597ebd5732987dbcd149e02c38525c1c5bf2a58",
+        "gf180mcu_ocd_ip_sram": "efdbf734d806c2ac3b858d281a5b832625a8e928",
+        "gf180mcu_osu_sc_gf12t3v3": "8a2f58f283a2eaa725314c9e1b8b7d1d343f23a3",
+        "gf180mcu_osu_sc_gf9t3v3": "8a2f58f283a2eaa725314c9e1b8b7d1d343f23a3"
+    }
+}

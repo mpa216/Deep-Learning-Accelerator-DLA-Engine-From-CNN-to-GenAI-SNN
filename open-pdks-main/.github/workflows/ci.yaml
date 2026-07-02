@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        pdk-family: [sky130, gf180mcu]
+    name: Build ${{ matrix.pdk-family }} with Ciel | (Nix/x86_64-linux)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup_nix
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Magic, Ciel, GHR
+        run: |
+          nix profile install github:fossi-foundation/nix-eda#{ghr,magic-vlsi} github:fossi-foundation/ciel
+          ciel --version
+          magic --version
+          ghr --version
+      - name: Set PDK root
+        run: |
+          mkdir -p root
+          echo "PDK_ROOT=$PWD/root" >> $GITHUB_ENV
+      - name: Build with Ciel
+        run: |
+          ciel build --include-libraries all --pdk-family ${{ matrix.pdk-family }} --use-repo-at open_pdks=$PWD --jobs $(nproc) --clear-build-artifacts $(git rev-parse HEAD)
+      - name: Push if New Tag
+        if: github.ref_type == 'tag'
+        run: |
+          if [ "${{ secrets.BOT_GH_TOKEN }}" != "" ]; then
+            ciel push --github-token ${{ secrets.BOT_GH_TOKEN }} --pdk-family ${{ matrix.pdk-family }} --repository ciel-releases $(git rev-parse HEAD)
+          else
+            echo "Secret BOT_GH_TOKEN unset. Not attempting to push."
+          fi

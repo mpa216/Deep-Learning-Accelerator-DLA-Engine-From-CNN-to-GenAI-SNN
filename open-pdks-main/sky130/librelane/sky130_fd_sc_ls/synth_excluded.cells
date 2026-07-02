@@ -1,0 +1,19 @@
+# clock buffers/invertes (used in CTS)
+sky130_fd_sc_ls__clkbuf*
+sky130_fd_sc_ls__clkinv*
+# clock delay buffers/inverters (used in PNR timing)
+sky130_fd_sc_ls__clkdlyinv*
+# signal delay buffers (used in PNR timing)
+sky130_fd_sc_ls__dlygate*
+sky130_fd_sc_ls__dlymetal*
+# tap/decap/fill (PNR)
+sky130_fd_sc_ls__tap*
+sky130_fd_sc_ls__decap*
+sky130_fd_sc_ls__decaphe*
+sky130_fd_sc_ls__decaphetap*
+sky130_fd_sc_ls__fill*
+sky130_fd_sc_ls__fill_diode*
+# diode
+sky130_fd_sc_ls__diode*
+# scan chain cells (used for DFT)
+sky130_fd_sc_ls__s*

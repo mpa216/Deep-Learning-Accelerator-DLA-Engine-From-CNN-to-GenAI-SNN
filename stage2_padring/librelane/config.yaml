@@ -1,0 +1,299 @@
+meta:
+  version: 3
+  flow: Chip
+  substituting_steps:
+
+    # Disable KLayout DRC
+    #KLayout.DRC: null
+    #Checker.KLayoutDRC: null
+
+    # Disable KLayout antenna check
+    #KLayout.Antenna: null
+    #Checker.KLayoutAntenna: null
+
+    # Disable KLayout density check
+    #KLayout.Density: null
+    #Checker.KLayoutDensity: null
+
+    # Save time during development
+    # Enable for sign-off
+    #OpenROAD.IRDropReport: null
+    #Magic.DRC: null
+    #Checker.MagicDRC: null
+    #KLayout.XOR: null
+    #Netgen.LVS: null
+    #Checker.LVS: null
+
+DESIGN_NAME: chip_top
+VERILOG_FILES:
+- dir::../src/chip_top.sv
+- dir::../src/chip_core.sv
+- dir::../../rtl/dla_serial_bridge.v
+
+# APIC_A CHANGE: dla_engine_top.nl.v (registered under MACROS below) directly
+# instantiates the raw SRAM IP (gf180mcu_ocd_ip_sram__sram256x8m8wm1) --
+# unlike our own top-level dla_engine_top flow, this flow never re-synthesizes
+# dla_engine_top from RTL, so rtl/gf180_sram_1rw_256x8.v (whose `ifdef
+# SYNTHESIS blackbox declaration normally resolves that reference) is never
+# otherwise in scope. Not registered as a MACROS entry with its own
+# gds/lef/instances -- its geometry is already physically embedded inside
+# dla_engine_top's own hardened GDS (placed as one macro below), so a second,
+# independent placement would be wrong. EXTRA_VERILOG_MODELS supplies just
+# the blackbox module declaration for lint/elaboration to resolve against.
+#
+# The three gf180mcu_*_io__blackbox.v files below are also added here: they
+# ARE registered as PAD_VERILOG_MODELS (auto-derived from PAD_CELL_LIBRARY),
+# but that variable is only consumed by the later OpenROAD I/O-placement
+# script (scripts/openroad/common/io.tcl), not by Yosys.Synthesis -- confirmed
+# by Yosys erroring on gf180mcu_fd_io__asig_5p0 ("not part of the design")
+# even though its module declaration is present in gf180mcu_fd_io__blackbox.v.
+# EXTRA_VERILOG_MODELS is the one variable both Verilator.Lint and
+# Yosys.Synthesis actually read (confirmed directly in each step's source).
+EXTRA_VERILOG_MODELS:
+- dir::../../rtl/gf180_sram_1rw_256x8.v
+- dir::../gf180mcu/gf180mcuD/libs.ref/gf180mcu_fd_io/verilog/gf180mcu_fd_io__blackbox.v
+- dir::../gf180mcu/gf180mcuD/libs.ref/gf180mcu_fd_io/verilog/gf180mcu_ef_io__blackbox.v
+- dir::../gf180mcu/gf180mcuD/libs.ref/gf180mcu_fd_io/verilog/gf180mcu_ws_io__blackbox.v
+
+# APIC_A CHANGE: adds SYNTHESIS (needed so the file above takes its `ifdef
+# SYNTHESIS blackbox branch, not the behavioral-sim branch -- see CLAUDE.md
+# "SRAM behavioral vs. synthesis switching") alongside the reference slot's
+# own SLOT_WORKSHOP (slots/slot_workshop.yaml -- must be preserved, it drives
+# slot_defines.svh's NUM_INPUT_PADS/etc. that chip_top.sv's parameters read).
+VERILOG_DEFINES: ["SLOT_WORKSHOP", "SYNTHESIS"]
+
+# APIC_A CHANGE (2026-07-02): dla_engine_top is 3.3V (gf180mcu_as_sc_mcu7t3v3).
+# Keeping chip_core.sv's own glue logic (dla_serial_bridge.v + pad wiring) on
+# the same 3.3V library so the whole core-side path is voltage-consistent.
+# The I/O pads themselves (src/chip_top.sv) are still the padring's original
+# single-voltage 5V gf180mcu_fd_io__*/gf180mcu_ws_io__dvdd/dvss cells -- a
+# dual-voltage gf180mcu_ocd_io swap was evaluated but deferred (no existing
+# LibreLane PDK integration for it; see src/chip_top.sv's note and CLAUDE.md
+# "Stage 2 padring"). So there's a known, documented mixed-voltage boundary
+# at the chip_core <-> pad interface for now -- this doesn't block DRC/LVS/STA
+# signoff (the digital flow doesn't model electrical voltage compatibility),
+# but real silicon would want that boundary resolved before tapeout.
+# Was unset (PDK default gf180mcu_fd_sc_mcu7t5v0, 5V) for the reference
+# workshop slot.
+STD_CELL_LIBRARY: gf180mcu_as_sc_mcu7t3v3
+
+# APIC_A CHANGE (2026-07-02): the dla_engine_top MACROS entry below points
+# `vh:` at the already-hardened dla_engine_top.nl.v (a gate-level netlist,
+# not a blackbox) -- it contains post-synthesis-only cells (antenna diodes
+# from RUN_HEURISTIC_DIODE_INSERTION, see CLAUDE.md "Antenna closure study")
+# that are deliberately excluded from synthesis (synth_exclude.cells) and so
+# have no role in ordinary RTL lint. Verilator.Lint defaults to NOT pulling
+# in PDK/library Verilog models (LINTER_INCLUDE_PDK_MODELS defaults False),
+# which is fine for pure RTL -- our own top-level dla_engine_top flow never
+# needed this, since its own lint runs before synthesis/diode-insertion even
+# happen. Here lint also has to resolve an already-final netlist, so it needs
+# the library's behavioral models (e.g. gf180mcu_as_sc_mcu7t3v3__diode_2,
+# confirmed present in gf180mcu_as_sc_mcu7t3v3.v) explicitly included.
+LINTER_INCLUDE_PDK_MODELS: true
+
+# APIC_A CHANGE: with PDK models included, every one of the netlist's ~8,900
+# antenna diodes (RUN_HEURISTIC_DIODE_INSERTION) triggers 4 PINMISSING
+# warnings (VPW/VNW/VDD/VSS) since diode power pins are deliberately left
+# unconnected in RTL -- physically connected later by the PDN, same
+# convention as bring-up note 1 for the raw SRAM macro's power pins. Not a
+# real defect (this macro's power connectivity already passed its own
+# DRC/LVS signoff); left enabled it produced a 100+MB, still-growing log of
+# nothing but this one warning repeated, so disabled explicitly rather than
+# waited out. Keeps LibreLane's own two defaults (DECLFILENAME, EOFNEWLINE).
+LINTER_DISABLE_WARNINGS:
+- DECLFILENAME
+- EOFNEWLINE
+- PINMISSING
+
+# Enable plugin for better SystemVerilog support
+# USE_SLANG: True
+# SLANG_ARGUMENTS: ['--keep-hierarchy']
+
+# Slightly smaller file sizes
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+
+# SDC files
+PNR_SDC_FILE: dir::chip_top.sdc
+SIGNOFF_SDC_FILE: dir::chip_top.sdc
+FALLBACK_SDC: dir::chip_top.sdc
+
+# Power / ground nets
+VDD_NETS:
+- VDD
+GND_NETS:
+- VSS
+
+# We need to add gf180mcu_fd_io__bi_24t
+# due to the unused Y output for output only pads
+IGNORE_DISCONNECTED_MODULES:
+- gf180mcu_fd_io__bi_24t
+- gf180mcu_ws_ip__id
+- gf180mcu_ws_ip__logo
+
+# Clock
+CLOCK_PORT: clk_PAD
+CLOCK_NET: clk_pad/Y
+CLOCK_PERIOD: 40 # 25 MHz
+
+# Fix hold violations
+PL_RESIZER_HOLD_SLACK_MARGIN: 0.35
+GRT_RESIZER_HOLD_SLACK_MARGIN: 0.3
+
+# Increase for more logic
+# on your die
+PL_TARGET_DENSITY_PCT: 35
+GRT_ALLOW_CONGESTION: true
+
+# Fix antenna violations after DRT
+DRT_ANTENNA_REPAIR_ITERS: 10
+DRT_ANTENNA_REPAIR_MARGIN: 10 # %
+
+# PDN - Straps
+PDN_VWIDTH: 5
+PDN_HWIDTH: 5
+PDN_VSPACING: 1
+PDN_HSPACING: 1
+PDN_VPITCH: 75
+PDN_HPITCH: 75
+
+# PDN - Core ring
+PDN_CORE_RING: True
+# Maximum metal width without slotting: 30um
+PDN_CORE_RING_VWIDTH: 25
+PDN_CORE_RING_HWIDTH: 25
+PDN_CORE_RING_CONNECT_TO_PADS: True
+PDN_ENABLE_PINS: False
+PDN_CORE_VERTICAL_LAYER: Metal2
+PDN_CORE_HORIZONTAL_LAYER: Metal3
+
+# Due to OpenROAD bug
+# https://github.com/The-OpenROAD-Project/OpenROAD/issues/8229
+#PL_TIME_DRIVEN: False
+#PL_ROUTABILITY_DRIVEN: False
+
+# Do not error on magic DRC violations
+# Note: Passing magic DRC is not required for the submission.
+# However, it is recommended to fix or carefully review all violations.
+ERROR_ON_MAGIC_DRC: False
+
+# Prevent false positive DRC errors in I/O cells
+MAGIC_GDS_FLATGLOB:
+# For contacts
+- "*_CDNS_*"
+# Foundry provided SRAMs
+- "*$$*"
+- "M1_N*"
+- "M1_P*"
+- "M2_M1*"
+- "M3_M2*"
+- "nmos_5p0*"
+- "nmos_1p2*"
+- "pmos_5p0*"
+- "pmos_1p2*"
+- "via1_*"
+- "ypass_gate*"
+- "G_ring_*"
+# These additional cells must be flattened to get rid of 3.3V devices
+# (DUALGATE drawn into high-level cells)
+- "dcap_103*"
+- "din_*"
+- "mux821_*"
+- "rdummy_*"
+- "pmoscap_*"
+- "xdec_*"
+- "ypredec*"
+- "xpredec*"
+- "prexdec_*"
+- "xdec8_*"
+- "xdec16_*"
+- "xdec32_*"
+- "sa_*"
+
+# Since we cannot meet the minimum density limit on Metal2,
+# ignore active metal on previous and subsequent layers
+# (DM.5_DM.7 and DM.4_DM.6). Dummy metal is moved to active
+# metal during the precheck.
+KLAYOUT_FILLER_OPTIONS:
+  Metal2_ignore_active: true
+
+# Because we have multiple power pads for one power domain
+MAGIC_EXT_UNIQUE: notopports
+
+MACROS:
+  gf180mcu_ws_ip__id:
+    gds:
+      - dir::../ip/gf180mcu_ws_ip__id/gds/gf180mcu_ws_ip__id.gds
+    lef:
+      - dir::../ip/gf180mcu_ws_ip__id/lef/gf180mcu_ws_ip__id.lef
+    vh:
+      - dir::../ip/gf180mcu_ws_ip__id/vh/gf180mcu_ws_ip__id.v
+    lib:
+      "*":
+        - dir::../ip/gf180mcu_ws_ip__id/lib/gf180mcu_ws_ip__id.lib
+    instances:
+      chip_id:
+        location: [26, 26]
+        orientation: N
+
+  gf180mcu_ws_ip__logo:
+    gds:
+      - dir::../ip/gf180mcu_ws_ip__logo/gds/gf180mcu_ws_ip__logo.gds
+    lef:
+      - dir::../ip/gf180mcu_ws_ip__logo/lef/gf180mcu_ws_ip__logo.lef
+    vh:
+      - dir::../ip/gf180mcu_ws_ip__logo/vh/gf180mcu_ws_ip__logo.v
+    lib:
+      "*":
+        - dir::../ip/gf180mcu_ws_ip__logo/lib/gf180mcu_ws_ip__logo.lib
+    instances:
+      wafer_space_logo:
+        location: ["expr::$DIE_AREA[2] + -169.25", "expr::$DIE_AREA[3] + -169.25"]
+        orientation: N
+
+  # APIC_A CHANGE (2026-07-02): the hardened dla_engine_top macro (Stage 1,
+  # 3.3V/K=256/40ns/density-63, antenna-0 -- see CLAUDE.md). Views point
+  # directly at that run's own final/ output, not a fresh --save-views-to
+  # copy: the path shape already matches (gds/, lef/, nl/, lib/<corner>/)
+  # verified against this same as3v3_k256_d63 run.
+  #
+  # Placement: [500, 500], footprint 1600x1500 -> spans to [2100, 2000].
+  # Core area is [442,442]-[2493,2493] (2051x2051); chip_id [26,26] and
+  # wafer_space_logo (die-corner expr) both sit OUTSIDE the core area, in
+  # the padring/sealring margin, so there's no corner conflict -- this
+  # placement just needs ~390-490 um of margin on all four core sides for
+  # routing/PDN, unverified until the actual PnR run (next session).
+  dla_engine_top:
+    gds:
+      - dir::../../librelane/runs/as3v3_k256_d63/final/gds/dla_engine_top.gds
+    lef:
+      - dir::../../librelane/runs/as3v3_k256_d63/final/lef/dla_engine_top.lef
+    vh:
+      - dir::../../librelane/runs/as3v3_k256_d63/final/nl/dla_engine_top.nl.v
+    lib:
+      "*_tt_025C_3v30":
+        - dir::../../librelane/runs/as3v3_k256_d63/final/lib/nom_tt_025C_3v30/dla_engine_top__nom_tt_025C_3v30.lib
+      "*_ss_125C_3v00":
+        - dir::../../librelane/runs/as3v3_k256_d63/final/lib/nom_ss_125C_3v00/dla_engine_top__nom_ss_125C_3v00.lib
+      "*_ff_n40C_3v60":
+        - dir::../../librelane/runs/as3v3_k256_d63/final/lib/nom_ff_n40C_3v60/dla_engine_top__nom_ff_n40C_3v60.lib
+    instances:
+      i_chip_core.u_dla:
+        location: [500, 500]
+        orientation: N
+
+# APIC_A CHANGE: PDN_MACRO_CONNECTIONS entry for dla_engine_top. Its own
+# hardened power pins are on Metal4 (checked directly in its LEF), matching
+# this padring's default macro-grid connect (Metal4<->Metal5, from the PDK's
+# own FP_PDN_VERTICAL/HORIZONTAL_LAYER defaults) -- unlike the raw SRAM macro
+# inside dla_engine_top (Metal3), no custom pdn_cfg.tcl fix is needed here.
+PDN_MACRO_CONNECTIONS:
+- ".*u_dla.* VDD VSS VDD VSS"
+
+# Halo size around macros while cutting rows.
+# Workaround for: https://github.com/The-OpenROAD-Project/OpenROAD/issues/8868
+FP_MACRO_HORIZONTAL_HALO: 10
+FP_MACRO_VERTICAL_HALO: 10
+PDN_HORIZONTAL_HALO: 5
+PDN_VERTICAL_HALO: 5
+
+PDN_CFG: dir::pdn_cfg.tcl

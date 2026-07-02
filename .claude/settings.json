@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone https://github.com/wafer-space/gf180mcu.git*)"
+    ]
+  }
+}

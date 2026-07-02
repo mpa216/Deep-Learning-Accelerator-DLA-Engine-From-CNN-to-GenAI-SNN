@@ -1,0 +1,176 @@
+# Process node
+set ::env(PROCESS) 130
+set ::env(DEF_UNITS_PER_MICRON) 1000
+
+if { ![info exist ::env(STD_CELL_LIBRARY)] } {
+	set ::env(STD_CELL_LIBRARY) sky130_fd_sc_hd
+}
+
+if { ![info exist ::env(PAD_CELL_LIBRARY)] } {
+	set ::env(PAD_CELL_LIBRARY) sky130_ef_io
+}
+
+# PDK power/ground pins
+set ::env(VDD_PIN) "VPWR"
+set ::env(GND_PIN) "VGND"
+
+# SCL power/ground pins
+set ::env(SCL_POWER_PINS) "VPWR VPB"
+set ::env(SCL_GROUND_PINS) "VGND VNB"
+
+
+# Technology LEF
+set ::env(TECH_LEFS) [dict create]
+dict set ::env(TECH_LEFS) "nom_*" [glob "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/techlef/$::env(STD_CELL_LIBRARY)__nom.tlef"]
+dict set ::env(TECH_LEFS) "min_*" [glob "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/techlef/$::env(STD_CELL_LIBRARY)__min.tlef"]
+dict set ::env(TECH_LEFS) "max_*" [glob "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/techlef/$::env(STD_CELL_LIBRARY)__max.tlef"]
+
+# Corners
+set ::env(STA_CORNERS) "\
+    nom_tt_025C_1v80 \
+    nom_ss_100C_1v60 \
+    nom_ff_n40C_1v95 \
+    min_tt_025C_1v80 \
+    min_ss_100C_1v60 \
+    min_ff_n40C_1v95 \
+    max_tt_025C_1v80 \
+    max_ss_100C_1v60 \
+    max_ff_n40C_1v95 \
+"
+
+# Default corner
+set ::env(DEFAULT_CORNER) "nom_tt_025C_1v80"
+
+# Check all timing corners
+set ::env(TIMING_VIOLATION_CORNERS) "*"
+
+# Liberty
+set ::env(CELL_LIBS) [dict create]
+dict set ::env(CELL_LIBS) "*_tt_025C_1v80" "\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/lib/$::env(STD_CELL_LIBRARY)__tt_025C_1v80.lib\
+"
+dict set ::env(CELL_LIBS) "*_ff_n40C_1v95" "\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/lib/$::env(STD_CELL_LIBRARY)__ff_n40C_1v95.lib\
+"
+dict set ::env(CELL_LIBS) "*_ss_100C_1v60" "\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/lib/$::env(STD_CELL_LIBRARY)__ss_100C_1v60.lib\
+"
+
+# Standard cells
+set ::env(CELL_LEFS) [glob "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/lef/*.lef"]
+set ::env(CELL_GDS) [glob "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/gds/*.gds"]
+set ::env(CELL_VERILOG_MODELS) "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/verilog/$::env(STD_CELL_LIBRARY).v"
+set ::env(CELL_SPICE_MODELS) [glob "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/spice/*.spice"]
+set ::env(CELL_CDLS) "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/cdl/$::env(STD_CELL_LIBRARY).cdl"
+
+# Pad cells
+set ::env(PAD_LEFS) "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/lef/sky130_ef_io.lef"
+set ::env(PAD_GDS) "\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/gds/sky130_fd_io.gds\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/gds/sky130_ef_io.gds\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/gds/sky130_ef_io__analog.gds\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/gds/sky130_ef_io__connect_vcchib_vccd_and_vswitch_vddio_slice_20um.gds\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/gds/sky130_ef_io__connect_vdda_vddio_and_vssa_vssio_slice_20um.gds\
+"
+set ::env(PAD_VERILOG_MODELS) "\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/verilog/sky130_fd_io__blackbox_pp.v\
+    $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/verilog/sky130_ef_io.v\
+"
+#set ::env(PAD_SPICE_MODELS) "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/spice/$::env(PAD_CELL_LIBRARY).spice"
+set ::env(PAD_CDLS) "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_io/cdl/sky130_ef_io.cdl"
+
+# magic setup
+set ::env(MAGICRC) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/magic/TECHNAME.magicrc"
+set ::env(MAGIC_TECH) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/magic/TECHNAME.tech"
+
+# Klayout setup
+set ::env(KLAYOUT_TECH) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/klayout/tech/$::env(PDK).lyt"
+set ::env(KLAYOUT_PROPERTIES) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/klayout/tech/$::env(PDK).lyp"
+set ::env(KLAYOUT_DEF_LAYER_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/klayout/tech/$::env(PDK).map"
+set ::env(KLAYOUT_XOR_IGNORE_LAYERS) "81/14"
+set ::env(KLAYOUT_DRC_OPTIONS) [dict create beol 1 feol 1 floating_metal 0 seal 1 offgrid 1] ; # based on KLAYOUT_DRC_RUNSET options
+set ::env(KLAYOUT_DRC_RUNSET) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/klayout/drc/$::env(PDK)_mr.drc"
+#set ::env(KLAYOUT_DRC_TECH) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/klayout/$::env(PDK).lydrc"
+
+# netgen setup
+set ::env(NETGEN_SETUP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/netgen/TECHNAME_setup.tcl"
+# CTS luts
+
+set ::env(FP_TAPCELL_DIST) 13
+
+# Tracks info
+set ::env(FP_TRACKS_INFO) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/tracks.info"
+
+# Latch mapping
+set ::env(SYNTH_LATCH_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/latch_map.v"
+
+# Tri-state buffer mapping
+set ::env(SYNTH_TRISTATE_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/tribuff_map.v"
+
+# Full adder mapping
+set ::env(SYNTH_FA_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/fa_map.v"
+
+# Ripple carry adder mapping
+set ::env(SYNTH_RCA_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/rca_map.v"
+
+# Carry select adder mapping
+set ::env(SYNTH_CSA_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/csa_map.v"
+
+# List of cells excluded from synthesis
+set ::env(SYNTH_EXCLUDED_CELL_FILE) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/synth_excluded.cells"
+
+# List of cells excluded from PNR steps (undesirable or bad)
+set ::env(PNR_EXCLUDED_CELL_FILE) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/pnr_excluded.cells"
+
+# Open-RCX Rules File
+set ::env(RCX_RULESETS) [dict create]
+dict set ::env(RCX_RULESETS) "nom_*" "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).nom.spef_extractor"
+dict set ::env(RCX_RULESETS) "min_*" "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).min.spef_extractor"
+dict set ::env(RCX_RULESETS) "max_*" "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).max.spef_extractor"
+if { [file exists "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).nom.calibre"] } {
+	dict set ::env(RCX_RULESETS) "nom_*" "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).nom.calibre"
+	dict set ::env(RCX_RULESETS) "min_*" "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).min.calibre"
+	dict set ::env(RCX_RULESETS) "max_*" "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/rules.openrcx.$::env(PDK).max.calibre"
+}
+
+# Extra PDN configs
+set ::env(PDN_RAIL_LAYER) met1
+set ::env(PDN_VERTICAL_LAYER) met4
+set ::env(PDN_HORIZONTAL_LAYER) met5
+set ::env(PDN_RAIL_OFFSET) 0
+set ::env(PDN_VWIDTH) 1.6
+set ::env(PDN_HWIDTH) 1.6
+set ::env(PDN_VSPACING) 1.7
+set ::env(PDN_HSPACING) 1.7
+set ::env(PDN_VOFFSET) 16.32
+set ::env(PDN_VPITCH) 153.6
+set ::env(PDN_HOFFSET) 16.65
+set ::env(PDN_HPITCH) 153.18
+
+# Core Ring PDN defaults
+set ::env(PDN_CORE_RING_VWIDTH) 1.6
+set ::env(PDN_CORE_RING_HWIDTH) 1.6
+set ::env(PDN_CORE_RING_VSPACING) 1.7
+set ::env(PDN_CORE_RING_HSPACING) 1.7
+set ::env(PDN_CORE_RING_VOFFSET) 6
+set ::env(PDN_CORE_RING_HOFFSET) 6
+
+# Used for parasitics estimation, IR drop analysis, etc
+set ::env(SIGNAL_WIRE_RC_LAYERS) "met2"
+set ::env(CLOCK_WIRE_RC_LAYER) "met5"
+
+# I/O Layer info
+set ::env(IO_PIN_H_LAYER) "met3"
+set ::env(IO_PIN_V_LAYER) "met2"
+
+# Routing Layer Info
+set ::env(GRT_LAYER_ADJUSTMENTS) "0.99,0,0,0,0,0"
+
+set ::env(RT_MIN_LAYER) "met1"
+set ::env(RT_MAX_LAYER) "met5"
+
+set ::env(RT_CLOCK_MIN_LAYER) "met3"
+
+# CVC
+set ::env(CVC_SCRIPTS_DIR) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/cvc"
+

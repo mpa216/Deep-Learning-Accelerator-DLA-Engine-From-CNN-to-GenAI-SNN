@@ -69,15 +69,28 @@ VERILOG_DEFINES:
   - SYNTHESIS
 
 CLOCK_PORT: clk
-# 75 ns (~13.3 MHz). The 3-macro variant closed at 60 ns (critical path was
-# the PE-array MAC), but making the A/B buffers SRAM puts the SRAM READ on the
-# combinational MAC path. At the slow corner (ss_125C; the SRAM is a 3V IP) the
-# read alone is ~13 ns clk-to-Q, and the high-fanout SRAM data nets now span
-# the spread-out macros through a long repair-buffer chain -- so the
-# SRAM->mux->PE-MAC->accumulator path overran 60 ns by ~5.9 ns (setup WS
-# -5.93). 75 ns closes all 9 corners with ~9 ns margin. To recover throughput,
-# register/pipeline the SRAM read or cluster the A/B macros nearer the PE array.
-CLOCK_PERIOD: 75
+# 75 ns was tuned for the 5V std cells (see the 5V-era history below) and
+# closed all 9 corners with ~9 ns margin there. On the first 3.3V run
+# (as3v3_full, 2026-07-01, otherwise-untuned: same 75 ns / density 56 /
+# 4x3 grid) the AS 3.3V cells turned out much faster: worst-corner setup WS
+# was +44.40 ns (nom_ss_125C_3v00) instead of +7.58 ns -- i.e. the actual
+# critical path is only ~75-44.4 = ~30.6 ns, so 75 ns was leaving a huge
+# amount of throughput on the table. Tightening to 40 ns (~25 MHz, vs the old
+# ~13.3 MHz) targets that same ~9 ns margin convention (30.6 + 9 ~= 40) as a
+# reasoned first guess, not a blind retry. NOTE: hold slack does NOT scale
+# with clock period (was already thin at +0.12 ns worst-corner on the 75 ns
+# 3.3V run) -- watch it doesn't go negative here, since CTS/placement can
+# shift skew slightly when the flow is retargeted at a tighter constraint.
+#
+# --- 5V-era history (kept for context; no longer the active tuning) ---
+# The 3-macro variant closed at 60 ns (critical path was the PE-array MAC),
+# but making the A/B buffers SRAM puts the SRAM READ on the combinational MAC
+# path. At the slow corner (ss_125C; the SRAM is a 3V IP) the read alone is
+# ~13 ns clk-to-Q, and the high-fanout SRAM data nets now span the spread-out
+# macros through a long repair-buffer chain -- so the SRAM->mux->PE-MAC->
+# accumulator path overran 60 ns by ~5.9 ns (setup WS -5.93). 75 ns closed
+# all 9 corners with ~9 ns margin on the 5V cells.
+CLOCK_PERIOD: 40
 
 # --- Pre-hardened GF180 SRAM macro (foundry views) -------------------
 # Registered via the unified MACROS variable (the modern LibreLane way;
@@ -163,13 +176,33 @@ MACROS:
 # 1600x1500 core ~2.40M um2 -> ~47% util (proven band; denser failed [DPL-0036]).
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1600, 1500]
-PL_TARGET_DENSITY_PCT: 56   # 55->56 achieves LITERAL-0 antennas (run tag
-# b_density56, 2026-06-14). A 1-point density nudge re-rolled global placement just
-# enough that the lone Metal2 side-area net (_03807_ at density 55) routes clean:
-# antenna 0 net/0 pin, DRC=0, LVS=0, setup +7.58ns / hold +0.22ns (all 9 corners),
-# 11 macros. CONFIRMED reproducible: re-ran config.yaml 2026-06-14 (tag confirm_d56)
-# -> BIT-IDENTICAL GDS (18,985,336 B), antenna 0 again. Deterministic, not a fluke.
-# Found by a placement-perturbation sweep after in-DRT jumper repair (dead) and
+PL_TARGET_DENSITY_PCT: 63   # 3.3V/K=256 antenna-0 WIN (run as3v3_k256_d63, 2026-07-02):
+# LITERAL 0 net/0 pin, DRC=0, LVS=0, setup +15.12ns / hold +0.150ns (all 9 corners, best
+# hold margin of the whole K=256 series), 11 macros. RTL was re-synthesized with
+# dla_engine_top.v's default K: 4->256 (see that file) so a single `start` natively covers
+# the GAN's 256-deep contraction layers -- this changed the netlist enough (93,724 vs
+# 94,493 instances; wider K_IDX_W/ADDR_W throughout) that density=61 (the K=4 antenna-0
+# winner) did NOT carry over, so antenna-0 was re-chased on the new netlist with the same
+# density lever, budget-capped at 5 total LibreLane runs: 61->2 nets (as3v3_k256_v1),
+# 60->5 nets/worse (as3v3_k256_d60), 62->1 net (as3v3_k256_d62), 63->0 (this run, iter 4 of
+# 5, one under budget). Confirmed reproducible: re-ran config.yaml (tag as3v3_k256_confirm)
+# -> DEF (actual placement+routing database) byte-identical, same verification standard as
+# the earlier K=4 (b_density56/confirm_d56, as3v3_d61/as3v3_confirm_d61) wins.
+#
+# --- K=4 sweep history (netlist since re-synthesized to K=256; kept for context) ---
+# 55->4 nets (worse), 56->2 nets (baseline, as3v3_clk40), 57->1 net (1.04x, as3v3_d57),
+# 58->1 net (1.11x, as3v3_d58), 59->1 net (1.08x, as3v3_d59) -- 57-59 plateaued at exactly
+# 1 (different net each time, confirming density re-rolls placement rather than converging
+# smoothly), then 61 (skipping past 60) hit literal 0 (as3v3_d61), confirmed reproducible
+# via byte-identical DEF against a re-run (as3v3_confirm_d61).
+#
+# --- 5V-era history (kept for context; density value no longer tied to this) ---
+# 55->56 achieved LITERAL-0 antennas on the 5V cells (run tag b_density56, 2026-06-14).
+# A 1-point density nudge re-rolled global placement just enough that the lone Metal2
+# side-area net (_03807_ at density 55) routed clean: antenna 0 net/0 pin, DRC=0, LVS=0,
+# setup +7.58ns / hold +0.22ns (all 9 corners), 11 macros. CONFIRMED reproducible: re-ran
+# config.yaml 2026-06-14 (tag confirm_d56) -> BIT-IDENTICAL GDS (18,985,336 B), antenna 0
+# again. Found by a placement-perturbation sweep after in-DRT jumper repair (dead) and
 # diode/floorplan levers all failed; the macro-swap re-rolls landed 3/5/3, density56 hit 0.
 
 # MAX_FANOUT_CONSTRAINT left at the DEFAULT (10) = the signed-off grid baseline.

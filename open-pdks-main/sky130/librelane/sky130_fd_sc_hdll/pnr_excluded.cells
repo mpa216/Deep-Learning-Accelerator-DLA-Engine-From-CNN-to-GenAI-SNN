@@ -1,0 +1,5 @@
+# low power flow (power domain isolation)
+sky130_fd_sc_hdll__inputiso*
+sky130_fd_sc_hdll__isobufsrc*
+# probe
+sky130_fd_sc_hdll__probe*

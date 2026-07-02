@@ -15,6 +15,16 @@ dict set ::env(LIB) *_ss_125C_3v00 "\
 set ::env(STA_CORNERS) "nom_tt_025C_3v30 min_tt_025C_3v30 max_tt_025C_3v30 nom_ff_n40C_3v60 min_ff_n40C_3v60 max_ff_n40C_3v60 nom_ss_125C_3v00 min_ss_125C_3v00 max_ss_125C_3v00"
 set ::env(DEFAULT_CORNER) "nom_tt_025C_3v30"
 
+# Required by LibreLane >=3.0; not auto-derived here because this config sets
+# ::env(LIB) directly instead of the legacy LIB_SYNTH/LIB_SLOWEST/LIB_FASTEST
+# vars that the PDK compat shim keys its auto-derivation off of.
+set ::env(TIMING_VIOLATION_CORNERS) "*tt*"
+
+# The PDK-wide libs.tech/librelane/config.tcl hardcodes the exclusion-list
+# filename as no_synth.cells for every std cell library, but this lib ships
+# the same content as synth_exclude.cells -- override explicitly.
+set ::env(SYNTH_EXCLUDED_CELL_FILE) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/synth_exclude.cells"
+
 # MUX2 mapping
 set ::env(SYNTH_MUX_MAP) "$::env(PDK_ROOT)/$::env(PDK)/libs.tech/librelane/$::env(STD_CELL_LIBRARY)/mux2_map.v"
 

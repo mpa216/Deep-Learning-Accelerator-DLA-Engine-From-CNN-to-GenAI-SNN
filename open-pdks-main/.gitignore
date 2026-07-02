@@ -1,0 +1,27 @@
+*.swp
+*.vvp
+*.vcd
+*.raw
+__pycache__
+**/.DS_Store
+**/.Trashes/
+
+# script artifacts
+*_install.log
+*_migrate.log
+make.log
+
+# autotools artifacts
+**/Makefile
+**/Makefile.am
+
+# exceptions for travisCI
+!.travisCI/Makefile
+
+# local install cache
+/sources
+
+# can use this file to aid in local installations
+reconfigure.sh
+reconfigure_sky.sh
+reconfigure_gf.sh
