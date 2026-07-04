@@ -15,6 +15,10 @@ stage2_padring/gf180mcu_stage2_final/
 *.tar
 *.tar.gz
 
+# Local-only chipathon trackers (removed from the remote 2026-07-05, keep local copies untracked)
+GAN_CHIP_Pin_Requirement.xlsx
+GAN_CHIP_Progress_Tracker_1.xlsx
+
 # Common junk
 __pycache__/
 *.log
