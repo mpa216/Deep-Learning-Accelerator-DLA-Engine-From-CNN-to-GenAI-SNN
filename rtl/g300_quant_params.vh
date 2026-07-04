@@ -2,9 +2,9 @@
 // int8 requantization constants for the DLA-backed G300 pipeline.
 localparam integer G300_REQ_SHIFT    = 16;
 localparam integer G300_REQ_SHIFT_L4 = 16;
-localparam signed [63:0] G300_MA0 = 64'sd393;
-localparam signed [63:0] G300_MB0 = 64'sd28372;
-localparam signed [63:0] G300_MA2 = 64'sd2260;
-localparam signed [63:0] G300_MB2 = 64'sd22077;
-localparam signed [63:0] G300_MW4 = 64'sd52749829;
+localparam signed [63:0] G300_MA0 = 64'sd1173;
+localparam signed [63:0] G300_MB0 = 64'sd93743;
+localparam signed [63:0] G300_MA2 = 64'sd1102;
+localparam signed [63:0] G300_MB2 = 64'sd35580;
+localparam signed [63:0] G300_MW4 = 64'sd32731085;
 localparam signed [63:0] G300_MB4 = 64'sd437099189;

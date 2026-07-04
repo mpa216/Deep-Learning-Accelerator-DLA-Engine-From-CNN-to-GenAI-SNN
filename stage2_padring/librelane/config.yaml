@@ -265,8 +265,18 @@ MACROS:
   dla_engine_top:
     gds:
       - dir::../../librelane/runs/as3v3_k256_d63/final/gds/dla_engine_top.gds
+    # APIC_A CHANGE (2026-07-03): pdngen-safe copy of the run's LEF, generated
+    # by scripts/fix_stage2_macro_lef.py (the golden run's own LEF is untouched).
+    # 4 short mid-macro VDD/VSS pin segments (Stage-1 PDN strap fragments that
+    # sit ENTIRELY inside the macro's bloated Metal5 OBS band) are re-classified
+    # from PIN to Metal4 OBS: OpenROAD's InstanceGrid::checkSetup() hard-errors
+    # ([PDN-0006]) if ANY single pin rect is completely covered by an
+    # obstruction above the top pin layer. The 23 remaining full-height Metal4
+    # stripes reach the Metal5-clear bands at the macro top/bottom, which is
+    # where the grid actually connects. Electrically identical, strictly more
+    # conservative for routing.
     lef:
-      - dir::../../librelane/runs/as3v3_k256_d63/final/lef/dla_engine_top.lef
+      - dir::../dla_engine_top.stage2pdn.lef
     vh:
       - dir::../../librelane/runs/as3v3_k256_d63/final/nl/dla_engine_top.nl.v
     lib:

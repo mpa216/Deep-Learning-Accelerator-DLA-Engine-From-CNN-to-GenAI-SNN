@@ -1,3 +1,11 @@
+/// sta-blackbox
+// ^ Directive for LibreLane's OpenSTA steps (Stage 2 padring flow, where this
+//   file is registered under EXTRA_VERILOG_MODELS): OpenSTA's Verilog reader
+//   only parses gate-level netlists and errors on the RTL below, so this file
+//   is skipped and its modules blackboxed for STA. Timing is unaffected: at
+//   chip level the hardened dla_engine_top macro's own .lib provides it (and
+//   in the Stage 1 flow the SRAM's .lib is registered via MACROS directly).
+//   Every other consumer (Icarus, Verilator, Yosys) sees this as a comment.
 `timescale 1ns / 1ps
 
 // Wrapper around GF180MCU 256x8 1RW SRAM macro.

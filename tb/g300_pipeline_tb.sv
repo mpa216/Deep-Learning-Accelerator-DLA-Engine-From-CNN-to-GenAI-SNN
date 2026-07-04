@@ -49,8 +49,13 @@ module g300_pipeline_tb;
         end
 
         $readmemh(expected_memh, expected);
+`ifndef GLS
+        // Full-hierarchy dump is fine for RTL, but under GLS (the ~93k-instance
+        // hardened netlist) it would produce a multi-GB VCD and slow the sim
+        // by an order of magnitude -- skip dumping entirely in that mode.
         $dumpfile(vcd_path);
         $dumpvars(0, g300_pipeline_tb);
+`endif
     end
 
     initial begin

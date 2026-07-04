@@ -90,6 +90,12 @@ module g300_pipeline_top #(
     wire [C_ADDR_W-1:0]       dla_rd_addr;
     wire                      dla_rd_en;
 
+`ifdef GLS
+    // Post-layout GLS: the hardened netlist (as3v3_k256_d63) carries no
+    // parameters -- its baked configuration (N=4/K=256/DATA_W=8/ACC_W=24/
+    // SRAM_LATENCY=1) is exactly what this module assumes, so instantiate bare.
+    dla_engine_top u_dla (
+`else
     dla_engine_top #(
         .N(N),
         .K(K),
@@ -97,6 +103,7 @@ module g300_pipeline_top #(
         .ACC_W(ACC_W),
         .SRAM_LATENCY(1)
     ) u_dla (
+`endif
         .clk(clk),
         .rst_n(rst_n),
         .start(dla_start),

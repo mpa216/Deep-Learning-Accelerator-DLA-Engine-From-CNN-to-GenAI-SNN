@@ -12,6 +12,32 @@ dict set ::env(LIB) *_ss_125C_3v00 "\
     $::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/lib/$::env(STD_CELL_LIBRARY)__ss_125C_3v00.lib\
 "
 
+# APIC_A CHANGE (2026-07-03, ported to this source 2026-07-04): also register
+# the gf180mcu_fd_io pad-cell liberty at each corner. Without it, OpenSTA links
+# pad instances (in_c/in_s/bi_24t/...) as empty blackboxes, so a padring SDC's
+# clock source pin (`clk_pad/Y`) does not exist in STA's view -> create_clock
+# silently degrades to a VIRTUAL clock -> every register path is unconstrained
+# and setup/hold "worst slack" reads +infinity at all 9 corners (hollow
+# signoff; observed on the first full Stage 2 run, `Virtual: yes` in
+# clock.rpt). The fd_io lib family is characterized per CORE-side VDD voltage;
+# the 3v30/2v97/3v63 sets match this 3.3V core rail (2v97/3v63 are the
+# nominal-±10% corners; our corner names say 3v00/3v60 -- nearest-available
+# characterization, same convention as the SRAM corner matching). Every cell
+# in these libs carries dont_use:true, so synthesis/resizer optimization
+# cannot pick pad cells. Guarded per-file because some PDK distributions ship
+# without the fd_io liberty; pad timing only matters for padring (Stage 2)
+# designs, so skipping silently is correct for core-only flows.
+foreach {_apic_corner _apic_fdlib} {
+    *_tt_025C_3v30 gf180mcu_fd_io__tt_025C_3v30.lib
+    *_ff_n40C_3v60 gf180mcu_fd_io__ff_n40C_3v63.lib
+    *_ss_125C_3v00 gf180mcu_fd_io__ss_125C_2v97.lib
+} {
+    set _apic_path "$::env(PDK_ROOT)/$::env(PDK)/libs.ref/gf180mcu_fd_io/lib/$_apic_fdlib"
+    if {[file exists $_apic_path]} {
+        dict set ::env(LIB) $_apic_corner "[dict get $::env(LIB) $_apic_corner] $_apic_path"
+    }
+}
+
 set ::env(STA_CORNERS) "nom_tt_025C_3v30 min_tt_025C_3v30 max_tt_025C_3v30 nom_ff_n40C_3v60 min_ff_n40C_3v60 max_ff_n40C_3v60 nom_ss_125C_3v00 min_ss_125C_3v00 max_ss_125C_3v00"
 set ::env(DEFAULT_CORNER) "nom_tt_025C_3v30"
 

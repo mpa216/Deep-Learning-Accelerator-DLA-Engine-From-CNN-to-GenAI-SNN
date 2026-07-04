@@ -2,6 +2,8 @@
 librelane/runs/
 librelane_rtl2gds_gf180/runs/
 **/runs/
+stage2_padring/librelane/runs_archive/
+stage2_padring/gf180mcu_stage2_final/
 
 # Simulation waveforms & dumps
 *.vcd
@@ -23,3 +25,8 @@ stage2_padring/gf180mcu/
 
 # Claude Code settings (local only, not part of project history)
 .claude/
+
+# Gate-level-sim compiled binaries embed the whole routed netlist (~73 MB each,
+# over GitHub limits) and recompile in seconds -- see "Post-layout simulation" in docs
+sim/results/dla_engine_top_gls_tb.vvp
+sim/results/g300_pipeline_gls_tb.vvp

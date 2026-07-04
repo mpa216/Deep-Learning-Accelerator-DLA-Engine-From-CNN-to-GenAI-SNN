@@ -50,6 +50,19 @@ set_input_delay -min 0 -clock $clocks $clk_core_inout_ports
 set_input_delay -max $input_delay_value -clock $clocks $clk_core_inout_ports
 set_output_delay $output_delay_value -clock $clocks $clk_core_inout_ports
 
+# APIC_A CHANGE (2026-07-04): the serial-link inputs SCLK/MOSI/CS_N
+# (bidir_PAD[0]/[1]/[2], see rtl/chip_core_dla.sv pin allocation) are
+# ASYNCHRONOUS to clk by design: dla_serial_bridge double-flop-synchronizes
+# all three and edge-detects SCLK internally (SCLK is data, not a clock),
+# and the link protocol already requires SCLK to be several clk periods
+# slow. The blanket set_input_delay above therefore imposed a hold check
+# with no physical meaning, reported as the design's only hold violations
+# (-0.55 ns worst, 3 endpoints = exactly these synchronizer front flops;
+# metastability at the front flop is expected and absorbed by the second
+# flop). False-path them, both directions of the check (setup+hold), which
+# is the standard constraint for synchronizer-guarded async inputs.
+set_false_path -from [get_ports {bidir_PAD[0] bidir_PAD[1] bidir_PAD[2]}]
+
 # Input-only pads
 set clk_core_input_ports [get_ports { 
     rst_n_PAD
