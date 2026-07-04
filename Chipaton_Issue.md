@@ -10,9 +10,6 @@
 > 40 ns across all 9 corners. Remaining items are logistics, not design — see *Remaining Work*.
 
 ### Team members
-1. Mahardhika Putra Adipratama
-2. Fairuz Aquilla Rahagi
-
 | Discord | Github | Affiliation (experience) | Role |
 |---|---|---|---|
 | mpa216 | @mpa216 | Institut Teknologi Bandung (undergrad) | Team lead |
@@ -77,29 +74,27 @@ engine by the host, which streams weights/activations over the serial link;
   (`2v97/3v30/3v63` liberty corners, which is exactly what chip STA uses). Do **not** bias at
   5 V.
 
-> Longer explanations, concerns, etc. should be on the `README.md` of your repo.
+> Longer explanations, concerns, etc. should be on the `README.md` of the repo.
 
 ### Remaining Work
 The design itself is done; what remains is logistics, documentation, and post-silicon test:
 
 **A. Tapeout logistics**
+
 1. **Confirm with wafer.space/chipathon that the workshop slot's supply may be biased at
    3.3 V** (the chip is single-supply 3.3 V by construction; 5 V would over-volt the core and
-   SRAM) — and **which package** the slot returns in (packaged part strongly preferred over
-   bare die).
+   SRAM) — and **which package** the slot returns in.
 2. Deliver the final GDS (`chip_top.gds`) per the submission process.
 
-**B. Documentation**
-3. Demo video (8–10 min, 16:9, MP4 H.264) — not started.
-4. Refresh the schematic/layout review decks with the final `chip_top` layout (current decks
-   still show the interim macro-less core) — recommended.
 
-**C. Post-silicon bring-up (plan ready, executes when silicon returns)**
-5. Documented test plan: 3.3 V current-limited power-on (expect ≪ 1 mA) → reset/status check →
+**B. Post-silicon bring-up**
+
+3. Documented test plan: 3.3 V current-limited power-on (expect ≪ 1 mA) → reset/status check →
    zero-fill A/B + START + all-zero C readback → replay the unit-test golden vectors
    (−34139 / 59877 / −36996 / −23021) → stream the full GAN schedule from a PC-orchestrated
    bit-banging 3.3 V MCU (Raspberry Pi Pico / ESP32) and render an MNIST digit. Reference host
    behavior is the chip-level testbench, portable 1:1.
+
 
 **Deferred (post-chipathon):** a true dual-rail variant (5 V pad ring / 3.3 V core) — the only
 candidate pad library (`gf180mcu_ocd_io`) is not silicon-ready per its own TODO (liberty data
@@ -110,7 +105,6 @@ copied from the unmodified cells, ESD clamp rework pending).
 91-pad budget (60 analog + 20 bidir + 4 DVDD + 4 DVSS + clk + rst_n + 1 slot spare input; the
 74 unused pads are tied off / left unconnected). Full per-pad map in the
 [Pin Requirement](https://docs.google.com/spreadsheets/d/18P1uWpSGcc6VaS-xk1MqfWM4oBnjx-UG/edit?usp=sharing&ouid=117903760759888865104&rtpof=true&sd=true)
-file (Chipathon template format, updated 2026-07-04).
 
 ### Links
 - [Github repo(s)](https://github.com/mpa216/Deep-Learning-Accelerator-DLA-Engine-From-CNN-to-GenAI-SNN)
