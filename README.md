@@ -1,8 +1,11 @@
 # An Open-Source Deep Learning Accelerator for GANs on GF180MCU
 
 **APIC_A** — a tapeout-oriented Deep Learning Accelerator (DLA) that runs a quantized
-MNIST GAN generator on a structural systolic array, backed by physical GlobalFoundries
-180nm (GF180MCU) SRAM macros.
+MNIST GAN generator on a structural INT8 matrix engine, backed by physical GlobalFoundries
+180nm (GF180MCU) SRAM macros. The design is **fully implemented and signed off**: a hardened
+`dla_engine_top` macro (Stage 1) integrated into a padring chip (`chip_top`, Stage 2), both
+with DRC = 0, LVS = 0, antenna = 0, and 9-corner timing closure at 25 MHz on a single 3.3 V
+supply.
 
 ---
 
@@ -11,15 +14,18 @@ MNIST GAN generator on a structural systolic array, backed by physical GlobalFou
 This project presents the hardware–software co-design of a Deep Learning Accelerator (DLA)
 for Generative Adversarial Networks (GANs), targeting the GF180MCU process node. A
 software-defined 3-layer multi-layer perceptron (MLP) GAN generator (`64 → 256 → 256 → 784`,
-ReLU/ReLU/Tanh) is mapped onto a structural, synthesizable `N×N` systolic Processing-Element
-(PE) array. The flow covers **8-bit (INT8) model quantization**, Verilog memory generation,
-**physical SRAM-macro integration** (`gf180mcu_ocd_ip_sram__sram256x8m8wm1`), and bit-true
-RTL verification against Python golden references. The original scalar, simulation-only MLP
-(`g300_pipeline_top`) was re-architected so its dense layers execute as **INT8 matrix-vector
-tiles on the DLA**, demonstrating an end-to-end "checkpoint → quantized weights → accelerator →
-generated image" pipeline that is ready for OpenLane physical synthesis.
+ReLU/ReLU/Tanh) is mapped onto a structural, synthesizable `N×N` Processing-Element (PE)
+array. The flow covers **8-bit (INT8) model quantization**, Verilog memory generation,
+**physical SRAM-macro integration** (`gf180mcu_ocd_ip_sram__sram256x8m8wm1`), bit-true
+RTL verification against Python golden references, **post-layout gate-level simulation**,
+and a complete **RTL→GDS physical flow (LibreLane)** through two stages: the hardened
+accelerator macro and a full padring chip with a 4-wire serial host interface. The original
+scalar, simulation-only MLP (`g300_pipeline_top`) was re-architected so its dense layers
+execute as **INT8 matrix-vector tiles on the DLA**, demonstrating an end-to-end
+"checkpoint → quantized weights → accelerator → generated image" pipeline all the way to a
+signed-off chip GDS.
 
-**Keywords:** Deep Learning Accelerator, GF180, SRAM Macro, Systolic Array, INT8 Quantization, GAN, ASIC.
+**Keywords:** Deep Learning Accelerator, GF180, SRAM Macro, INT8 Quantization, GAN, ASIC, LibreLane.
 
 ---
 
@@ -34,7 +40,7 @@ computed the 3-layer MLP with sequential `for` loops over flip-flop arrays loade
 simulation-only `$readmemh`. That model is functionally correct but **unsynthesizable** —
 the flip-flop count and routing congestion are impractical.
 
-To reach tapeout readiness on GF180MCU, the compute was moved into a structural accelerator
+To reach tapeout on GF180MCU, the compute was moved into a structural accelerator
 (`dla_engine_top.v`). The behavioral pipeline now serves as a **verification orchestrator**:
 it streams INT8 weight/activation tiles into the DLA's public read/write ports and applies
 bias, requantization, and activations around it — proving the accelerator reproduces the GAN
@@ -45,12 +51,17 @@ output bit-for-bit.
 ## II. Hardware Architecture
 
 The synthesizable core is `dla_engine_top`, a GEMM engine computing
-`C[N×N] = A[N×K] × B[K×N]` (default `N=4`), with INT8 operands and a 24-bit accumulator.
+`C[N×N] = A[N×K] × B[K×N]` (hardened at `N=4, K=256`), with INT8 operands and a 24-bit
+accumulator.
 
-**A. Systolic PE Array (`dla_pe_array.v`, `dla_pe.v`)**
-An `N×N` grid of Processing Elements. Each PE multiplies one 8-bit `A` element by one 8-bit
-`B` element and accumulates into a 24-bit register, sign-extended from the 16-bit product.
-The grid processes a whole `N×N` output block in parallel over `K` cycles.
+**A. PE Array (`dla_pe_array.v`, `dla_pe.v`)**
+An `N×N` grid of Processing Elements in an **output-stationary broadcast** organization:
+every PE in row *i* receives the same `A` byte and every PE in column *j* the same `B` byte
+each cycle, and each PE MACs into its private 24-bit accumulator (sign-extended from the
+16-bit product) over `K` cycles. There are no PE-to-PE connections — the grid shares the
+systolic array's topology and output-stationary schedule, but uses row/column broadcast
+rather than wave pipelining, the right trade-off at `N=4`. `K` is a *temporal* accumulation
+depth: the same 16 PEs sweep 256 MAC terms, matching the GAN's 256-wide layers.
 
 **B. Controller FSM (`dla_controller.v`)**
 A 4-state machine sequencing one matrix-multiply transaction:
@@ -67,14 +78,23 @@ IDLE ──(start)──► CLEAR ──► COMPUTE ──(K cycles)──► DO
 
 **C. SRAM-Backed Buffers (`dla_{a,b,c}_buffer_bank.v`)**
 To avoid unsynthesizable standard-cell `reg` memories, the A/B/C buffers instantiate physical
-256×8 1RW foundry SRAM macros via a wrapper (`gf180_sram_1rw_256x8.v` → `dla_sram_1rw_256x8`)
+256×8 1RW foundry SRAM macros via a wrapper (`gf180_sram_1rw_256x8.v`)
 that abstracts the active-low macro signals (`CEN`, `GWEN`, `WEN`) into a simple active-high
-synchronous port. The A buffer uses one macro per row, B one per column, and C uses 3×8-bit
-macros to store the 24-bit accumulators. SRAM reads are registered (1-cycle latency), so the
-top level uses `SRAM_LATENCY=1` to align PE enable/status.
+synchronous port. **11 macros total**: A uses one macro per row (4), B one per column (4),
+and C three macros as **byte planes** of the 24-bit accumulator word (all sharing one address
+bus). SRAM reads are registered (1-cycle latency), so the top level uses `SRAM_LATENCY=1` to
+align PE enable/status.
 
 The wrapper switches model by `` `ifdef SYNTHESIS ``: a behavioral model for simulation, and a
 `(* blackbox *)` stub for synthesis (real `.lef`/`.gds`/`.lib` linked at place-and-route).
+
+**D. Serial Host Bridge (`dla_serial_bridge.v`, `chip_core_dla.sv`) — Stage 2**
+The DLA's parallel interface is 53 signal bits, but the chip's padring budget is 20
+general-purpose digital pads. A 4-wire synchronous serial link (`SCLK`/`MOSI`/`MISO`/`CS_N`,
+double-flop synchronized — SCLK is edge-detected data, not a clock domain) carries framed
+commands: `WRITE_A`/`WRITE_B` (2-bit cmd + 10-bit addr + 8-bit data), `START`, and `READ_C`
+(24-bit result shifted out on MISO). `busy`/`done`/`wb_done` are additionally wired straight
+to pads for scope-visible bring-up.
 
 ---
 
@@ -89,8 +109,9 @@ Quantized tensors are exported as `.memh` (hex) and `.vh` (Verilog header) so ex
 parameters load into RTL testbenches and, ultimately, the physical SRAMs.
 
 **C. Verification Vectors**
-`gen_d3004_vectors.py` and `gen_g3005_vectors.py` produce INT8 inputs and compute the expected
-24-bit accumulator in Python — the "golden" answers the RTL testbenches check against.
+`gen_d3004_vectors.py`, `gen_d3004n4_vectors.py`, and `gen_g3005_vectors.py` produce INT8
+inputs and compute the expected 24-bit accumulators in Python — the "golden" answers the RTL
+testbenches check against.
 
 ---
 
@@ -110,6 +131,9 @@ native **4×4** DLA (`N=4, K=256`):
 Because the GAN is **unconditional** (64-D noise input, no class label), the generated digit is
 chosen by selecting a latent vector (`--seed N`), not by requesting a class.
 
+The on-chip SRAM holds one tile at a time (A 1 KiB + B 1 KiB + C 768 B = 2,816 B); the GAN's
+~280 KB of INT8 weights stream through these tiles from the host.
+
 ---
 
 ## V. Repository Structure
@@ -117,25 +141,35 @@ chosen by selecting a latent vector (`--seed N`), not by requesting a class.
 ```
 APIC_A/
 ├── rtl/                            # Synthesizable DLA + sim-only orchestrator
-│   ├── dla_engine_top.v            #   GEMM engine top  ◄── TAPEOUT TARGET
+│   ├── dla_engine_top.v            #   GEMM engine top (N=4, K=256)  ◄── STAGE-1 TAPEOUT TARGET
 │   ├── dla_controller.v            #   4-state controller FSM
 │   ├── dla_pe.v / dla_pe_array.v   #   PE and N×N grid
-│   ├── dla_{a,b,c}_buffer_bank.v   #   SRAM-backed A/B/C buffers
-│   ├── gf180_sram_1rw_256x8.v      #   SRAM macro wrapper (+behavioral/blackbox)
+│   ├── dla_{a,b,c}_buffer_bank.v   #   SRAM-backed A/B/C buffers (11 macros)
+│   ├── gf180_sram_1rw_256x8.v      #   SRAM macro wrapper (behavioral/blackbox)
+│   ├── dla_serial_bridge.v         #   4-wire serial host link (Stage 2)
+│   ├── chip_core_dla.sv            #   Padring core: bridge + hardened DLA (Stage 2)
 │   ├── g300_pipeline_top.v         #   GAN orchestrator (sim-only verification harness)
 │   └── g300_quant_params.vh        #   GENERATED requant constants
+├── librelane/                      # Stage-1 physical flow (config.yaml, PDN script)
+├── stage2_padring/                 # Stage-2 padring chip (chip_top, slots, SDC, flow)
+├── 3V3lib/                         # Third-party 3.3 V std-cell lib (AS 7t3v3) + fixes
 ├── gf180mcu_ocd_ip_sram__sram256x8m8wm1/   # Hardened SRAM IP (GDS/LEF/LIB/SPICE/specs)
+├── APIC_Paper/                     # APSIPA 2026 paper sources
 ├── weights/mnist_gan_mlp/          # Original PyTorch checkpoints
 ├── weights_vh/mnist_gan_mlp/       # INT8 .memh/.vh + weights_manifest.json
-├── scripts/                        # Quantization, vector gen, image render
+├── scripts/                        # Quantization, vector gen, image render, LEF patch
 │   ├── ckpt_to_vh.py               #   FP32 ckpt → INT8 memh/vh
 │   ├── gen_g300_int8_assets.py     #   GAN requant constants + golden image
-│   ├── gen_{d3004,g3005}_vectors.py#   DLA unit-test vectors
+│   ├── gen_{d3004,d3004n4,g3005}_vectors.py  # DLA unit-test vectors
+│   ├── fix_stage2_macro_lef.py     #   Stage-2 macro LEF PIN→OBS patch
 │   └── memh_to_jpeg.ps1            #   Render a .memh as a JPEG
 ├── tb/                             # Testbenches + golden data
-│   ├── dla_engine_top_d3004_tb.sv  #   DLA matrix-multiply vector test
+│   ├── dla_engine_top_d3004_tb.sv  #   DLA matrix-multiply test (N=1/K=256 sub-config)
+│   ├── dla_engine_top_d3004n4_tb.sv#   Same at N=4/K=256 — the real hardened config
 │   ├── dla_engine_top_g3005_tb.sv  #   DLA single GAN-layer-row test
-│   └── g300_pipeline_tb.sv         #   Full GAN-on-DLA image test
+│   ├── g300_pipeline_tb.sv         #   Full GAN-on-DLA image test
+│   ├── chip_core_dla_tb.sv         #   Serial bridge → DLA, driven pad-level (Stage 2)
+│   └── dla_engine_top_gls_tb.sv    #   Post-layout gate-level sim of the routed netlist
 └── sim/run_iverilog.ps1            # Compile + run all testbenches (Icarus Verilog)
 ```
 
@@ -144,13 +178,18 @@ APIC_A/
 ## VI. Getting Started
 
 **Prerequisites:** Icarus Verilog (`iverilog`/`vvp`) and Python 3. Optional: `gtkwave` (waveforms),
-PyTorch (only for re-running `ckpt_to_vh.py`).
+PyTorch (only for re-running `ckpt_to_vh.py`). The physical flow additionally uses the
+chipathon Docker image (`hpretl/iic-osic-tools:chipathon26`) for LibreLane.
 
 ### Run all testbenches
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\sim\run_iverilog.ps1
 ```
-Expected: `PASS` for `dla_engine_top_d3004_tb`, `dla_engine_top_g3005_tb`, and `g300_pipeline_tb`.
+Or compile any single testbench directly (Linux/macOS/Windows alike):
+```bash
+iverilog -g2012 -I rtl -s <tb_top> -o sim/results/<tb>.vvp rtl/*.v tb/<tb>.sv
+vvp sim/results/<tb>.vvp    # run from the repo root ($readmemh paths are relative)
+```
 
 ### Generate a specific digit through the DLA
 The GAN is unconditional — pick a seed whose saved latent yields the digit you want:
@@ -185,40 +224,65 @@ produces the same image; only changing the latent changes the digit.
 
 ## VII. Verification
 
-All three simulations are **test-vector** sims: a Python script computes a golden result, the
-testbench drives the DUT with the saved input and asserts equality.
+All simulations are **test-vector** sims: a Python script computes a golden result, the
+testbench drives the DUT with the saved input and asserts equality. Verification spans three
+levels — RTL, pad-level (through the serial bridge), and post-layout gate-level.
 
-| Testbench | Generator | Checks |
-|-----------|-----------|--------|
-| `dla_engine_top_d3004_tb` | `gen_d3004_vectors.py` | One DLA matrix-multiply vs golden |
-| `dla_engine_top_g3005_tb` | `gen_g3005_vectors.py` | One INT8 GAN layer-row vs golden |
-| `g300_pipeline_tb` | `gen_g300_int8_assets.py` | Full 784-pixel GAN image vs golden |
+| Testbench | Level | Checks |
+|-----------|-------|--------|
+| `dla_engine_top_d3004_tb` | RTL | One DLA matrix-multiply vs golden (N=1/K=256 sub-config) |
+| `dla_engine_top_d3004n4_tb` | RTL | Same at N=4/K=256 — all 4 SRAM lanes in parallel, the hardened config |
+| `dla_engine_top_g3005_tb` | RTL | One INT8 GAN layer-row vs golden |
+| `g300_pipeline_tb` | RTL | Full 784-pixel GAN image vs golden, bit-exact |
+| `chip_core_dla_tb` | Pad-level | Serial bridge → DLA, driven exactly like an external host |
+| `dla_engine_top_gls_tb` | **Gate-level** | The routed Stage-1 netlist (`.nl.v`) vs the d3004n4 goldens |
 
-A passing vector sim proves correctness *for those vectors*; broaden coverage (more seeds,
-random latents) for higher confidence.
+The full-GAN pipeline test also runs at gate level (`-DGLS`), rendering the complete MNIST
+digit through the routed netlist bit-exactly (~11 min) — closing the gap between "RTL matches
+golden" and "what was taped out matches golden". (Timing signoff is 9-corner STA; the GLS is
+functional/zero-delay, as the cell models carry no `specify` blocks.)
 
 ---
 
-## VIII. Physical Implementation (Roadmap)
+## VIII. Physical Implementation (Signed Off)
 
-Intended flow: **OpenLane** for standard-cell synthesis and place-and-route on GF180MCU.
+Two-stage **LibreLane** flow on GF180MCU (`gf180mcuD`), single-supply **3.3 V** throughout:
+logic in the third-party `gf180mcu_as_sc_mcu7t3v3` standard cells, SRAM already a 3.3 V IP,
+and the foundry I/O pads operated at their 3.3 V-characterized corner.
 
-- **SRAM blackboxing** — synthesize with `-DSYNTHESIS` so the macro stays a black box; OpenLane
-  reserves area and uses the foundry Liberty timing (`…__tt_025C_3v30.lib`) for the critical path.
-- **Power hookup** — `VDD`/`VSS` are decoupled from the logical datapath in the wrapper; physical
-  power is injected via the PDN (e.g. `FP_PDN_MACRO_HOOKS`) rather than tied to logic constants.
-- **Macro views** — `.lef`/`.gds`/`.lib` are provided in `gf180mcu_ocd_ip_sram__sram256x8m8wm1/`.
+**Stage 1 — hardened accelerator macro** (`librelane/`, run `as3v3_k256_d63`):
+`dla_engine_top` at N=4/**K=256**, 11 SRAM macros, ~94k instances, 1600×1500 µm.
+Magic DRC = 0, LVS = 0, **antenna 0 nets / 0 pins** (found via a deterministic
+`PL_TARGET_DENSITY_PCT` sweep, reproduced byte-identically at the DEF level), 9-corner
+timing closure at **40 ns** (~25 MHz): setup +15.12 ns, hold +0.150 ns.
 
-**Tapeout boundary:** `dla_engine_top` + buffer banks + the SRAM macro are the synthesizable
-silicon target. `g300_pipeline_top`, the testbenches, and the Python scripts are the
-verification harness — they drive the DLA through its public interface and are **not** taped out.
+**Stage 2 — padring chip** (`stage2_padring/`, run `full_flow`): `chip_top` on the 2935×2935 µm
+workshop slot (60 analog + 20 bidir + power/clk/rst pads), integrating the hardened Stage-1
+macro + serial bridge. All 83 flow stages complete:
+
+| Metric | Value |
+|---|---|
+| Magic DRC / KLayout DRC | 0 / 0 |
+| Chip-level LVS (71,668 devices) | 0 errors |
+| Antenna | 0 nets / 0 pins |
+| Setup / hold ws (worst of 9 corners, 40 ns) | +21.67 ns / +0.329 ns |
+| Total power (tt) | 0.23 mW |
+
+Key flow techniques (documented in-repo): `-DSYNTHESIS` SRAM blackboxing with PDN-only power
+hookup, explicit `MACROS` placement, Metal3 PDN macro connects, pre-route heuristic diode
+insertion for antenna repair, per-corner pad liberty for non-vacuous chip STA, and false-path
+constraints on the synchronizer-guarded async serial inputs.
+
+**Post-silicon bring-up** targets a 3.3 V MCU (ESP32 / Pi Pico) bit-banging the 4-wire serial
+protocol: power-on current check → status pins after reset → zero-fill + null START → replay
+the d3004n4 golden vectors → stream the full GAN schedule and render a digit.
 
 ---
 
 ## IX. References
 - Pretrained checkpoints: https://github.com/csinva/gan-vae-pretrained-pytorch
 - GF180 SRAM macros: https://github.com/RTimothyEdwards/gf180mcu_ocd_ip_sram
-- GF180MCU PDK / OpenLane: open-source GlobalFoundries MPW shuttle programs.
+- GF180MCU PDK / LibreLane: open-source GlobalFoundries MPW shuttle programs.
 
 ## Acknowledgment
 The authors acknowledge the open-source EDA community and the GlobalFoundries open MPW/shuttle
