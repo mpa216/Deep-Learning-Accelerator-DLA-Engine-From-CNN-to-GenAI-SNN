@@ -367,6 +367,39 @@ module gan_engine_top_tb;
         $display("  output-quantiser clamps         = %0d", rv);
         $display("  verdict pad                     = %0b", verdict);
 
+        // Dump the whole metric register file as the chip reports it, so
+        // scripts/plot_gan_metrics.py --dump can graph REAL RTL output rather than
+        // the golden model.  Same format a bring-up host emits over the serial link.
+        f = $fopen("tb/data/gan_chip/gan_met_rtl.txt", "w");
+        $fwrite(f, "# metric registers read from gan_engine_top (RTL run)\n");
+        for (i = 0; i < 20; i = i + 1) begin
+            host_read(RSEL_MET, i[9:0], rv);
+            case (i)
+                0:  $fwrite(f, "STATUS %0d\n", rv);
+                1:  $fwrite(f, "Y_FAKE %0d\n", rv);
+                2:  $fwrite(f, "Y_REAL %0d\n", rv);
+                3:  $fwrite(f, "LOSS_G %0d\n", rv);
+                4:  $fwrite(f, "LOSS_D %0d\n", rv);
+                5:  $fwrite(f, "ACC_LOSS_G %0d\n", rv);
+                6:  $fwrite(f, "ACC_LOSS_D %0d\n", rv);
+                7:  $fwrite(f, "N_SAMPLES %0d\n", rv);
+                8:  $fwrite(f, "N_FOOLED %0d\n", rv);
+                9:  $fwrite(f, "N_REAL_OK %0d\n", rv);
+                10: $fwrite(f, "Y_FAKE_MIN %0d\n", rv);
+                11: $fwrite(f, "Y_FAKE_MAX %0d\n", rv);
+                12: $fwrite(f, "ACC_Y_FAKE %0d\n", rv);
+                13: $fwrite(f, "ACC_Y_REAL %0d\n", rv);
+                14: $fwrite(f, "INK %0d\n", rv);
+                15: $fwrite(f, "SAT_PRE %0d\n", rv);
+                16: $fwrite(f, "SAT_OUT %0d\n", rv);
+                17: $fwrite(f, "CYCLES %0d\n", rv);
+                18: $fwrite(f, "LOGIT %0d\n", rv);
+                default: $fwrite(f, "LAST_ACC %0d\n", rv);
+            endcase
+        end
+        $fclose(f);
+        $display("  metric dump -> tb/data/gan_chip/gan_met_rtl.txt");
+
         $display("");
         if (errors == 0) $display("PASS: chip output matches scripts/gan_golden.py exactly");
         else             $display("FAIL: %0d mismatches", errors);

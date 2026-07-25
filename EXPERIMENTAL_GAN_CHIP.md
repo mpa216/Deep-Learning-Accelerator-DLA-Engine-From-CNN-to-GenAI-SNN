@@ -208,12 +208,40 @@ iverilog -g2012 -I rtl -s chip_core_gan_tb -o sim/results/chip_core_gan_tb.vvp \
   rtl/gan_*.v rtl/dla_*.v rtl/gf180_sram_1rw_256x8.v rtl/chip_core_gan.sv tb/chip_core_gan_tb.sv
 vvp sim/results/chip_core_gan_tb.vvp
 
-# 5. loss graph + metrics report
+# 5. loss graph + metrics report + digit PNGs
+#    (run this one INSIDE the container -- it has matplotlib and Pillow, the host
+#     does not; without them the script still emits the ASCII plot and the report)
 python3 scripts/plot_gan_metrics.py
 
 # 6. synthesis only (~4 min) -- checks the config, macro count, latches
 cd librelane && librelane config_gan.yaml --to Yosys.Synthesis --run-tag gan_synth_check
 ```
+
+### Where the metrics and graphs land
+
+Everything below is under `tb/data/gan_chip/`.
+
+| file | what it is |
+|---|---|
+| `gan_loss_curve.png` | **the loss graph** — loss_G / loss_D per sample |
+| `gan_metrics_report.txt` | full metrics report + the same curve in ASCII (no deps) |
+| `gan_met_rtl.txt` | **the metric registers as the RTL actually reported them** (written by `gan_engine_top_tb`; same format a bring-up host emits over `RD_MET`) |
+| `gan_met_expected.memh` | what the golden model says those registers should hold |
+| `gan_loss_series.csv` | per-sample y_fake / y_real / loss_G / loss_D / ink / fooled |
+| `gan_img_rtl.png` `.memh` | the digit the RTL produced |
+| `gan_img_expected.png` `.pgm` `.memh` | the golden digit |
+| `gan_real_img.png` `.pgm` `.memh` | the "real" digit scored by D |
+| `gan_expected.txt` | golden summary: layer configs, scores, losses, per-layer saturation, ASCII digit |
+| `gan_cfg.memh`, `gan_zq.memh` | config-register image and int8 latent fed to the chip |
+| `gan_pwl_vectors.memh`, `gan_nlog_vectors.memh` | unit-test vectors |
+
+`plot_gan_metrics.py` prefers `gan_met_rtl.txt` when it exists, so the report reflects
+real hardware output; the per-sample curve comes from the golden sweep because running
+10 full G+D passes in RTL is ~4.4 M cycles (use `--sweep` for the model, or run the
+testbench per latent to build the curve from RTL).
+
+Chip-side, the authoritative source is the hardware itself: 20 `MET_*` registers read
+over the serial link with `RD_MET`.
 
 ---
 

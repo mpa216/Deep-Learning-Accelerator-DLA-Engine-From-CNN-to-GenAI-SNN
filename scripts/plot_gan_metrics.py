@@ -95,6 +95,40 @@ def try_png(series: dict[str, list[float]], path: Path) -> str:
     return f"wrote {path}"
 
 
+def render_digits() -> list[str]:
+    """Render the generated / real digits to PNG, if Pillow is available.
+
+    The .memh files hold signed int8 pixels (the chip's image-buffer contents);
+    gray level = pixel + 128.  gan_img_rtl.memh is what the RTL actually produced,
+    gan_img_expected.memh what gan_golden.py says it should.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return ["Pillow not available -- skipped digit PNGs "
+                "(the .pgm files next to them open in any image viewer)"]
+
+    out = []
+    for stem in ("gan_img_rtl", "gan_img_expected", "gan_real_img"):
+        src = OUT_DIR / f"{stem}.memh"
+        if not src.exists():
+            continue
+        px = []
+        for line in src.read_text().split():
+            v = int(line, 16)
+            if v & 0x80:
+                v -= 256
+            px.append(max(0, min(255, v + 128)))
+        if len(px) < 784:
+            continue
+        im = Image.new("L", (28, 28))
+        im.putdata(px[:784])
+        dst = OUT_DIR / f"{stem}.png"
+        im.resize((28 * 8, 28 * 8), Image.NEAREST).save(dst)
+        out.append(f"wrote {dst}")
+    return out
+
+
 def report_from_dump(vals: dict[str, int]) -> str:
     def g(k, d=0):
         return vals.get(k, d)
@@ -155,6 +189,10 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     report_parts = []
 
+    # Default to the RTL's own metric dump if the testbench has produced one.
+    if args.dump is None and (OUT_DIR / "gan_met_rtl.txt").exists():
+        args.dump = str(OUT_DIR / "gan_met_rtl.txt")
+
     if args.dump:
         vals = {}
         for line in Path(args.dump).read_text().splitlines():
@@ -162,7 +200,7 @@ def main() -> None:
             if line:
                 k, v = line.split()
                 vals[k] = int(v)
-        report_parts.append(report_from_dump(vals))
+        report_parts.append(f"source: {Path(args.dump).name}\n" + report_from_dump(vals))
 
     csv_path = Path(args.csv)
     if csv_path.exists():
@@ -188,6 +226,9 @@ def main() -> None:
     elif not args.dump:
         raise SystemExit(f"no data: {csv_path} does not exist and no --dump given.\n"
                          f"Run: python3 scripts/gen_gan_chip_assets.py --sweep 10")
+
+    report_parts.append("Digit images\n" + "=" * 58 + "\n  " +
+                        "\n  ".join(render_digits()))
 
     text = "\n\n".join(report_parts)
     (OUT_DIR / "gan_metrics_report.txt").write_text(text + "\n")

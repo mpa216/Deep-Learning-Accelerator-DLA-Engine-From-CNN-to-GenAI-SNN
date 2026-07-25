@@ -1,3 +1,29 @@
+source: gan_met_rtl.txt
+GAN chip metric report
+==========================================================
+  D(generated)      y_fake          3958  = 0.9663
+  D(real)           y_real          3928  = 0.9590
+  verdict                       REAL - the generator fooled D
+
+  loss_G = -ln y_fake                141  = 0.0344 nats
+  loss_D = -ln y_real
+           -ln(1 - y_fake)         14062  = 3.4331 nats
+  mean loss_G over    1 samples          = 0.0344 nats
+  mean loss_D over    1 samples          = 3.4331 nats
+
+  fooled D                1 / 1      (100.0%)
+  real accepted           1 / 1    
+  mean y_fake                   = 0.9663
+  D logit (pre-sigmoid)         = +3.3403
+
+  quantisation health
+    pre-activation clamps             75   (harmless in the tanh/sigmoid layers, a warning in a ReLU layer)
+    output-quantiser clamps            0   (non-zero means a layer's MH/SH scale is too aggressive)
+
+  throughput
+    image ink (sum of gray)        45113   (mean pixel 57.5/255)
+    compute cycles                440252   = 26.4 ms at the 60 ns target clock
+
 Per-sample loss curve (10 samples from gan_loss_series.csv)
 ==========================================================
     8.359 |*                    *             *      o                     
@@ -22,4 +48,10 @@ Per-sample loss curve (10 samples from gan_loss_series.csv)
   mean loss_G = 2.9224 nats
   mean loss_D = 1.6112 nats
   generator fooled D on 4/10 samples
-  matplotlib not available -- skipped PNG (ASCII plot above is complete)
+  wrote /foss/designs/tb/data/gan_chip/gan_loss_curve.png
+
+Digit images
+==========================================================
+  wrote /foss/designs/tb/data/gan_chip/gan_img_rtl.png
+  wrote /foss/designs/tb/data/gan_chip/gan_img_expected.png
+  wrote /foss/designs/tb/data/gan_chip/gan_real_img.png
