@@ -1,0 +1,25 @@
+Per-sample loss curve (10 samples from gan_loss_series.csv)
+==========================================================
+    8.359 |*                    *             *      o                     
+          |                                                                
+          |                                                                
+          |                                                                
+          |                                                                
+          |                                                                
+          |                                                                
+          |                                                                
+          |                            o                                   
+          |                                                                
+          |                                                                
+          |                                                 o              
+          |       *      *                                                 
+          |                                                        o      *
+          |o      o      o      o      *      o             *      *      o
+    0.000 |                                          *                     
+          +----------------------------------------------------------------
+           sample ->    * loss_G   o loss_D
+
+  mean loss_G = 2.9224 nats
+  mean loss_D = 1.6112 nats
+  generator fooled D on 4/10 samples
+  matplotlib not available -- skipped PNG (ASCII plot above is complete)

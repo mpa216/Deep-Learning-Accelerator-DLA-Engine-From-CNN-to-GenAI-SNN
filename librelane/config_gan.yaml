@@ -1,0 +1,231 @@
+# LibreLane Classic config for the EXPERIMENTAL full-GAN engine (gan_engine_top).
+#
+# Sibling of config.yaml (which hardens the main-branch dla_engine_top, 11 macros,
+# 1600x1500).  This variant hardens the whole GAN -- generator + discriminator +
+# 9-segment PWL activations + BCE loss/metrics -- into ONE Stage-1 macro:
+#
+#     16 SRAM macros = A(4) + B(4) + C(3)   [inside dla_engine_top, unchanged]
+#                    + ACT(1) + IMG(4)      [new: activations and the 784-pixel image]
+#
+# Run it exactly like config.yaml, from librelane/ inside the container:
+#     librelane config_gan.yaml --run-tag gan_v1
+#
+# >>> NOTHING BELOW HAS BEEN THROUGH PnR YET. <<<  DIE_AREA, the macro grid,
+# PL_TARGET_DENSITY_PCT and CLOCK_PERIOD are sized from Yosys area estimates plus the
+# measured Yosys->placed scaling of the signed-off as3v3_k256_d63 run; they are a
+# reasoned starting point, not a verified floorplan.  See "FLOORPLAN SIZING" below.
+meta:
+  version: 3
+  flow: Classic
+
+DESIGN_NAME: gan_engine_top
+
+PDK: gf180mcuD
+
+# Same third-party native-3.3V standard cells as the main branch, so the whole chip
+# (logic + the 3.3V OCD SRAM) runs on a single 3.3V supply.  The PDK merge documented
+# in config.yaml is a prerequisite here too.
+STD_CELL_LIBRARY: gf180mcu_as_sc_mcu7t3v3
+
+# --- Synthesizable RTL ONLY -------------------------------------------------
+# The testbenches, the host-side model and g300_pipeline_top are NOT listed: they are
+# simulation-only ($readmemh, huge flop arrays).
+VERILOG_FILES:
+  # new GAN layer
+  - dir::../rtl/gan_engine_top.v
+  - dir::../rtl/gan_sequencer.v
+  - dir::../rtl/gan_postproc.v
+  - dir::../rtl/gan_pwl_act.v
+  - dir::../rtl/gan_nlog.v
+  - dir::../rtl/gan_metrics.v
+  - dir::../rtl/gan_act_buffer.v
+  - dir::../rtl/gan_img_buffer.v
+  # unchanged INT8 MAC engine
+  - dir::../rtl/dla_engine_top.v
+  - dir::../rtl/dla_controller.v
+  - dir::../rtl/dla_pe.v
+  - dir::../rtl/dla_pe_array.v
+  - dir::../rtl/dla_a_buffer_bank.v
+  - dir::../rtl/dla_b_buffer_bank.v
+  - dir::../rtl/dla_c_buffer_bank.v
+  - dir::../rtl/gf180_sram_1rw_256x8.v
+
+# Mandatory: selects the (* blackbox *) branch of gf180_sram_1rw_256x8.v.  Without it
+# Yosys synthesises ~33k flip-flops instead of instantiating 16 hard macros.
+VERILOG_DEFINES:
+  - SYNTHESIS
+
+CLOCK_PORT: clk
+
+# --- CLOCK: deliberately relaxed for the first experimental run --------------
+# The main-branch macro closes at 40 ns with +15.1 ns of setup slack, i.e. a ~25 ns
+# critical path (SRAM read -> mux -> PE MAC -> accumulator).  This variant adds a
+# NEW and almost certainly longer path in gan_postproc: register -> operand mux ->
+# 28x20 signed array multiplier -> register.  A 28x20 array multiply in 180 nm at the
+# slow corner (ss_125C_3v00) is plausibly 25-35 ns on its own, so 40 ns would be a
+# coin flip and a failed multi-hour run is expensive.
+#
+# 60 ns (~16.7 MHz) is therefore the first target.  Read timing__setup__ws from the
+# first run and retime exactly the way the main branch went 75 -> 40 ns.  If the goal
+# is to get back to 40 ns, the fix is to split gan_postproc's multiply across two
+# pipeline stages (it already has spare cycles -- it runs ~8 cycles per neuron against
+# the MAC array's 256), not to squeeze the floorplan.
+CLOCK_PERIOD: 60
+
+# --- SRAM macro (16 instances) ----------------------------------------------
+# Instance names verified by Yosys elaboration of the current RTL:
+#   yosys -p 'read_verilog -DSYNTHESIS -I rtl rtl/gan_*.v rtl/dla_*.v \
+#             rtl/gf180_sram_1rw_256x8.v; hierarchy -top gan_engine_top; flatten; \
+#             select -list t:gf180mcu_ocd_ip_sram__sram256x8m8wm1'
+MACROS:
+  gf180mcu_ocd_ip_sram__sram256x8m8wm1:
+    gds:
+      - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.gds
+    lef:
+      - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.lef
+    lib:
+      "*_tt_025C_3v30":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__tt_025C_3v30.lib
+      "*_ss_125C_3v00":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ss_125C_3v00.lib
+      "*_ff_n40C_3v60":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib
+    instances:
+      # 4x4 grid, macro 301.3(W) x 224.93(H).
+      # Columns x = 120 / 560 / 1000 / 1440  -> 138.7 um horizontal channels
+      # Rows    y = 130 / 570 / 1010 / 1450  -> 215.07 um vertical channels
+      # (both wider than the main branch's 69/265 split, because this die has more
+      #  std cells per macro to route around).
+      #
+      # --- row 0: A buffer, one macro per weight row ---
+      "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
+        location: [120.0, 130.0]
+        orientation: N
+      "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
+        location: [560.0, 130.0]
+        orientation: N
+      "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
+        location: [1000.0, 130.0]
+        orientation: N
+      "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
+        location: [1440.0, 130.0]
+        orientation: N
+      # --- row 1: B buffer, one macro per column ---
+      "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
+        location: [120.0, 570.0]
+        orientation: N
+      "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
+        location: [560.0, 570.0]
+        orientation: N
+      "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
+        location: [1000.0, 570.0]
+        orientation: N
+      "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
+        location: [1440.0, 570.0]
+        orientation: N
+      # --- row 2: C buffer (3 byte planes of the 24-bit result) + ACT ---
+      # ACT sits next to C on purpose: C -> gan_postproc -> ACT is the write-back path.
+      u_dla.u_c_buffer.GEN_SRAM.u_sram0.u_sram:
+        location: [120.0, 1010.0]
+        orientation: N
+      u_dla.u_c_buffer.GEN_SRAM.u_sram1.u_sram:
+        location: [560.0, 1010.0]
+        orientation: N
+      u_dla.u_c_buffer.GEN_SRAM.u_sram2.u_sram:
+        location: [1000.0, 1010.0]
+        orientation: N
+      u_act.u_sram.u_sram:
+        location: [1440.0, 1010.0]
+        orientation: N
+      # --- row 3: image buffer, 4 banks x 256 bytes = the 784-pixel digit ---
+      u_img.u_sram0.u_sram:
+        location: [120.0, 1450.0]
+        orientation: N
+      u_img.u_sram1.u_sram:
+        location: [560.0, 1450.0]
+        orientation: N
+      u_img.u_sram2.u_sram:
+        location: [1000.0, 1450.0]
+        orientation: N
+      u_img.u_sram3.u_sram:
+        location: [1440.0, 1450.0]
+        orientation: N
+
+# --- FLOORPLAN SIZING --------------------------------------------------------
+# Measured (AS 3.3V tt corner).  The gan_engine_top figure is from this very config's
+# own Yosys.Synthesis step (run tag gan_synth_check): 23,701 cells, 1,589 flip-flops,
+# 16 SRAM macros, 0 inferred latches.
+#     dla_engine_top  (main branch)        266,835 um2 of standard cells
+#     gan_engine_top  (this design)        614,125 um2   (+347k: gan_postproc 152k,
+#                                                          gan_metrics 125k incl. the
+#                                                          -ln unit, gan_sequencer 35k,
+#                                                          config file + muxing + ties)
+# Calibration from the signed-off as3v3_k256_d63 run: its Yosys estimate of 266,835
+# became 384,055 um2 of PLACED standard cells (x1.44) once taps, antenna diodes, tie
+# cells and timing-repair buffers were added.  Scaling those components for this
+# design's larger die and net count gives ~782,000 um2 placed.
+#
+#     16 macros            16 x 67,771  = 1,084,336 um2
+#     placed std cells     (estimate)   =   800,000 um2
+#     total instance area               = 1,884,000 um2
+#     die 1900 x 1900 = 3.61e6 um2, core ~3.50e6 um2
+#       -> instance utilisation ~53%   (reference run: 48.6%)
+#       -> STD-CELL density ~32% of the non-macro area (reference: 24.3%)
+#
+# 1900 x 1900 is also the largest square that still drops into the Stage-2 workshop
+# slot's 2051 x 2051 core with a usable margin (~75 um per side at location
+# [517, 517]).  That margin is noticeably tighter than the main branch's, so if
+# chip-level routing or PDN complains, shrink the LOGIC rather than the die.  In
+# descending order of payoff:
+#   1. share the single gan_pwl_act instance between gan_postproc and gan_metrics'
+#      -ln unit (they never run at the same time)          ~ -38,000 um2
+#   2. replace gan_postproc's 28x20 array multiplier with a sequential shift-add
+#      multiplier (costs ~20 cycles per multiply, of which there are 3 per neuron
+#      against the MAC array's 256 cycles per tile)        ~ -90,000 um2
+FP_SIZING: absolute
+DIE_AREA: [0, 0, 1900, 1900]
+
+# Starting point only.  The main branch needed a density sweep to reach literal-zero
+# antennas (55->63 across two netlists); expect the same here and use the same lever.
+PL_TARGET_DENSITY_PCT: 60
+
+GPL_CELL_PADDING: 1
+DPL_CELL_PADDING: 2
+
+# --- Power / ground ----------------------------------------------------------
+VDD_NETS:
+  - VDD
+GND_NETS:
+  - VSS
+# Matches all 16 macros: u_dla.u_a_buffer...u_sram.u_sram, u_act.u_sram.u_sram,
+# u_img.u_sramN.u_sram -- every instance path contains "u_sram".
+PDN_MACRO_CONNECTIONS:
+  - ".*u_sram.* VDD VSS VDD VSS"
+
+PDN_MULTILAYER: false
+PDN_VWIDTH: 5
+PDN_HWIDTH: 5
+PDN_VSPACING: 1
+PDN_HSPACING: 1
+PDN_VPITCH: 75
+PDN_HPITCH: 75
+PDN_EXTEND_TO: boundary
+
+# The gf180 OCD SRAM power pins top out at Metal3, so the stock Metal4<->Metal5 macro
+# grid connect makes no vias ([PDN-0232]/[PDN-0233]).  Same custom script as the main
+# branch -- it is macro-cell specific, not design specific, so it covers all 16.
+PDN_CFG: dir::pdn_cfg.tcl
+
+# --- Routing / signoff -------------------------------------------------------
+RT_MAX_LAYER: Metal5
+
+# Antenna strategy carried over verbatim from the main-branch signoff: attack antennas
+# PRE-route with heuristic diodes and a generous GRT repair margin, and keep the
+# in-detailed-router repair OFF.  DRT_ANTENNA_REPAIR_ITERS >= 1 is a confirmed dead end
+# on this design family ([DRT-0073] "No access point" -- see CLAUDE.md's antenna study).
+RUN_HEURISTIC_DIODE_INSERTION: true
+GRT_ANTENNA_REPAIR_MARGIN: 25
+DRT_ANTENNA_REPAIR_ITERS: 0
+DRT_ANTENNA_REPAIR_JUMPER_ONLY: true
+DIODE_ON_PORTS: in
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout

@@ -1,0 +1,61 @@
+GAN chip golden reference
+============================================================
+latent seed          : 4   (s_z = 0.0175883)
+D hidden activation  : RELU
+
+Generator layer configs (host writes these 6 registers per layer):
+  LayerCfg(G0: MA=4948 MB=395515 S=13 MH=497058 SH=24 func=RELU gain=1)
+  LayerCfg(G2: MA=15951 MB=514934 S=14 MH=290222 SH=24 func=RELU gain=1)
+  LayerCfg(G4: MA=31919 MB=426855 S=14 MH=520192 SH=24 func=TANH gain=1)
+  LayerCfg(D0: MA=3512 MB=418267 S=16 MH=325930 SH=25 func=RELU gain=7.18058)
+  LayerCfg(D2: MA=38121 MB=411287 S=15 MH=483719 SH=26 func=RELU gain=4.18577)
+  LayerCfg(D4: MA=11702 MB=409120 S=13 MH=4096 SH=12 func=SIGMOID gain=1)
+
+image int8 range     : [-127, 127]   ink = 45113
+vs float (unquantised) generator : mean |dgray| =  1.89, max =  17 (of 255)
+vs main-branch int8 pipeline (Q20 tanh LUT) : mean |dgray| =  1.71, max =   7 (of 255)
+
+y_fake  =  3958  (0.9663)   verdict REAL(fooled D)
+y_real  =  3928  (0.9590)   verdict REAL
+loss_G  =     141  (0.0344 nats)
+loss_D  =   14062  (3.4331 nats)
+saturation (Q4.12 pre-activation clamp / int8 output clamp), per layer:
+    G0   256 neurons : pre    0  out    0
+    G2   256 neurons : pre    0  out    0
+    G4   784 neurons : pre   75  out    0
+    D0   256 neurons : pre    0  out    0
+    D2   256 neurons : pre    0  out    0
+    D4     1 neurons : pre    0  out    0
+    (pre-clamps in the tanh/sigmoid layers are harmless -- both functions are
+     already flat beyond +-8.0; clamps in a ReLU layer would mean the host
+     picked too small a gain)
+
+Generated digit:
+                            
+                            
+                            
+                            
+                .-..        
+              *%%%@@%+      
+ .          -@@@@@@@@@+-    
+           .@@@@@@@@@@@+    
+          .%@@#*#%%%@@@+    
+         -@@@%  ..:#@@@*    
+        -@@@%.    :%@@@=    
+       .@@@@.     +@@@@%    
+      -%@@@:      *%@@@=    
+     -%@@@=       =@@@@-    
+     #@@@#        =@@@@-    
+    .%@@@=        %@@@@:    
+    =@@@%        #@@@@#:    
+    +@@@-      -%@@@@@:     
+    .@@@*   .*@@@@@@*.      
+     @@@@@@%@@@@@@%.        
+     %@@@@@@@@@@%=.         
+     .*@@@@@@@+.            
+       -*#**:               
+                            
+                            
+                            
+                            
+                            
