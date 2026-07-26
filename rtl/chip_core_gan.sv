@@ -14,7 +14,15 @@
 //   [5] dla_busy (out)  MAC array active
 //   [6] dla_done (out)  MAC pass complete
 //   [7] verdict (out)   D(generated) > 0.5 -- the generator fooled the discriminator
-//   [8..19] unused (inputs, pulled down)
+//   [8..15] pdata[7:0] (in)  parallel write bus for the WR_BURST8 command
+//   [16..19] unused (inputs, pulled down)
+//
+// The parallel bus is what makes the link stop dominating run time.  Streaming weights
+// is ~99% of the time on the wire, and a single-byte serial frame costs 24 SCLK edges;
+// WR_BURST drops that to 8 by auto-incrementing the address, and WR_BURST8 takes the
+// whole byte off these eight pads in one edge.  Together with 4-way batching that is
+// 9.4 s -> 0.098 s per generated digit.  Eight of the twelve spare pads are used; four
+// remain free.
 // clk/rst_n come from the padring's dedicated clock/reset pads.
 //
 // This file replaces the padring fork's src/chip_core.sv at integration time.
@@ -51,7 +59,7 @@ module chip_core #(
     assign input_pd = '0;
 
     wire _unused;
-    assign _unused = &{1'b0, input_in, bidir_in[NUM_BIDIR_PADS-1:3], analog};
+    assign _unused = &{1'b0, input_in, bidir_in[NUM_BIDIR_PADS-1:16], analog};
 
     localparam int PIN_SCLK     = 0;
     localparam int PIN_MOSI     = 1;
@@ -61,11 +69,14 @@ module chip_core #(
     localparam int PIN_DLA_BUSY = 5;
     localparam int PIN_DLA_DONE = 6;
     localparam int PIN_VERDICT  = 7;
-    localparam int PIN_FIRST_SPARE = 8;
+    localparam int PIN_PDATA_LO = 8;         // pdata[7:0] on bidir[8..15]
+    localparam int PIN_PDATA_HI = 15;
+    localparam int PIN_FIRST_SPARE = 16;
 
     wire sclk_pad = bidir_in[PIN_SCLK];
     wire mosi_pad = bidir_in[PIN_MOSI];
     wire cs_n_pad = bidir_in[PIN_CS_N];
+    wire [7:0] pdata_pad = bidir_in[PIN_PDATA_HI:PIN_PDATA_LO];
     wire miso_pad;
 
     wire        w_wr_en, w_cfg_we, w_exec_req, w_rd_en;
@@ -84,6 +95,7 @@ module chip_core #(
         .mosi_pad (mosi_pad),
         .cs_n_pad (cs_n_pad),
         .miso_pad (miso_pad),
+        .pdata_pad(pdata_pad),
         .wr_en    (w_wr_en),
         .wr_sel   (w_wr_sel),
         .wr_addr  (w_wr_addr),

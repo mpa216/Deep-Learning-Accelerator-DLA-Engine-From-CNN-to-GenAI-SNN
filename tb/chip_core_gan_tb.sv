@@ -24,7 +24,8 @@ module chip_core_gan_tb;
     // Serial commands (must match gan_serial_bridge.v).
     localparam [3:0] C_WR_A   = 4'd0, C_WR_B   = 4'd1, C_WR_IMG = 4'd2, C_WR_ACT = 4'd3,
                      C_WR_CFG = 4'd4, C_EXEC   = 4'd5, C_RD_MET = 4'd6, C_RD_IMG = 4'd7,
-                     C_RD_ACT = 4'd8, C_RD_C   = 4'd9;
+                     C_RD_ACT = 4'd8, C_RD_C   = 4'd9, C_WR_BURST = 4'd10,
+                     C_WR_BURST8 = 4'd11;
 
     reg clk = 1'b0;
     reg rst_n = 1'b0;
@@ -59,7 +60,8 @@ module chip_core_gan_tb;
     );
 
     localparam int PIN_SCLK = 0, PIN_MOSI = 1, PIN_CS_N = 2, PIN_MISO = 3,
-                   PIN_BUSY = 4, PIN_VERDICT = 7;
+                   PIN_BUSY = 4, PIN_VERDICT = 7,
+                   PIN_PDATA_LO = 8, PIN_PDATA_HI = 15;
 
     wire miso    = bidir_in[PIN_MISO];
     wire busy    = bidir_in[PIN_BUSY];
@@ -67,12 +69,20 @@ module chip_core_gan_tb;
 
     integer errors = 0;
     integer i;
+    integer edges = 0;             // every SCLK pulse, for measuring link cost
+
+    // ---- fixtures (declared before the tasks that read them) -----------------
+    reg signed [7:0]  weights   [0:1023];
+    reg signed [7:0]  input_vec [0:255];
+    reg signed [7:0]  bias      [0:3];
+    reg signed [23:0] expected  [0:3];
 
     // ---- serial primitives ---------------------------------------------------
     // SCLK is treated as data by the bridge (double-flop synchronised then edge
     // detected), so each level must be held at least 3 core clocks: SCLK <= clk/8.
     task sclk_pulse;
         begin
+            edges = edges + 1;
             bidir_drv[PIN_SCLK] = 1'b1;
             repeat (4) @(posedge clk);
             bidir_drv[PIN_SCLK] = 1'b0;
@@ -154,6 +164,38 @@ module chip_core_gan_tb;
         end
     endtask
 
+    // Serial burst: address sent once, then raw bytes, one per 8 SCLK edges.
+    // Only works where the destination addresses are consecutive -- which is exactly
+    // the traffic that matters: the A buffer always, and B whenever batch > 1.
+    task ser_burst(input [1:0] target, input [9:0] start, input integer n,
+                   input integer src_base);
+        integer b;
+        begin
+            cs_low;
+            shift_out(4, {28'd0, C_WR_BURST});
+            shift_out(12, {20'd0, target, start});
+            for (b = 0; b < n; b = b + 1)
+                shift_out(8, {24'd0, weights[src_base + b]});
+            cs_high;
+        end
+    endtask
+
+    // Parallel burst: one whole byte per SCLK edge off bidir[8..15].
+    task ser_burst8(input [1:0] target, input [9:0] start, input integer n,
+                    input integer src_base);
+        integer b;
+        begin
+            cs_low;
+            shift_out(4, {28'd0, C_WR_BURST8});
+            shift_out(12, {20'd0, target, start});
+            for (b = 0; b < n; b = b + 1) begin
+                bidir_drv[PIN_PDATA_HI:PIN_PDATA_LO] = weights[src_base + b];
+                sclk_pulse;
+            end
+            cs_high;
+        end
+    endtask
+
     task check(input [8*20:1] name, input signed [31:0] got, input signed [31:0] exp);
         begin
             if (got !== exp) begin
@@ -166,13 +208,12 @@ module chip_core_gan_tb;
     endtask
 
     // ---- MAC vectors reused from the main branch's d3004n4 unit test ---------
-    reg signed [7:0]  weights   [0:1023];
-    reg signed [7:0]  input_vec [0:255];
-    reg signed [7:0]  bias      [0:3];
-    reg signed [23:0] expected  [0:3];
 
     reg [23:0] rv;
     reg signed [23:0] cvals [0:3];
+    integer e0, e_burst, e_burst8, e_burst8s;
+
+    task exec_or_nop; begin @(posedge clk); end endtask
 
     // The requant the chip should apply, re-implemented independently here.
     // FUNC_IDENT is used so no PWL is involved: act == pre.
@@ -235,8 +276,11 @@ module chip_core_gan_tb;
         // ---- 3. a real MAC pass, driven entirely over the serial link -------
         $display("[3] streaming a 4x256 weight tile + 256-deep input vector (this is");
         $display("    the same d3004n4 fixture the main branch's unit test uses)");
-        for (i = 0; i < 1024; i = i + 1)
-            ser_write(C_WR_A, i[11:0], weights[i]);          // A: row*256 + k
+        e0 = edges;
+        ser_burst8(WSEL_A, 10'd0, 1024, 0);                  // A: row*256 + k, sequential
+        e_burst8 = edges - e0;
+        // B at batch 1 is strided (k*4), so it cannot burst -- but it is 256 bytes once
+        // per layer against 1024 per tile, so it is not where the time goes.
         for (i = 0; i < 256; i = i + 1)
             ser_write(C_WR_B, i[11:0] * 4, input_vec[i]);    // B: k*4 + col
         ser_exec(OP_CLR_ACC, 8'd0);
@@ -310,6 +354,50 @@ module chip_core_gan_tb;
         check("N_SAMPLES", $signed(rv), 32'sd1);
         ser_read(C_RD_MET, {7'd0, MET_STATUS}, rv);
         $display("  STATUS    = %06h   verdict pad = %0b", rv, verdict);
+
+        // ---- 6. burst modes: correctness and measured cost -------------------
+        $display("[6] burst write modes");
+        exec_or_nop;
+        // Measured over a full 1024-byte tile, which is the traffic that matters --
+        // a 32-byte sample would amortise the 16-edge header badly and understate both.
+        e0 = edges;
+        ser_burst(WSEL_ACT, 10'd0, 1024, 0);                 // serial burst, one tile
+        e_burst = edges - e0;
+        for (i = 0; i < 1024; i = i + 32) begin
+            ser_read(C_RD_ACT, i[11:0], rv);
+            if ($signed(rv) !== weights[i]) begin
+                $display("  MISMATCH burst ACT[%0d]: got %0d, expected %0d",
+                         i, $signed(rv), weights[i]);
+                errors = errors + 1;
+            end
+        end
+        $display("    serial burst: 1024 bytes written, 32 spot-checked");
+
+        e0 = edges;
+        ser_burst8(WSEL_IMG, 10'd0, 1024, 0);                // parallel burst, one tile
+        e_burst8s = edges - e0;
+        for (i = 0; i < 1024; i = i + 32) begin
+            ser_read(C_RD_IMG, i[11:0], rv);
+            if ($signed(rv) !== weights[i]) begin
+                $display("  MISMATCH burst8 IMG[%0d]: got %0d, expected %0d",
+                         i, $signed(rv), weights[i]);
+                errors = errors + 1;
+            end
+        end
+        $display("    parallel burst: 1024 bytes written, 32 spot-checked");
+
+        $display("");
+        $display("    MEASURED SCLK edges for a 1024-byte tile (x100 fixed point):");
+        $display("      single-byte frames : %0d edges,  %0d.%02d per byte,   1.00x",
+                 1024 * 24, (1024 * 24) / 1024, ((1024 * 24) * 100 / 1024) % 100);
+        $display("      serial burst       : %0d edges,  %0d.%02d per byte,  %0d.%02dx",
+                 e_burst, e_burst / 1024, (e_burst * 100 / 1024) % 100,
+                 (1024 * 24 * 100 / e_burst) / 100, (1024 * 24 * 100 / e_burst) % 100);
+        $display("      parallel burst     : %0d edges,  %0d.%02d per byte, %0d.%02dx",
+                 e_burst8s, e_burst8s / 1024, (e_burst8s * 100 / 1024) % 100,
+                 (1024 * 24 * 100 / e_burst8s) / 100, (1024 * 24 * 100 / e_burst8s) % 100);
+        $display("      (the A tile in test 3 also used parallel burst: %0d edges)",
+                 e_burst8);
 
         $display("");
         if (errors == 0) $display("PASS: all serial-protocol checks matched");

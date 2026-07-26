@@ -400,6 +400,54 @@ Worth flagging because they were committed before being checked:
 Both now come from `scripts/analyze_gan_memory.py`, which derives them from the weight
 manifest and the RTL geometry rather than from memory.
 
+## Making the link stop being the bottleneck
+
+The analysis above says the chip is link-bound: the MAC array is idle 99.9% of the time
+and the orchestration overhead is 0.84%. Neither on-chip sequencing nor faster compute
+would change anything. Two things do.
+
+**Burst mode, which costs no pins at all.** Every weight byte was paying
+`CMD(4) + ADDR(12) + DATA(8)` = 24 bits, but the addresses are *consecutive* — the A
+buffer is filled at 0..1023 every tile. `WR_BURST` sends the start address once and then
+streams raw bytes, auto-incrementing. Measured over a full tile: 24,576 SCLK edges down
+to 8,208, a **2.99×** speed-up for a small change to the bridge.
+
+**A parallel data bus, which costs 8 of the 12 spare pads.** With burst mode already
+sending nothing but data, widening the data path moves a whole byte per SCLK edge instead
+of eight. `WR_BURST8` takes the byte off `bidir[8..15]`. Measured: 1,040 edges per tile,
+**23.63×**.
+
+Worth recording why the 60 analog pads could not be pressed into service: the cell is
+`gf180mcu_fd_io__asig_5p0` and it has exactly one signal pin, a pass-through `ASIG5V`.
+No `A` (drive), no `Y` (receive), no output-enable. Compare the bidir cell `bi_24t`,
+which has all of those. They are bare analog pass-throughs with no digital driver or
+receiver, so the real spare budget was 12 bidir pads, not 72.
+
+### A number that needed correcting
+
+While measuring this properly, an earlier estimate of "96x end to end" turned out to be
+too optimistic, because it counted weight traffic only. At batch 4 the discriminator's
+784-wide input can no longer be served by the on-chip image buffer (four images do not
+fit), so the host must feed B per tile per K-tile. Counting *all* host writes:
+
+```
+  batch 1:  A 819,840 + B     256 =   820,096 bytes per image
+  batch 4:  A 819,840 + B 525,312 = 1,345,152 bytes per 4 images = 336,288 per image
+  -> batching is 2.44x on total bytes, not 4.00x
+```
+
+The 4.26x figure measured for *compute cycles* stands — that one is real, and it is what
+the on-chip work costs. But on the wire the honest end-to-end number is:
+
+```
+  batch 1, single-byte frames   9.448 s per image     1.0x
+  batch 1, serial burst         3.149 s               3.0x
+  batch 1, parallel burst       0.394 s              24.0x
+  batch 4, parallel burst       0.161 s              58.5x
+```
+
+Still a 58x improvement, and still worth having. Just not 96x.
+
 ## What is NOT done
 
 **Place-and-route has never been run on this design.** `librelane/config_gan.yaml` is

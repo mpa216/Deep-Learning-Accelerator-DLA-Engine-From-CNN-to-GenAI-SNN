@@ -204,13 +204,39 @@ SCLK rising edge; hold each SCLK level ≥3 core clocks:
 
 ```
 CMD[3:0] ADDR[11:0] then:
-  0 WR_A   +8b    1 WR_B   +8b    2 WR_IMG +8b    3 WR_ACT +8b
-  4 WR_CFG +24b   5 EXEC   (ADDR = {op[3:0], arg[7:0]})
-  6 RD_MET  ->24b 7 RD_IMG ->24b  8 RD_ACT ->24b  9 RD_C   ->24b
+   0 WR_A   +8b    1 WR_B   +8b    2 WR_IMG +8b    3 WR_ACT +8b
+   4 WR_CFG +24b   5 EXEC   (ADDR = {op[3:0], arg[7:0]})
+   6 RD_MET  ->24b 7 RD_IMG ->24b  8 RD_ACT ->24b  9 RD_C   ->24b
+  10 WR_BURST   ADDR = {target[1:0], start[9:0]}, then 8-bit words until CS_N rises
+  11 WR_BURST8  same, but one whole byte per SCLK edge off pdata[7:0]
 ```
 
 Pads: `bidir[0..3]` = SCLK/MOSI/CS_N/MISO, `[4]` busy, `[5]` dla_busy, `[6]` dla_done,
-`[7]` verdict.
+`[7]` verdict, `[8..15]` pdata[7:0] (parallel write bus), `[16..19]` spare.
+**16 of 20 bidir pads used; 18 of the slot's 92 signal/power pads connected.**
+(The 60 analog pads cannot help: `gf180mcu_fd_io__asig_5p0` has only a pass-through
+`ASIG5V` pin — no `A`/`Y`/`OE`/`IE`, so no digital driver or receiver.)
+
+### Why the burst commands exist
+
+Streaming weights is ~99% of the time on the wire, and a single-byte frame spends 16 of
+its 24 bits on a command and an address that are entirely predictable — the A buffer is
+filled at consecutive addresses, 1024 per tile. Both burst commands send the address once
+and then auto-increment. Measured by `tb/chip_core_gan_tb.sv` over a full 1024-byte tile:
+
+| mode | SCLK edges | per byte | speed-up |
+|---|---|---|---|
+| single-byte frames | 24,576 | 24.00 | 1.00× |
+| `WR_BURST` (serial) | 8,208 | 8.01 | **2.99×** |
+| `WR_BURST8` (parallel) | 1,040 | 1.01 | **23.63×** |
+
+Bursts apply wherever destination addresses are consecutive — the A buffer always, IMG
+and ACT always, and B whenever batch > 1 (at batch 1 the B column is strided by 4, but
+that is 256 bytes once per layer against 1024 per tile).
+
+`SCLK` remains capped at `clk/8`: the bridge double-flops and edge-detects it as data
+rather than treating it as a clock, and the parallel bus goes through the identical
+synchroniser so the byte captured at a detected edge is the byte the host presented.
 
 ---
 
@@ -291,7 +317,7 @@ All run in the container on this branch.
 | `gan_engine_top_tb` — full G→D→losses | **PASS**: image 784/784 pixels bit-exact; `Y_FAKE`, `Y_REAL`, `LOSS_G`, `LOSS_D`, both accumulators, `N_SAMPLES/FOOLED/REAL_OK`, `INK`, `SAT_PRE`, `SAT_OUT`, `LOGIT` all match golden |
 | `gan_batch4_flow_tb` — batch-4 **end to end** | **PASS**: four digits generated and scored in one weight stream — **3136/3136 pixels bit-exact** across all four lanes, four distinct `y_fake` scores match golden, all four `y_real` agree (the real digit is replicated across lanes, so lane disagreement would be a bug), every accumulator and counter matches. **413,592 compute cycles for four digits = 103,398 per digit, 4.26× better than batch 1's 440,252** |
 | `gan_batch4_tb` — batch-4 datapath | **PASS**, 53 self-computed checks: all 16 C words for four independent input vectors, a 16-way flush landing at `lane*256+offset`, `DST_PTR` advancing once per flush not once per lane, `OP_LOADB_ACT` restoring all four lanes into B's four columns, four per-lane scores and lane-selected `LATCH_LOSS` |
-| `chip_core_gan_tb` — pad-level serial | **PASS**: image buffer, activation buffer, a full 4×256 MAC pass vs the `d3004n4` fixture, a post-processing flush vs an independent model, score + loss + metric reads |
+| `chip_core_gan_tb` — pad-level serial | **PASS**: image buffer, activation buffer, a full 4×256 MAC pass vs the `d3004n4` fixture, a post-processing flush vs an independent model, score + loss + metric reads, **both burst modes verified over a full 1024-byte tile with their edge counts measured** |
 | Verilator lint (`-Wall`, `-DSYNTHESIS`) | **0 warnings** in the new files |
 | Yosys / LibreLane `--to Yosys.Synthesis` | **clean**: 689,451 um2 of cells, **13 SRAM macros** (8x256 + 3x64 + 2x1024), **0 inferred latches**, 0 problems reported |
 | Main-branch regression: `d3004`, `d3004n4`, `g3005`, `g300_pipeline` | **PASS**, unchanged |
@@ -387,7 +413,7 @@ rtl/gan_img_buffer.v     1024 B image buffer       (1 macro)
 rtl/gan_metrics.v        losses + 20 metric registers
 rtl/gan_sequencer.v      opcode FSM: the whole G->D dataflow
 rtl/gan_engine_top.v     TAPEOUT BOUNDARY
-rtl/gan_serial_bridge.v  4-wire host link
+rtl/gan_serial_bridge.v  host link: 4-wire + 8-bit parallel burst bus
 rtl/chip_core_gan.sv     Stage-2 padring core
 
 scripts/gan_golden.py            bit-exact model; single source of truth
