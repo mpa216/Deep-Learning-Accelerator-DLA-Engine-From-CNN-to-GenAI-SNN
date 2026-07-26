@@ -4,7 +4,7 @@
 // discriminator dataflow, with no host round-trip per neuron.
 //
 // The host still streams weights (the two networks hold 538 KiB of int8 weights and
-// biases against 4.6 KB of on-chip SRAM -- they cannot live on the die), but everything
+// biases against 4,096 B (4 KiB) of on-chip SRAM -- they cannot live on the die), but everything
 // else runs here:
 //
 //   per layer :   OP_LOADB_ACT | OP_LOADB_IMG    input vector -> DLA B buffer
