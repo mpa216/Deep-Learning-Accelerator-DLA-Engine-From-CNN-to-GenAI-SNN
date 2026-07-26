@@ -25,9 +25,11 @@
 //     ACT        1    layer output activations
 //     IMG        4    the 784-pixel image
 //
-// Weights are NOT on chip: the two networks hold ~645 KB of int8 weights against
-// 4.6 KB of SRAM, so the host streams one 4x256 tile at a time into the A buffer --
-// the same arrangement the main-branch chip used, and the only one that fits.
+// Weights are NOT on chip: the two networks hold 538 KiB of int8 weights and biases
+// against 4.6 KB of SRAM, so the host streams one 4x256 tile at a time into the A
+// buffer -- the same arrangement the main-branch chip used, and the only one that fits.
+// The values themselves are frozen (trained checkpoints, quantised once); it is the
+// on-chip working set that turns over, once per OP_TILE.
 // ============================================================================
 module gan_engine_top (
     input                     clk,

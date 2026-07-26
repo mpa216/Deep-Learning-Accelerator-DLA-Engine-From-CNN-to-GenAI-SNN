@@ -3,8 +3,8 @@
 // GAN sequencer: turns a handful of host opcodes into the full generator ->
 // discriminator dataflow, with no host round-trip per neuron.
 //
-// The host still streams weights (the two networks hold ~645 KB of int8 weights,
-// against 4.6 KB of on-chip SRAM -- they cannot live on the die), but everything
+// The host still streams weights (the two networks hold 538 KiB of int8 weights and
+// biases against 4.6 KB of on-chip SRAM -- they cannot live on the die), but everything
 // else runs here:
 //
 //   per layer :   OP_LOADB_ACT | OP_LOADB_IMG    input vector -> DLA B buffer

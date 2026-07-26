@@ -84,9 +84,14 @@ buffer. No ping-pong needed.
 array is K=256, so `OP_TILE` is issued four times (each contributing a 24-bit partial sum
 into a 28-bit accumulator) before a single `OP_FLUSH`. The main branch had no such mode.
 
-**Weights are not on chip.** The two networks hold ~645 KB of INT8 weights against 4.6 KB
-of on-chip SRAM, so the host streams one 4×256 tile into the A buffer per `OP_TILE` — the
-same arrangement the main-branch chip used, and the only one that fits.
+**Weights are not on chip.** The two networks hold 538 KiB of INT8 weights and biases
+against 4.6 KB of on-chip SRAM, so the host streams a fresh 4×256 tile into the A buffer
+before every one of the 966 `OP_TILE`s in a full generate-and-score-both run — 801 KiB of
+writes once zero-padding to K=256 and the two discriminator passes are counted. Same
+arrangement the main-branch chip used, and the only one that fits.
+
+The weight *values* never change: they are the frozen, once-quantised trained
+checkpoints. It is only the on-chip *working set* that is reloaded constantly.
 
 ---
 

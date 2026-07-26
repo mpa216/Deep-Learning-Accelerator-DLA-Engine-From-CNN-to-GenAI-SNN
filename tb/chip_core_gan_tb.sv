@@ -5,7 +5,7 @@
 // no internal RTL ports are touched.
 //
 // The full-flow check lives in tb/gan_engine_top_tb.sv (parallel interface, ~440k
-// cycles).  Streaming 645 KB of weights one 24-bit serial frame at a time would take
+// cycles).  Streaming 801 KiB of weight writes one 24-bit serial frame at a time would take
 // ~10^8 cycles, so this testbench instead proves the *interface*: every command in
 // the protocol, the buffer address maps, one real MAC pass with known-good vectors,
 // one post-processing flush, and the metric read path.  Together with the full-flow
