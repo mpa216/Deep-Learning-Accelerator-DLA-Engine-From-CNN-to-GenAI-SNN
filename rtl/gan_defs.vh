@@ -29,6 +29,11 @@ localparam [3:0] CFG_B3      = 4'd9;
 localparam [3:0] CFG_DST_PTR = 4'd10;  // [9:0] write pointer, auto-increments per flush
 localparam [3:0] CFG_DST_SEL = 4'd11;  // [1:0] DST_*
 localparam [3:0] CFG_NOUT    = 4'd12;  // [2:0] valid outputs in a flush (1..4)
+// Batch lanes in flight: 1 (the original mode) or 4.  The MAC array is a 4x4
+// matrix-matrix engine, so four independent input vectors can share one weight tile --
+// B's four columns and C's sixteen words are exactly that.  Batching divides weight
+// streaming, which dominates run time, by the batch factor.
+localparam [3:0] CFG_BATCH   = 4'd13;  // [2:0] 1 or 4
 
 // ---- flush destinations ----
 localparam [1:0] DST_ACT        = 2'd0;  // activation buffer (next layer's input)
@@ -82,6 +87,10 @@ localparam [4:0] MET_SAT_OUT    = 5'd16;   // int8 output-quantiser clamps
 localparam [4:0] MET_CYCLES     = 5'd17;   // busy cycles since the last OP_CLR_MET
 localparam [4:0] MET_LOGIT      = 5'd18;   // last pre-sigmoid value (Q4.12)
 localparam [4:0] MET_LAST_ACC   = 5'd19;   // last raw MAC accumulator (debug)
+// Per-lane scores for batch mode.  MET_Y_FAKE/MET_Y_REAL above still report the most
+// recently scored lane, so every register below index 20 keeps its batch-1 meaning.
+localparam [4:0] MET_Y_FAKE_L0  = 5'd20;   // .. 23
+localparam [4:0] MET_Y_REAL_L0  = 5'd24;   // .. 27
 
 // ---- geometry ----
 localparam integer GAN_IMG_LEN = 784;      // 28 x 28 MNIST digit

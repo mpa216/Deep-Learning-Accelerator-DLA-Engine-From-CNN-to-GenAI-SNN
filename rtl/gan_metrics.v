@@ -21,8 +21,10 @@ module gan_metrics (
     input                     score_vld,     // a discriminator score was produced
     input      [12:0]         score_y,       // Q4.12, 0..4096
     input                     score_is_real,
+    input      [1:0]          score_lane,    // batch lane this score belongs to
     input  signed [15:0]      score_logit,   // pre-sigmoid value
-    input                     latch_loss,    // OP_LATCH_LOSS: fold y_real/y_fake in
+    input                     latch_loss,    // OP_LATCH_LOSS: fold one lane's pair in
+    input      [1:0]          latch_lane,
 
     input                     ink_vld,       // a pixel was written to the image buffer
     input  signed [7:0]       ink_pixel,
@@ -42,12 +44,19 @@ module gan_metrics (
     localparam [23:0] SAT24 = 24'h7fffff;
 
     reg [23:0] y_fake, y_real, loss_g, loss_d;
+    // Per-lane scores.  y_fake/y_real above mirror the most recently scored lane, so
+    // every batch-1 register keeps its original meaning.
+    reg [23:0] y_fake_l [0:3];
+    reg [23:0] y_real_l [0:3];
+    reg [1:0]  lane_r;
     reg [23:0] acc_loss_g, acc_loss_d, acc_y_fake, acc_y_real;
     reg [23:0] n_samples, n_fooled, n_real_ok;
     reg [23:0] y_fake_min, y_fake_max;
     reg [23:0] ink, sat_pre_cnt, sat_out_cnt, cycles;
     reg signed [15:0] logit;
     reg signed [27:0] last_acc_r;
+
+    integer li;
 
     // Saturating 24-bit add.
     function [23:0] sadd;
@@ -93,7 +102,11 @@ module gan_metrics (
             n_samples <= 24'd0; n_fooled <= 24'd0; n_real_ok <= 24'd0;
             y_fake_min <= 24'd4096; y_fake_max <= 24'd0;
             ink <= 24'd0; sat_pre_cnt <= 24'd0; sat_out_cnt <= 24'd0; cycles <= 24'd0;
-            logit <= 16'sd0; last_acc_r <= 28'sd0;
+            logit <= 16'sd0; last_acc_r <= 28'sd0; lane_r <= 2'd0;
+            for (li = 0; li < 4; li = li + 1) begin
+                y_fake_l[li] <= 24'd0;
+                y_real_l[li] <= 24'd0;
+            end
             lstate <= L_IDLE; nl_req <= 1'b0; nl_in <= 13'd0; loss_d_part <= 24'd0;
         end else begin
             nl_req <= 1'b0;
@@ -106,6 +119,10 @@ module gan_metrics (
                 y_fake_min <= 24'd4096; y_fake_max <= 24'd0;
                 ink <= 24'd0; sat_pre_cnt <= 24'd0; sat_out_cnt <= 24'd0;
                 cycles <= 24'd0;
+                for (li = 0; li < 4; li = li + 1) begin
+                    y_fake_l[li] <= 24'd0;
+                    y_real_l[li] <= 24'd0;
+                end
             end else begin
                 if (seq_busy && (cycles != SAT24)) cycles <= cycles + 1'b1;
                 if (sat_pre) sat_pre_cnt <= sadd(sat_pre_cnt, 24'd1);
@@ -117,10 +134,12 @@ module gan_metrics (
                     logit      <= score_logit;
                     last_acc_r <= last_acc;
                     if (score_is_real) begin
+                        y_real_l[score_lane] <= {11'd0, score_y};
                         y_real     <= {11'd0, score_y};
                         acc_y_real <= sadd(acc_y_real, {11'd0, score_y});
                         if (score_y > 13'd2048) n_real_ok <= sadd(n_real_ok, 24'd1);
                     end else begin
+                        y_fake_l[score_lane] <= {11'd0, score_y};
                         y_fake     <= {11'd0, score_y};
                         acc_y_fake <= sadd(acc_y_fake, {11'd0, score_y});
                         if (score_y > 13'd2048) n_fooled <= sadd(n_fooled, 24'd1);
@@ -132,7 +151,8 @@ module gan_metrics (
 
             case (lstate)
                 L_IDLE: if (latch_loss && !clr) begin
-                    nl_in  <= y_fake[12:0];
+                    lane_r <= latch_lane;
+                    nl_in  <= y_fake_l[latch_lane][12:0];
                     nl_req <= 1'b1;
                     lstate <= L_G;
                 end
@@ -140,14 +160,14 @@ module gan_metrics (
                 L_G: if (nl_vld) begin
                     loss_g     <= nl_out[23:0];
                     acc_loss_g <= sadd(acc_loss_g, nl_out[23:0]);
-                    nl_in      <= y_real[12:0];
+                    nl_in      <= y_real_l[lane_r][12:0];
                     nl_req     <= 1'b1;
                     lstate     <= L_DR;
                 end
 
                 L_DR: if (nl_vld) begin
                     loss_d_part <= nl_out[23:0];
-                    nl_in       <= 13'd4096 - y_fake[12:0];   // 1 - y_fake
+                    nl_in       <= 13'd4096 - y_fake_l[lane_r][12:0];   // 1 - y_fake
                     nl_req      <= 1'b1;
                     lstate      <= L_DF;
                 end
@@ -197,6 +217,8 @@ module gan_metrics (
             MET_CYCLES:     met_data = cycles;
             MET_LOGIT:      met_data = {{8{logit[15]}}, logit};
             MET_LAST_ACC:   met_data = last_acc_r[23:0];
+            5'd20, 5'd21, 5'd22, 5'd23: met_data = y_fake_l[met_addr[1:0]];
+            5'd24, 5'd25, 5'd26, 5'd27: met_data = y_real_l[met_addr[1:0]];
             default:        met_data = 24'd0;
         endcase
     end

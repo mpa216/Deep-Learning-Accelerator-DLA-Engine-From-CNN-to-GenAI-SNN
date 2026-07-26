@@ -101,6 +101,7 @@ module gan_engine_top (
     wire signed [7:0]  cfg_b3   = cfg[CFG_B3][7:0];
     wire [9:0]         cfg_dptr = cfg[CFG_DST_PTR][9:0];
     wire [1:0]         cfg_dsel = cfg[CFG_DST_SEL][1:0];
+    wire [2:0]         cfg_batch = cfg[CFG_BATCH][2:0];
 
     // ------------------------------------------------------------------
     // Sequencer <-> host arbitration for the shared write/read ports
@@ -113,7 +114,8 @@ module gan_engine_top (
     wire [3:0]  seq_dla_rd_addr;
 
     wire        seq_act_we, seq_img_we;
-    wire [7:0]  seq_act_waddr, seq_act_wdata, seq_act_raddr;
+    wire [9:0]  seq_act_waddr, seq_act_raddr;
+    wire [7:0]  seq_act_wdata;
     wire [9:0]  seq_img_waddr, seq_img_raddr;
     wire [7:0]  seq_img_wdata;
 
@@ -129,9 +131,9 @@ module gan_engine_top (
     wire [3:0]  dla_rd_addr = seq_busy ? seq_dla_rd_addr : rd_addr[3:0];
 
     wire        act_we    = seq_busy ? seq_act_we    : (host_w && (wr_sel == WSEL_ACT));
-    wire [7:0]  act_waddr = seq_busy ? seq_act_waddr : wr_addr[7:0];
+    wire [9:0]  act_waddr = seq_busy ? seq_act_waddr : wr_addr;
     wire [7:0]  act_wdata = seq_busy ? seq_act_wdata : wr_data;
-    wire [7:0]  act_raddr = seq_busy ? seq_act_raddr : rd_addr[7:0];
+    wire [9:0]  act_raddr = seq_busy ? seq_act_raddr : rd_addr;
 
     wire        img_we    = seq_busy ? seq_img_we    : (host_w && (wr_sel == WSEL_IMG));
     wire [9:0]  img_waddr = seq_busy ? seq_img_waddr : wr_addr;
@@ -149,7 +151,8 @@ module gan_engine_top (
         .K            (256),
         .DATA_W       (8),
         .ACC_W        (24),
-        .SRAM_LATENCY (1)
+        .SRAM_LATENCY (1),
+        .C_SRAM_DEPTH (64)     // only N*N = 16 words are ever used
     ) u_dla (
         .clk     (clk),
         .rst_n   (rst_n),
@@ -219,6 +222,7 @@ module gan_engine_top (
     );
 
     wire        met_clr, met_score_vld, met_score_is_real, met_latch_loss;
+    wire [1:0]  met_score_lane, met_latch_lane;
     wire        met_ink_vld, met_sat_pre, met_sat_out, met_busy;
     wire [12:0] met_score_y;
     wire signed [15:0] met_logit;
@@ -233,8 +237,10 @@ module gan_engine_top (
         .score_vld     (met_score_vld),
         .score_y       (met_score_y),
         .score_is_real (met_score_is_real),
+        .score_lane    (met_score_lane),
         .score_logit   (met_logit),
         .latch_loss    (met_latch_loss),
+        .latch_lane    (met_latch_lane),
         .ink_vld       (met_ink_vld),
         .ink_pixel     (met_ink_pixel),
         .sat_pre       (met_sat_pre),
@@ -271,6 +277,7 @@ module gan_engine_top (
         .cfg_dst_ptr (cfg_dptr),
         .cfg_dst_sel (cfg_dsel),
         .cfg_nout    (cfg_nout),
+        .cfg_batch   (cfg_batch),
         .dst_ptr_inc (dst_ptr_inc),
 
         .dla_start   (seq_dla_start),
@@ -310,8 +317,10 @@ module gan_engine_top (
         .met_score_vld     (met_score_vld),
         .met_score_y       (met_score_y),
         .met_score_is_real (met_score_is_real),
+        .met_score_lane    (met_score_lane),
         .met_logit         (met_logit),
         .met_latch_loss    (met_latch_loss),
+        .met_latch_lane    (met_latch_lane),
         .met_ink_vld       (met_ink_vld),
         .met_ink_pixel     (met_ink_pixel),
         .met_sat_pre       (met_sat_pre),

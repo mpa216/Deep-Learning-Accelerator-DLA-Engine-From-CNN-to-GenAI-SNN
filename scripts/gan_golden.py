@@ -352,6 +352,34 @@ class GanChip:
             x, s_x = post, s_out
         return cfgs
 
+    def calibrate_generator_batch(self, zqs, s_z):
+        """One generator config covering every latent in a batch.
+
+        All lanes of a batch share the same weight tile and therefore the same six
+        config registers, so the activation ranges must be taken over their union --
+        the same rule calibrate_discriminator_pair already applies to fake vs real.
+        """
+        cfgs = []
+        xs = [[v * s_z for v in zq] for zq in zqs]
+        s_x = s_z
+        specs = [("G0", "relu", FUNC_RELU), ("G2", "relu", FUNC_RELU),
+                 ("G4", "tanh", FUNC_TANH)]
+        for key, fact, func in specs:
+            pres, posts = [], []
+            for x in xs:
+                p, q = self._float_layer(x, key, s_x, fact)
+                pres.append(p)
+                posts.append(q)
+            pre_max = max(abs(v) for p in pres for v in p)
+            s_out = (self.s_img if func == FUNC_TANH
+                     else max(max(abs(v) for q in posts for v in q) / 127.0, 1e-12))
+            cfgs.append(make_layer_cfg(key,
+                                       self.scale[f"G300_{key[1]}_weight"], s_x,
+                                       self.scale[f"G300_{key[1]}_bias"],
+                                       s_out, func, pre_max))
+            xs, s_x = posts, s_out
+        return cfgs
+
     def calibrate_discriminator_pair(self, *images, hidden_func=FUNC_LRELU):
         """Calibrate ONE discriminator config covering every image it will score.
 

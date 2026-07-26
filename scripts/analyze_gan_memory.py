@@ -18,17 +18,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WDIR = ROOT / "weights_vh" / "mnist_gan_mlp"
 
-MACRO_BYTES = 256                       # gf180mcu_ocd_ip_sram__sram256x8m8wm1
-MACRO_UM2 = 301.3 * 224.93              # from the macro LEF
+# This SRAM family is fixed-width (301.3 um) and scales only in height, so area per
+# byte improves steeply with depth -- which is why each bank now uses the size that
+# fits it rather than four copies of one size.
+MACRO_W = 301.3
+MACRO_H = {64: 152.21, 256: 224.93, 512: 321.89, 1024: 515.81}
+MACRO_UM2 = {d: MACRO_W * h for d, h in MACRO_H.items()}
 
-# bank -> (macro count, note)
+# bank -> (macro count, macro depth, note)
 BANKS = {
-    "A   (weight tile)":   (4, "4 weight rows x 256 k"),
-    "B   (input vector)":  (4, "4 columns x 256 k"),
-    "C   (MAC results)":   (3, "3 byte planes of a 24-bit word, 256 deep"),
-    "ACT (activations)":   (1, "one layer's outputs"),
-    "IMG (the digit)":     (4, "1024 flat bytes across 4 banks"),
+    "A   (weight tile)":   (4, 256,  "4 weight rows x 256 k, read in parallel"),
+    "B   (input vector)":  (4, 256,  "4 columns = 4 batch lanes"),
+    "C   (MAC results)":   (3, 64,   "3 byte planes; only N*N = 16 words used"),
+    "ACT (activations)":   (1, 1024, "4 lanes x 256 activations, lane-major"),
+    "IMG (the digit)":     (1, 1024, "one digit, or 4 drain windows at batch 4"),
 }
+BATCH = 4
 
 N, K = 4, 256
 IMG_LEN = 784
@@ -69,15 +74,24 @@ def main() -> None:
 
     # ---- 2. SRAM inventory --------------------------------------------------
     rule("2. ON-CHIP SRAM")
-    print(f"{'bank':22s} {'macros':>7s} {'bytes':>8s} {'area um2':>10s}   note")
+    print(f"{'bank':22s} {'macros':>13s} {'bytes':>8s} {'area um2':>10s}   note")
     n_macros = 0
-    for name, (cnt, note) in BANKS.items():
+    sram_bytes = 0
+    sram_um2 = 0.0
+    for name, (cnt, depth, note) in BANKS.items():
         n_macros += cnt
-        print(f"{name:22s} {cnt:7d} {cnt*MACRO_BYTES:8,d} {cnt*MACRO_UM2:10,.0f}   {note}")
-    sram_bytes = n_macros * MACRO_BYTES
-    print(f"{'-'*70}")
-    print(f"{'TOTAL':22s} {n_macros:7d} {sram_bytes:8,d} {n_macros*MACRO_UM2:10,.0f}"
+        sram_bytes += cnt * depth
+        sram_um2 += cnt * MACRO_UM2[depth]
+        print(f"{name:22s} {f'{cnt} x {depth}x8':>13s} {cnt*depth:8,d} "
+              f"{cnt*MACRO_UM2[depth]:10,.0f}   {note}")
+    print(f"{'-'*76}")
+    print(f"{'TOTAL':22s} {n_macros:13d} {sram_bytes:8,d} {sram_um2:10,.0f}"
           f"   = {sram_bytes/1024:.1f} KiB")
+    old = 16 * MACRO_UM2[256]
+    print(f"\n  previous arrangement (16 x 256x8): {old:,.0f} um2 "
+          f"-> right-sizing saves {100*(old-sram_um2)/old:.1f}%")
+    print(f"  area per byte: 64x8 {MACRO_UM2[64]/64:.0f}, 256x8 {MACRO_UM2[256]/256:.0f}, "
+          f"512x8 {MACRO_UM2[512]/512:.0f}, 1024x8 {MACRO_UM2[1024]/1024:.0f} um2/byte")
     print(f"\n  weights / on-chip SRAM = {tot/sram_bytes:,.0f}x  "
           f"-- only 1/{tot/sram_bytes:,.0f} of the model fits at any instant")
 
@@ -86,16 +100,16 @@ def main() -> None:
     print("   ('usable' = addresses this design ever touches, at peak)")
     print(f"\n{'bank':22s} {'capacity':>9s} {'usable':>8s} {'util':>7s}   why")
     rows = [
-        ("A   (weight tile)", 4*MACRO_BYTES, 4*K,
+        ("A   (weight tile)", 4*256, 4*K,
          "all 4 rows x full K depth"),
-        ("B   (input vector)", 4*MACRO_BYTES, 1*K,
-         "only column 0: the GAN is matrix-VECTOR, not matrix-matrix"),
-        ("C   (MAC results)", 3*MACRO_BYTES, N*N*3,
-         f"only {N*N} of 256 words hold results"),
-        ("ACT (activations)", 1*MACRO_BYTES, 256,
-         "256-wide hidden layers fill it exactly"),
-        ("IMG (the digit)", 4*MACRO_BYTES, IMG_LEN,
-         f"{IMG_LEN} of 1024 bytes = a 28x28 digit"),
+        ("B   (input vector)", 4*256, BATCH*K,
+         f"all 4 columns at batch {BATCH} (was 25% when batch was 1)"),
+        ("C   (MAC results)", 3*64, N*N*3,
+         f"{N*N} words = 4 neurons x 4 lanes, in 64-deep macros"),
+        ("ACT (activations)", 1024, BATCH*256,
+         f"{BATCH} lanes x 256 activations"),
+        ("IMG (the digit)", 1024, IMG_LEN,
+         f"{IMG_LEN} of 1024 bytes at batch 1; 4 drain windows at batch 4"),
     ]
     use_tot = 0
     for name, cap, use, why in rows:
@@ -119,11 +133,11 @@ def main() -> None:
         a_last = 4 * last
         b_use = min(K, idim)
         dest = "IMG 784 B" if name == "G4" else ("score reg" if od == 1 else "ACT 256 B")
-        a_txt = (f"{a_use:4d}B {100*a_use/(4*MACRO_BYTES):4.0f}%"
+        a_txt = (f"{a_use:4d}B {100*a_use/1024:4.0f}%"
                  if nkt == 1 else
                  f"{a_use:4d}B/{a_last:3d}B last")
         print(f"{name:6s} {f'{idim}->{od}':12s} {nkt:7d} {a_txt:>14s}"
-              f" {b_use:5d}B {100*b_use/(4*MACRO_BYTES):4.0f}% {dest:>16s}")
+              f" {b_use:5d}B {100*b_use/1024:4.0f}% {dest:>16s}")
     print(f"\n  OP_TILE per generate pass          : "
           f"{sum(max(1, od//N) * ((idim+K-1)//K) for n, od, idim in LAYERS[:3]):,d}")
     print(f"  OP_TILE per discriminator pass     : "
@@ -156,20 +170,24 @@ def main() -> None:
     print(f"  generate + D(fake) + D(real)                : {run:9,d}"
           f"  = {run/1024:.0f} KiB")
     print(f"  A buffer reloaded                           : "
-          f"{run/(4*MACRO_BYTES):9,.0f} times over")
+          f"{run/1024:9,.0f} times over")
     print(f"  useful MACs in that run                     : {macs:9,d}")
     print(f"  weight bytes streamed per MAC               : {run/macs:9.2f}")
+    print(f"  ... at batch {BATCH}, per image                    : "
+          f"{run/BATCH/1024:9,.0f} KiB  ({BATCH}x less)")
     print("""
-  A ratio of ~1 byte per MAC is the whole story: a matrix-VECTOR product uses each
-  weight exactly once, so there is no reuse to capture and no on-chip SRAM size
-  short of holding the entire model would change it.  Reuse only appears with
-  batching -- and the MAC array is ALREADY a 4x4 matrix-matrix engine, so B's three
-  idle columns and C's twelve idle words are exactly a free 4-way batch.  What
-  blocks it is downstream storage, not the engine:""")
-    print(f"    batch-4 would need ACT {4*256:,d} B (have {256:,d}) and "
-          f"IMG {4*IMG_LEN:,d} B (have {4*MACRO_BYTES:,d})")
-    need = (4 * 256 - 256 + 4 * IMG_LEN - 4 * MACRO_BYTES + MACRO_BYTES - 1) // MACRO_BYTES
-    print(f"    i.e. ~{need} more macros ({n_macros + need} total) to cut weight traffic 4x")
+  A ratio of ~1 byte per MAC is why batching matters: a matrix-VECTOR product uses
+  each weight exactly once, so no on-chip SRAM size short of holding the whole model
+  creates reuse.  Batching does -- and the MAC array was already a 4x4 matrix-matrix
+  engine, so four lanes cost nothing in the engine itself.  What batching needs is
+  downstream storage, and that is what the right-sized macros bought:
+
+    ACT   4 x 256 activations  = 1,024 B  -> one 1024x8 macro
+    IMG   4 x 784 pixels       = 3,136 B  -> does NOT fit; the host holds the images
+                                             and this buffer is a 1 KiB drain window
+
+  Keeping all four images on chip would need IMG at 4 x 1024x8, adding ~466k um2 and
+  pushing the die past the Stage-2 slot -- hence "batch 4, host holds images".""")
 
 
 if __name__ == "__main__":

@@ -25,7 +25,8 @@ the main branch's five testbenches still pass (verified — see *Verification* b
 | Requantisation | 64-bit multiplies in a sim-only wrapper | one shared 28×20 multiplier |
 | Quant constants | compile-time `include`, re-synthesise per latent | host-written config registers |
 | Losses / metrics | host-side, in Python | on chip (`gan_metrics` + `gan_nlog`) |
-| SRAM macros | 11 | 16 (+1 activation, +4 image) |
+| SRAM macros | 11 x 256x8 | **13, right-sized**: A 4x256, B 4x256, C 3x64, ACT 1x1024, IMG 1x1024 |
+| Batch | 1 | **1 or 4** (`CFG_BATCH`) -- 4x less weight traffic |
 
 The PWL is not cosmetic. The main branch's generator tanh was a 8193×24-bit ROM that
 only ever existed in a testbench array — it could never have been taped out. Replacing it
@@ -49,7 +50,7 @@ generated digit, 9-segment PWL vs the unquantised float generator:
                           gan_serial_bridge.v
                                      |
    +---------------------------------+-------------------------------------+
-   |  gan_engine_top.v            TAPEOUT BOUNDARY (16 SRAM macros)         |
+   |  gan_engine_top.v            TAPEOUT BOUNDARY (13 SRAM macros)         |
    |                                                                       |
    |   config regs (16 x 24b) ------+                                      |
    |                                v                                      |
@@ -65,8 +66,8 @@ generated digit, 9-segment PWL vs the unquantised float generator:
    |                   +--------------+---------------+                    |
    |                   v              v               v                    |
    |         gan_act_buffer     gan_img_buffer    gan_metrics.v            |
-   |            256 B, 1 macro   1024 B, 4 macros    losses via gan_nlog.v |
-   |         (layer activations) (the 784-px digit)  + 20 counters         |
+   |          1024 B, 1 macro    1024 B, 1 macro    losses via gan_nlog.v |
+   |         (4 lanes x 256)     (digit / drain)    + 28 registers        |
    +-----------------------------------------------------------------------+
 ```
 
@@ -75,10 +76,30 @@ pixels back through `784 → 256 → 256 → 1` for the discriminator, then the 
 image buffer is the handover point between the two networks and is also where the host
 loads a *real* digit so `D(real)` can be scored.
 
-**Why one 256-byte activation buffer is enough** for a 6-layer network: a layer's *input*
-vector is copied into the MAC array's own B buffer once per layer (`OP_LOADB_ACT`), so by
-the time the layer starts writing its outputs, its inputs no longer live in the activation
-buffer. No ping-pong needed.
+**Why one activation buffer is enough** for a 6-layer network: a layer's *input* vector is
+copied into the MAC array's own B buffer once per layer (`OP_LOADB_ACT`), so by the time
+the layer starts writing its outputs, its inputs no longer live in the activation buffer.
+No ping-pong needed.
+
+**Batching (`CFG_BATCH` = 1 or 4).** The MAC array computes `C[i][j] = sum_k A[i][k]*B[k][j]`
+— its four B columns are four *independent* input vectors and its sixteen C words are four
+neurons x four lanes. So one streamed weight tile serves four images, and since weight
+streaming dominates run time, batch 4 is a ~4x throughput win for no change to the engine
+at all. Buffers are laid out lane-major (lane j at `[j*256 .. j*256+255]`), so batch 1 is
+exactly the old addressing with j pinned to 0.
+
+Four images are 3,136 bytes and do not fit on chip, so **the host holds them**: the
+generator's output layer writes 16 pixels per tile into the image buffer as a 1 KiB drain
+window and the host empties it as it goes, then feeds the pixels back into B for the
+discriminator. That costs ~2.5% extra link traffic against a 4x saving in weight streaming.
+Keeping all four resident would need IMG at 4 x 1024x8 — about 466k um2 more, pushing the
+die out of the Stage-2 slot.
+
+**Right-sized macros.** This SRAM family is fixed-width and scales only in height, so area
+per byte runs 717 / 265 / 189 / 152 um2 for 64 / 256 / 512 / 1024 deep. Sizing each bank to
+what it actually holds (C uses 16 of 256 words; ACT and IMG want 1 KiB in one macro rather
+than four) makes the batch-4 design **8.6% smaller** than the 16 x 256x8 arrangement it
+replaces: 13 macros, 990,581 um2 against 1,084,343.
 
 **K-tiling** is new. The discriminator's first layer contracts over 784 inputs but the MAC
 array is K=256, so `OP_TILE` is issued four times (each contributing a 24-bit partial sum
@@ -154,9 +175,12 @@ loss_D = -ln(y_real) - ln(1 - y_fake)
 | 10 | `DST_PTR` | write pointer; **auto-increments** by `NOUT` per flush |
 | 11 | `DST_SEL` | 0 = activation buffer, 1 = image, 2 = score(fake), 3 = score(real) |
 | 12 | `NOUT` | valid outputs in a flush (1–4) |
+| 13 | `BATCH` | batch lanes: 1 or 4 |
 
 **Opcodes** (`exec_op`): `ZERO_B`, `LOADB_ACT`, `LOADB_IMG(page)`, `TILE`, `FLUSH`,
-`CLR_ACC`, `CLR_MET`, `LATCH_LOSS`, `ZERO_ACT`, `ZERO_IMG`.
+`CLR_ACC`, `CLR_MET`, `LATCH_LOSS(lane)`, `ZERO_ACT`, `ZERO_IMG`.  At batch 4 a single
+`FLUSH` post-processes all sixteen accumulators, and `LATCH_LOSS` takes the lane to fold
+into the accumulators as its argument.
 
 **Metric registers** (`MET_*`), 32 × 24-bit, read-only — this is the "loss graph and key
 metrics" output:
@@ -169,6 +193,7 @@ metrics" output:
 | 7 | `N_SAMPLES` | | 17 | `CYCLES` (throughput) |
 | 8–9 | `N_FOOLED`, `N_REAL_OK` | | 18 | `LOGIT` (pre-sigmoid) |
 | 10–11 | `Y_FAKE_MIN/MAX` | | 19 | `LAST_ACC` (debug) |
+| 20–23 | `Y_FAKE_L0..3` | per-lane scores | 24–27 | `Y_REAL_L0..3` |
 
 `N_FOOLED` is the hardware version of the reference testbench's
 *"VERDICT: REAL — Generator successfully fooled the Discriminator"*, and it is also
@@ -258,9 +283,10 @@ All run in the container on this branch.
 |---|---|
 | `gan_pwl_act_tb` — 1258 PWL + 600 −ln vectors vs `gan_golden.py` | **PASS**, bit-exact |
 | `gan_engine_top_tb` — full G→D→losses | **PASS**: image 784/784 pixels bit-exact; `Y_FAKE`, `Y_REAL`, `LOSS_G`, `LOSS_D`, both accumulators, `N_SAMPLES/FOOLED/REAL_OK`, `INK`, `SAT_PRE`, `SAT_OUT`, `LOGIT` all match golden |
-| `chip_core_gan_tb` — pad-level serial | **PASS**: all four image banks, activation buffer, a full 4×256 MAC pass vs the `d3004n4` fixture, a post-processing flush vs an independent model, score + loss + metric reads |
+| `gan_batch4_tb` — batch-4 datapath | **PASS**, 53 self-computed checks: all 16 C words for four independent input vectors, a 16-way flush landing at `lane*256+offset`, `DST_PTR` advancing once per flush not once per lane, `OP_LOADB_ACT` restoring all four lanes into B's four columns, four per-lane scores and lane-selected `LATCH_LOSS` |
+| `chip_core_gan_tb` — pad-level serial | **PASS**: image buffer, activation buffer, a full 4×256 MAC pass vs the `d3004n4` fixture, a post-processing flush vs an independent model, score + loss + metric reads |
 | Verilator lint (`-Wall`, `-DSYNTHESIS`) | **0 warnings** in the new files |
-| Yosys / LibreLane `--to Yosys.Synthesis` | **clean**: 23,701 cells, 1,589 flops, **16 SRAM macros**, **0 inferred latches**, 0 problems reported |
+| Yosys / LibreLane `--to Yosys.Synthesis` | **clean**: 689,451 um2 of cells, **13 SRAM macros** (8x256 + 3x64 + 2x1024), **0 inferred latches**, 0 problems reported |
 | Main-branch regression: `d3004`, `d3004n4`, `g3005`, `g300_pipeline` | **PASS**, unchanged |
 
 Result for latent seed 4 (digit "0"):
@@ -282,10 +308,10 @@ compute cycles = 440,252
 **no place-and-route has been run**. Everything downstream of synthesis is a sized
 estimate, not a result:
 
-- `DIE_AREA 1900×1900` with a 4×4 macro grid. Sized from this design's own measured
-  614,125 µm² of standard cells plus the *measured* Yosys→placed scaling factor (1.44×)
-  of the signed-off `as3v3_k256_d63` run → ~53% instance utilisation, ~32% std-cell
-  density in the non-macro area (the reference run: 48.6% / 24.3%).
+- `DIE_AREA 1900×1900`, macros in four rows (A / B / C / the two deep buffers). Sized
+  from this design's own measured 689,451 µm² of standard cells plus the *measured*
+  Yosys→placed scaling factor (1.44×) of the signed-off `as3v3_k256_d63` run →
+  ~52% instance utilisation.
 - 1900×1900 is also the largest square that still fits the Stage-2 workshop slot's
   2051×2051 core, with ~75 µm margin per side. That is noticeably tighter than the main
   branch's fit. If chip-level routing or the PDN complains, **shrink the logic, not the
@@ -340,8 +366,9 @@ rtl/gan_pwl_tables.vh    GENERATED by scripts/gan_golden.py -- PWL coefficients
 rtl/gan_pwl_act.v        9-segment PWL activation unit
 rtl/gan_nlog.v           -ln(y) for the BCE losses
 rtl/gan_postproc.v       requant -> activation -> int8, one shared multiplier
-rtl/gan_act_buffer.v     256 B activation buffer   (1 macro)
-rtl/gan_img_buffer.v     1024 B image buffer       (4 macros)
+rtl/gan_sram_1rw.v       64x8 and 1024x8 macro wrappers + blackboxes
+rtl/gan_act_buffer.v     1024 B activation buffer  (1 macro, 4 lanes)
+rtl/gan_img_buffer.v     1024 B image buffer       (1 macro)
 rtl/gan_metrics.v        losses + 20 metric registers
 rtl/gan_sequencer.v      opcode FSM: the whole G->D dataflow
 rtl/gan_engine_top.v     TAPEOUT BOUNDARY
@@ -353,7 +380,8 @@ scripts/gen_gan_chip_assets.py   assets, config images, goldens, loss sweep
 scripts/plot_gan_metrics.py      loss curve + metrics report
 
 tb/gan_pwl_act_tb.sv     PWL + -ln unit test
-tb/gan_engine_top_tb.sv  full G -> D -> losses
+tb/gan_engine_top_tb.sv  full G -> D -> losses (batch 1)
+tb/gan_batch4_tb.sv      batch-4 datapath
 tb/chip_core_gan_tb.sv   pad-level serial protocol
 
 librelane/config_gan.yaml  16-macro hardening config

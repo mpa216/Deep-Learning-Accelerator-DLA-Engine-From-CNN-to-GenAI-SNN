@@ -4,8 +4,14 @@
 # 1600x1500).  This variant hardens the whole GAN -- generator + discriminator +
 # 9-segment PWL activations + BCE loss/metrics -- into ONE Stage-1 macro:
 #
-#     16 SRAM macros = A(4) + B(4) + C(3)   [inside dla_engine_top, unchanged]
-#                    + ACT(1) + IMG(4)      [new: activations and the 784-pixel image]
+#     13 SRAM macros = A(4x256) + B(4x256) + C(3x64)  [inside dla_engine_top]
+#                    + ACT(1x1024) + IMG(1x1024)      [activations and the digit]
+#
+# The array runs up to FOUR batch lanes (CFG_BATCH): B's four columns hold four
+# independent input vectors and C's sixteen words are four neurons x four lanes, so one
+# streamed weight tile serves four images.  Weight streaming dominates run time, so this
+# is a ~4x throughput win -- and right-sizing the macros pays for it, leaving the design
+# SMALLER than the 16x 256x8 arrangement it replaces.
 #
 # Run it exactly like config.yaml, from librelane/ inside the container:
 #     librelane config_gan.yaml --run-tag gan_v1
@@ -40,6 +46,7 @@ VERILOG_FILES:
   - dir::../rtl/gan_metrics.v
   - dir::../rtl/gan_act_buffer.v
   - dir::../rtl/gan_img_buffer.v
+  - dir::../rtl/gan_sram_1rw.v      # 64x8 and 1024x8 wrappers + blackboxes
   # unchanged INT8 MAC engine
   - dir::../rtl/dla_engine_top.v
   - dir::../rtl/dla_controller.v
@@ -77,6 +84,24 @@ CLOCK_PERIOD: 60
 #   yosys -p 'read_verilog -DSYNTHESIS -I rtl rtl/gan_*.v rtl/dla_*.v \
 #             rtl/gf180_sram_1rw_256x8.v; hierarchy -top gan_engine_top; flatten; \
 #             select -list t:gf180mcu_ocd_ip_sram__sram256x8m8wm1'
+# --- SRAM macros: three sizes, right-sized per bank --------------------------
+# This family is fixed-width (301.3 um) and scales only in height, so area per byte
+# improves steeply with depth: 64x8 = 717, 256x8 = 265, 512x8 = 189, 1024x8 = 152
+# um2/byte.  Hence:
+#   A, B   4x 256x8 each -- A needs four simultaneous read ports (one per weight row)
+#          and B four columns (one per batch lane), so they cannot be merged.
+#   C      3x 64x8       -- only N*N = 16 of 256 words are ever used; 32% smaller.
+#   ACT    1x 1024x8     -- 4 lanes x 256 activations, and 43% cheaper than 4x 256x8.
+#   IMG    1x 1024x8     -- one 784-pixel digit (batch 1) or four 256-byte drain
+#                           windows (batch 4, where the host holds the images).
+# 13 macros, 990,581 um2 -- 8.6% LESS than the 16x 256x8 arrangement it replaces,
+# while adding 4x batch throughput.
+#
+# The 256x8 keeps pointing at the copy the signed-off Stage-1 run used; the two new
+# sizes come from SRAM_MACRO/.  Instance names verified by Yosys elaboration:
+#   yosys -p 'read_verilog -DSYNTHESIS -I rtl rtl/gan_*.v rtl/dla_*.v \
+#             rtl/gf180_sram_1rw_256x8.v; hierarchy -top gan_engine_top; flatten; \
+#             select -list t:gf180mcu_ocd_ip_sram__sram256x8m8wm1'
 MACROS:
   gf180mcu_ocd_ip_sram__sram256x8m8wm1:
     gds:
@@ -91,97 +116,100 @@ MACROS:
       "*_ff_n40C_3v60":
         - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib
     instances:
-      # 4x4 grid, macro 301.3(W) x 224.93(H).
-      # Columns x = 120 / 560 / 1000 / 1440  -> 138.7 um horizontal channels
-      # Rows    y = 130 / 570 / 1010 / 1450  -> 215.07 um vertical channels
-      # (both wider than the main branch's 69/265 split, because this die has more
-      #  std cells per macro to route around).
-      #
-      # --- row 0: A buffer, one macro per weight row ---
+      # 4 columns at x = 120 / 560 / 1000 / 1440 (138.7 um channels)
+      # --- row 0, y = 120: A buffer, one macro per weight row ---
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
-        location: [120.0, 130.0]
+        location: [120.0, 120.0]
         orientation: N
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
-        location: [560.0, 130.0]
+        location: [560.0, 120.0]
         orientation: N
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
-        location: [1000.0, 130.0]
+        location: [1000.0, 120.0]
         orientation: N
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
-        location: [1440.0, 130.0]
+        location: [1440.0, 120.0]
         orientation: N
-      # --- row 1: B buffer, one macro per column ---
+      # --- row 1, y = 520: B buffer, one macro per batch lane ---
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
-        location: [120.0, 570.0]
+        location: [120.0, 520.0]
         orientation: N
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
-        location: [560.0, 570.0]
+        location: [560.0, 520.0]
         orientation: N
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
-        location: [1000.0, 570.0]
+        location: [1000.0, 520.0]
         orientation: N
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
-        location: [1440.0, 570.0]
+        location: [1440.0, 520.0]
         orientation: N
-      # --- row 2: C buffer (3 byte planes of the 24-bit result) + ACT ---
-      # ACT sits next to C on purpose: C -> gan_postproc -> ACT is the write-back path.
-      u_dla.u_c_buffer.GEN_SRAM.u_sram0.u_sram:
-        location: [120.0, 1010.0]
+
+  gf180mcu_ocd_ip_sram__sram64x8m8wm1:
+    gds:
+      - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1.gds
+    lef:
+      - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1.lef
+    lib:
+      "*_tt_025C_3v30":
+        - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1__tt_025C_3v30.lib
+      "*_ss_125C_3v00":
+        - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1__ss_125C_3v00.lib
+      "*_ff_n40C_3v60":
+        - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1__ff_n40C_3v60.lib
+    instances:
+      # --- row 2, y = 920: C buffer, 3 byte planes of the 24-bit result ---
+      u_dla.u_c_buffer.GEN_SRAM.GEN_D64.u_sram0.u_sram:
+        location: [120.0, 920.0]
         orientation: N
-      u_dla.u_c_buffer.GEN_SRAM.u_sram1.u_sram:
-        location: [560.0, 1010.0]
+      u_dla.u_c_buffer.GEN_SRAM.GEN_D64.u_sram1.u_sram:
+        location: [560.0, 920.0]
         orientation: N
-      u_dla.u_c_buffer.GEN_SRAM.u_sram2.u_sram:
-        location: [1000.0, 1010.0]
+      u_dla.u_c_buffer.GEN_SRAM.GEN_D64.u_sram2.u_sram:
+        location: [1000.0, 920.0]
         orientation: N
+
+  gf180mcu_ocd_ip_sram__sram1024x8m8wm1:
+    gds:
+      - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram1024x8m8wm1/gf180mcu_ocd_ip_sram__sram1024x8m8wm1.gds
+    lef:
+      - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram1024x8m8wm1/gf180mcu_ocd_ip_sram__sram1024x8m8wm1.lef
+    lib:
+      "*_tt_025C_3v30":
+        - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram1024x8m8wm1/gf180mcu_ocd_ip_sram__sram1024x8m8wm1__tt_025C_3v30.lib
+      "*_ss_125C_3v00":
+        - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram1024x8m8wm1/gf180mcu_ocd_ip_sram__sram1024x8m8wm1__ss_125C_3v00.lib
+      "*_ff_n40C_3v60":
+        - dir::../SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram1024x8m8wm1/gf180mcu_ocd_ip_sram__sram1024x8m8wm1__ff_n40C_3v60.lib
+    instances:
+      # --- row 3, y = 1250: the two deep buffers (515.81 um tall) ---
       u_act.u_sram.u_sram:
-        location: [1440.0, 1010.0]
+        location: [120.0, 1250.0]
         orientation: N
-      # --- row 3: image buffer, 4 banks x 256 bytes = the 784-pixel digit ---
-      u_img.u_sram0.u_sram:
-        location: [120.0, 1450.0]
-        orientation: N
-      u_img.u_sram1.u_sram:
-        location: [560.0, 1450.0]
-        orientation: N
-      u_img.u_sram2.u_sram:
-        location: [1000.0, 1450.0]
-        orientation: N
-      u_img.u_sram3.u_sram:
-        location: [1440.0, 1450.0]
+      u_img.u_sram.u_sram:
+        location: [560.0, 1250.0]
         orientation: N
 
 # --- FLOORPLAN SIZING --------------------------------------------------------
-# Measured (AS 3.3V tt corner).  The gan_engine_top figure is from this very config's
-# own Yosys.Synthesis step (run tag gan_synth_check): 23,701 cells, 1,589 flip-flops,
-# 16 SRAM macros, 0 inferred latches.
-#     dla_engine_top  (main branch)        266,835 um2 of standard cells
-#     gan_engine_top  (this design)        614,125 um2   (+347k: gan_postproc 152k,
-#                                                          gan_metrics 125k incl. the
-#                                                          -ln unit, gan_sequencer 35k,
-#                                                          config file + muxing + ties)
-# Calibration from the signed-off as3v3_k256_d63 run: its Yosys estimate of 266,835
-# became 384,055 um2 of PLACED standard cells (x1.44) once taps, antenna diodes, tie
-# cells and timing-repair buffers were added.  Scaling those components for this
-# design's larger die and net count gives ~782,000 um2 placed.
+# Macro area, from the LEF geometry (301.3 um wide, height varies with depth):
+#     A    4 x 256x8    271,086 um2
+#     B    4 x 256x8    271,086
+#     C    3 x  64x8    137,583      (was 3 x 256x8 = 203,314; only 16 words are used)
+#     ACT  1 x 1024x8   155,414      (was 1 x 256x8; now holds 4 lanes)
+#     IMG  1 x 1024x8   155,414      (was 4 x 256x8 = 271,086, and needed a bank mux)
+#     TOTAL 13 macros   990,581 um2  -- 8.6% below the previous 16 x 256x8 (1,084,343)
 #
-#     16 macros            16 x 67,771  = 1,084,336 um2
-#     placed std cells     (estimate)   =   800,000 um2
-#     total instance area               = 1,884,000 um2
+# Standard cells: measured by this config's own Yosys.Synthesis step.  Calibration from
+# the signed-off as3v3_k256_d63 run says the placed figure lands ~1.44x the Yosys
+# estimate once taps, antenna diodes, ties and repair buffers are added.
+#
 #     die 1900 x 1900 = 3.61e6 um2, core ~3.50e6 um2
-#       -> instance utilisation ~53%   (reference run: 48.6%)
-#       -> STD-CELL density ~32% of the non-macro area (reference: 24.3%)
+#     macros 990,581 + placed std cells ~830,000 = ~1.82e6 um2 instance area
+#       -> instance utilisation ~52%   (signed-off reference run: 48.6%)
 #
-# 1900 x 1900 is also the largest square that still drops into the Stage-2 workshop
-# slot's 2051 x 2051 core with a usable margin (~75 um per side at location
-# [517, 517]).  That margin is noticeably tighter than the main branch's, so if
-# chip-level routing or PDN complains, shrink the LOGIC rather than the die.  In
-# descending order of payoff:
-#   1. share the single gan_pwl_act instance between gan_postproc and gan_metrics'
-#      -ln unit (they never run at the same time)          ~ -38,000 um2
-#   2. replace gan_postproc's 28x20 array multiplier with a sequential shift-add
-#      multiplier (costs ~20 cycles per multiply, of which there are 3 per neuron
-#      against the MAC array's 256 cycles per tile)        ~ -90,000 um2
+# 1900 x 1900 also drops into the Stage-2 workshop slot's 2051 x 2051 core with ~75 um
+# of margin per side.  Holding all four batched images on chip instead of streaming them
+# to the host would need IMG at 4 x 1024x8, pushing the die past 2000 um and out of the
+# slot -- which is exactly why the strategy is "batch 4, host holds images".
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1900, 1900]
 

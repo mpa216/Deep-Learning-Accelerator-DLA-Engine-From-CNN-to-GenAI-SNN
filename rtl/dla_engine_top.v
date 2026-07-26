@@ -18,7 +18,10 @@ module dla_engine_top #(
     parameter AB_ADDR_W = (N*K <= 1) ? 1 : $clog2(N*K),
     parameter C_ADDR_W  = (N*N <= 1) ? 1 : $clog2(N*N),
     parameter K_IDX_W   = (K <= 1) ? 1 : $clog2(K),
-    parameter SRAM_LATENCY = 1
+    parameter SRAM_LATENCY = 1,
+    // Depth of the C-buffer macros. 256 = the main-branch tapeout; 64 = right-sized
+    // (only N*N = 16 words are ever used).  See dla_c_buffer_bank.v.
+    parameter C_SRAM_DEPTH = 256
 ) (
     input                            clk,
     input                            rst_n,
@@ -176,7 +179,8 @@ module dla_engine_top #(
         .N(N),
         .ACC_W(ACC_W),
         .ADDR_W(C_ADDR_W),
-        .USE_SRAM(1)
+        .USE_SRAM(1),
+        .SRAM_DEPTH(C_SRAM_DEPTH)
     ) u_c_buffer (
         .clk(clk),
         .wr_en(c_wr_en),

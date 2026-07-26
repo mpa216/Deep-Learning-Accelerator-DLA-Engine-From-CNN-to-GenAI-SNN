@@ -18,6 +18,13 @@
 // layer run on a K=256 MAC array: each pass contributes a 24-bit partial sum and the
 // 28-bit accumulators here add them up.  The main branch had no such mode -- it could
 // only ever evaluate contractions of exactly 256.
+//
+// BATCHING (CFG_BATCH = 1 or 4).  The MAC array computes C[i][j] = sum_k A[i][k]*B[k][j],
+// so its four B columns hold four INDEPENDENT input vectors and its sixteen C words are
+// four neurons x four lanes.  At CFG_BATCH=4 one weight tile therefore serves four
+// images, which divides weight streaming -- the thing that dominates wall-clock time --
+// by four.  Buffers are laid out lane-major, lane j occupying [j*256 .. j*256+255], so
+// batch 1 is exactly the old addressing with j pinned to 0.
 module gan_sequencer (
     input                     clk,
     input                     rst_n,
@@ -42,6 +49,7 @@ module gan_sequencer (
     input      [9:0]          cfg_dst_ptr,
     input      [1:0]          cfg_dst_sel,
     input      [2:0]          cfg_nout,
+    input      [2:0]          cfg_batch,
     output reg                dst_ptr_inc,
 
     // ---- DLA engine ----
@@ -57,9 +65,9 @@ module gan_sequencer (
 
     // ---- activation buffer ----
     output reg                act_we,
-    output reg [7:0]          act_waddr,
+    output reg [9:0]          act_waddr,
     output reg [7:0]          act_wdata,
-    output     [7:0]          act_raddr,
+    output     [9:0]          act_raddr,
     input      [7:0]          act_rdata,
 
     // ---- image buffer ----
@@ -86,8 +94,10 @@ module gan_sequencer (
     output reg                met_score_vld,
     output reg [12:0]         met_score_y,
     output reg                met_score_is_real,
+    output reg [1:0]          met_score_lane,
     output reg signed [15:0]  met_logit,
     output reg                met_latch_loss,
+    output reg [1:0]          met_latch_lane,
     output reg                met_ink_vld,
     output reg signed [7:0]   met_ink_pixel,
     output reg                met_sat_pre,
@@ -121,11 +131,15 @@ module gan_sequencer (
 
     reg [3:0]  state;
     reg [10:0] k;                     // 0..1024 element counter
-    reg [1:0]  i;                     // 0..3 neuron index within a tile
+    reg [3:0]  ci;                    // 0..15 C-word index during a tile read
+    reg [1:0]  fi;                    // neuron index within a flush
+    reg [1:0]  fj;                    // batch lane within a flush
     reg [1:0]  img_page;              // K-tile page for OP_LOADB_IMG
+    reg [1:0]  lat_lane;              // OP_LATCH_LOSS argument: which lane to fold in
     reg        lb_from_img;
 
-    reg signed [27:0] acc [0:3];
+    // 16 accumulators: acc[i*4 + j] = neuron i, lane j.  At batch 1 only j = 0 is used.
+    reg signed [27:0] acc [0:15];
 
     // exec_req is included so `busy` is already high on the cycle after a command is
     // accepted -- a host polling busy immediately never sees a false "idle".
@@ -133,8 +147,19 @@ module gan_sequencer (
 
     // Buffer read addresses are combinational so the registered SRAM output lands
     // exactly one cycle later, on the next value of `k`.
-    assign act_raddr = k[7:0];
+    assign act_raddr = k[9:0];
     assign img_raddr = {img_page, k[7:0]};
+
+    wire [2:0] batch = (cfg_batch == 3'd0) ? 3'd1 : cfg_batch;   // 0 would hang the flush
+
+    // Lane-major write address shared by ACT and the batched IMG path:
+    //   lane * 256 + (dst_ptr + neuron).  At batch 1, fj is pinned to 0 and this is
+    //   just dst_ptr + neuron, i.e. the original addressing.
+    wire [9:0] lane_addr = {fj, cfg_dst_ptr[7:0] + {6'd0, fi}};
+
+    // How far the LOADB copy walks: one vector per lane, except OP_LOADB_IMG which
+    // always fills a single 256-deep K-tile page into column 0.
+    wire [10:0] lb_last = lb_from_img ? 11'd256 : ({8'd0, batch} << 8);
 
     // Absolute image index being *written* to B this cycle (data for k-1).
     wire [10:0] km1     = k - 11'd1;
@@ -143,34 +168,41 @@ module gan_sequencer (
     wire [7:0]  lb_byte = lb_from_img ? (img_ok ? img_rdata : 8'd0) : act_rdata;
 
     // Post-processor operands (must be stable while pp_req is asserted).
+    // The bias belongs to the NEURON, so every lane of a flush shares it.
     wire is_score = (cfg_dst_sel == DST_SCORE_FAKE) || (cfg_dst_sel == DST_SCORE_REAL);
     assign pp_skip = is_score;
-    assign pp_acc  = acc[i];
-    assign pp_bias = (i == 2'd0) ? cfg_b0
-                   : (i == 2'd1) ? cfg_b1
-                   : (i == 2'd2) ? cfg_b2
-                                 : cfg_b3;
+    assign pp_acc  = acc[{fi, fj}];
+    assign pp_bias = (fi == 2'd0) ? cfg_b0
+                   : (fi == 2'd1) ? cfg_b1
+                   : (fi == 2'd2) ? cfg_b2
+                                  : cfg_b3;
     assign met_last_acc = acc[0];
 
+    // All sixteen C words are read back every tile; at batch 1 the twelve belonging to
+    // idle lanes are accumulated but never flushed.  Sixteen reads against the array's
+    // 256 MAC cycles is not worth special-casing.
     assign dla_rd_en   = (state == S_TILE_RD0) || (state == S_TILE_RD1);
-    assign dla_rd_addr = {i, 2'b00};                 // C[i][0] = flat address i*N
+    assign dla_rd_addr = ci;                         // flat C address = row*N + col
 
     integer n;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= S_IDLE;
-            k <= 11'd0; i <= 2'd0; img_page <= 2'd0; lb_from_img <= 1'b0;
+            k <= 11'd0; ci <= 4'd0; fi <= 2'd0; fj <= 2'd0;
+            img_page <= 2'd0; lb_from_img <= 1'b0; lat_lane <= 2'd0;
+            met_latch_lane <= 2'd0;
             dla_start <= 1'b0; dla_wr_en <= 1'b0; dla_wr_sel <= 1'b0;
             dla_wr_addr <= 10'd0; dla_wr_data <= 8'sd0;
-            act_we <= 1'b0; act_waddr <= 8'd0; act_wdata <= 8'd0;
+            act_we <= 1'b0; act_waddr <= 10'd0; act_wdata <= 8'd0;
             img_we <= 1'b0; img_waddr <= 10'd0; img_wdata <= 8'd0;
             pp_req <= 1'b0; dst_ptr_inc <= 1'b0;
             met_clr <= 1'b0; met_score_vld <= 1'b0; met_score_y <= 13'd0;
-            met_score_is_real <= 1'b0; met_logit <= 16'sd0; met_latch_loss <= 1'b0;
+            met_score_is_real <= 1'b0; met_score_lane <= 2'd0;
+            met_logit <= 16'sd0; met_latch_loss <= 1'b0;
             met_ink_vld <= 1'b0; met_ink_pixel <= 8'sd0;
             met_sat_pre <= 1'b0; met_sat_out <= 1'b0;
-            for (n = 0; n < 4; n = n + 1) acc[n] <= 28'sd0;
+            for (n = 0; n < 16; n = n + 1) acc[n] <= 28'sd0;
         end else begin
             // Single-cycle strobes default low.
             dla_wr_en <= 1'b0;
@@ -188,8 +220,10 @@ module gan_sequencer (
             case (state)
                 // ------------------------------------------------------------
                 S_IDLE: if (exec_req) begin
-                    k <= 11'd0;
-                    i <= 2'd0;
+                    k  <= 11'd0;
+                    ci <= 4'd0;
+                    fi <= 2'd0;
+                    fj <= 2'd0;
                     case (exec_op)
                         OP_ZERO_B:    state <= S_ZB;
                         OP_ZERO_ACT:  state <= S_ZA;
@@ -199,9 +233,9 @@ module gan_sequencer (
                                             img_page    <= exec_arg[1:0];   state <= S_LB; end
                         OP_TILE:      state <= S_TILE_GO;
                         OP_FLUSH:     state <= S_FL_REQ;
-                        OP_CLR_ACC:   for (n = 0; n < 4; n = n + 1) acc[n] <= 28'sd0;
+                        OP_CLR_ACC:   for (n = 0; n < 16; n = n + 1) acc[n] <= 28'sd0;
                         OP_CLR_MET:   met_clr <= 1'b1;
-                        OP_LATCH_LOSS: state <= S_LOSS_GO;
+                        OP_LATCH_LOSS: begin lat_lane <= exec_arg[1:0]; state <= S_LOSS_GO; end
                         default:      ;                      // OP_NOP
                     endcase
                 end
@@ -223,20 +257,24 @@ module gan_sequencer (
                     if (k != 11'd0) begin
                         dla_wr_en   <= 1'b1;
                         dla_wr_sel  <= 1'b1;
-                        dla_wr_addr <= {km1[7:0], 2'b00};
+                        // B is addressed [k][col] = k*N + col, and the linear counter
+                        // walks ACT lane-major, so the counter's low 8 bits are k and
+                        // its next 2 bits are the lane -- exactly a swap of the halves.
+                        dla_wr_addr <= lb_from_img ? {km1[7:0], 2'b00}
+                                                   : {km1[7:0], km1[9:8]};
                         dla_wr_data <= lb_byte;
                     end
-                    if (k == 11'd256) state <= S_FIN;
+                    if (k == lb_last) state <= S_FIN;
                     else              k <= k + 1'b1;
                 end
 
                 // ---- clear the activation buffer ---------------------------
                 S_ZA: begin
                     act_we    <= 1'b1;
-                    act_waddr <= k[7:0];
+                    act_waddr <= k[9:0];
                     act_wdata <= 8'd0;
-                    if (k == 11'd255) state <= S_FIN;
-                    else              k <= k + 1'b1;
+                    if (k == 11'd1023) state <= S_FIN;
+                    else               k <= k + 1'b1;
                 end
 
                 // ---- clear the image buffer --------------------------------
@@ -256,17 +294,17 @@ module gan_sequencer (
 
                 S_TILE_WT: if (dla_wb_done) begin
                     dla_start <= 1'b0;
-                    i         <= 2'd0;
+                    ci        <= 4'd0;
                     state     <= S_TILE_RD0;
                 end
 
                 S_TILE_RD0: state <= S_TILE_RD1;    // C read address settling
 
                 S_TILE_RD1: begin
-                    acc[i] <= acc[i] + {{4{dla_rd_data[23]}}, dla_rd_data};
-                    if (i == 2'd3) state <= S_IDLE;
+                    acc[ci] <= acc[ci] + {{4{dla_rd_data[23]}}, dla_rd_data};
+                    if (ci == 4'd15) state <= S_FIN;
                     else begin
-                        i     <= i + 1'b1;
+                        ci    <= ci + 1'b1;
                         state <= S_TILE_RD0;
                     end
                 end
@@ -283,12 +321,17 @@ module gan_sequencer (
                     case (cfg_dst_sel)
                         DST_ACT: begin
                             act_we    <= 1'b1;
-                            act_waddr <= cfg_dst_ptr[7:0] + {6'd0, i};
+                            act_waddr <= lane_addr;
                             act_wdata <= pp_q;
                         end
                         DST_IMG: begin
                             img_we        <= 1'b1;
-                            img_waddr     <= cfg_dst_ptr + {8'd0, i};
+                            // Batch 1 addresses the whole 784-pixel image flat; batch 4
+                            // uses the buffer as four 256-byte drain windows the host
+                            // empties as it goes (four images do not fit on chip).
+                            img_waddr     <= (batch == 3'd1)
+                                             ? (cfg_dst_ptr + {8'd0, fi})
+                                             : lane_addr;
                             img_wdata     <= pp_q;
                             met_ink_vld   <= 1'b1;
                             met_ink_pixel <= pp_q;
@@ -297,15 +340,22 @@ module gan_sequencer (
                             met_score_vld     <= 1'b1;
                             met_score_y       <= pp_act[12:0];
                             met_score_is_real <= cfg_dst_sel[0];
+                            met_score_lane    <= fj;
                             met_logit         <= pp_pre;
                         end
                     endcase
 
-                    if ({1'b0, i} == (cfg_nout - 3'd1)) begin
+                    if (({1'b0, fi} == (cfg_nout - 3'd1)) &&
+                        ({1'b0, fj} == (batch - 3'd1))) begin
                         dst_ptr_inc <= 1'b1;
                         state       <= S_FIN;
                     end else begin
-                        i     <= i + 1'b1;
+                        if ({1'b0, fj} == (batch - 3'd1)) begin
+                            fj <= 2'd0;
+                            fi <= fi + 1'b1;
+                        end else begin
+                            fj <= fj + 1'b1;
+                        end
                         state <= S_FL_REQ;
                     end
                 end
@@ -313,6 +363,7 @@ module gan_sequencer (
                 // ---- BCE losses --------------------------------------------
                 S_LOSS_GO: begin
                     met_latch_loss <= 1'b1;
+                    met_latch_lane <= lat_lane;
                     state          <= S_LOSS_WT;
                 end
 
