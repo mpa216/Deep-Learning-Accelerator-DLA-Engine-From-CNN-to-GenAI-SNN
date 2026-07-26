@@ -1,0 +1,17 @@
+
+batch-4 asset set (one shared config across 4 latents)
+------------------------------------------------------------
+  seeds [0, 1, 2, 3], s_z = 0.0286196
+    LayerCfg(G0: MA=8051 MB=395515 S=13 MH=471008 SH=26 func=RELU gain=1)
+    LayerCfg(G2: MA=63683 MB=487015 S=16 MH=344857 SH=24 func=RELU gain=4.22931)
+    LayerCfg(G4: MA=113607 MB=426855 S=14 MH=520192 SH=24 func=TANH gain=1)
+    LayerCfg(D0: MA=2837 MB=337823 S=16 MH=273662 SH=24 func=RELU gain=8.89044)
+    LayerCfg(D2: MA=28681 MB=419686 S=15 MH=474038 SH=26 func=RELU gain=4.102)
+    LayerCfg(D4: MA=11702 MB=409120 S=13 MH=4096 SH=12 func=SIGMOID gain=1)
+  lane 0 (seed 0): y_fake =     0 (0.0000)  FAKE
+  lane 1 (seed 1): y_fake =  1391 (0.3396)  FAKE
+  lane 2 (seed 2): y_fake =   743 (0.1814)  FAKE
+  lane 3 (seed 3): y_fake =     0 (0.0000)  FAKE
+  y_real (all lanes)   =  3927 (0.9587)
+  N_SAMPLES 4  N_FOOLED 0  N_REAL_OK 4  INK 85284
+  mean loss_G = 4.8551 nats, mean loss_D = 0.1961 nats

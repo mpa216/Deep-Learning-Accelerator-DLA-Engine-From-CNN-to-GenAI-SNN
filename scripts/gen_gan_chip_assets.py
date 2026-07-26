@@ -175,6 +175,74 @@ def run_one(chip: GanChip, z_real: list[float], real_img: list[int], hidden_func
     return zq, s_z, g_cfgs, d_cfgs, img, y_fake, y_real, met, per_layer
 
 
+def run_batch(chip: GanChip, seeds: list[int], real_img: list[int], hidden_func: int):
+    """Batch-4 run: four latents share ONE config set, as the hardware requires.
+
+    Every lane of a batch is driven by the same weight tile and therefore the same six
+    config registers per layer, so the activation scales are calibrated over the union
+    of all four latents.  That is the only thing batching changes about the arithmetic.
+    """
+    zs = [load_latent(s, None) for s in seeds]
+    s_z = max(max(abs(v) for v in z) for z in zs) / 127.0
+    zqs = [[max(-127, min(127, round(v / s_z))) for v in z] for z in zs]
+
+    g_cfgs = chip.calibrate_generator_batch(zqs, s_z)
+    imgs, g_stats = [], []
+    for zq in zqs:
+        im, st = chip.run_generator(zq, g_cfgs)
+        imgs.append(im)
+        g_stats.append(st)
+
+    # One discriminator config covers the four generated digits and the real one.
+    d_cfgs = chip.calibrate_discriminator_pair(*imgs, real_img, hidden_func=hidden_func)
+    y_fake, y_real_stats = [], None
+    for im in imgs:
+        y, _ = chip.run_discriminator(im, d_cfgs)
+        y_fake.append(y)
+    y_real, y_real_stats = chip.run_discriminator(real_img, d_cfgs)
+
+    met = Metrics()
+    # The chip scores all four fake lanes, then all four real lanes (the real digit is
+    # replicated across lanes, so every lane must return the same y_real -- a built-in
+    # cross-lane consistency check), then folds one lane at a time into the losses.
+    for j in range(4):
+        met.score(y_fake[j], is_real=False)
+    for j in range(4):
+        met.score(y_real, is_real=True)
+    for j in range(4):
+        met.y_fake = y_fake[j]
+        met.y_real = y_real
+        met.latch_loss()
+    met.ink = sum(p + 128 for im in imgs for p in im)
+    met.logit = y_real_stats["logit"]
+    return zqs, s_z, g_cfgs, d_cfgs, imgs, y_fake, y_real, met
+
+
+def emit_batch_assets(out_dir: Path, zqs, blocks, imgs, y_fake, y_real, met):
+    (out_dir / "gan_zq_b4.memh").write_text(
+        "\n".join(to_hex_signed(v, 8) for zq in zqs for v in zq) + "\n")
+    (out_dir / "gan_cfg_b4.memh").write_text(
+        "\n".join(to_hex_signed(v, 24) for blk in blocks for v in blk) + "\n")
+    (out_dir / "gan_img_expected_b4.memh").write_text(
+        "\n".join(to_hex_signed(v, 8) for im in imgs for v in im) + "\n")
+
+    m = met.as_dict()
+    w = [0] * MET_N
+    w[1], w[2] = m["y_fake"], m["y_real"]
+    w[3], w[4] = m["loss_g"], m["loss_d"]
+    w[5], w[6] = m["acc_loss_g"], m["acc_loss_d"]
+    w[7], w[8], w[9] = m["n_samples"], m["n_fooled"], m["n_real_ok"]
+    w[10], w[11] = m["y_fake_min"], m["y_fake_max"]
+    w[12], w[13] = m["acc_y_fake"], m["acc_y_real"]
+    w[14] = m["ink"]
+    w[18] = m["logit"]
+    for j in range(4):
+        w[20 + j] = y_fake[j]
+        w[24 + j] = y_real
+    (out_dir / "gan_met_expected_b4.memh").write_text(
+        "\n".join(to_hex_signed(v, 24) for v in w) + "\n")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -186,6 +254,8 @@ def main() -> None:
                          "relu is the default: the checkpoints store no activation "
                          "metadata, and relu is the setting under which D produces "
                          "sane, unsaturated scores on this G's output (see README)")
+    ap.add_argument("--batch4", action="store_true",
+                    help="also emit the 4-lane batch asset set (seeds 0-3)")
     ap.add_argument("--sweep", type=int, default=0,
                     help="also sweep N latent seeds and write the loss series CSV")
     args = ap.parse_args()
@@ -304,6 +374,33 @@ def main() -> None:
     (OUT_DIR / "gan_expected.txt").write_text(text + "\n")
     print()
     print(text)
+
+    # ---- optional batch-4 asset set -----------------------------------------
+    if args.batch4:
+        seeds = [0, 1, 2, 3]
+        bzq, bsz, bg, bd, bimgs, byf, byr, bmet = run_batch(
+            chip, seeds, real_img, hidden_func)
+        bblocks = []
+        for cfg, dsel, nout in ((bg[0], DST_ACT, 4), (bg[1], DST_ACT, 4),
+                                (bg[2], DST_IMG, 4), (bd[0], DST_ACT, 4),
+                                (bd[1], DST_ACT, 4), (bd[2], DST_SCORE_FAKE, 1)):
+            bblocks.append(cfg_words(cfg, [0, 0, 0, 0], 0, dsel, nout))
+        emit_batch_assets(OUT_DIR, bzq, bblocks, bimgs, byf, byr, bmet)
+        bm = bmet.as_dict()
+        lines = ["", "batch-4 asset set (one shared config across 4 latents)",
+                 "-" * 60, f"  seeds {seeds}, s_z = {bsz:.6g}"]
+        for c in bg + bd:
+            lines.append(f"    {c!r}")
+        for j, s_ in enumerate(seeds):
+            lines.append(f"  lane {j} (seed {s_}): y_fake = {byf[j]:5d} "
+                         f"({byf[j]/Q_ONE:.4f})  {'fooled D' if byf[j] > Q_ONE//2 else 'FAKE'}")
+        lines += [f"  y_real (all lanes)   = {byr:5d} ({byr/Q_ONE:.4f})",
+                  f"  N_SAMPLES {bm['n_samples']}  N_FOOLED {bm['n_fooled']}  "
+                  f"N_REAL_OK {bm['n_real_ok']}  INK {bm['ink']}",
+                  f"  mean loss_G = {bm['acc_loss_g']/Q_ONE/4:.4f} nats, "
+                  f"mean loss_D = {bm['acc_loss_d']/Q_ONE/4:.4f} nats"]
+        print("\n".join(lines))
+        (OUT_DIR / "gan_expected_b4.txt").write_text("\n".join(lines) + "\n")
 
     # ---- optional multi-sample sweep for the loss graph ---------------------
     if args.sweep:

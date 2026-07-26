@@ -228,7 +228,13 @@ python3 scripts/gen_gan_chip_assets.py --seed 4 --sweep 10    # + loss series
 iverilog -g2012 -I rtl -s gan_pwl_act_tb -o sim/results/gan_pwl_act_tb.vvp \
   rtl/gan_pwl_act.v rtl/gan_nlog.v tb/gan_pwl_act_tb.sv && vvp sim/results/gan_pwl_act_tb.vvp
 
-# 3. full generator -> discriminator -> losses  (~4 min, 440k cycles)
+# 3a. batch-4 end to end: four digits in one weight stream (~8 min)
+python3 scripts/gen_gan_chip_assets.py --seed 4 --batch4
+iverilog -g2012 -I rtl -s gan_batch4_flow_tb -o sim/results/gan_batch4_flow_tb.vvp \
+  rtl/gan_*.v rtl/dla_*.v rtl/gf180_sram_1rw_256x8.v tb/gan_batch4_flow_tb.sv
+vvp sim/results/gan_batch4_flow_tb.vvp
+
+# 3b. batch-1 full generator -> discriminator -> losses  (~4 min, 440k cycles)
 iverilog -g2012 -I rtl -s gan_engine_top_tb -o sim/results/gan_engine_top_tb.vvp \
   rtl/gan_*.v rtl/dla_*.v rtl/gf180_sram_1rw_256x8.v tb/gan_engine_top_tb.sv
 vvp sim/results/gan_engine_top_tb.vvp
@@ -283,13 +289,22 @@ All run in the container on this branch.
 |---|---|
 | `gan_pwl_act_tb` — 1258 PWL + 600 −ln vectors vs `gan_golden.py` | **PASS**, bit-exact |
 | `gan_engine_top_tb` — full G→D→losses | **PASS**: image 784/784 pixels bit-exact; `Y_FAKE`, `Y_REAL`, `LOSS_G`, `LOSS_D`, both accumulators, `N_SAMPLES/FOOLED/REAL_OK`, `INK`, `SAT_PRE`, `SAT_OUT`, `LOGIT` all match golden |
+| `gan_batch4_flow_tb` — batch-4 **end to end** | **PASS**: four digits generated and scored in one weight stream — **3136/3136 pixels bit-exact** across all four lanes, four distinct `y_fake` scores match golden, all four `y_real` agree (the real digit is replicated across lanes, so lane disagreement would be a bug), every accumulator and counter matches. **413,592 compute cycles for four digits = 103,398 per digit, 4.26× better than batch 1's 440,252** |
 | `gan_batch4_tb` — batch-4 datapath | **PASS**, 53 self-computed checks: all 16 C words for four independent input vectors, a 16-way flush landing at `lane*256+offset`, `DST_PTR` advancing once per flush not once per lane, `OP_LOADB_ACT` restoring all four lanes into B's four columns, four per-lane scores and lane-selected `LATCH_LOSS` |
 | `chip_core_gan_tb` — pad-level serial | **PASS**: image buffer, activation buffer, a full 4×256 MAC pass vs the `d3004n4` fixture, a post-processing flush vs an independent model, score + loss + metric reads |
 | Verilator lint (`-Wall`, `-DSYNTHESIS`) | **0 warnings** in the new files |
 | Yosys / LibreLane `--to Yosys.Synthesis` | **clean**: 689,451 um2 of cells, **13 SRAM macros** (8x256 + 3x64 + 2x1024), **0 inferred latches**, 0 problems reported |
 | Main-branch regression: `d3004`, `d3004n4`, `g3005`, `g300_pipeline` | **PASS**, unchanged |
 
-Result for latent seed 4 (digit "0"):
+Batch-4 result (seeds 0-3, one shared config):
+
+```
+4 x 784 pixels bit-exact;  y_fake = 0 / 1391 / 743 / 0,  y_real = 3927 in all 4 lanes
+ACC_LOSS_G 79546   ACC_LOSS_D 3213   N_SAMPLES 4   N_REAL_OK 4   INK 85284
+413,592 compute cycles for four digits (103,398 each) vs 440,252 for one at batch 1
+```
+
+Result for latent seed 4 (digit "0"), batch 1:
 
 ```
 D(generated) = 3958/4096 = 96%  -> VERDICT REAL (the generator fooled the discriminator)
@@ -382,6 +397,7 @@ scripts/plot_gan_metrics.py      loss curve + metrics report
 tb/gan_pwl_act_tb.sv     PWL + -ln unit test
 tb/gan_engine_top_tb.sv  full G -> D -> losses (batch 1)
 tb/gan_batch4_tb.sv      batch-4 datapath
+tb/gan_batch4_flow_tb.sv batch-4 end to end: 4 digits, host-held images
 tb/chip_core_gan_tb.sv   pad-level serial protocol
 
 librelane/config_gan.yaml  16-macro hardening config
