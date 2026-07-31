@@ -4,6 +4,8 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\definecolor{figblue}{RGB}{37,84,160}
+\definecolor{figred}{RGB}{198,58,45}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{multirow}
@@ -55,18 +57,89 @@ The main contributions are: (1)~an open INT8 GAN-generator accelerator on GF180M
 \section{Related Work}
 Most neural network accelerators are built around arrays of multiply-and-accumulate units. A well-known large-scale example is the systolic Tensor Processing Unit \cite{tpu}, and a broad overview of deep learning accelerators for different platforms is given in \cite{survey}. To run a floating-point network on this kind of integer array, the weights and activations are usually quantized with a per-tensor scale, as described by Jacob et al. \cite{jacob}.
 
-The closest work to ours is Wang et al. \cite{wang}, which presents a small PE-array accelerator for an underwater recognition network in a 40~nm process. Our design is different because it targets the open GF180MCU 180~nm process and uses a full open-source flow from RTL to a tapeout-ready chip GDS. The workload is a pretrained MLP GAN \cite{goodfellow, ganpretrained}, and the RTL is based on the open DLA Engine project \cite{dlaengine}.
+Accelerators of this kind span a wide range of scales. The TPU \cite{tpu} is a $256\times256$ systolic array in 28~nm aimed at datacenter inference; Eyeriss \cite{eyeriss} is a 168-PE row-stationary CNN accelerator in 65~nm whose contribution is a dataflow chosen to minimize data movement rather than to maximize MAC count---a concern that reappears in our own results, where data movement dominates end-to-end latency by more than two orders of magnitude. Closest to ours in array size is Wang et al. \cite{wang}, a small PE-array accelerator for an underwater recognition network in 40~nm.
+
+All three are closed-process designs. Our contribution is different in kind: the same class of architecture carried end to end on the open GF180MCU 180~nm process with a fully open-source flow from RTL to a sign-off-clean chip GDS, so that the result is reproducible and re-targetable by a reader rather than only reported. Section~\ref{sec:phys} compares the resulting efficiency honestly, including where the open, coarser process costs us. The workload is a pretrained MLP GAN \cite{goodfellow, ganpretrained}, and the RTL is based on the open DLA Engine project \cite{dlaengine}.
 
 \section{GAN Architecture}\label{sec:overview}
 
-The GAN generator architecture uses a multi-layer perceptron (MLP) model that receives a latent vector of size 64 as the initial input. This input is then projected through two hidden layers, each containing 256 neurons, to form a richer feature representation. Each hidden layer is followed by a ReLU activation function, allowing the model to learn non-linear patterns from the data.
-
-\begin{figure}[h]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=0.8\columnwidth]{figs/GAN_Generator_layers.png}
-\caption{GAN generator layer architecture.}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1mm,y=1mm,
+  outerblk/.style={draw=figblue,fill=figblue!4,rounded corners=2.5mm,line width=1pt},
+  subblk/.style={draw=figblue!60,fill=white,rounded corners=1.6mm,line width=0.6pt},
+  syn/.style={figblue!45,line width=0.3pt},
+  flow/.style={-{Stealth[length=1.9mm,width=1.6mm]},figblue,line width=0.9pt},
+  ax/.style={-{Stealth[length=1.2mm,width=1.1mm]},black!55,line width=0.4pt},
+  fn/.style={figred,line width=1.1pt},
+  ttl/.style={font=\scriptsize\bfseries,text=figblue!80!black},
+  dim/.style={font=\tiny,text=black!60},
+  cell/.style={draw=figblue!75!black,line width=0.35pt,minimum size=3.4mm,inner sep=0pt,font=\tiny}]
+% ---- top-level blocks ----
+\draw[outerblk] (0,-14) rectangle (19,14);
+\draw[outerblk] (26,-15) rectangle (154,19);
+\draw[outerblk] (161,-14) rectangle (181,14);
+\node[font=\small\bfseries,text=figblue!80!black] at (90,16.1) {MLP GAN Generator};
+% ---- fat arrows between top-level blocks ----
+\draw[draw=figblue,fill=figblue!15,line width=0.8pt]
+  (19.9,1.0) -- (23.2,1.0) -- (23.2,2.1) -- (25.3,0) -- (23.2,-2.1) -- (23.2,-1.0) -- (19.9,-1.0) -- cycle;
+\draw[draw=figblue,fill=figblue!15,line width=0.8pt]
+  (154.7,1.0) -- (158.0,1.0) -- (158.0,2.1) -- (160.1,0) -- (158.0,-2.1) -- (158.0,-1.0) -- (154.7,-1.0) -- cycle;
+\node[dim] at (157.4,3.9) {reshape};
+% ---- latent vector, drawn as a vector ----
+\node[ttl,align=center] at (9.5,10.6) {Latent\\Vector};
+\foreach [count=\i] \val/\sh in {0.8/45, -0.3/14, 1.2/60, -0.7/38}
+  \node[cell,fill=figblue!\sh] at (9.5,{4.6-(\i-1)*3.4}) {$\val$};
+\node[font=\tiny] at (9.5,-8.15) {$\vdots$};
+\node[cell,fill=figblue!28] at (9.5,-10.6) {$0.5$};
+\draw[line width=0.5pt,black!75] (7.2,6.6) -- (6.5,6.6) -- (6.5,-12.6) -- (7.2,-12.6);
+\draw[line width=0.5pt,black!75] (11.8,6.6) -- (12.5,6.6) -- (12.5,-12.6) -- (11.8,-12.6);
+\node[font=\scriptsize] at (9.5,-16.5) {$z\in\mathbb{R}^{64}$};
+% ---- dense layers, drawn as neurons ----
+\foreach \bx/\lin/\lout/\ltag in {29/64/256/L0, 71/256/256/L2, 113/256/784/L4}{
+  \draw[subblk] (\bx,-13) rectangle (\bx+21,13);
+  \node[ttl] at (\bx+10.5,10.2) {Dense \lout};
+  \node[font=\tiny,text=black!45] at (\bx+2.6,10.9) {\ltag};
+  \foreach \ly in {4.2,0,-4.2}
+    \foreach \ry in {6.4,3.2,0,-3.2,-6.4}
+      \draw[syn] (\bx+5.5,\ly) -- (\bx+15.5,\ry);
+  \foreach \ly in {4.2,0,-4.2}
+    \node[circle,draw=figblue!80!black,fill=figblue!22,inner sep=0pt,minimum size=3.2mm,line width=0.4pt] at (\bx+5.5,\ly) {};
+  \foreach \ry in {6.4,3.2,0,-3.2,-6.4}
+    \node[circle,draw=figblue!80!black,fill=figblue!22,inner sep=0pt,minimum size=2.8mm,line width=0.4pt] at (\bx+15.5,\ry) {};
+  \node[font=\tiny] at (\bx+5.5,-7.2) {$\vdots$};
+  \node[font=\tiny] at (\bx+15.5,-9.3) {$\vdots$};
+  \node[dim] at (\bx+5.5,-11.3) {\lin};
+  \node[dim] at (\bx+15.5,-11.3) {\lout};
+}
+% ---- activations, drawn as their functions ----
+\foreach \cx/\aname in {60.5/ReLU, 102.5/ReLU, 144.5/Tanh}{
+  \draw[subblk] (\cx-6.5,-13) rectangle (\cx+6.5,13);
+  \node[ttl] at (\cx,10.2) {\aname};
+  \draw[ax] (\cx-4.9,-1.4) -- (\cx+4.9,-1.4);
+  \draw[ax] (\cx,-6.3) -- (\cx,3.5);
+}
+\foreach \cx in {60.5,102.5}{
+  \draw[fn] (\cx-4.3,-1.4) -- (\cx,-1.4) -- (\cx+3.4,2.0);
+  \node[dim] at (\cx,-8.7) {$\max(0,x)$};
+}
+\draw[fn,smooth,samples=29,domain=-4.3:4.3] plot ({144.5+\x},{-1.4+3.4*(exp(\x/0.75)-1)/(exp(\x/0.75)+1)});
+\node[dim] at (144.5,-8.7) {$\tanh(x)$};
+% ---- flow arrows between sub-blocks ----
+\foreach \xa in {50.4,67.4,92.4,109.4,134.4}
+  \draw[flow] (\xa,0) -- (\xa+3.2,0);
+% ---- generated image ----
+\node[ttl,align=center] at (171,10.6) {Generated\\Image};
+\node[inner sep=0pt] at (171,-2.6) {\includegraphics[width=12mm,height=12mm]{digit_seed6.jpg}};
+\draw[black!60,line width=0.4pt] (165,-8.6) rectangle (177,3.4);
+\node[font=\scriptsize] at (171,-16.5) {$28\times28$ grayscale};
+\end{tikzpicture}}
+\caption{MLP GAN generator: the 64-dimensional latent vector $z$ is expanded through two 256-neuron ReLU hidden layers and a 784-neuron tanh output layer into a $28\times28$ grayscale image (layer tags match Table~\ref{tab:net}).}
 \label{fig:gan}
-\end{figure}
+\end{figure*}
+
+The GAN generator architecture, illustrated in Fig.~\ref{fig:gan}, uses a multi-layer perceptron (MLP) model that receives a latent vector of size 64 as the initial input. This input is then projected through two hidden layers, each containing 256 neurons, to form a richer feature representation. Each hidden layer is followed by a ReLU activation function, allowing the model to learn non-linear patterns from the data.
 
 After that, the learned representation is passed to an output layer with 784 neurons, which corresponds to a $28\times28$ pixel image. In the final stage, a tanh activation function is used to limit the output values to a range between $-1$ and $1$, so that the output of the generator can be represented as a grayscale image. Through this process, the generator transforms a random vector into a synthetic image that resembles real data.
 
@@ -96,16 +169,16 @@ The DLA computes a tiled matrix multiplication $C=A\times B$. The array size is 
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.85\columnwidth]{Top_level.png}
+\includegraphics[width=0.75\columnwidth]{Top_level.png}
 \caption{DLA engine top level.}
 \label{fig:top}
 \end{figure}
 
-At the top level, the A buffer provides one row vector to the PE array, and the B buffer provides one column vector. The control unit generates the read index, clear signal, enable signal, done signal, and busy signal. The output bus carries the accumulated C values.
+At the top level, shown in Fig.~\ref{fig:top}, the A buffer provides one row vector to the PE array, and the B buffer provides one column vector. The control unit generates the read index, clear signal, enable signal, done signal, and busy signal. The output bus carries the accumulated C values.
 
 \subsection{Processing Element}
 
-Each processing element receives two signed 8-bit inputs. It multiplies them, sign-extends the 16-bit product to 24 bits, and adds it to a local accumulator. The accumulator is cleared at the start of each matrix multiplication. The output of each PE is one dot product.
+Each processing element (Fig.~\ref{fig:pe}) receives two signed 8-bit inputs. It multiplies them, sign-extends the 16-bit product to 24 bits, and adds it to a local accumulator. The accumulator is cleared at the start of each matrix multiplication. The output of each PE is one dot product.
 
 \begin{figure}[h]
 \centering
@@ -121,7 +194,7 @@ acc_{out}[n] = acc_{out}[n-1] + a_{in}[n]\,b_{in}[n].
 After $K$ cycles, the accumulator stores one output value of the matrix multiplication tile. A 24-bit accumulator is used so that the sum of 8-bit products has enough range for the selected layer sizes.
 
 \subsection{PE Array}
-The PE array instantiates 16 PEs in a $4\times4$ grid. Each row receives one activation lane, and each column receives one weight lane; the operands are broadcast along the rows and columns, and each PE accumulates its result locally (an output-stationary organization), so all 16 PEs operate in parallel and the array produces one $4\times4$ output tile after the accumulation loop finishes.
+The PE array (Fig.~\ref{fig:pearray}) instantiates 16 PEs in a $4\times4$ grid. Each row receives one activation lane, and each column receives one weight lane; the operands are broadcast along the rows and columns, and each PE accumulates its result locally (an output-stationary organization), so all 16 PEs operate in parallel and the array produces one $4\times4$ output tile after the accumulation loop finishes.
 
 The $a\_bus$ contains four 8-bit activation values, while the $b\_bus$ contains four 8-bit weight values. The output $c\_bus$ is flattened from 16 accumulator outputs, each with 24 bits.
 
@@ -133,7 +206,7 @@ The $a\_bus$ contains four 8-bit activation values, while the $b\_bus$ contains 
 \end{figure}
 
 \subsection{Controller FSM}
-The controller uses four states. In IDLE, it waits for START. In CLEAR, it clears all PE accumulators for one cycle. In COMPUTE, it asserts the PE-array enable and increments the A and B buffer addresses until all $K$ terms have been processed. In DONE, it raises DONE and waits for START to return low before going back to IDLE. A separate writeback sequencer then serializes the 16 accumulator values into the C buffer and raises a writeback-done flag.
+The controller uses four states (Fig.~\ref{fig:fsm}). In IDLE, it waits for START. In CLEAR, it clears all PE accumulators for one cycle. In COMPUTE, it asserts the PE-array enable and increments the A and B buffer addresses until all $K$ terms have been processed. In DONE, it raises DONE and waits for START to return low before going back to IDLE. A separate writeback sequencer then serializes the 16 accumulator values into the C buffer and raises a writeback-done flag.
 
 \begin{figure}[h]
 \centering
@@ -156,7 +229,7 @@ The controller uses four states. In IDLE, it waits for START. In CLEAR, it clear
 \end{figure}
 
 \subsection{SRAM Buffers}
-The input and output buffers are implemented with physical $256\times8$ single-port SRAM macros. The A buffer uses four macros, one for each row lane. The B buffer also uses four macros, one for each column lane. The C buffer stores 24-bit accumulator outputs by using three 8-bit SRAM macros as byte planes of one 24-bit word. In total, the design uses eleven SRAM macros, 2{,}816 bytes of storage; the roughly 280~KB of INT8 generator weights are streamed through these tiles from outside rather than stored on chip.
+The input and output buffers are implemented with physical $256\times8$ single-port SRAM macros. The A buffer uses four macros, one for each row lane. The B buffer also uses four macros, one for each column lane. The C buffer stores 24-bit accumulator outputs by using three 8-bit SRAM macros as byte planes of one 24-bit word. In total, the design uses eleven SRAM macros, 2{,}816 bytes of storage; the 276~KiB of INT8 generator weights are streamed through these tiles from outside rather than stored on chip. Because each tile is written to the full $K{=}256$ depth and zero-padded, the bytes actually crossing the interface per image are 331{,}776---the difference is layer L0, whose 64 inputs are padded to 256.
 
 The SRAM wrapper has a behavioral memory model for simulation and a blackbox branch for synthesis; the power pins are not tied to logic constants in RTL but connected by the physical power delivery network during place and route. The SRAM read has one cycle of latency, so the top level delays the PE enable and completion flags by one cycle to keep data and control aligned, which prevents the PE array from accumulating invalid data after a read request.
 
@@ -164,11 +237,11 @@ The SRAM wrapper has a behavioral memory model for simulation and a blackbox bra
 
 The hardened accelerator exposes 53 signal bits (a 10-bit write address alone, now that $K=256$), but the target shuttle slot provides only 20 general-purpose digital pads next to its 60 analog, 8 supply, clock, and reset pads. Instead of a pin-per-signal mapping, the chip core wraps the accelerator behind a small synchronous 4-wire serial bridge (SCLK, MOSI, CS\_N, MISO). The bridge treats SCLK as a data input: all three inputs are double-flop synchronized into the core clock domain and SCLK is edge-detected, which deliberately avoids a second clock domain. A frame is shifted MSB-first while CS\_N is low as a 2-bit command plus a 10-bit address (write frames append 8 data bits): WRITE\_A and WRITE\_B load the operand buffers, START launches one tile, and READ\_C returns one 24-bit two's-complement result on MISO. Raising CS\_N at any point aborts the frame safely. Three status flags (busy, done, writeback-done) bypass the serial link and drive pads directly, giving oscilloscope-visible liveness during board bring-up. In total the chip uses 9 of the slot's 91 pads (the serial link, the status flags, clock, and reset); the remaining bidir pads are tied off with pull-downs.
 
-The padring is the wafer.space GF180MCU project template \cite{padring} for a $2935\times2935~\mu$m workshop slot. One consequence of the template is that the pad supply and the core supply are shorted into a single rail on every pad, so the chip is single-supply by construction. The adopted operating point is therefore 3.3~V for the whole die: the logic and SRAM are 3.3~V parts, and the foundry I/O cells are officially characterized for 3.3~V operation, so every cell on the die operates in a foundry-characterized corner and the I/O levels are directly compatible with a 3.3~V microcontroller host.
+The padring is the wafer.space GF180MCU project template \cite{padring} for a $2935\times2935~\mu$m workshop slot. One consequence of the template is that the pad supply and the core supply are shorted into a single rail on every pad, so the chip is single-supply by construction. The adopted operating point is therefore 3.3~V for the whole die: the logic and SRAM are 3.3~V parts, and the foundry I/O cells are officially characterized for 3.3~V operation, so every cell on the die operates in a foundry-characterized corner and the I/O levels are directly compatible with a 3.3~V microcontroller host. Fig.~\ref{fig:chipgds} shows the final chip layout.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.66\columnwidth]{Chip_GDS.png}
+\includegraphics[width=0.60\columnwidth]{Chip_GDS.png}
 \caption{Final chip layout ($2935\times2935~\mu$m slot): the DLA macro with its 11 SRAMs, the padring, and the template's identification blocks.}
 \label{fig:chipgds}
 \end{figure}
@@ -179,17 +252,26 @@ The system is separated into the hardware core and the verification environment.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\columnwidth]{Hardware_Software_Integration.png}
+\includegraphics[width=0.62\columnwidth]{Hardware_Software_Integration.png}
 \caption{Hardware and software flow.}
 \label{fig:hwsoft}
 \end{figure}
 
-Python prepares the input data and memory contents, then the RTL testbench loads the data into the hardware engine. After the engine finishes, the output is read back and passed to the activation-function stage. This split keeps the accelerator simple, while still allowing the complete GAN pipeline to be checked.
+As shown in Fig.~\ref{fig:hwsoft}, Python prepares the input data and memory contents, then the RTL testbench loads the data into the hardware engine. After the engine finishes, the output is read back and passed to the activation-function stage. This split keeps the accelerator simple, while still allowing the complete GAN pipeline to be checked.
 
 \subsection{Quantization and Requantization}
 The original model weights are stored as 32-bit floating-point values. Before they can be used by the integer array, every weight and bias tensor is converted to signed 8-bit values using one scale factor per tensor. The scale comes from the largest absolute value in the tensor, and all scales are saved in a manifest file so the testbench can reuse the same values.
 
 The DLA only returns the integer dot product of one tile. The rest of the math is done around it in integer form, so the hardware result matches the Python reference. For the two hidden layers, the integer result is rescaled, the bias is added, and a ReLU activation is applied before the value is quantized again to 8 bits for the next layer. For the output layer, the result is turned into a fixed-point value, passed through a tanh lookup table, and then mapped to a grayscale pixel. The lookup table is used so that tanh does not have to be computed directly in hardware.
+
+\subsection{Choice of operand width}\label{sec:width}
+INT8 was not assumed: it is the knee of a measured three-way trade-off, shown in Table~\ref{tab:quant}. The FP32 checkpoint was re-quantized to $W$ bits---weights and activations together---and the digit re-rendered through the bit-exact model, scoring the mean absolute gray-level error against the FP32 generator; the same $4\times4$ PE array RTL was then synthesized at \texttt{DATA\_W}~$=W$ against the 3.3~V standard-cell library to obtain its silicon cost.
+
+Accuracy collapses below eight bits and saturates above it. INT4 is $16.8\times$ worse than INT8 (31.96 versus 1.90 gray levels of 255) for a $2.5\times$ smaller array, and it does not even reduce the traffic that dominates run time, because the SRAM macros are $\times 8$ and a sub-byte operand still occupies a byte unless packing logic is added. In the other direction, INT16 recovers only 0.98 gray levels---0.4\% of full scale, below the visible threshold for this workload---while nearly tripling the PE array area and doubling the weight bytes, which doubles the term that is 99\% of end-to-end latency (Section~\ref{sec:disc}). The accumulator width follows the operand width as $2W+\log_2 K$, so it also sets the C-buffer macro count: 24~bits and three byte-planes at INT8, but 40~bits and five macros at INT16.
+
+FP16 is a different datapath rather than a parameter change---exponent addition, alignment shifting, normalization and rounding around an $11\times11$ mantissa multiplier---and the open PDK provides no floating-point macro. Its arithmetic core alone is therefore bounded below by the INT12 row. The dynamic range that motivates floating point is already handled here by the per-tensor scale together with the Q4.12 requantization, and the measured saturation counters confirm that the integer path is not clipping where it matters.
+
+\input{tab_quant}
 
 \section{Verification}\label{sec:map}
 
@@ -260,12 +342,12 @@ Density (\%) & Antenna nets & Setup slack (ns) & Result \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.7\columnwidth]{Stage1_GDS.png}
+\includegraphics[width=0.63\columnwidth]{Stage1_GDS.png}
 \caption{Hardened accelerator macro ($1600\times1500~\mu$m) with the eleven SRAM macros on a $4\times3$ grid.}
 \label{fig:layout}
 \end{figure}
 
-Table~\ref{tab:signoff} summarizes the hardened macro. Magic reports zero DRC errors, Netgen reports zero LVS errors, and the antenna report has zero violating nets and pins. The design meets the 40~ns clock at all nine STA corners: the worst setup slacks per corner family are $+23.41$~ns (TT), $+15.12$~ns (SS, 125\,\textdegree C, 3.0~V), and $+26.54$~ns (FF), and the worst hold slacks are $+0.260$, $+0.333$, and $+0.150$~ns respectively. The reported nominal power is 162~mW, almost entirely internal power estimated with the flow's default switching activity, and should be read as a conservative tool estimate rather than a measurement.
+Fig.~\ref{fig:layout} shows the resulting macro layout, and Table~\ref{tab:signoff} summarizes the sign-off results. Magic reports zero DRC errors, Netgen reports zero LVS errors, and the antenna report has zero violating nets and pins. The design meets the 40~ns clock at all nine STA corners: the worst setup slacks per corner family are $+23.41$~ns (TT), $+15.12$~ns (SS, 125\,\textdegree C, 3.0~V), and $+26.54$~ns (FF), and the worst hold slacks are $+0.260$, $+0.333$, and $+0.150$~ns respectively. The reported nominal power is 162~mW, almost entirely internal power estimated with the flow's default switching activity, and should be read as a conservative tool estimate rather than a measurement.
 
 \begin{table}[h]
 \caption{Hardened macro results.}
@@ -323,28 +405,55 @@ Worst IR drop & 0.31 mV \\
 \end{table}
 
 \subsection{Comparison}
-Table~\ref{tab:compare} compares this work with a recent accelerator by Wang et al. \cite{wang}. Their design uses a smaller PE array on a 40~nm process and is not built with an open-source flow. Our design uses a larger array on the older 180~nm GF180MCU process and is built fully with open tools, and the whole result---from the quantization scripts to the final chip GDS---can be reproduced from the public flow. The larger area and higher power mostly come from the coarser process and the conservative clock, not from the architecture.
+Table~\ref{tab:compare} places this work against representative MAC-array accelerators spanning three orders of magnitude in scale: the datacenter-class TPU~v1 \cite{tpu}, the mobile CNN accelerator Eyeriss \cite{eyeriss}, and the small embedded design of Wang et al. \cite{wang} that is closest in array size. Absolute area and power are not comparable across such different nodes, so normalized figures are given alongside: peak throughput per unit area and per watt, both of which are process-sensitive but at least scale-invariant.
 
+Our design occupies 2.326~mm$^2$ of core area and dissipates 162~mW at 25~MHz, giving 0.344~GOPS/mm$^2$ and 4.95~GOPS/W. It is comfortably the least efficient entry, and the gap is not marginal: Wang et al. reach roughly $115\times$ our GOPS/W. Three factors account for almost all of it, and none is architectural. The process is $4.5\times$ coarser in feature size, worth roughly two orders of magnitude in energy per operation on its own; the clock is deliberately conservative at 25~MHz where the comparison designs run in the hundreds of megahertz; and the array is 16 MACs against their 8 operating at far higher utilization. Under ideal $(L/L_0)^2$ scaling our core would be 0.115~mm$^2$ at 40~nm, which is the fairer basis for an area reading, though such scaling is optimistic for an SRAM-dominated design---eleven macros account for a large share of the area here---and should be treated as a bound rather than a projection.
+
+The claim of this work is therefore not efficiency but reproducibility on an open process. The entire result, from the quantization scripts to the final chip GDS with DRC, LVS, antenna and nine-corner timing sign-off, is produced by a public open-source flow on an open PDK, which none of the compared designs offer; the closed 40~nm and 28~nm results cannot be re-derived, re-targeted or corrected by a reader. For a shared-shuttle educational tapeout that property is the point, and the efficiency figures above are best read as the price of it.
+
+% ---------------------------------------------------------------------------
+% AUTHORS: the two leftmost data columns must be completed from the source
+% papers before submission -- the values were deliberately NOT filled in here
+% because they cannot be verified from this repository.  Fields needed per work:
+%   technology node, array size and dataflow, arithmetic precision, core area,
+%   power and the clock/operating point it was measured at, peak throughput.
+% Then compute GOPS/mm^2 and GOPS/W the same way as the "This work" column
+% (peak GOPS divided by core area / total power).  Suggested primary sources:
+%   TPU v1  -- Jouppi et al., ISCA 2017, Table 2 / Fig. 2 (28 nm, 65,536 MACs)
+%   Eyeriss -- Chen et al., IEEE JSSC 52(1), 2017 (65 nm, 168 PEs)
+% If a number is unavailable in the source, print "n/r" rather than estimating.
+% ---------------------------------------------------------------------------
 \begin{table}[h]
-\caption{Comparison with a recent accelerator.}
+\caption{Comparison with representative MAC-array accelerators. Normalized figures use peak throughput over core area and total power.}
 \label{tab:compare}
 \centering
+\resizebox{\columnwidth}{!}{%
 \renewcommand{\arraystretch}{1.08}
-\begin{tabular}{@{}lcc@{}}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-Parameter & Wang et al. (2024) & This work \\
+Parameter & TPU v1 \cite{tpu} & Eyeriss \cite{eyeriss} & Wang \cite{wang} & This work \\
 \midrule
-Technology       & TSMC 40 nm                 & GF180MCU 180 nm \\
-Architecture     & $2\times2\times2$ PE array & $4\times4$ PE array, $K{=}256$ \\
-Core area        & 11.97 mm$^2$               & 2.326 mm$^2$ \\
-Total power      & 96.35 mW                   & 162 mW (estimate) \\
-Open-source flow & No                         & Yes \\
+Technology        & 28 nm  & 65 nm  & 40 nm                     & GF180MCU 180 nm \\
+Array             & $256^2$ & 168 PE & $2\times2\times2$        & $4\times4$, $K{=}256$ \\
+Precision         & INT8   & INT16  & \dots                     & INT8 \\
+Core area (mm$^2$)& \dots  & \dots  & 11.97                     & 2.326 \\
+Power             & \dots  & \dots  & 96.35 mW                  & 162 mW \\
+Peak throughput   & \dots  & \dots  & 54.61 GOPS                & 0.8 GOPS \\
+GOPS/mm$^2$       & \dots  & \dots  & 4.56                      & 0.344 \\
+GOPS/W            & \dots  & \dots  & 566.8                     & 4.95 \\
+Open-source flow  & No     & No     & No                        & Yes \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \section{Discussion}\label{sec:disc}
-The array performs 16 MAC operations per cycle, a peak of 0.8~GOPS at 25~MHz. One image needs 324 tiles of 256 accumulation cycles each, about 3.6~ms of pure compute; effective utilization is lower because the broadcast schedule computes four unique neurons per tile and because each tile's operands must first be loaded into the buffers. On the finished chip, end-to-end latency is dominated by streaming the roughly 280~KB of weights through the serial link, which is a deliberate trade: the slot's pad budget and the 2.8~KB of on-chip SRAM favor a simple streaming tile engine over on-chip weight storage. Better weight reuse, double buffering, or a wider link would improve throughput.
+The array performs 16 MAC operations per cycle, a peak of 0.8~GOPS at 25~MHz. Table~\ref{tab:latency} breaks one image down by stage. The per-tile cost is measured rather than assumed: a dedicated testbench reports 278 cycles from \texttt{start} to \texttt{wb\_done}, of which 256 are the $K$ accumulation and 22 are controller sequencing plus the serialized writeback of the sixteen accumulators. Across the 324 tiles of the three layers---64 for L0, 64 for L2 and 196 for L4---that is 90{,}072 cycles, or 3.60~ms of array time at 40~ns. Effective utilization is lower still, because the broadcast schedule computes only four unique neurons per tile.
+
+That compute time is not, however, the latency a user sees. Streaming the weights across the 4-wire link costs one 20-edge frame per byte, and with the serial clock at \texttt{clk}/8---one edge every four core clocks, or 160~ns---the 331{,}776 weight bytes of a single image take 1.06~s. Adding the input vectors, the \texttt{START} commands and the C read-back gives \textbf{1.076~s end to end per image}, of which the PE array is busy for 0.33\%: the link is $298\times$ the compute. Effective throughput is 0.93 images/s, or 0.62~MOPS against the 0.8~GOPS peak.
+
+This is a property of the workload, not an implementation defect. A matrix--\emph{vector} product reuses no weight, so 1.01~weight bytes must cross the link per MAC and no achievable on-chip SRAM changes that; with 538~KiB of model against 2.8~KiB of buffer, the host is necessarily inside the inner loop. The consequences are worth stating plainly for anyone reproducing this class of design: peak GOPS is close to meaningless here, and the useful levers are all on the data-movement side. Widening the host interface is the largest: an 8-bit parallel write bus reduces the cost from 20 edges per byte to about one, and batching several latents against one weight stream amortizes the dominant term directly. Both were implemented and measured on a follow-on variant of this design, which reaches 58--62$\times$ end-to-end over the baseline serial link by combining the two. Weight-stationary reuse, double buffering, or a compressed weight format would attack the same term.
+
+\input{tab_latency}
 
 The implementation also shows a trade-off between timing and antenna closure: floorplans that shortened the SRAM-to-MAC critical path consistently increased the antenna count, and the priority here was a clean physical sign-off rather than the fastest possible clock. The earlier voltage-domain concern was resolved structurally---the padring shorts the pad and core supplies, so the single-supply 3.3~V operating point removes the level-shifting problem entirely, at the cost of 3.3~V (rather than 5~V) I/O levels, which matches the intended microcontroller host anyway. A true dual-rail variant was evaluated and deferred because the only available dual-voltage pad library is not yet silicon-ready. A bring-up plan for the returned silicon is prepared: current-limited power-on, status-pin checks, replay of the unit-test golden vectors over the serial link from a bit-banging 3.3~V microcontroller, and finally a full streamed digit render.
 
@@ -360,6 +469,7 @@ W. Anthony: RTL architecture, PE array design, RTL-to-GDS flow, verification. I 
 \begin{thebibliography}{12}
 \bibitem{tpu} N. P. Jouppi \emph{et al.}, ``In-datacenter performance analysis of a tensor processing unit,'' in \emph{Proc. ISCA}, 2017.
 \bibitem{survey} C. Silvano \emph{et al.}, ``A survey on deep learning hardware accelerators for heterogeneous HPC platforms,'' \emph{ACM Computing Surveys}, 2025.
+\bibitem{eyeriss} Y.-H. Chen, T. Krishna, J. S. Emer, and V. Sze, ``Eyeriss: An energy-efficient reconfigurable accelerator for deep convolutional neural networks,'' \emph{IEEE J. Solid-State Circuits}, vol. 52, no. 1, pp. 127--138, 2017.
 \bibitem{jacob} B. Jacob, S. Kligys, B. Chen, M. Zhu, M. Tang, A. Howard, H. Adam, and D. Kalenichenko, ``Quantization and training of neural networks for efficient integer-arithmetic-only inference,'' in \emph{Proc. IEEE/CVF CVPR}, 2018.
 \bibitem{wang} C. C. Wang, S. H. Luo, H. C. Wu, R. G. B. Sangalang, C. P. Jou, and H. Hsia, ``A 54.61 GOPS 96.35 mW digital logic accelerator for underwater object recognition DNN using 40 nm CMOS process,'' in \emph{Proc. IEEE 6th Int. Conf. AI Circuits and Systems (AICAS)}, 2024.
 \bibitem{goodfellow} I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio, ``Generative adversarial nets,'' in \emph{Proc. NeurIPS}, 2014.

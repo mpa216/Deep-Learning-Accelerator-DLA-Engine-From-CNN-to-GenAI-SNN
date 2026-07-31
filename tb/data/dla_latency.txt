@@ -1,0 +1,8 @@
+# measured by tb/dla_latency_tb.sv -- cycles
+N 4
+K 256
+T_AWRITE 1026
+T_BWRITE 258
+T_START 260
+T_WB 278
+T_CREAD 2
