@@ -629,7 +629,111 @@ only bring-up visibility the chip has.
 
 ---
 
-## 10. File map
+## 10. Post-silicon bring-up: wiring and the parallel burst bus
+
+The reference host implementation is `tb/chip_core_gan_tb.sv` — it drives the pads and
+touches nothing internal, so its `ser_write` / `ser_cfg` / `ser_exec` / `ser_read` /
+`ser_burst` / `ser_burst8` tasks port onto an MCU one-for-one. Port those, do not invent
+a protocol from this prose.
+
+### What to wire
+
+| chip pin | pad | direction (from the chip) | needed? |
+|---|---|---|---|
+| VDD ×4, VSS ×4 | dedicated | — | yes — one 3.3 V rail, 100 nF per pin + 10 µF bulk |
+| `clk` | dedicated clock pad | in | yes |
+| `rst_n` | dedicated reset pad | in | yes |
+| SCLK / MOSI / CS_N / MISO | `bidir[0..3]` | in / in / in / **out** | yes |
+| `busy` | `bidir[4]` | out | yes — the host must poll it between commands |
+| `dla_busy`, `dla_done` | `bidir[5..6]` | out | optional, scope-only |
+| `verdict` | `bidir[7]` | out | optional — same bit is in `MET_STATUS` |
+| `pdata[7:0]` | `bidir[8..15]` | **in** | only for `WR_BURST8` |
+| `bidir[16..19]`, 60 analog, spare input | — | — | leave unconnected |
+
+**`pdata[7:0]` has no pull-down.** `chip_core_gan.sv` enables the on-die pull-down only
+for `bidir[16..19]`, so if you wire the burst bus you must drive all eight lines at all
+times, and if you *don't* wire it, tie those pads to ground. Floating CMOS inputs
+oscillate and burn supply current — this is the one thing on this chip that will bite you
+electrically.
+
+Minimum viable bring-up is 3.3 V + GND + `clk` + `rst_n` + the four link wires + `busy` =
+**8 signals**; the burst bus adds 8 more. Everything works without it, just ~24× slower on
+weight streaming.
+
+Clock: fully static design, so anything from DC up to the target 60 ns (16.7 MHz) works.
+Bring up at ~1 MHz. Expect well under 1 mA idle — power up current-limited.
+
+### The `WR_BURST8` frame, exactly
+
+```
+CS_N low
+  4 bits  CMD  = 11  (WR_BURST8)          MSB first on MOSI, one bit per SCLK RISING edge
+ 12 bits  ADDR = {target[1:0], start[9:0]}    target: 0=A  1=B  2=IMG  3=ACT
+  then, per byte:  present the byte on pdata[7:0], pulse SCLK  -> one byte written
+CS_N high
+```
+
+Every SCLK rising edge after the header writes `pdata[7:0]` to the current address and
+increments it. There is no byte count and no terminator: the burst runs until you raise
+`CS_N`. A full 4×256 A tile is therefore **one frame**: 16 header bits + 1024 SCLK pulses,
+1040 edges against 24,576 for single-byte frames (23.6×, measured by test [6] of
+`chip_core_gan_tb`).
+
+`WR_BURST` (command 10) is the same frame with the data shifted serially on MOSI, 8 bits
+per byte — 3× rather than 24×, and it needs no extra pins. Use it if you did not wire the
+parallel bus.
+
+Rules that matter:
+
+- **Only rising edges do work.** The bridge computes `sclk_rise = sclk_s & ~sclk_prev`
+  after a two-flop synchroniser, so a falling edge does nothing and one byte costs a full
+  SCLK period. Hold each level ≥ 3 core clocks; the testbench uses 4 high + 4 low, i.e.
+  SCLK ≤ clk/8. At 16.7 MHz core that caps the bus at ~2.1 Mbyte/s.
+- **Present `pdata` before you raise SCLK and hold it until after the fall.** It goes
+  through the same two-flop synchroniser as MOSI, so equal delays cancel and a byte that
+  is stable across the whole SCLK period is always sampled correctly.
+- **`busy` must be low for the whole burst.** `gan_engine_top` gates host writes with
+  `host_w = wr_en && !seq_busy`; anything written while the sequencer runs is silently
+  dropped. Poll `busy` before starting, and never interleave an `EXEC`.
+- **The address is 10 bits and wraps.** Bursting more than 1024 bytes overwrites from 0.
+- Raising `CS_N` at any point aborts cleanly, so a stuck host can always resynchronise.
+
+### Wiring `pdata` so the speed-up is real
+
+The 23.6× is a *chip-side* figure. To see it on a real host, allocate `pdata[7:0]` to
+**eight contiguous bits of one GPIO port** so the MCU can write a byte with a single
+register store. Scattered across ports, the MCU spends eight bit-bang writes per byte and
+you have thrown the entire advantage away — `WR_BURST` over one wire would have been just
+as fast and needed no extra pins.
+
+On an ESP32 or RP2040 that means picking a byte-aligned GPIO group; on the RP2040 the PIO
+block can shift the whole tile out with no CPU involvement, which is the ideal host for
+this bus. Keep `bidir[8]` = `pdata[0]` … `bidir[15]` = `pdata[7]` — the bridge reads
+`pdata_pad = bidir_in[15:8]`.
+
+### Bring-up ladder
+
+1. **Power on current-limited**, no clock. Check idle current is sub-mA.
+2. **Clock + reset.** Confirm `busy`, `dla_busy`, `dla_done` all read low.
+3. **Link liveness.** `WR_CFG` a known value to a config register, then read a metric
+   register back — `RD_MET` of `MET_STATUS` should return sane bits. This proves
+   SCLK/MOSI/CS_N/MISO and the synchronisers before anything else is trusted.
+4. **Buffer loopback.** `WR_IMG` a pattern, `RD_IMG` it back. Then the same for ACT.
+   This is test [1]/[2] of `chip_core_gan_tb`.
+5. **Burst correctness before burst speed.** Write a 1024-byte pattern with `WR_BURST8`,
+   read it back with `RD_IMG`, and compare. If bytes are shifted by one address, your
+   `pdata` setup time relative to SCLK is wrong; if every byte is the same, the port
+   write is not landing before the edge.
+6. **One MAC tile.** Stream the `d3004n4` fixture (reused by test [3]) and check the four
+   C values against −34139 / 59877 / −36996 / −23021.
+7. **One flush.** Program a layer's config block, `OP_FLUSH`, read ACT — test [4].
+8. **Full generator**, then D, then the losses — replay `tb/data/gan_chip/` goldens.
+   At batch 1 the whole pass is ~440k core cycles; at 1 MHz that is ~0.44 s of compute
+   with the link on top.
+
+Steps 1–5 need no weights and no golden data, and they are where a wiring fault will show.
+
+## 11. File map
 
 ```
 rtl/gan_defs.vh          shared constants + register maps (mirrored in Python)
