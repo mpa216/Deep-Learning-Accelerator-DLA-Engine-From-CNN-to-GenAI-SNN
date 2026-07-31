@@ -18,6 +18,8 @@ stage2_padring/gf180mcu_stage2_final/
 # Local-only chipathon trackers (removed from the remote 2026-07-05, keep local copies untracked)
 GAN_CHIP_Pin_Requirement.xlsx
 GAN_CHIP_Progress_Tracker_1.xlsx
+# Derived from the above by scripts/gen_pin_requirement_gan.py -- regenerable
+GAN_CHIP_Pin_Requirement_gan.xlsx
 
 # Common junk
 __pycache__/
