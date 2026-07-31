@@ -85,13 +85,13 @@ tensors with **zero mismatches** and scales identical to 12 significant figures.
 
 | width | mean err (gray/255) | max | accumulator | C macros | PE array µm² | vs INT8 | link time |
 |---|---|---|---|---|---|---|---|
-| INT4 | 31.96 | 254 | 16 | 2 | 100,108 | 0.40× | 0.90 s |
-| INT6 | 6.43 | 130 | 20 | 3 | 156,542 | 0.62× | 0.90 s |
-| **INT8** | **1.90** | **46** | **24** | **3** | **252,540** | **1.00×** | **0.90 s** |
-| INT10 | 0.98 | 9 | 28 | 4 | 346,657 | 1.37× | 1.81 s |
-| INT12 | 0.93 | 7 | 32 | 4 | 465,699 | 1.84× | 1.81 s |
-| INT16 | 0.92 | 7 | 40 | 5 | 747,110 | 2.96× | 1.81 s |
-| **FP16**† | ~0 (reference) | — | 32 (binary32) | 4 | **732,407** | **2.90×** | 1.81 s |
+| INT4 | 31.96 | 254 | 16 | 2 | 100,108 | 0.40× | 1.36 s |
+| INT6 | 6.43 | 130 | 20 | 3 | 156,542 | 0.62× | 1.36 s |
+| **INT8** | **1.90** | **46** | **24** | **3** | **252,540** | **1.00×** | **1.36 s** |
+| INT10 | 0.98 | 9 | 28 | 4 | 346,657 | 1.37× | 2.71 s |
+| INT12 | 0.93 | 7 | 32 | 4 | 465,699 | 1.84× | 2.71 s |
+| INT16 | 0.92 | 7 | 40 | 5 | 747,110 | 2.96× | 2.71 s |
+| **FP16**† | ~0 (reference) | — | 32 (binary32) | 4 | **732,407** | **2.90×** | 2.71 s |
 
 † `study/fp16_mac.v`, FP16 multiply with FP32 accumulate. Verified bit-exact against
 `scripts/gen_fp16_vectors.py` over 8,192 MAC steps *before* its area was quoted; that
@@ -121,18 +121,18 @@ Two extra findings worth putting in the paper (both are in the new text):
 
 **Done — §Discussion rewritten around the measured breakdown.**
 
-| stage | bytes | SCLK edges | time | share |
+| stage | bytes | serial bit-periods | time | share |
 |---|---|---|---|---|
-| weight stream (A) | 331,776 | 6,635,520 | 1.062 s | 99.0% |
-| input vector (B) | 768 | 15,360 | 2.458 ms | 0.2% |
-| START commands | — | 3,888 | 622 µs | 0.1% |
-| result read (C) | 3,888 | 46,656 | 7.465 ms | 0.7% |
-| **link total** | | **6,701,424** | **1.072 s** | 100% |
+| weight stream (A) | 331,776 | 6,635,520 | 1.593 s | 99.0% |
+| input vector (B) | 768 | 15,360 | 3.686 ms | 0.2% |
+| START commands | — | 3,888 | 933 µs | 0.1% |
+| result read (C) | 3,888 | 46,656 | 11.197 ms | 0.7% |
+| **link total** | | **6,701,424** | **1.608 s** | 100% |
 | PE array compute | | | 3.603 ms | |
-| **end to end** | | | **1.076 s** | |
+| **end to end** | | | **1.612 s** | |
 
-The array is busy for **0.33%** of the time. The link is **298×** the compute. Effective
-throughput 0.93 images/s = 0.62 MOPS against the 0.80 GOPS peak.
+The array is busy for **0.22%** of the time. The link is **446×** the compute. Effective
+throughput 0.62 images/s = 0.41 MOPS against the 0.80 GOPS peak.
 
 ### Three numbers in the existing documentation that need correcting
 
@@ -142,13 +142,15 @@ throughput 0.93 images/s = 0.62 MOPS against the 0.80 GOPS peak.
    256. A host may close the gap by zeroing the pad once; both figures are reported by
    the script (`--tight`). The paper text now says 331,776.
 
-2. **The serial clock convention was ambiguous and worth 2×.** "SCLK ≤ clk/8" as a
-   *frequency* means one edge every 4 core clocks (160 ns at 40 ns), which is what the
-   bridges permit and what the paper now states. `CHANGES_EXPLAINED.md`'s 9.448 s / 0.161 s
-   figures assume one edge every **8** clocks and simultaneously count weight bytes only;
-   the two errors partly cancel. Pass `--sclk-edge-clks 8 --tight` to reproduce them.
-   **Whichever convention you publish, state it explicitly** — a reviewer can otherwise
-   derive a number 2× different from yours.
+2. **State the serial rate explicitly — it is easy to get 2× wrong.** Both bridges shift
+   on **rising SCLK edges only** (`sclk_rise = sclk_s & ~sclk_prev`), so one transferred
+   bit costs a full SCLK *period*, not a half. The two-flop synchroniser needs each level
+   stable ~3 core clocks, so the floor is 6 clocks per bit — which is exactly what
+   `chip_core_dla_tb.sv` drives (`SCLK_HALF_PERIOD_CLKS = 3`) and passes at. The
+   experimental chip's testbench uses 8 (4 high + 4 low). Reading "SCLK ≤ clk/8" as a
+   frequency and then counting *both* edges gives 4 clocks per bit and a number 1.5–2×
+   too optimistic. `scripts/analyze_latency.py` now defaults to each design's own
+   testbench rate; override with `--sclk-clks-per-bit`.
 
 3. **Do not quote 0.23 mW as chip power.** The Stage-2 chip-level run reports
    `power__total = 0.268 mW`, and `CLAUDE.md` records "0.23 mW" as chip total. That is
@@ -165,7 +167,7 @@ Yes, and it strengthens that branch's story rather than contradicting it.
 - **The latency comment applies directly and is already answered there.** The experimental
   chip exists largely *because* of what comment 4 exposes: it adds `WR_BURST` (8 edges per
   byte) and `WR_BURST8` (1 edge per byte off an 8-bit parallel bus) plus 4-way batching,
-  which together take end-to-end from 6.50 s to 0.105 s per image on the same accounting
+  which together take end-to-end from 12.97 s to 0.207 s per image on the same accounting
   (60 ns clock, all traffic counted) — a **62×** improvement attacking exactly the term
   that is 99% of the main chip's latency. The paper's Discussion now cites this as
   measured follow-on work.

@@ -260,8 +260,8 @@ def main() -> int:
     print(hdr)
     a8 = areas.get(8)
     for r in rows:
-        # 20 edges per byte, one edge per 4 clocks at 40 ns  ->  3.2 us per byte
-        t = r["bytes_per_img"] * 20 * 4 * 40e-9
+        # 20 bits per byte-write frame, 6 core clocks per bit at 40 ns -> 4.8 us/byte
+        t = r["bytes_per_img"] * 20 * 6 * 40e-9
         line = (f"{r['bits']:5d} {r['mean']:13.2f} {r['max']:5d} {r['acc_bits']:4d} "
                 f"{r['c_planes']:6d} {r['bytes_per_img']:13,d} {t:9.3f}s")
         if areas:
@@ -271,7 +271,7 @@ def main() -> int:
 
     if fp16_area and a8:
         # FP16 needs 2 bytes per operand, like INT16.
-        t16 = base_bytes * 2 * 20 * 4 * 40e-9
+        t16 = base_bytes * 2 * 20 * 6 * 40e-9
         print(f"{'FP16':>5s} {'~0 (ref)':>13s} {'--':>5s} {'32':>4s} {'4':>6s} "
               f"{base_bytes * 2:13,d} {t16:9.3f}s {fp16_area:13.0f} "
               f"{fp16_area / a8:7.2f}x")
@@ -324,7 +324,7 @@ def main() -> int:
                 continue
             a = areas.get(r["bits"])
             astr = f"{a:,.0f}" if a else "---"
-            t = r["bytes_per_img"] * 20 * 4 * 40e-9
+            t = r["bytes_per_img"] * 20 * 6 * 40e-9
             bold = r"\textbf" if r["bits"] == 8 else None
             cells = [f"INT{r['bits']}", f"{r['mean']:.2f}", f"{r['max']:d}", astr,
                      f"{t:.2f}~s"]
@@ -332,7 +332,7 @@ def main() -> int:
                 cells = [f"{bold}{{{c}}}" for c in cells]
             lines.append(" & ".join(cells) + r" \\")
         if fp16_area:
-            t16 = base_bytes * 2 * 20 * 4 * 40e-9
+            t16 = base_bytes * 2 * 20 * 6 * 40e-9
             lines.append(f"FP16$^\\dagger$ & \\textless 0.01 & --- & {fp16_area:,.0f} "
                          f"& {t16:.2f}~s \\\\")
         lines += [r"\bottomrule", r"\end{tabular}"]

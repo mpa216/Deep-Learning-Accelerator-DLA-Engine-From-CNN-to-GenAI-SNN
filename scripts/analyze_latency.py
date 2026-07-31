@@ -53,12 +53,16 @@ GAN_CYCLES_MEASURED = {1: 440252, 4: 413592}    # batch -> cycles for the whole 
 class Link:
     """A serial bridge's cost model.
 
-    Both bridges shift one bit per SCLK edge behind a double-flop synchroniser, which
-    caps SCLK at clk/8 -- i.e. one edge every 4 core clocks.  `edge_clks` makes that
-    explicit so the assumption is visible rather than baked into a constant.
+    Both bridges shift one bit per SCLK RISING edge (`sclk_rise = sclk_s & ~sclk_prev`)
+    behind a double-flop synchroniser, so one transferred bit costs a full SCLK PERIOD,
+    not a half.  `edge_clks` is therefore core clocks per bit, and its floor is set by
+    the synchroniser needing each level stable for ~3 clocks.  The defaults are what each
+    design's own verified testbench actually drives: 6 for the main chip
+    (tb/chip_core_dla_tb.sv, SCLK_HALF_PERIOD_CLKS = 3) and 8 for the experimental one
+    (tb/chip_core_gan_tb.sv, 4 clocks high + 4 low).
     """
 
-    def __init__(self, name, hdr, data_bits, read_bits, exec_bits, edge_clks=4,
+    def __init__(self, name, hdr, data_bits, read_bits, exec_bits, edge_clks=6,
                  burst_hdr=None, burst_bits_per_byte=None):
         self.name = name
         self.hdr = hdr                                  # CMD + ADDR, in edges
@@ -88,11 +92,12 @@ LINK_MAIN = Link("4-wire serial", hdr=12, data_bits=8, read_bits=24, exec_bits=0
 # rtl/gan_serial_bridge.v : CMD[3:0] + ADDR[11:0] = 16, then 8 / 24 / 0.
 # WR_BURST sends the header once and auto-increments (8 edges per byte); WR_BURST8 moves
 # a whole byte per edge off the 8-bit parallel bus on bidir[8..15].
-LINK_GAN = Link("4-wire serial", hdr=16, data_bits=8, read_bits=24, exec_bits=0)
+LINK_GAN = Link("4-wire serial", hdr=16, data_bits=8, read_bits=24, exec_bits=0,
+                edge_clks=8)
 LINK_GAN_BURST = Link("serial burst", hdr=16, data_bits=8, read_bits=24, exec_bits=0,
-                      burst_hdr=16, burst_bits_per_byte=8)
+                      edge_clks=8, burst_hdr=16, burst_bits_per_byte=8)
 LINK_GAN_BURST8 = Link("parallel burst", hdr=16, data_bits=8, read_bits=24, exec_bits=0,
-                       burst_hdr=16, burst_bits_per_byte=1)
+                       edge_clks=8, burst_hdr=16, burst_bits_per_byte=1)
 
 
 # ---------------------------------------------------------------------------
@@ -207,20 +212,21 @@ def main() -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--clk-main", type=float, default=40.0, help="main chip period, ns")
     ap.add_argument("--clk-gan", type=float, default=60.0, help="experimental period, ns")
-    ap.add_argument("--sclk-edge-clks", type=int, default=4,
-                    help="core clocks per SCLK edge. The bridges double-flop and "
-                         "edge-detect SCLK, needing each level stable for >=3 clocks; "
-                         "SCLK = clk/8 in FREQUENCY therefore means one edge every 4 "
-                         "clocks, which is the default. Pass 8 to reproduce the more "
-                         "conservative figures quoted in CHANGES_EXPLAINED.md")
+    ap.add_argument("--sclk-clks-per-bit", type=int, default=None,
+                    help="core clocks per transferred bit (one full SCLK period, since "
+                         "only rising edges do work). Default: each design's own "
+                         "testbench rate -- 6 for the main chip, 8 for the experimental "
+                         "one. The floor is ~6: the double-flop synchroniser needs each "
+                         "SCLK level stable for about 3 core clocks.")
     ap.add_argument("--tight", action="store_true",
                     help="count only the weight bytes the model contains, assuming the "
                          "host zero-pads L0 once instead of every tile")
     ap.add_argument("--latex", default=None, help="also write a LaTeX table here")
     args = ap.parse_args()
 
-    for lk in (LINK_MAIN, LINK_GAN, LINK_GAN_BURST, LINK_GAN_BURST8):
-        lk.edge_clks = args.sclk_edge_clks
+    if args.sclk_clks_per_bit:
+        for lk in (LINK_MAIN, LINK_GAN, LINK_GAN_BURST, LINK_GAN_BURST8):
+            lk.edge_clks = args.sclk_clks_per_bit
 
     prims, src = dict(DEFAULT_PRIMS), "built-in defaults (run tb/dla_latency_tb.sv!)"
     if LAT_FILE.exists():
@@ -239,7 +245,7 @@ def main() -> int:
     print(f"  T_WB = {prims['T_WB']} cycles per tile "
           f"(K={prims['K']} accumulate + {prims['T_WB'] - prims['K']} controller/writeback)")
     print(f"  clock {args.clk_main:.0f} ns ({1e3/args.clk_main:.1f} MHz), "
-          f"SCLK = clk/8 -> one edge per {LINK_MAIN.edge_clks} clocks "
+          f"{LINK_MAIN.edge_clks} core clocks per transferred bit "
           f"({LINK_MAIN.edge_clks * args.clk_main:.0f} ns)")
     print()
 
@@ -347,13 +353,14 @@ def main() -> int:
     print("  the output tiles sweep. An accumulator bank sized to a whole output layer")
     print("  would remove it -- the largest single traffic saving still on the table.")
     print()
-    print(f"  Serial-rate convention: one SCLK edge per {args.sclk_edge_clks} core clocks.")
-    print("  The bridges double-flop and edge-detect SCLK and need each level stable for")
-    print("  >=3 clocks, so SCLK = clk/8 in frequency permits one edge every 4 clocks.")
-    print("  CHANGES_EXPLAINED.md's 9.448 s / 0.161 s figures assume one edge every 8")
-    print("  clocks AND count weight bytes only (no opcode, pixel-refeed or drain")
-    print("  traffic), so they are optimistic on traffic and pessimistic on rate by 2x;")
-    print("  the two errors partly cancel. The figures above count every byte.")
+    print(f"  Serial rate: {LINK_GAN.edge_clks} core clocks per transferred bit here, "
+          f"{LINK_MAIN.edge_clks} on the main chip.")
+    print("  Only RISING SCLK edges do work, so a bit costs a full SCLK period, and the")
+    print("  double-flop synchroniser sets the floor at about 3 clocks per level. These")
+    print("  are the rates each design's own pad-level testbench drives and passes at.")
+    print("  CHANGES_EXPLAINED.md's 9.448 s figure uses this same rate but counts weight")
+    print("  bytes only -- no opcode, pixel re-feed or drain traffic. The figures above")
+    print("  count every byte that crosses the pads.")
 
     if args.latex:
         out = Path(args.latex)
