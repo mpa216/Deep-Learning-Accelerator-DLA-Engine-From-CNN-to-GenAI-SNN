@@ -283,8 +283,26 @@ class GanChip:
                 self.b[f"{net}{li}"] = read_memh_signed(wdir / f"{net}300_{li}_bias.memh", 8)
         self.s_img = 1.0 / 127.0        # image int8 scale: byte = round(tanh * 127)
 
+    def set_weights(self, key, wq, s_w, bq, s_b):
+        """Replace one layer's quantised tensors in place.
+
+        The checkpoint on disk is the inference weight set; `scripts/gan_train_host.py`
+        moves the weights every training step and needs the model to follow, so this is
+        the one way the tensors are allowed to change after construction.
+        `key` is "G0", "G2", "G4", "D0", "D2" or "D4".
+        """
+        self.W[key] = list(wq)
+        self.b[key] = list(bq)
+        self.scale[f"{key[0]}300_{key[1:]}_weight"] = s_w
+        self.scale[f"{key[0]}300_{key[1:]}_bias"] = s_b
+
     # -- one dense layer, exactly as the hardware sequences it -----------------
-    def layer(self, xq, key, cfg: LayerCfg, out_dim, in_dim, terminal=False):
+    def layer(self, xq, key, cfg: LayerCfg, out_dim, in_dim, terminal=False, qmax=127,
+              acc_bits=24):
+        """`qmax` is the largest representable activation and `acc_bits` the C-word width.
+        127 and 24 are the hardware (INT8 into a 24-bit accumulator, three byte-planes of
+        C SRAM); scripts/quant_tradeoff_study.py sweeps them together to measure what
+        other operand widths would cost. Nothing else passes them."""
         W, b = self.W[key], self.b[key]
         outs, acts, pres, sat_pre, sat_out = [], [], [], 0, 0
         for j in range(out_dim):
@@ -292,7 +310,8 @@ class GanChip:
             acc = 0
             for kt in range(0, in_dim, 256):            # K-tiles, as in hardware
                 part = sum(W[base + k] * xq[k] for k in range(kt, min(kt + 256, in_dim)))
-                assert -(1 << 23) <= part < (1 << 23), "K-tile overflows the 24-bit C word"
+                assert -(1 << (acc_bits - 1)) <= part < (1 << (acc_bits - 1)), \
+                    f"K-tile overflows the {acc_bits}-bit C word"
                 acc += part
             t = acc * cfg.MA + b[j] * cfg.MB
             raw = rshift_round(t, cfg.S)
@@ -306,7 +325,7 @@ class GanChip:
                 outs.append(act)
             else:
                 rawq = rshift_round(act * cfg.MH, cfg.SH)
-                q = sat(rawq, -128, 127)
+                q = sat(rawq, -qmax - 1, qmax)
                 if rawq != q:
                     sat_out += 1
                 outs.append(q)

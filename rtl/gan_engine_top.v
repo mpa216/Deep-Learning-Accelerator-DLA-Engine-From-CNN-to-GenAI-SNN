@@ -18,12 +18,12 @@
 // straight from chip registers.  Activations use the 9-segment piecewise-linear
 // tanh/sigmoid of the UAS_VLSI reference design.
 //
-// SRAM macro budget: 16 x (256 x 8)
-//     A buffer   4    weight tile rows        (inside dla_engine_top)
-//     B buffer   4    shared input vector     (inside dla_engine_top)
-//     C buffer   3    24-bit MAC results      (inside dla_engine_top)
-//     ACT        1    layer output activations
-//     IMG        4    the 784-pixel image
+// SRAM macro budget: 13 macros, right-sized from the OCD 3.3 V family
+//     A buffer   4 x  256x8   weight tile rows        (inside dla_engine_top)
+//     B buffer   4 x  256x8   shared input vector     (inside dla_engine_top)
+//     C buffer   3 x   64x8   24-bit MAC results      (inside dla_engine_top)
+//     ACT        1 x 1024x8   layer output activations, 4 lanes of 256
+//     IMG        1 x 1024x8   the 784-pixel image (a drain window at batch 4)
 //
 // Weights are NOT on chip: the two networks hold 538 KiB of int8 weights and biases
 // against 4,096 B (4 KiB) of SRAM, so the host streams one 4x256 tile at a time into the A

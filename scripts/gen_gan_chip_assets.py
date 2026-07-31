@@ -36,7 +36,7 @@ OUT_DIR = ROOT / "tb" / "data" / "gan_chip"
 # ---- config register map (must match rtl/gan_defs.vh) ----------------------
 CFG_MA, CFG_MB, CFG_S, CFG_MH, CFG_SH, CFG_FUNC = 0, 1, 2, 3, 4, 5
 CFG_B0, CFG_B1, CFG_B2, CFG_B3 = 6, 7, 8, 9
-CFG_DST_PTR, CFG_DST_SEL, CFG_NOUT = 10, 11, 12
+CFG_DST_PTR, CFG_DST_SEL, CFG_NOUT, CFG_BATCH = 10, 11, 12, 13
 CFG_N = 16
 
 DST_ACT, DST_IMG, DST_SCORE_FAKE, DST_SCORE_REAL = 0, 1, 2, 3
@@ -218,6 +218,47 @@ def run_batch(chip: GanChip, seeds: list[int], real_img: list[int], hidden_func:
     return zqs, s_z, g_cfgs, d_cfgs, imgs, y_fake, y_real, met
 
 
+def emit_act_captures(out_dir: Path, chip: GanChip, zqs, g_cfgs, d_cfgs, imgs, real_img):
+    """Per-layer expected ACTIVATION BUFFER contents, for tb/gan_train_capture_tb.sv.
+
+    Everything else in this file checks the chip's final outputs (the image, the scores,
+    the losses).  Host-side training instead reads back every layer's activations, so
+    that drain path needs its own golden data: one 1024-byte file per ACT-producing
+    layer, laid out exactly as the buffer holds it (lane-major, lane j at j*256).
+
+    The six layers, in the order the testbench runs them:
+        0 G0(z)         1 G2            2 D0(fake)   3 D2(fake)   4 D0(real)  5 D2(real)
+    The generator's output layer writes IMG, not ACT, and is already covered by
+    gan_img_expected_b4.memh.
+    """
+    lanes = len(zqs)
+    passes = []
+
+    xs = list(zqs)                                     # generator, per lane
+    for li, (key, cfg, out_d, in_d) in enumerate(
+            (("G0", g_cfgs[0], 256, 64), ("G2", g_cfgs[1], 256, 256))):
+        outs = [chip.layer(xs[j], key, cfg, out_d, in_d)[0] for j in range(lanes)]
+        passes.append(outs)
+        xs = outs
+
+    for src in (imgs, [real_img] * lanes):             # D on the fakes, then on the real
+        xs = list(src)
+        for key, cfg, out_d, in_d in (("D0", d_cfgs[0], 256, 784),
+                                      ("D2", d_cfgs[1], 256, 256)):
+            outs = [chip.layer(xs[j], key, cfg, out_d, in_d)[0] for j in range(lanes)]
+            passes.append(outs)
+            xs = outs
+
+    for li, outs in enumerate(passes):
+        words = []
+        for j in range(lanes):                         # lane-major, 256 bytes per lane
+            lane = outs[j]
+            words += [lane[i] if i < len(lane) else 0 for i in range(256)]
+        (out_dir / f"gan_act_expected_L{li}_b4.memh").write_text(
+            "\n".join(to_hex_signed(v, 8) for v in words) + "\n")
+    return len(passes)
+
+
 def emit_batch_assets(out_dir: Path, zqs, blocks, imgs, y_fake, y_real, met):
     (out_dir / "gan_zq_b4.memh").write_text(
         "\n".join(to_hex_signed(v, 8) for zq in zqs for v in zq) + "\n")
@@ -256,6 +297,9 @@ def main() -> None:
                          "sane, unsaturated scores on this G's output (see README)")
     ap.add_argument("--batch4", action="store_true",
                     help="also emit the 4-lane batch asset set (seeds 0-3)")
+    ap.add_argument("--capture-act", action="store_true",
+                    help="with --batch4, also emit the per-layer expected activation "
+                         "buffers used by tb/gan_train_capture_tb.sv")
     ap.add_argument("--sweep", type=int, default=0,
                     help="also sweep N latent seeds and write the loss series CSV")
     args = ap.parse_args()
@@ -386,6 +430,10 @@ def main() -> None:
                                 (bd[1], DST_ACT, 4), (bd[2], DST_SCORE_FAKE, 1)):
             bblocks.append(cfg_words(cfg, [0, 0, 0, 0], 0, dsel, nout))
         emit_batch_assets(OUT_DIR, bzq, bblocks, bimgs, byf, byr, bmet)
+        if args.capture_act:
+            n = emit_act_captures(OUT_DIR, chip, bzq, bg, bd, bimgs, real_img)
+            print(f"\ncaptured {n} per-layer activation buffers "
+                  f"(gan_act_expected_L0..L{n-1}_b4.memh)")
         bm = bmet.as_dict()
         lines = ["", "batch-4 asset set (one shared config across 4 latents)",
                  "-" * 60, f"  seeds {seeds}, s_z = {bsz:.6g}"]

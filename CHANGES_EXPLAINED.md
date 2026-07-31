@@ -287,9 +287,11 @@ of SRAM. That is a factor of 128. There is no arrangement of macros that fits th
 the workshop slot's whole core would not hold it. So the host reloads a fresh 4×256 weight
 tile before every one of the 966 `OP_TILE`s in a run.
 
-The weight *values* never change: they are the frozen, once-quantised trained checkpoints.
-There is no training on this chip, no backpropagation, no gradients. What churns is the
-on-chip working set, not the model.
+The weight *values* never change during a run: they are the frozen, once-quantised trained
+checkpoints. There is no training on this chip, no backpropagation, no gradients. What
+churns is the on-chip working set, not the model. (The weights *can* change between runs,
+and `scripts/gan_train_host.py` does exactly that — see "Training, with the chip doing the
+forward pass" below.)
 
 The important consequence: **because the weights do not fit, the host is necessarily
 inside the inner loop.** An on-chip layer sequencer that looped over tiles by itself would
@@ -447,6 +449,64 @@ the on-chip work costs. But on the wire the honest end-to-end number is:
 ```
 
 Still a 58x improvement, and still worth having. Just not 96x.
+
+## Training, with the chip doing the forward pass
+
+Real training — backpropagation, gradients, a weight update — is out of scope for the
+silicon, and it always was. That raises two fair questions, and it is worth answering them
+plainly because the intuitive answers are both wrong.
+
+**"If we are not training, do we still need the discriminator on the chip?"** There is
+nothing to remove. The discriminator is not a piece of hardware. It is the *same* MAC
+array, the *same* post-processor and the *same* memories as the generator, driven by
+different weights and a different setting of one config register. `gan_sequencer.v` tells
+the whole story in two lines: if `CFG_DST_SEL` says "this is a score", the post-processor
+skips the int8 requantisation and hands the sigmoid straight to the metrics unit.
+Otherwise the result goes to the activation or image buffer. That is the entire
+difference. Take the discriminator away and the chip does not get smaller; you just stop
+sending those commands.
+
+Meanwhile it is genuinely useful. Every training step has to evaluate D on the generated
+digits and on the real ones — 266k multiply-accumulates against the generator's 282k. The
+chip does that forward work, four samples at a time off one weight stream. The host does
+the backward pass, which is about twice as much arithmetic, in floating point.
+
+**"Would the activations be better done on the host?"** No, and this is the one that
+would actually break the design. The obvious argument — "activations are tiny, only 1.8 KB
+per image against 820 KB of weights, so moving them costs nothing" — is true about *bytes*
+and irrelevant. The cost is in *stalls*. There are about 453 flush points in one image, and
+at each one the next layer cannot start until the activation exists. On chip that costs
+about 8 cycles per neuron, entirely hidden behind the MAC array's 256. On the host it costs
+a full round trip over the serial link, 453 times per image.
+
+And there is a blunter argument: the post-processor and the piecewise-linear activation
+*are* what distinguishes this chip from the one on `main`. Remove them and `gan_engine_top`
+is `dla_engine_top` again — a bare matrix engine with a nine-month-old signoff.
+
+**So what does host-side training actually need added?** Nothing, in the RTL. That was the
+surprise. Backpropagation normally wants each layer's pre-activation value, which the chip
+never exposes — but it does not need it, because every activation used here has a
+derivative you can write in terms of its own *output*: ReLU's derivative is "was the output
+positive", tanh's is `1 - a²`, sigmoid's is `a(1-a)`. Those outputs are already readable
+over the existing `RD_ACT` and `RD_IMG` commands. The chip's activation is invisible to
+the training maths.
+
+`scripts/gan_train_host.py` is that loop: float master weights on the host, quantised and
+recalibrated every step, forward passes on the chip, gradients and Adam on the host. It
+drives an opcode-level model of `gan_engine_top` — the same command stream real silicon
+would receive — and `--check-forward` proves that stream reproduces the golden model
+exactly (3136/3136 pixels, every config register, every score).
+`tb/gan_train_capture_tb.sv` proves the same thing against the actual RTL, checking all
+six layers' drained activations byte for byte.
+
+Two honest limits. First, the drains cost about **20% extra link traffic** on top of
+inference, because reads are one 40-edge frame per byte — a burst *read* command mirroring
+`WR_BURST8` would collapse that by roughly 40x, and it is the one RTL addition that would
+pay for itself here. Second, the chip's own loss registers saturate at 8.32 nats, because
+`gan_nlog` takes a Q4.12 probability and cannot represent `y < 1/4096`. Early in training,
+when the generator is losing badly, `MET_LOSS_G` reads 8.32 while the truth is 20-plus. The
+registers are a monitor, not the gradient source; once the scores are in range they agree
+with the float loss to about 1e-4.
 
 ## What is NOT done
 

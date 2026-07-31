@@ -270,6 +270,16 @@ iverilog -g2012 -I rtl -s chip_core_gan_tb -o sim/results/chip_core_gan_tb.vvp \
   rtl/gan_*.v rtl/dla_*.v rtl/gf180_sram_1rw_256x8.v rtl/chip_core_gan.sv tb/chip_core_gan_tb.sv
 vvp sim/results/chip_core_gan_tb.vvp
 
+# 4b. per-layer activation drain -- the path host-side training reads back (~90 s)
+python3 scripts/gen_gan_chip_assets.py --batch4 --capture-act
+iverilog -g2012 -I rtl -s gan_train_capture_tb -o sim/results/gan_train_capture_tb.vvp \
+  rtl/*.v tb/gan_train_capture_tb.sv && vvp sim/results/gan_train_capture_tb.vvp
+
+# 4c. training with the chip in the loop, weight update on the host (section 9)
+python3 scripts/gan_train_host.py --check-forward              # bit-exactness gate
+python3 scripts/gan_train_host.py --steps 300 --lr-d 2e-5      # chip in the loop
+python3 scripts/gan_train_host.py --steps 300 --reference      # float control run
+
 # 5. loss graph + metrics report + digit PNGs
 #    (run this one INSIDE the container -- it has matplotlib and Pillow, the host
 #     does not; without them the script still emits the ASCII plot and the report)
@@ -318,6 +328,8 @@ All run in the container on this branch.
 | `gan_batch4_flow_tb` — batch-4 **end to end** | **PASS**: four digits generated and scored in one weight stream — **3136/3136 pixels bit-exact** across all four lanes, four distinct `y_fake` scores match golden, all four `y_real` agree (the real digit is replicated across lanes, so lane disagreement would be a bug), every accumulator and counter matches. **413,592 compute cycles for four digits = 103,398 per digit, 4.26× better than batch 1's 440,252** |
 | `gan_batch4_tb` — batch-4 datapath | **PASS**, 53 self-computed checks: all 16 C words for four independent input vectors, a 16-way flush landing at `lane*256+offset`, `DST_PTR` advancing once per flush not once per lane, `OP_LOADB_ACT` restoring all four lanes into B's four columns, four per-lane scores and lane-selected `LATCH_LOSS` |
 | `chip_core_gan_tb` — pad-level serial | **PASS**: image buffer, activation buffer, a full 4×256 MAC pass vs the `d3004n4` fixture, a post-processing flush vs an independent model, score + loss + metric reads, **both burst modes verified over a full 1024-byte tile with their edge counts measured** |
+| `gan_train_capture_tb` — per-layer activation drain | **PASS**: all six ACT-producing layers drained and compared byte for byte (6 x 1024 bytes) plus the 3136 image pixels, all bit-exact vs `gan_golden.py`. This is the read-back path host-side backpropagation depends on (section 9) |
+| `gan_train_host.py --check-forward` — opcode-level driver vs golden | **PASS**: every generator config register identical, 3136/3136 generated pixels bit-exact, all four discriminator scores bit-exact |
 | Verilator lint (`-Wall`, `-DSYNTHESIS`) | **0 warnings** in the new files |
 | Yosys / LibreLane `--to Yosys.Synthesis` | **clean**: 689,451 um2 of cells, **13 SRAM macros** (8x256 + 3x64 + 2x1024), **0 inferred latches**, 0 problems reported |
 | Main-branch regression: `d3004`, `d3004n4`, `g3005`, `g300_pipeline` | **PASS**, unchanged |
@@ -396,10 +408,154 @@ Expect it to take longer than the main branch's (16 macros, ~2.3× the standard 
 - **The chip does not train.** It evaluates both networks and the losses at inference.
   Backpropagation and weight updates stay on the host, exactly as in the MATLAB
   reference, which trained on the host and exported weights for the hardware to use.
+  Section 9 covers what that costs and why the discriminator and the activations are
+  still worth their silicon.
 
 ---
 
-## 9. File map
+## 9. Training on the host, with the chip in the loop
+
+Since the weight update is out of scope for silicon, two fair questions follow: does the
+chip still need the discriminator, and are the on-chip activations earning their area?
+The answers are *yes, for free* and *yes, decisively* — and neither needs an RTL change.
+
+### The discriminator is not a piece of hardware
+
+There is no D datapath to remove. `gan_sequencer.v:172-173` is the whole of it:
+
+```verilog
+wire is_score = (cfg_dst_sel == DST_SCORE_FAKE) || (cfg_dst_sel == DST_SCORE_REAL);
+assign pp_skip = is_score;
+```
+
+D runs on the same 4x4 MAC array, the same `gan_postproc`, the same A/B/C/ACT/IMG banks
+as the generator, from host-streamed weights and host-written config registers. What is
+D-specific is two values of `CFG_DST_SEL`, one opcode (`OP_LATCH_LOSS`) and one
+convention (`OP_LOADB_IMG` treating the image buffer as an input vector). Deleting the
+discriminator saves approximately zero gates — you simply stop issuing those opcodes.
+
+And it earns its keep during training: a GAN step needs D(G(z)) and D(x_real), which is
+266k MACs of forward work against the generator's 282k. Counting MACs, the chip covers
+the forward third of a training step and the host does the backward two-thirds in float.
+
+The only genuinely removable blocks are `gan_metrics.v`, `gan_nlog.v` and the second
+`gan_pwl_act` instance — roughly 9-13% of cell area (section 7 prices the PWL instance
+at ~38,000 um^2). They stay: P&R has never run, so area is not the binding constraint
+yet, and `SAT_PRE`/`SAT_OUT` are the only way to see a bad calibration during bring-up.
+
+### The activations stay on chip
+
+The bandwidth argument is a red herring — intermediate activations are about 1.8 KB per
+image against 820 KB of weight traffic. The real arguments are:
+
+- **Control, not bytes.** `gan_postproc`'s ~8 cycles per neuron hide entirely behind the
+  MAC array's 256. A host-side activation forces a read-modify-write round trip at each
+  of the ~453 flushes per image (G 64+64+196, D 64+64+1) before the next layer can start.
+- **What would be left.** Strip `gan_postproc` and `gan_pwl_act` and `gan_engine_top`
+  degenerates into the main branch's `dla_engine_top`. The on-chip activation *is* the
+  delta of this branch.
+- **Accuracy is not a reason to move it.** The 9-segment PWL costs 1.71 gray levels of
+  255 against the untapeoutable 8193-entry LUT it replaced.
+
+If area later forces a cut, section 7's levers (a sequential multiplier in `gan_postproc`,
+-90,000 um^2; sharing the one PWL instance, -38,000) are the answer, not removal.
+
+### Why no RTL change is needed for host-side backpropagation
+
+Backpropagation normally wants each layer's *pre-activation*, and the chip never exposes
+one — `MET_LOGIT` keeps only the last score's. It does not need to. Every activation in
+this design has a derivative that is a function of its own **output**:
+
+| activation | f'(pre) written in terms of the output a |
+|---|---|
+| ReLU      | `a > 0` |
+| LeakyReLU | `1 if a > 0 else 0.2` |
+| tanh      | `1 - a^2` |
+| sigmoid   | `a (1 - a)` |
+
+and the outputs are already drainable over the existing `RD_ACT`, `RD_IMG` and `RD_MET`
+commands. So the on-chip activation is transparent to training: no new opcode, register
+or datapath. `tb/gan_train_capture_tb.sv` is the proof — it drains all six ACT-producing
+layers plus the image and checks every byte against `gan_golden.py`.
+
+### The driver
+
+`scripts/gan_train_host.py` closes the loop. The split:
+
+```
+chip   forward G, forward D, requantisation, PWL activation, sigmoid score,
+       BCE losses (for logging)
+host   float master weights, per-step quantisation and calibration,
+       the entire backward pass, the optimiser
+```
+
+Per step it quantises the float masters, solves the six config registers per layer over
+the union of the batch (`make_layer_cfg`, the same solve `gan_golden.py` does), runs G
+and both D passes on the chip, drains the activations, backpropagates in float, and
+updates with Adam. `CFG_BATCH = 4` means the hardware batch *is* the minibatch.
+
+It has two backends. `GoldenBackend` drives `ChipModel`, a register- and opcode-level
+model of `gan_engine_top` — the config file, the A/B/C buffers, the sixteen K-tile
+accumulators, the ACT/IMG banks, one method per opcode. That is what makes the driver a
+real host rather than a wrapper: it issues the same command stream silicon would see.
+`SerialFrameBackend` adds the SCLK-edge accounting of `gan_serial_bridge.v` on top.
+
+```
+python3 scripts/gan_train_host.py --check-forward            # the gate
+python3 scripts/gan_train_host.py --steps 300 --lr-d 2e-5    # chip in the loop
+python3 scripts/gan_train_host.py --steps 300 --reference    # float control
+```
+It needs numpy, which lives in the container, not on the host python:
+`docker exec apic_headless bash -lc "cd /foss/designs && python3 scripts/gan_train_host.py ..."`.
+
+### Measured
+
+- **`--check-forward`**: the opcode stream reproduces `gan_golden.py` exactly — generator
+  config registers identical, 3136/3136 generated pixels bit-exact, all four
+  discriminator scores bit-exact.
+- **`tb/gan_train_capture_tb.sv`** on the RTL: 6 x 1024 drained activation bytes plus
+  3136 image pixels bit-exact; all four `y_real` lanes agree. ~90 s.
+- **Link cost**, batch 4, one training step (4 images through G, two D passes):
+  1,871,552 SCLK edges = 0.449 s at SCLK = clk/8 and clk = 60 ns. **19.9% of that is
+  read-back** — the drains training adds on top of inference. Reads are one 40-edge frame
+  per byte, so a `RD_BURST` mirroring `WR_BURST8` would collapse it by roughly 40x. That
+  is the one RTL addition with a real payoff for training, and it is not done.
+- **300 steps, chip-in-the-loop vs float control**, same seed, `--lr-d 2e-5`:
+
+  | run | loss_G mean (2nd half) | loss_D mean | y_fake mean (2nd half) | fooled |
+  |---|---|---|---|---|
+  | chip in the loop | 10.47 (9.18) | 2.86 | 0.306 (0.334) | 357/1200 |
+  | float control    |  7.16 (8.08) | 0.75 | 0.167 (0.129) | 194/1200 |
+
+  Both show the same adversarial oscillation and neither diverges: quantisation costs
+  accuracy, not stability.
+
+### Limits worth stating plainly
+
+- **The chip's own loss saturates at 8.32 nats.** `gan_nlog` takes a Q4.12 probability,
+  so `y < 1/4096` clamps and `-ln y` cannot exceed `ln 4096`. Early in training, when the
+  generator is being crushed, `MET_LOSS_G` reads 8.32 while the true value is 20+. The
+  registers are a monitor; the host's float loss is what the gradients come from. Once
+  `y_fake` is in range the two agree to about 1e-4 (measured 1.6021 vs 1.6022).
+- **Pre-activation clamping is routine and mostly harmless.** ~11% of post-processor
+  evaluations clamp `pre`, essentially all in the tanh/sigmoid layers, which force gain 1
+  and are flat beyond +-8.0 anyway. `SAT_OUT` — the one that would signal a genuinely bad
+  MH/SH — stayed at 76 over 300 steps.
+- **No dataset.** There is no MNIST in this repository, so the driver's default "real"
+  batch is jittered synthetic ring digits (`--real-synth`). That exercises the loop end
+  to end; it is not a training result. Use `--real-npz` / `--real-dir` for real data.
+- **One forward, two updates.** D is updated and then G is differentiated through the
+  same int8 view of D that produced the scores, rather than re-running D's forward after
+  its update. That saves a second chip pass and is the usual simplification.
+- **The backward pass is not accelerated.** `delta.W^T` and the outer product
+  `delta (x) a` are both GEMMs, and raw 24-bit accumulators are already host-readable over
+  `RSEL_C` (`gan_engine_top.v:130-131`), so the array *could* run them — but gradients
+  under one INT8 calibration per layer per step are not expected to survive it. Not
+  attempted.
+
+---
+
+## 10. File map
 
 ```
 rtl/gan_defs.vh          shared constants + register maps (mirrored in Python)
@@ -410,7 +566,7 @@ rtl/gan_postproc.v       requant -> activation -> int8, one shared multiplier
 rtl/gan_sram_1rw.v       64x8 and 1024x8 macro wrappers + blackboxes
 rtl/gan_act_buffer.v     1024 B activation buffer  (1 macro, 4 lanes)
 rtl/gan_img_buffer.v     1024 B image buffer       (1 macro)
-rtl/gan_metrics.v        losses + 20 metric registers
+rtl/gan_metrics.v        losses + 28 metric registers (20 scalar + 8 per-lane)
 rtl/gan_sequencer.v      opcode FSM: the whole G->D dataflow
 rtl/gan_engine_top.v     TAPEOUT BOUNDARY
 rtl/gan_serial_bridge.v  host link: 4-wire + 8-bit parallel burst bus
@@ -418,13 +574,15 @@ rtl/chip_core_gan.sv     Stage-2 padring core
 
 scripts/gan_golden.py            bit-exact model; single source of truth
 scripts/gen_gan_chip_assets.py   assets, config images, goldens, loss sweep
+scripts/gan_train_host.py        chip-in-the-loop training, host weight update
 scripts/plot_gan_metrics.py      loss curve + metrics report
 
-tb/gan_pwl_act_tb.sv     PWL + -ln unit test
-tb/gan_engine_top_tb.sv  full G -> D -> losses (batch 1)
-tb/gan_batch4_tb.sv      batch-4 datapath
-tb/gan_batch4_flow_tb.sv batch-4 end to end: 4 digits, host-held images
-tb/chip_core_gan_tb.sv   pad-level serial protocol
+tb/gan_pwl_act_tb.sv       PWL + -ln unit test
+tb/gan_engine_top_tb.sv    full G -> D -> losses (batch 1)
+tb/gan_batch4_tb.sv        batch-4 datapath
+tb/gan_batch4_flow_tb.sv   batch-4 end to end: 4 digits, host-held images
+tb/gan_train_capture_tb.sv per-layer activation drain (what training reads back)
+tb/chip_core_gan_tb.sv     pad-level serial protocol
 
-librelane/config_gan.yaml  16-macro hardening config
+librelane/config_gan.yaml  13-macro hardening config
 ```
