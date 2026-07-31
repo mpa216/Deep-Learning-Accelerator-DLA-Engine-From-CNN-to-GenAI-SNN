@@ -217,6 +217,37 @@ Pads: `bidir[0..3]` = SCLK/MOSI/CS_N/MISO, `[4]` busy, `[5]` dla_busy, `[6]` dla
 (The 60 analog pads cannot help: `gf180mcu_fd_io__asig_5p0` has only a pass-through
 `ASIG5V` pin — no `A`/`Y`/`OE`/`IE`, so no digital driver or receiver.)
 
+### What the discriminator costs in pins: one, and it is optional
+
+The main chip uses 7 of the 20 bidir pads, this one uses 16, and it is worth attributing
+the difference precisely because the obvious reading is wrong:
+
+| pads | main chip | experimental chip | why |
+|---|---|---|---|
+| `[0..3]` | SCLK/MOSI/CS_N/MISO | same | the link is unchanged — only the frame header widened, from `CMD[1:0]+ADDR[9:0]` to `CMD[3:0]+ADDR[11:0]`, which costs no pins |
+| `[4..6]` | busy, done, wb_done | busy, dla_busy, dla_done | same three status pads, renamed as the sequencer took ownership of the array |
+| `[7]` | spare | **verdict** | **the only pin the discriminator adds** |
+| `[8..15]` | spare | pdata[7:0] | the parallel burst bus — a throughput feature, nothing to do with D |
+| `[16..19]` | spare | spare | 4 still free |
+
+So of the nine newly used pads, **eight are the burst bus** and would have been just as
+useful on a generator-only chip, and **one is the discriminator**. Even that one is a
+convenience: `verdict` is `y_fake > 0.5`, which the host can read over the link as
+`MET_STATUS` or derive from `MET_Y_FAKE`. Leaving it unbonded loses nothing but the
+ability to see the verdict on a scope without a serial read.
+
+Everything outside the bidir bank is identical to the main chip: the same two dedicated
+pads (`clk`, `rst_n`), the same 8 supply pads on one 3.3 V rail, the same 60 unusable
+analog pads, and the same wafer.space slot template — so the bond map does not move.
+The reason a full GAN fits behind an unchanged pin budget is that the interface grew
+*internally*, not externally: `gan_engine_top` has 106 signal bits against
+`dla_engine_top`'s ~53, and all of it is absorbed by the serial bridge.
+
+`GAN_CHIP_Pin_Requirement_gan.xlsx` is the pin sheet for this chip, generated from the
+main chip's submitted sheet by `scripts/gen_pin_requirement_gan.py` (which never writes
+to the original). One caveat carried in that sheet: unlike the main chip's, it does
+**not** describe a signed-off GDS — P&R has not been run on `gan_engine_top`.
+
 ### Why the burst commands exist
 
 Streaming weights is ~99% of the time on the wire, and a single-byte frame spends 16 of
