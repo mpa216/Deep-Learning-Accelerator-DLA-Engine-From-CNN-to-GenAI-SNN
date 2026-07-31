@@ -23,11 +23,10 @@ Usage:
     python3 scripts/quant_tradeoff_study.py --synth         # + Yosys area (container)
     python3 scripts/quant_tradeoff_study.py --synth --latex APIC_Paper/tab_quant.tex
 
-FP16 is not synthesised: a correct FP16 MAC is a different datapath (exponent add,
-alignment shift, normalise, round), not a parameter change to this one, and building a
-half-verified one would produce a misleading number.  What IS reported is its mantissa
-multiplier measured as an integer multiplier of the same width, which is a hard lower
-bound on the arithmetic cost before any exponent handling.
+FP16 IS included, and measured the same way: `study/fp16_mac.v` is an FP16-multiply /
+FP32-accumulate PE, verified bit-exact against a model by `study/fp16_mac_tb.sv` before
+its area is quoted.  It flushes subnormals and omits NaN/Inf handling entirely, so the
+figure is a FLOOR on a production FP16 unit -- which only strengthens the conclusion.
 """
 
 from __future__ import annotations
@@ -147,6 +146,32 @@ YOSYS_LIB = ("3V3lib/gf180mcu_as_sc_mcu7t3v3-main/pdk/libs.ref/"
              "gf180mcu_as_sc_mcu7t3v3/lib/gf180mcu_as_sc_mcu7t3v3__tt_025C_3v30.lib")
 
 
+def synth_fp16_area() -> float | None:
+    """Cell area of a 4x4 FP16-multiply / FP32-accumulate array, same library, same flow.
+
+    study/fp16_mac.v lives outside rtl/ precisely so it can never be swept into a tapeout
+    build; it exists only to make this comparison a measurement instead of an assertion.
+    """
+    script = (f"read_verilog -sv study/fp16_mac.v\n"
+              f"synth -top fp16_mac_array -flatten\n"
+              f"dfflibmap -liberty {YOSYS_LIB}\n"
+              f"abc -liberty {YOSYS_LIB}\n"
+              f"opt_clean\n"
+              f"stat -liberty {YOSYS_LIB}\n")
+    cmd = (f"cd /foss/designs && cat > /tmp/_fp16.ys <<'EOS'\n{script}EOS\n"
+           f"yosys -s /tmp/_fp16.ys 2>&1 | grep -E 'Chip area'")
+    try:
+        out = subprocess.run(["docker", "exec", "apic_headless", "bash", "-lc", cmd],
+                             capture_output=True, text=True, timeout=1800).stdout
+    except Exception as exc:                                    # pragma: no cover
+        print(f"  (FP16 synthesis failed: {exc})")
+        return None
+    for line in out.splitlines():
+        if "Chip area" in line:
+            return float(line.split(":")[-1].strip())
+    return None
+
+
 def synth_area(width: int, acc_w: int, top: str = "dla_pe_array") -> float | None:
     """Cell area of the N=4 PE array at DATA_W=width, from Yosys + the 3.3 V library.
 
@@ -214,6 +239,7 @@ def main() -> int:
         r["bytes_per_img"] = base_bytes * math.ceil(r["bits"] / 8)
 
     areas = {}
+    fp16_area = None
     if args.synth:
         print("synthesising dla_pe_array (16 PEs) at each width ...")
         for W in widths:
@@ -221,6 +247,10 @@ def main() -> int:
             areas[W] = a
             if a:
                 print(f"  DATA_W={W:2d}  ACC_W={2*W+8:2d}  cell area {a:10.2f} um2")
+        fp16_area = synth_fp16_area()
+        if fp16_area:
+            print(f"  FP16 mul / FP32 acc  (study/fp16_mac.v)  cell area "
+                  f"{fp16_area:10.2f} um2")
         print()
 
     hdr = f"{'bits':>5s} {'mean |dgray|':>13s} {'max':>5s} {'acc':>4s} {'C mac':>6s} " \
@@ -239,6 +269,12 @@ def main() -> int:
             line += (f" {a:13.0f} {a/a8:7.2f}x" if a and a8 else f" {'--':>13s} {'--':>8s}")
         print(line)
 
+    if fp16_area and a8:
+        # FP16 needs 2 bytes per operand, like INT16.
+        t16 = base_bytes * 2 * 20 * 4 * 40e-9
+        print(f"{'FP16':>5s} {'~0 (ref)':>13s} {'--':>5s} {'32':>4s} {'4':>6s} "
+              f"{base_bytes * 2:13,d} {t16:9.3f}s {fp16_area:13.0f} "
+              f"{fp16_area / a8:7.2f}x")
     print()
     print("Reading:")
     r8 = next(r for r in rows if r["bits"] == 8)
@@ -254,10 +290,17 @@ def main() -> int:
               f"levels while DOUBLING the weight bytes, i.e. doubling the ~99%-dominant")
         print(f"  link term: {r8['bytes_per_img']*20*4*40e-9:.2f}s -> "
               f"{r16['bytes_per_img']*20*4*40e-9:.2f}s per image.")
-    print("  FP16: the mantissa multiply alone is an 11x11 array (see the INT12 row as a")
-    print("  lower bound) before exponent add, alignment, normalisation and rounding; the")
-    print("  open PDK ships no FP macro, and the workload's dynamic range is already")
-    print("  handled by the per-tensor scale plus the Q4.12 requantisation.")
+    if fp16_area and a8:
+        print(f"  FP16 (multiply in FP16, accumulate in FP32) costs {fp16_area/a8:.2f}x the")
+        print("  INT8 array -- and that is a FLOOR: study/fp16_mac.v flushes subnormals and")
+        print("  has no NaN/Inf handling at all. It buys essentially exact arithmetic, which")
+        print("  the INT16 row shows is worth under one gray level here, while needing two")
+        print("  bytes per operand like INT16 and therefore the same doubled link time. The")
+        print("  open PDK also ships no FP macro, and the dynamic range that motivates")
+        print("  floating point is already handled by the per-tensor scale plus the Q4.12")
+        print("  requantisation.")
+    else:
+        print("  FP16: run with --synth to measure study/fp16_mac.v against the INT8 array.")
 
     if args.latex:
         out = Path(args.latex)
@@ -288,7 +331,16 @@ def main() -> int:
             if bold:
                 cells = [f"{bold}{{{c}}}" for c in cells]
             lines.append(" & ".join(cells) + r" \\")
-        lines += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+        if fp16_area:
+            t16 = base_bytes * 2 * 20 * 4 * 40e-9
+            lines.append(f"FP16$^\\dagger$ & \\textless 0.01 & --- & {fp16_area:,.0f} "
+                         f"& {t16:.2f}~s \\\\")
+        lines += [r"\bottomrule", r"\end{tabular}"]
+        if fp16_area:
+            lines.append(r"\\[2pt]\footnotesize $^\dagger$FP16 multiply with FP32 "
+                         r"accumulate (\texttt{study/fp16\_mac.v}), subnormals flushed "
+                         r"and no NaN/Inf handling: a floor on a production unit.")
+        lines += [r"\end{table}"]
         out.write_text("\n".join(lines) + "\n")
         print(f"\nwrote {out}")
     return 0

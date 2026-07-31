@@ -11,6 +11,8 @@ Width & Mean err. & Max err. & PE area ($\mu$m$^2$) & Link time \\
 INT4 & 31.96 & 254 & 100,108 & 0.90~s \\
 \textbf{INT8} & \textbf{1.90} & \textbf{46} & \textbf{252,540} & \textbf{0.90~s} \\
 INT16 & 0.92 & 7 & 747,110 & 1.81~s \\
+FP16$^\dagger$ & \textless 0.01 & --- & 732,407 & 1.81~s \\
 \bottomrule
 \end{tabular}
+\\[2pt]\footnotesize $^\dagger$FP16 multiply with FP32 accumulate (\texttt{study/fp16\_mac.v}), subnormals flushed and no NaN/Inf handling: a floor on a production unit.
 \end{table}

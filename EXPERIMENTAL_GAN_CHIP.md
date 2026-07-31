@@ -530,6 +530,49 @@ It needs numpy, which lives in the container, not on the host python:
   Both show the same adversarial oscillation and neither diverges: quantisation costs
   accuracy, not stability.
 
+### Should the discriminator run on the host instead?
+
+It can, today, with no RTL change — and for a training loop it usually should. This is a
+host scheduling decision, not a hardware one, which is the whole point of the previous
+section: D is not a datapath, so there is nothing to remove and nothing to add back.
+
+The case for running D on the host is traffic, not area. Counting the weight bytes one
+full pass actually pushes across the link:
+
+| | bytes | share |
+|---|---|---|
+| G weights | 282,624 | 29.8% |
+| D weights (fake pass + real pass) | 534,528 | 56.4% |
+| D pixel re-feed into B | 131,072 | 13.8% |
+| latent | 256 | — |
+| **total** | **948,480** | |
+
+**D is 70.2% of the link traffic**, and the link is ~99% of wall-clock time. Moving D to
+the host therefore makes a pass **3.35× faster** end to end. The host pays almost nothing
+for it: it already holds every D weight — it is the thing streaming them — and during
+training it already drains D's activations for the backward pass, so computing D locally
+removes a round trip rather than adding one.
+
+The case for keeping D on chip is what it demonstrates. The same MAC array, the same
+post-processor and the same buffers run a *different network* with nothing changed but
+host-written registers; the sigmoid score path is the only thing that exercises
+`skip_quant`, and the on-chip BCE is the only thing that exercises `gan_nlog`. Delete
+those from the schedule and the chip is `main`'s `dla_engine_top` with an activation
+bolted on — the "full GAN on chip" claim goes with it.
+
+So the honest guidance is to choose per run, not per tapeout:
+
+- **Demonstration, bring-up, chip-vs-model checking** — run D on chip. It costs no silicon,
+  it validates the register-programmable datapath claim, and it is the result worth
+  publishing.
+- **Training loops, or anything throughput-sensitive** — run D on the host. 3.35× on the
+  dominant term for free, and the host wanted D's activations anyway.
+
+If area ever does become the binding constraint at P&R, the thing to delete is not D but
+`gan_metrics.v` + `gan_nlog.v` + the second `gan_pwl_act` instance (~9–13% of cells), and
+even then only the loss pipeline: keep the score and saturation registers, which are the
+only bring-up visibility the chip has.
+
 ### Limits worth stating plainly
 
 - **The chip's own loss saturates at 8.32 nats.** `gan_nlog` takes a Q4.12 probability,

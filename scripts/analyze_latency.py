@@ -326,6 +326,20 @@ def main() -> int:
     print("  batch 4 the host must feed D's 784-wide input back per K-tile, because four")
     print("  digits (3,136 B) do not fit in the 1 KiB image buffer.")
     print()
+    # ---- would it be better to run D on the host? -------------------------
+    # D costs no silicon (it is the same datapath as G, selected by CFG_DST_SEL), so this
+    # is purely a traffic question -- and the host already holds every D weight, because
+    # it is the thing streaming them.
+    g_w = sum(L.a_tight for L in G_LAYERS)
+    d_w = 2 * sum(L.a_tight for L in D_LAYERS)          # fake pass + real pass
+    d_refeed = 2 * (D_LAYERS[0].tile_ops * 256)         # D-only: the 784-wide input
+    total_w = g_w + d_w + d_refeed + 256
+    print("  running D on the HOST instead (no RTL change -- just stop issuing the ops):")
+    print(f"    G weights {g_w:9,d} | D weights {d_w:9,d} | D pixel re-feed "
+          f"{d_refeed:9,d}")
+    print(f"    D is {100.0 * (d_w + d_refeed) / total_w:.1f}% of link traffic -> moving "
+          f"it off chip is {total_w / (g_w + 256):.2f}x end to end")
+    print()
     r1 = analyse_gan(prims, args.clk_gan, 1, LINK_GAN, tight=args.tight)
     print(f"  D's pixel re-feed costs {r1['bbytes']:,} B at batch 1 against the 3,136 B")
     print("  strictly needed: the host must reload B for every (output tile, K-tile) pair")

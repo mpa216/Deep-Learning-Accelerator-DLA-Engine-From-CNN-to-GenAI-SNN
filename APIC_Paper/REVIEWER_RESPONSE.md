@@ -91,6 +91,13 @@ tensors with **zero mismatches** and scales identical to 12 significant figures.
 | INT10 | 0.98 | 9 | 28 | 4 | 346,657 | 1.37× | 1.81 s |
 | INT12 | 0.93 | 7 | 32 | 4 | 465,699 | 1.84× | 1.81 s |
 | INT16 | 0.92 | 7 | 40 | 5 | 747,110 | 2.96× | 1.81 s |
+| **FP16**† | ~0 (reference) | — | 32 (binary32) | 4 | **732,407** | **2.90×** | 1.81 s |
+
+† `study/fp16_mac.v`, FP16 multiply with FP32 accumulate. Verified bit-exact against
+`scripts/gen_fp16_vectors.py` over 8,192 MAC steps *before* its area was quoted; that
+model is within 4.3e-07 relative error of exact float64. It flushes subnormals and has
+no NaN/Inf handling, so 2.90× is a **floor** on a production FP16 unit. It lives outside
+`rtl/` so no `rtl/*.v` glob or LibreLane config can ever pull it into a build.
 
 INT8 sits exactly at the knee. Below it accuracy collapses (INT4 is 16.8× worse) and you
 do not even win link time, because the SRAMs are ×8 and a sub-byte operand still occupies
@@ -102,11 +109,11 @@ Two extra findings worth putting in the paper (both are in the new text):
 - **The accumulator width tracks the operand width as 2W + log₂K**, so it sets the C-buffer
   macro count too: 24 bits / 3 byte-planes at INT8, 40 bits / 5 macros at INT16. The
   three-macro C buffer is not arbitrary — it *is* the INT8 decision made physical.
-- **FP16 is not a parameter change**, it is a different datapath (exponent add, alignment,
-  normalise, round) around an 11×11 mantissa multiplier, and the open PDK ships no FP
-  macro. I deliberately did **not** synthesise a hand-written FP16 MAC — a half-verified
-  one would produce a misleading area. The INT12 row stands as a lower bound on its
-  arithmetic core.
+- **FP16 lands essentially on top of INT16** (2.90× vs 2.96×) even though it multiplies
+  only 11×11 mantissa bits against INT16's 16×16. The saving in the multiplier is eaten
+  by the alignment shifter, leading-zero counter and rounding logic that fixed point does
+  not need. So floating point costs INT16 area *and* INT16 link time, to remove an error
+  already below one gray level.
 
 ---
 
