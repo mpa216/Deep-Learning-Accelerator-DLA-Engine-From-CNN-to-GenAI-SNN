@@ -64,20 +64,21 @@ VERILOG_DEFINES:
 
 CLOCK_PORT: clk
 
-# --- CLOCK: deliberately relaxed for the first experimental run --------------
-# The main-branch macro closes at 40 ns with +15.1 ns of setup slack, i.e. a ~25 ns
-# critical path (SRAM read -> mux -> PE MAC -> accumulator).  This variant adds a
-# NEW and almost certainly longer path in gan_postproc: register -> operand mux ->
-# 28x20 signed array multiplier -> register.  A 28x20 array multiply in 180 nm at the
-# slow corner (ss_125C_3v00) is plausibly 25-35 ns on its own, so 40 ns would be a
-# coin flip and a failed multi-hour run is expensive.
+# --- CLOCK: retimed 60 -> 40 ns on measured slack (2026-08-01) ---------------
+# 60 ns was the deliberately conservative first target, chosen because gan_postproc adds
+# a path the main-branch macro does not have: register -> operand mux -> 28x20 signed
+# array multiplier -> register, plausibly 25-35 ns on its own at ss_125C_3v00.
 #
-# 60 ns (~16.7 MHz) is therefore the first target.  Read timing__setup__ws from the
-# first run and retime exactly the way the main branch went 75 -> 40 ns.  If the goal
-# is to get back to 40 ns, the fix is to split gan_postproc's multiply across two
-# pipeline stages (it already has spare cycles -- it runs ~8 cycles per neuron against
-# the MAC array's 256), not to squeeze the floorplan.
-CLOCK_PERIOD: 60
+# Run gan_pnr_v3 measured it instead of guessing: setup WS +27.56 ns at the worst of nine
+# corners, i.e. an actual critical path of 60 - 27.56 = 32.44 ns.  The array multiplier is
+# NOT the bottleneck it was feared to be.  40 ns therefore leaves ~7.5 ns of margin and
+# matches the main-branch macro exactly -- same clock, ~1.5x the throughput of 60 ns.
+#
+# If a future change pushes setup negative here, the fix is to split gan_postproc's
+# multiply across two pipeline stages (it has ~248 spare cycles per neuron against the MAC
+# array's 256), not to squeeze the floorplan.  Falling back to 45 or 50 ns is the cheap
+# interim.
+CLOCK_PERIOD: 40
 
 # --- SRAM macro (16 instances) ----------------------------------------------
 # Instance names verified by Yosys elaboration of the current RTL:
@@ -213,9 +214,21 @@ MACROS:
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1900, 1900]
 
-# Starting point only.  The main branch needed a density sweep to reach literal-zero
-# antennas (55->63 across two netlists); expect the same here and use the same lever.
-PL_TARGET_DENSITY_PCT: 60
+# Antenna-closure lever.  See librelane/GAN_PNR_SWEEP_LOG.md for the running sweep.
+# Density is a RE-ROLL, not a smooth optimisation: each value changes which nets route
+# long, and the violation count does not trend monotonically (the main branch saw
+# 61->2, 60->5, 62->1, 63->0 on one netlist).  Changing CLOCK_PERIOD re-rolls it too,
+# because the retimed netlist buffers differently.
+#   60 @ 60 ns clock -> 1 net / 1 pin (1.07x, net1630 Metal2)   [run gan_pnr_v3]
+#   60 @ 40 ns clock -> 2 net / 2 pin (3.24x B-SRAM Metal3 + 1.08x net1630) [gan_40ns_d60]
+#   62 @ 40 ns clock -> 5 net / 5 pin (2.64x _17510_ Metal3 + 4 more)       [gan_40ns_d62]
+#   58 @ 40 ns clock -> 3 net / 3 pin (1.41/1.24/1.10x, all marginal Metal3) [gan_40ns_d58]
+#
+# Note the 3.24x net is a B-buffer SRAM read-data broadcast -- structurally long because of
+# where the macros sit, not because of how this particular placement rolled.  Density may
+# well clear net1630 and leave that one standing; if so the fix is floorplan-side (B macros
+# nearer the PE array, or route it above Metal3), not a further density nudge.
+PL_TARGET_DENSITY_PCT: 59
 
 GPL_CELL_PADDING: 1
 DPL_CELL_PADDING: 2
@@ -243,6 +256,42 @@ PDN_EXTEND_TO: boundary
 # grid connect makes no vias ([PDN-0232]/[PDN-0233]).  Same custom script as the main
 # branch -- it is macro-cell specific, not design specific, so it covers all 16.
 PDN_CFG: dir::pdn_cfg.tcl
+
+# --- Yosys pre-synthesis check: waived, with evidence ------------------------
+# Checker.YosysSynthChecks gates on Yosys's CHECK pass, which flags two things:
+# combinational loops and wires with no driver.  On this design it reports 1,266
+# errors and would abort the flow at stage 8.  All 1,266 are the second kind, and
+# every one of them is on a Yosys-INTERNAL name generated while representing RTL
+# that has not been optimised yet:
+#
+#   ~1,044  \sadd$func$...{.a,.b,.$result}   argument/return wires of the inlined
+#                                            `sadd` function in gan_metrics.v
+#     ~222  $mem2reg_{rd,wr}$...{_ADDR,_DATA} port wires left behind when the
+#                                            memory pass converts the small register
+#                                            files (cfg[0:15], acc[0:15],
+#                                            y_fake_l/y_real_l[0:3]) into flops
+#
+# They are an artefact of Verilog *functions* and small register files, neither of
+# which the main-branch dla_engine_top uses -- which is why config.yaml never hit
+# this.  Confirmed not fixable by RTL style: rewriting `sadd` without its local reg
+# and tagging the arrays (* mem2reg *) only drops 1,266 -> 966, because the residue
+# is on function argument wires that exist for ANY Verilog function call.
+#
+# Evidence that the netlist is nonetheless correct, all from run gan_pnr_v1:
+#   * ZERO combinational loops -- 1,266 of 1,266 warnings are "no driver"
+#   * the POST-synthesis CHECK pass reports "Found and reported 0 problems"
+#     (reports/chk.rpt) -- the artefacts are gone once opt has run
+#   * Checker.YosysUnmappedCells: clear
+#   * 13 macros exactly (8x256x8 + 3x64x8 + 2x1024x8), 0 inferred latches
+#   * GATE-LEVEL SIMULATION of 06-yosys-synthesis/gan_engine_top.nl.v against
+#     tb/gan_batch4_tb.sv: PASS, 53/53 checks -- the MAC array, the flush path
+#     through gan_postproc's PWL, OP_LOADB_ACT, all four sigmoid scores and the
+#     loss accumulators all behave exactly as the RTL does.
+#
+# So this is waived deliberately and narrowly, NOT because the check is
+# inconvenient.  Re-check it if the RTL gains new modules: the waiver covers
+# known-benign representation artefacts, not future real undriven logic.
+ERROR_ON_SYNTH_CHECKS: false
 
 # --- Routing / signoff -------------------------------------------------------
 RT_MAX_LAYER: Metal5

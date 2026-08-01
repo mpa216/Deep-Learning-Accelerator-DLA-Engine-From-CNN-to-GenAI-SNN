@@ -1,0 +1,217 @@
+timestamp 1763580222
+version 8.3
+tech gf180mcuD
+style ngspice()
+scale 1000 1 0.5
+resistclasses 1000000 3250000 6300 7000 6300 7000 7300 1000000 60000 185000 60000 185000 6300 7000 6300 7000 6800 7300 350000 310000 1000000 90 90 90 90 40
+use M2_M14310591302012_512x8m81 M2_M14310591302012_512x8m81_1 1 0 20240 0 1 4752
+use M3_M2431059130206_512x8m81 M3_M2431059130206_512x8m81_1 1 0 20240 0 1 4711
+use power_route_05_512x8m81 power_route_05_512x8m81_0 1 0 14119 0 1 1725
+use power_route_05_512x8m81 power_route_05_512x8m81_3 1 0 6357 0 1 1725
+use power_route_06_512x8m81 power_route_06_512x8m81_1 1 0 18748 0 1 1315
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_24 1 0 -992 0 1 35146
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_25 1 0 -992 0 1 32722
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_26 1 0 -992 0 1 33934
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_27 1 0 -992 0 1 27874
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_28 1 0 -992 0 1 29086
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_29 1 0 -992 0 1 31510
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_30 1 0 -992 0 1 30298
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_31 1 0 -992 0 1 26662
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_23 1 0 -992 0 1 36358
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_19 1 0 -992 0 1 37570
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_20 1 0 -992 0 1 38782
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_22 1 0 -992 0 1 39994
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_17 1 0 -992 0 1 42418
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_21 1 0 -992 0 1 41206
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_18 1 0 -992 0 1 43630
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_16 1 0 -992 0 1 44842
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_11 1 0 -992 0 1 47266
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_15 1 0 -992 0 1 46054
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_12 1 0 -992 0 1 48478
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_13 1 0 -992 0 1 50902
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_14 1 0 -992 0 1 49690
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_9 1 0 -992 0 1 52114
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_10 1 0 -992 0 1 53326
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_7 1 0 -992 0 1 55750
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_8 1 0 -992 0 1 54538
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_3 1 0 -992 0 1 56962
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_4 1 0 -992 0 1 58174
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_6 1 0 -992 0 1 59386
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_5 1 0 -992 0 1 60598
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_1 1 0 -992 0 1 61810
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_0 1 0 -992 0 1 64234
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_2 1 0 -992 0 1 63022
+use power_route_01_512x8m81 power_route_01_512x8m81_1 -1 0 18635 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_2 1 0 6623 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_3 1 0 14443 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_4 1 0 10533 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_9 1 0 2713 0 1 66029
+use power_route_02_a_512x8m81 power_route_02_a_512x8m81_32 1 0 -992 0 1 65446
+use power_route_04_512x8m81 power_route_04_512x8m81_1 1 0 -992 0 1 170
+use power_route_07_512x8m81 power_route_07_512x8m81_0 1 0 28522 0 1 1725
+use power_route_07_512x8m81 power_route_07_512x8m81_1 1 0 27248 0 1 1725
+use power_route_06_512x8m81 power_route_06_512x8m81_0 1 0 42568 0 1 1321
+use power_route_05_512x8m81 power_route_05_512x8m81_2 1 0 55242 0 1 1721
+use power_route_05_512x8m81 power_route_05_512x8m81_1 1 0 47412 0 1 1725
+use M3_M2431059130206_512x8m81 M3_M2431059130206_512x8m81_0 1 0 42036 0 1 4751
+use M2_M14310591302012_512x8m81 M2_M14310591302012_512x8m81_0 1 0 42036 0 1 4752
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_32 -1 0 64142 0 1 26659
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_7 -1 0 64142 0 1 36355
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_6 -1 0 64142 0 1 35143
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_5 -1 0 64142 0 1 33931
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_4 -1 0 64142 0 1 32719
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_3 -1 0 64142 0 1 31507
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_2 -1 0 64142 0 1 30295
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_1 -1 0 64142 0 1 29083
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_0 -1 0 64142 0 1 27871
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_16 -1 0 64142 0 1 47263
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_15 -1 0 64142 0 1 46051
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_14 -1 0 64142 0 1 44839
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_13 -1 0 64142 0 1 43627
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_12 -1 0 64142 0 1 42415
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_11 -1 0 64142 0 1 41203
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_10 -1 0 64142 0 1 39991
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_9 -1 0 64142 0 1 38779
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_8 -1 0 64142 0 1 37567
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_25 -1 0 64142 0 1 58171
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_24 -1 0 64142 0 1 56959
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_23 -1 0 64142 0 1 55747
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_22 -1 0 64142 0 1 54535
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_21 -1 0 64142 0 1 53323
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_20 -1 0 64142 0 1 52111
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_19 -1 0 64142 0 1 50899
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_18 -1 0 64142 0 1 49687
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_17 -1 0 64142 0 1 48475
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_26 -1 0 64142 0 1 59383
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_27 -1 0 64142 0 1 60595
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_28 -1 0 64142 0 1 61807
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_29 -1 0 64142 0 1 63019
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_30 -1 0 64142 0 1 64231
+use power_route_01_512x8m81 power_route_01_512x8m81_0 -1 0 59708 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_5 1 0 43806 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_6 1 0 55526 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_7 1 0 51616 0 1 66029
+use power_route_01_512x8m81 power_route_01_512x8m81_8 1 0 47714 0 1 66029
+use power_route_02_b_512x8m81 power_route_02_b_512x8m81_31 -1 0 64142 0 1 65443
+use power_route_04_512x8m81 power_route_04_512x8m81_0 -1 0 63942 0 1 170
+node "m2_41878_4584#" 0 0 41878 4584 m2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+node "m2_20083_4542#" 0 0 20083 4542 m2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+substrate "VSUBS" 0 0 -1073741817 -1073741817 space 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+merge "power_route_01_512x8m81_0/VSUBS" "power_route_01_512x8m81_6/VSUBS" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+merge "power_route_01_512x8m81_6/VSUBS" "power_route_01_512x8m81_7/VSUBS"
+merge "power_route_01_512x8m81_7/VSUBS" "power_route_01_512x8m81_8/VSUBS"
+merge "power_route_01_512x8m81_8/VSUBS" "power_route_01_512x8m81_5/VSUBS"
+merge "power_route_01_512x8m81_5/VSUBS" "power_route_02_b_512x8m81_31/VSUBS"
+merge "power_route_02_b_512x8m81_31/VSUBS" "power_route_01_512x8m81_1/VSUBS"
+merge "power_route_01_512x8m81_1/VSUBS" "power_route_01_512x8m81_3/VSUBS"
+merge "power_route_01_512x8m81_3/VSUBS" "power_route_01_512x8m81_4/VSUBS"
+merge "power_route_01_512x8m81_4/VSUBS" "power_route_01_512x8m81_2/VSUBS"
+merge "power_route_01_512x8m81_2/VSUBS" "power_route_02_a_512x8m81_32/VSUBS"
+merge "power_route_02_a_512x8m81_32/VSUBS" "power_route_01_512x8m81_9/VSUBS"
+merge "power_route_01_512x8m81_9/VSUBS" "power_route_02_b_512x8m81_30/VSUBS"
+merge "power_route_02_b_512x8m81_30/VSUBS" "power_route_02_a_512x8m81_0/VSUBS"
+merge "power_route_02_a_512x8m81_0/VSUBS" "power_route_02_b_512x8m81_29/VSUBS"
+merge "power_route_02_b_512x8m81_29/VSUBS" "power_route_02_a_512x8m81_2/VSUBS"
+merge "power_route_02_a_512x8m81_2/VSUBS" "power_route_02_b_512x8m81_28/VSUBS"
+merge "power_route_02_b_512x8m81_28/VSUBS" "power_route_02_a_512x8m81_1/VSUBS"
+merge "power_route_02_a_512x8m81_1/VSUBS" "power_route_02_b_512x8m81_27/VSUBS"
+merge "power_route_02_b_512x8m81_27/VSUBS" "power_route_02_a_512x8m81_5/VSUBS"
+merge "power_route_02_a_512x8m81_5/VSUBS" "power_route_02_b_512x8m81_26/VSUBS"
+merge "power_route_02_b_512x8m81_26/VSUBS" "power_route_02_a_512x8m81_6/VSUBS"
+merge "power_route_02_a_512x8m81_6/VSUBS" "power_route_02_b_512x8m81_24/VSUBS"
+merge "power_route_02_b_512x8m81_24/VSUBS" "power_route_02_b_512x8m81_25/VSUBS"
+merge "power_route_02_b_512x8m81_25/VSUBS" "power_route_02_a_512x8m81_4/VSUBS"
+merge "power_route_02_a_512x8m81_4/VSUBS" "power_route_02_a_512x8m81_3/VSUBS"
+merge "power_route_02_a_512x8m81_3/VSUBS" "power_route_02_b_512x8m81_23/VSUBS"
+merge "power_route_02_b_512x8m81_23/VSUBS" "power_route_02_a_512x8m81_7/VSUBS"
+merge "power_route_02_a_512x8m81_7/VSUBS" "power_route_02_b_512x8m81_22/VSUBS"
+merge "power_route_02_b_512x8m81_22/VSUBS" "power_route_02_a_512x8m81_8/VSUBS"
+merge "power_route_02_a_512x8m81_8/VSUBS" "power_route_02_b_512x8m81_21/VSUBS"
+merge "power_route_02_b_512x8m81_21/VSUBS" "power_route_02_a_512x8m81_10/VSUBS"
+merge "power_route_02_a_512x8m81_10/VSUBS" "power_route_02_b_512x8m81_20/VSUBS"
+merge "power_route_02_b_512x8m81_20/VSUBS" "power_route_02_a_512x8m81_9/VSUBS"
+merge "power_route_02_a_512x8m81_9/VSUBS" "power_route_02_b_512x8m81_19/VSUBS"
+merge "power_route_02_b_512x8m81_19/VSUBS" "power_route_02_a_512x8m81_13/VSUBS"
+merge "power_route_02_a_512x8m81_13/VSUBS" "power_route_02_b_512x8m81_18/VSUBS"
+merge "power_route_02_b_512x8m81_18/VSUBS" "power_route_02_a_512x8m81_14/VSUBS"
+merge "power_route_02_a_512x8m81_14/VSUBS" "power_route_02_b_512x8m81_17/VSUBS"
+merge "power_route_02_b_512x8m81_17/VSUBS" "power_route_02_b_512x8m81_16/VSUBS"
+merge "power_route_02_b_512x8m81_16/VSUBS" "power_route_02_a_512x8m81_12/VSUBS"
+merge "power_route_02_a_512x8m81_12/VSUBS" "power_route_02_a_512x8m81_11/VSUBS"
+merge "power_route_02_a_512x8m81_11/VSUBS" "power_route_02_b_512x8m81_15/VSUBS"
+merge "power_route_02_b_512x8m81_15/VSUBS" "power_route_02_a_512x8m81_15/VSUBS"
+merge "power_route_02_a_512x8m81_15/VSUBS" "power_route_02_b_512x8m81_14/VSUBS"
+merge "power_route_02_b_512x8m81_14/VSUBS" "power_route_02_a_512x8m81_16/VSUBS"
+merge "power_route_02_a_512x8m81_16/VSUBS" "power_route_02_b_512x8m81_13/VSUBS"
+merge "power_route_02_b_512x8m81_13/VSUBS" "power_route_02_a_512x8m81_18/VSUBS"
+merge "power_route_02_a_512x8m81_18/VSUBS" "power_route_02_b_512x8m81_12/VSUBS"
+merge "power_route_02_b_512x8m81_12/VSUBS" "power_route_02_a_512x8m81_17/VSUBS"
+merge "power_route_02_a_512x8m81_17/VSUBS" "power_route_02_b_512x8m81_11/VSUBS"
+merge "power_route_02_b_512x8m81_11/VSUBS" "power_route_02_a_512x8m81_21/VSUBS"
+merge "power_route_02_a_512x8m81_21/VSUBS" "power_route_02_b_512x8m81_9/VSUBS"
+merge "power_route_02_b_512x8m81_9/VSUBS" "power_route_02_b_512x8m81_10/VSUBS"
+merge "power_route_02_b_512x8m81_10/VSUBS" "power_route_02_a_512x8m81_22/VSUBS"
+merge "power_route_02_a_512x8m81_22/VSUBS" "power_route_02_a_512x8m81_20/VSUBS"
+merge "power_route_02_a_512x8m81_20/VSUBS" "power_route_02_b_512x8m81_8/VSUBS"
+merge "power_route_02_b_512x8m81_8/VSUBS" "power_route_02_a_512x8m81_19/VSUBS"
+merge "power_route_02_a_512x8m81_19/VSUBS" "power_route_02_b_512x8m81_7/VSUBS"
+merge "power_route_02_b_512x8m81_7/VSUBS" "power_route_02_a_512x8m81_23/VSUBS"
+merge "power_route_02_a_512x8m81_23/VSUBS" "power_route_02_b_512x8m81_6/VSUBS"
+merge "power_route_02_b_512x8m81_6/VSUBS" "power_route_02_a_512x8m81_24/VSUBS"
+merge "power_route_02_a_512x8m81_24/VSUBS" "power_route_02_b_512x8m81_5/VSUBS"
+merge "power_route_02_b_512x8m81_5/VSUBS" "power_route_02_a_512x8m81_26/VSUBS"
+merge "power_route_02_a_512x8m81_26/VSUBS" "power_route_02_b_512x8m81_4/VSUBS"
+merge "power_route_02_b_512x8m81_4/VSUBS" "power_route_02_a_512x8m81_25/VSUBS"
+merge "power_route_02_a_512x8m81_25/VSUBS" "power_route_02_b_512x8m81_3/VSUBS"
+merge "power_route_02_b_512x8m81_3/VSUBS" "power_route_02_a_512x8m81_29/VSUBS"
+merge "power_route_02_a_512x8m81_29/VSUBS" "power_route_02_b_512x8m81_1/VSUBS"
+merge "power_route_02_b_512x8m81_1/VSUBS" "power_route_02_b_512x8m81_2/VSUBS"
+merge "power_route_02_b_512x8m81_2/VSUBS" "power_route_02_a_512x8m81_30/VSUBS"
+merge "power_route_02_a_512x8m81_30/VSUBS" "power_route_02_a_512x8m81_28/VSUBS"
+merge "power_route_02_a_512x8m81_28/VSUBS" "power_route_02_b_512x8m81_0/VSUBS"
+merge "power_route_02_b_512x8m81_0/VSUBS" "power_route_02_a_512x8m81_27/VSUBS"
+merge "power_route_02_a_512x8m81_27/VSUBS" "power_route_02_b_512x8m81_32/VSUBS"
+merge "power_route_02_b_512x8m81_32/VSUBS" "power_route_02_a_512x8m81_31/VSUBS"
+merge "power_route_02_a_512x8m81_31/VSUBS" "power_route_04_512x8m81_0/VSUBS"
+merge "power_route_04_512x8m81_0/VSUBS" "power_route_05_512x8m81_2/VSUBS"
+merge "power_route_05_512x8m81_2/VSUBS" "power_route_05_512x8m81_1/VSUBS"
+merge "power_route_05_512x8m81_1/VSUBS" "power_route_06_512x8m81_0/VSUBS"
+merge "power_route_06_512x8m81_0/VSUBS" "M2_M14310591302012_512x8m81_0/VSUBS"
+merge "M2_M14310591302012_512x8m81_0/VSUBS" "M3_M2431059130206_512x8m81_0/VSUBS"
+merge "M3_M2431059130206_512x8m81_0/VSUBS" "power_route_07_512x8m81_0/VSUBS"
+merge "power_route_07_512x8m81_0/VSUBS" "power_route_07_512x8m81_1/VSUBS"
+merge "power_route_07_512x8m81_1/VSUBS" "M3_M2431059130206_512x8m81_1/VSUBS"
+merge "M3_M2431059130206_512x8m81_1/VSUBS" "M2_M14310591302012_512x8m81_1/VSUBS"
+merge "M2_M14310591302012_512x8m81_1/VSUBS" "power_route_06_512x8m81_1/VSUBS"
+merge "power_route_06_512x8m81_1/VSUBS" "power_route_05_512x8m81_0/VSUBS"
+merge "power_route_05_512x8m81_0/VSUBS" "power_route_05_512x8m81_3/VSUBS"
+merge "power_route_05_512x8m81_3/VSUBS" "power_route_04_512x8m81_1/VSUBS"
+merge "power_route_04_512x8m81_1/VSUBS" "VSUBS"
+merge "power_route_04_512x8m81_1/m2_2831_4045#" "power_route_02_a_512x8m81_23/m1_3342_30#" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+merge "power_route_02_a_512x8m81_23/m1_3342_30#" "power_route_02_a_512x8m81_24/m1_3342_30#"
+merge "power_route_02_a_512x8m81_24/m1_3342_30#" "power_route_02_a_512x8m81_25/M2_M14310591302087_512x8m81_1/m1_n113_n243#"
+merge "power_route_02_a_512x8m81_25/M2_M14310591302087_512x8m81_1/m1_n113_n243#" "power_route_02_a_512x8m81_26/m1_3342_30#"
+merge "power_route_02_a_512x8m81_26/m1_3342_30#" "power_route_02_a_512x8m81_25/m1_3342_30#"
+merge "power_route_02_a_512x8m81_25/m1_3342_30#" "power_route_02_a_512x8m81_30/m1_3342_30#"
+merge "power_route_02_a_512x8m81_30/m1_3342_30#" "power_route_02_a_512x8m81_29/m1_3342_30#"
+merge "power_route_02_a_512x8m81_29/m1_3342_30#" "power_route_02_a_512x8m81_28/m1_3342_30#"
+merge "power_route_02_a_512x8m81_28/m1_3342_30#" "power_route_02_a_512x8m81_30/M2_M14310591302087_512x8m81_1/m1_n113_n243#"
+merge "power_route_02_a_512x8m81_30/M2_M14310591302087_512x8m81_1/m1_n113_n243#" "power_route_02_a_512x8m81_27/m1_3342_30#"
+merge "power_route_02_a_512x8m81_27/m1_3342_30#" "power_route_02_a_512x8m81_31/m1_3342_30#"
+merge "power_route_04_512x8m81_0/m2_2831_4045#" "power_route_02_b_512x8m81_7/m1_3513_56#" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+merge "power_route_02_b_512x8m81_7/m1_3513_56#" "power_route_02_b_512x8m81_6/m1_3513_56#"
+merge "power_route_02_b_512x8m81_6/m1_3513_56#" "power_route_02_b_512x8m81_4/M2_M14310591302087_512x8m81_1/m1_n113_n243#"
+merge "power_route_02_b_512x8m81_4/M2_M14310591302087_512x8m81_1/m1_n113_n243#" "power_route_02_b_512x8m81_5/m1_3513_56#"
+merge "power_route_02_b_512x8m81_5/m1_3513_56#" "power_route_02_b_512x8m81_3/m1_3513_56#"
+merge "power_route_02_b_512x8m81_3/m1_3513_56#" "power_route_02_b_512x8m81_4/m1_3513_56#"
+merge "power_route_02_b_512x8m81_4/m1_3513_56#" "power_route_02_b_512x8m81_2/m1_3513_56#"
+merge "power_route_02_b_512x8m81_2/m1_3513_56#" "power_route_02_b_512x8m81_3/M2_M14310591302087_512x8m81_1/m1_n113_n243#"
+merge "power_route_02_b_512x8m81_3/M2_M14310591302087_512x8m81_1/m1_n113_n243#" "power_route_02_b_512x8m81_2/M3_M24310591302090_512x8m81_0/m2_n113_n243#"
+merge "power_route_02_b_512x8m81_2/M3_M24310591302090_512x8m81_0/m2_n113_n243#" "power_route_02_b_512x8m81_1/m1_3513_56#"
+merge "power_route_02_b_512x8m81_1/m1_3513_56#" "power_route_02_b_512x8m81_0/m1_3513_56#"
+merge "power_route_02_b_512x8m81_0/m1_3513_56#" "power_route_02_b_512x8m81_32/m1_3513_56#"
+merge "M3_M2431059130206_512x8m81_1/m2_n113_n156#" "M2_M14310591302012_512x8m81_1/m1_n113_n156#" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+merge "M2_M14310591302012_512x8m81_1/m1_n113_n156#" "m2_20083_4542#"
+merge "M2_M14310591302012_512x8m81_0/m1_n113_n156#" "M3_M2431059130206_512x8m81_0/m2_n113_n156#" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+merge "M3_M2431059130206_512x8m81_0/m2_n113_n156#" "m2_41878_4584#"
+merge "power_route_02_a_512x8m81_32/m1_2534_n140#" "power_route_01_512x8m81_9/m1_103_52#" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0

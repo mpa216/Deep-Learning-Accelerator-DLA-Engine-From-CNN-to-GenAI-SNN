@@ -1,0 +1,83 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762898190
+<< nwell >>
+rect -78 -189 637 835
+<< pmos >>
+rect 96 236 463 749
+<< pdiff >>
+rect 8 736 96 749
+rect 8 249 21 736
+rect 67 249 96 736
+rect 8 236 96 249
+rect 463 736 551 749
+rect 463 249 492 736
+rect 538 249 551 736
+rect 463 236 551 249
+<< pdiffc >>
+rect 21 249 67 736
+rect 492 249 538 736
+<< psubdiff >>
+rect 22 918 536 991
+<< nsubdiff >>
+rect 38 36 520 138
+<< polysilicon >>
+rect 96 749 463 843
+rect 96 191 463 236
+<< metal1 >>
+rect 14 966 544 992
+rect 14 810 16 966
+rect 72 810 544 966
+rect 14 786 544 810
+rect 9 736 100 739
+rect 9 249 21 736
+rect 67 249 100 736
+rect 9 240 100 249
+rect 458 736 549 739
+rect 458 249 492 736
+rect 538 249 549 736
+rect 458 240 549 249
+rect 38 36 520 138
+<< via1 >>
+rect 16 810 72 966
+<< metal2 >>
+rect 14 966 74 983
+rect 14 810 16 966
+rect 72 810 74 966
+rect 14 795 74 810
+rect 22 240 536 651
+<< via2 >>
+rect 16 810 72 966
+<< metal3 >>
+rect -2 966 92 1517
+rect -2 810 16 966
+rect 72 810 92 966
+rect -2 0 92 810
+rect 237 0 331 1028
+rect 466 0 560 1028
+use M1_NACTIVE_01_R270_512x8m81  M1_NACTIVE_01_R270_512x8m81_0
+timestamp 1762898190
+transform 1 0 282 0 1 102
+box -190 -36 190 36
+use M1_PACTIVE_R270_512x8m81  M1_PACTIVE_R270_512x8m81_0
+timestamp 1762898190
+transform 1 0 282 0 1 955
+box -189 -36 189 36
+use M1_POLY2_01_R270_512x8m81  M1_POLY2_01_R270_512x8m81_0
+timestamp 1762898190
+transform 1 0 280 0 1 812
+box -160 -36 160 37
+use M2_M1$04_R270_512x8m81  M2_M1$04_R270_512x8m81_0
+timestamp 1762898190
+transform 1 0 41 0 1 445
+box -31 -186 31 185
+use M2_M1$04_R270_512x8m81  M2_M1$04_R270_512x8m81_1
+timestamp 1762898190
+transform 1 0 519 0 1 445
+box -31 -186 31 185
+use M3_M2$01_R270_512x8m81  M3_M2$01_R270_512x8m81_0
+timestamp 1762898190
+transform 1 0 519 0 1 445
+box -31 -189 32 186
+<< end >>

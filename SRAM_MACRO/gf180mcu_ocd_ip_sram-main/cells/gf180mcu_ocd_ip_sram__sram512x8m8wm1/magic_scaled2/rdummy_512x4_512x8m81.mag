@@ -1,0 +1,1854 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< error_s >>
+rect 2864 27272 3015 27279
+rect 5384 27272 5535 27279
+rect 7904 27272 8055 27279
+rect 10424 27272 10575 27279
+rect 2864 440 3015 448
+rect 5384 440 5535 448
+rect 7904 440 8055 448
+rect 10424 440 10575 448
+<< nwell >>
+rect 10342 -2958 10628 -503
+rect 10475 -5973 10657 -4781
+rect 10570 -7410 10983 -6929
+rect 10586 -10310 10984 -9119
+rect 10586 -10812 10780 -10599
+<< pwell >>
+rect -31 27746 10951 27761
+rect -31 -41 10951 -26
+<< polysilicon >>
+rect -119 27623 26 27695
+rect 10892 27623 11065 27695
+rect -119 26904 26 26976
+rect 10892 26904 11065 26976
+rect -119 26783 26 26855
+rect 10892 26783 11065 26855
+rect -119 26064 26 26136
+rect 10892 26064 11065 26136
+rect -119 25943 26 26015
+rect 10892 25943 11065 26015
+rect -119 25224 26 25296
+rect 10892 25224 11065 25296
+rect -119 25103 26 25175
+rect 10892 25103 11065 25175
+rect -119 24384 26 24456
+rect 10892 24384 11065 24456
+rect -119 24263 26 24335
+rect 10892 24263 11065 24335
+rect -119 23544 26 23616
+rect 10892 23544 11065 23616
+rect -119 23423 26 23495
+rect 10892 23423 11065 23495
+rect -119 22704 26 22776
+rect 10892 22704 11065 22776
+rect -119 22583 26 22655
+rect 10892 22583 11065 22655
+rect -119 21864 26 21936
+rect 10892 21864 11065 21936
+rect -119 21743 26 21815
+rect 10892 21743 11065 21815
+rect -119 21024 26 21096
+rect 10892 21024 11065 21096
+rect -119 20903 26 20975
+rect 10892 20903 11065 20975
+rect -119 20184 26 20256
+rect 10892 20184 11065 20256
+rect -119 20063 26 20135
+rect 10892 20063 11065 20135
+rect -119 19344 26 19416
+rect 10892 19344 11065 19416
+rect -119 19223 26 19295
+rect 10892 19223 11065 19295
+rect -119 18504 26 18576
+rect 10892 18504 11065 18576
+rect -119 18383 26 18455
+rect 10892 18383 11065 18455
+rect -119 17664 26 17736
+rect 10892 17664 11065 17736
+rect -119 17543 26 17615
+rect 10892 17543 11065 17615
+rect -119 16824 26 16896
+rect 10892 16824 11065 16896
+rect -119 16703 26 16775
+rect 10892 16703 11065 16775
+rect -119 15984 26 16056
+rect 10892 15984 11065 16056
+rect -119 15863 26 15935
+rect 10892 15863 11065 15935
+rect -119 15144 26 15216
+rect 10892 15144 11065 15216
+rect -119 15023 26 15095
+rect 10892 15023 11065 15095
+rect -119 14304 26 14376
+rect 10892 14304 11065 14376
+rect -119 14183 26 14255
+rect 10892 14183 11065 14255
+rect -119 13464 26 13536
+rect 10892 13464 11065 13536
+rect -119 13343 26 13415
+rect 10892 13343 11065 13415
+rect -119 12624 26 12696
+rect 10892 12624 11065 12696
+rect -119 12503 26 12575
+rect 10892 12503 11065 12575
+rect -119 11784 26 11856
+rect 10892 11784 11065 11856
+rect -119 11663 26 11735
+rect 10892 11663 11065 11735
+rect -119 10944 26 11016
+rect 10892 10944 11065 11016
+rect -119 10823 26 10895
+rect 10892 10823 11065 10895
+rect -119 10104 26 10176
+rect 10892 10104 11065 10176
+rect -119 9983 26 10055
+rect 10892 9983 11065 10055
+rect -119 9264 26 9336
+rect 10892 9264 11065 9336
+rect -119 9143 26 9215
+rect 10892 9143 11065 9215
+rect -119 8424 26 8496
+rect 10892 8424 11065 8496
+rect -119 8303 26 8375
+rect 10892 8303 11065 8375
+rect -119 7584 26 7656
+rect 10892 7584 11065 7656
+rect -119 7463 26 7535
+rect 10892 7463 11065 7535
+rect -119 6744 26 6816
+rect 10892 6744 11065 6816
+rect -119 6623 26 6695
+rect 10892 6623 11065 6695
+rect -119 5904 26 5976
+rect 10892 5904 11065 5976
+rect -119 5783 26 5855
+rect 10892 5783 11065 5855
+rect -119 5064 26 5136
+rect 10892 5064 11065 5136
+rect -119 4943 26 5015
+rect 10892 4943 11065 5015
+rect -119 4224 26 4296
+rect 10892 4224 11065 4296
+rect -119 4103 26 4175
+rect 10892 4103 11065 4175
+rect -119 3384 26 3456
+rect 10892 3384 11065 3456
+rect -119 3263 26 3335
+rect 10892 3263 11065 3335
+rect -119 2544 26 2616
+rect 10892 2544 11065 2616
+rect -119 2423 26 2495
+rect 10892 2423 11065 2495
+rect -119 1704 26 1776
+rect 10892 1704 11065 1776
+rect -119 1583 26 1655
+rect 10892 1583 11065 1655
+rect -119 864 26 936
+rect 10892 864 11065 936
+rect -119 743 26 815
+rect 10892 743 11065 815
+rect -119 24 26 96
+rect 10917 24 11065 96
+rect 10713 -7364 10749 -7344
+rect 10817 -7364 10853 -7344
+rect 10703 -7372 10759 -7364
+rect 10808 -7372 10864 -7364
+rect 10703 -7448 10864 -7372
+rect 10703 -7476 10759 -7448
+rect 10808 -7476 10864 -7448
+rect 10703 -7653 10759 -7615
+rect 10808 -7653 10864 -7615
+rect 10705 -9084 10761 -9055
+rect 10809 -9084 10865 -9055
+rect 10705 -9157 10865 -9084
+rect 10705 -9165 10761 -9157
+rect 10809 -9165 10865 -9157
+rect 10715 -9185 10751 -9165
+rect 10819 -9185 10855 -9165
+<< metal1 >>
+rect 11031 23473 11245 23566
+rect -119 -147 -83 130
+rect -119 -227 30 -147
+rect 10719 -2893 10819 -2257
+rect 10486 -5550 10747 -5494
+rect 10486 -6356 10541 -5550
+rect 10831 -5736 10944 -5598
+rect 10486 -6412 11014 -6356
+rect 10756 -7377 10810 -7197
+rect 10569 -7412 10810 -7377
+rect 10960 -7384 11014 -6412
+rect 10569 -9113 10602 -7412
+rect 10756 -7535 10810 -7412
+rect 10857 -7440 11014 -7384
+rect 10651 -8627 10706 -7592
+rect 10569 -9148 10708 -9113
+rect 10758 -9254 10812 -8606
+rect 10860 -8627 10915 -7592
+rect 10654 -10734 10708 -10121
+rect 10756 -10810 10816 -10685
+rect 10863 -10734 10917 -10121
+rect 10733 -11858 10837 -10810
+<< metal2 >>
+rect -118 -19 -82 27678
+rect 10990 26772 11048 27678
+rect 10682 -399 10738 152
+rect 10661 -445 10738 -399
+rect 10822 -399 10878 152
+rect 10990 42 11048 26138
+rect 10822 -445 10881 -399
+rect 10661 -583 10688 -445
+rect 10855 -583 10881 -445
+rect 10756 -11858 10816 -8212
+<< metal3 >>
+rect -167 -31 -34 33
+rect 10420 -1358 11152 -513
+rect 10445 -4102 11152 -3179
+rect 10396 -4254 11152 -4154
+rect 10396 -4404 11152 -4304
+rect 10396 -4554 11152 -4454
+rect 10396 -4704 11152 -4604
+rect 10396 -5027 11004 -4927
+rect 10396 -5178 11004 -5077
+rect 10396 -5328 11004 -5228
+rect 10396 -5478 11004 -5377
+rect 10445 -5734 11004 -5528
+rect 10445 -6252 11152 -6040
+rect 10465 -8031 10921 -6760
+rect 10465 -9752 10921 -8164
+rect 10430 -10156 10921 -9821
+rect 10430 -10822 10921 -10443
+rect 10465 -11690 10757 -11076
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_0
+timestamp 1762445335
+transform -1 0 280 0 1 5460
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_1
+timestamp 1762445335
+transform -1 0 280 0 1 2100
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_2
+timestamp 1762445335
+transform -1 0 280 0 1 3780
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_3
+timestamp 1762445335
+transform -1 0 280 0 1 7140
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_4
+timestamp 1762445335
+transform -1 0 280 0 1 4620
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_5
+timestamp 1762445335
+transform -1 0 280 0 1 6300
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_6
+timestamp 1762445335
+transform -1 0 280 0 1 1260
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_7
+timestamp 1762445335
+transform -1 0 280 0 1 2940
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_8
+timestamp 1762445335
+transform -1 0 280 0 1 420
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_9
+timestamp 1762445335
+transform -1 0 280 0 1 13860
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_10
+timestamp 1762445335
+transform -1 0 280 0 1 16380
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_11
+timestamp 1762445335
+transform -1 0 280 0 1 15540
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_12
+timestamp 1762445335
+transform -1 0 280 0 1 17220
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_13
+timestamp 1762445335
+transform -1 0 280 0 1 14700
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_14
+timestamp 1762445335
+transform -1 0 280 0 1 8820
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_15
+timestamp 1762445335
+transform -1 0 280 0 1 12180
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_16
+timestamp 1762445335
+transform -1 0 280 0 1 10500
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_17
+timestamp 1762445335
+transform -1 0 280 0 1 11340
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_18
+timestamp 1762445335
+transform -1 0 280 0 1 13020
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_19
+timestamp 1762445335
+transform -1 0 280 0 1 9660
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_20
+timestamp 1762445335
+transform -1 0 280 0 1 19740
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_21
+timestamp 1762445335
+transform -1 0 280 0 1 21420
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_22
+timestamp 1762445335
+transform -1 0 280 0 1 23100
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_23
+timestamp 1762445335
+transform -1 0 280 0 1 26460
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_24
+timestamp 1762445335
+transform -1 0 280 0 1 24780
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_25
+timestamp 1762445335
+transform -1 0 280 0 1 18900
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_26
+timestamp 1762445335
+transform -1 0 280 0 1 20580
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_27
+timestamp 1762445335
+transform -1 0 280 0 1 22260
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_28
+timestamp 1762445335
+transform -1 0 280 0 1 25620
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_29
+timestamp 1762445335
+transform -1 0 280 0 1 23940
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_30
+timestamp 1762445335
+transform -1 0 280 0 1 18060
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_31
+timestamp 1762445335
+transform -1 0 280 0 1 7980
+box -31 -31 311 871
+use 018SRAM_cell1_512x8m81  018SRAM_cell1_512x8m81_0
+timestamp 1762445335
+transform -1 0 280 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_512x8m81  018SRAM_cell1_512x8m81_1
+timestamp 1762445335
+transform -1 0 280 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_0
+timestamp 1762445335
+transform -1 0 7840 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_1
+timestamp 1762445335
+transform -1 0 7560 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_2
+timestamp 1762445335
+transform -1 0 7280 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_3
+timestamp 1762445335
+transform -1 0 7000 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_4
+timestamp 1762445335
+transform -1 0 6440 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_5
+timestamp 1762445335
+transform -1 0 6720 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_6
+timestamp 1762445335
+transform -1 0 6160 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_7
+timestamp 1762445335
+transform -1 0 5880 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_8
+timestamp 1762445335
+transform -1 0 8400 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_9
+timestamp 1762445335
+transform -1 0 8680 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_10
+timestamp 1762445335
+transform -1 0 9240 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_11
+timestamp 1762445335
+transform -1 0 8960 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_12
+timestamp 1762445335
+transform -1 0 9520 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_13
+timestamp 1762445335
+transform -1 0 9800 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_14
+timestamp 1762445335
+transform -1 0 10080 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_15
+timestamp 1762445335
+transform -1 0 10360 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_16
+timestamp 1762445335
+transform -1 0 3640 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_17
+timestamp 1762445335
+transform -1 0 4200 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_18
+timestamp 1762445335
+transform -1 0 3920 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_19
+timestamp 1762445335
+transform -1 0 4480 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_20
+timestamp 1762445335
+transform -1 0 4760 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_21
+timestamp 1762445335
+transform -1 0 5040 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_22
+timestamp 1762445335
+transform -1 0 5320 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_23
+timestamp 1762445335
+transform -1 0 2800 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_24
+timestamp 1762445335
+transform -1 0 2520 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_25
+timestamp 1762445335
+transform -1 0 2240 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_26
+timestamp 1762445335
+transform -1 0 1960 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_27
+timestamp 1762445335
+transform -1 0 1400 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_28
+timestamp 1762445335
+transform -1 0 1680 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_29
+timestamp 1762445335
+transform -1 0 1120 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_30
+timestamp 1762445335
+transform -1 0 840 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_31
+timestamp 1762445335
+transform -1 0 3360 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_32
+timestamp 1762445335
+transform -1 0 1960 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_33
+timestamp 1762445335
+transform -1 0 1400 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_34
+timestamp 1762445335
+transform -1 0 1680 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_35
+timestamp 1762445335
+transform -1 0 1120 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_36
+timestamp 1762445335
+transform -1 0 840 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_37
+timestamp 1762445335
+transform -1 0 2520 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_38
+timestamp 1762445335
+transform -1 0 2240 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_39
+timestamp 1762445335
+transform -1 0 5040 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_40
+timestamp 1762445335
+transform -1 0 3360 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_41
+timestamp 1762445335
+transform -1 0 5320 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_42
+timestamp 1762445335
+transform -1 0 3640 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_43
+timestamp 1762445335
+transform -1 0 4200 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_44
+timestamp 1762445335
+transform -1 0 3920 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_45
+timestamp 1762445335
+transform -1 0 4480 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_46
+timestamp 1762445335
+transform -1 0 4760 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_47
+timestamp 1762445335
+transform -1 0 2800 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_48
+timestamp 1762445335
+transform -1 0 6440 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_49
+timestamp 1762445335
+transform -1 0 7560 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_50
+timestamp 1762445335
+transform -1 0 5880 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_51
+timestamp 1762445335
+transform -1 0 6160 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_52
+timestamp 1762445335
+transform -1 0 7840 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_53
+timestamp 1762445335
+transform -1 0 6720 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_54
+timestamp 1762445335
+transform -1 0 7000 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_55
+timestamp 1762445335
+transform -1 0 7280 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_56
+timestamp 1762445335
+transform -1 0 8960 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_57
+timestamp 1762445335
+transform -1 0 8680 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_58
+timestamp 1762445335
+transform -1 0 9800 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_59
+timestamp 1762445335
+transform -1 0 9520 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_60
+timestamp 1762445335
+transform -1 0 10080 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_61
+timestamp 1762445335
+transform -1 0 9240 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_62
+timestamp 1762445335
+transform -1 0 10360 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_512x8m81  018SRAM_cell1_dummy_512x8m81_63
+timestamp 1762445335
+transform -1 0 8400 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_0
+timestamp 1762445335
+transform 1 0 10640 0 -1 3360
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_1
+timestamp 1762445335
+transform 1 0 10640 0 -1 4200
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_2
+timestamp 1762445335
+transform 1 0 10640 0 -1 2520
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_3
+timestamp 1762445335
+transform 1 0 10640 0 -1 1680
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_4
+timestamp 1762445335
+transform 1 0 10640 0 -1 5040
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_5
+timestamp 1762445335
+transform 1 0 10640 0 -1 8400
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_6
+timestamp 1762445335
+transform 1 0 10640 0 -1 7560
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_7
+timestamp 1762445335
+transform 1 0 10640 0 -1 6720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_8
+timestamp 1762445335
+transform 1 0 10640 0 -1 5880
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_9
+timestamp 1762445335
+transform 1 0 10640 0 -1 840
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_10
+timestamp 1762445335
+transform 1 0 10640 0 1 2520
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_11
+timestamp 1762445335
+transform 1 0 10640 0 1 3360
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_12
+timestamp 1762445335
+transform 1 0 10640 0 1 5040
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_13
+timestamp 1762445335
+transform 1 0 10640 0 1 6720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_14
+timestamp 1762445335
+transform 1 0 10640 0 1 1680
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_15
+timestamp 1762445335
+transform 1 0 10640 0 1 4200
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_16
+timestamp 1762445335
+transform 1 0 10640 0 1 5880
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_17
+timestamp 1762445335
+transform 1 0 10640 0 1 7560
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_18
+timestamp 1762445335
+transform 1 0 10640 0 1 840
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_19
+timestamp 1762445335
+transform 1 0 10640 0 1 0
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_20
+timestamp 1762445335
+transform 1 0 10640 0 -1 17640
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_21
+timestamp 1762445335
+transform 1 0 10640 0 -1 14280
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_22
+timestamp 1762445335
+transform 1 0 10640 0 -1 16800
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_23
+timestamp 1762445335
+transform 1 0 10640 0 -1 15960
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_24
+timestamp 1762445335
+transform 1 0 10640 0 -1 15120
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_25
+timestamp 1762445335
+transform 1 0 10640 0 -1 10920
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_26
+timestamp 1762445335
+transform 1 0 10640 0 -1 9240
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_27
+timestamp 1762445335
+transform 1 0 10640 0 -1 10080
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_28
+timestamp 1762445335
+transform 1 0 10640 0 -1 13440
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_29
+timestamp 1762445335
+transform 1 0 10640 0 -1 12600
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_30
+timestamp 1762445335
+transform 1 0 10640 0 -1 11760
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_31
+timestamp 1762445335
+transform 1 0 10640 0 1 16800
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_32
+timestamp 1762445335
+transform 1 0 10640 0 1 14280
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_33
+timestamp 1762445335
+transform 1 0 10640 0 1 10080
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_34
+timestamp 1762445335
+transform 1 0 10640 0 1 11760
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_35
+timestamp 1762445335
+transform 1 0 10640 0 1 13440
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_36
+timestamp 1762445335
+transform 1 0 10640 0 1 15120
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_37
+timestamp 1762445335
+transform 1 0 10640 0 1 15960
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_38
+timestamp 1762445335
+transform 1 0 10640 0 1 9240
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_39
+timestamp 1762445335
+transform 1 0 10640 0 1 10920
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_40
+timestamp 1762445335
+transform 1 0 10640 0 1 12600
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_41
+timestamp 1762445335
+transform 1 0 10640 0 1 17640
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_42
+timestamp 1762445335
+transform 1 0 10640 0 -1 26040
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_43
+timestamp 1762445335
+transform 1 0 10640 0 -1 24360
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_44
+timestamp 1762445335
+transform 1 0 10640 0 -1 22680
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_45
+timestamp 1762445335
+transform 1 0 10640 0 -1 20160
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_46
+timestamp 1762445335
+transform 1 0 10640 0 -1 19320
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_47
+timestamp 1762445335
+transform 1 0 10640 0 -1 26880
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_48
+timestamp 1762445335
+transform 1 0 10640 0 -1 25200
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_49
+timestamp 1762445335
+transform 1 0 10640 0 -1 23520
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_50
+timestamp 1762445335
+transform 1 0 10640 0 -1 21840
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_51
+timestamp 1762445335
+transform 1 0 10640 0 -1 21000
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_52
+timestamp 1762445335
+transform 1 0 10640 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_53
+timestamp 1762445335
+transform 1 0 10640 0 1 25200
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_54
+timestamp 1762445335
+transform 1 0 10640 0 1 18480
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_55
+timestamp 1762445335
+transform 1 0 10640 0 1 21840
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_56
+timestamp 1762445335
+transform 1 0 10640 0 1 26040
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_57
+timestamp 1762445335
+transform 1 0 10640 0 1 23520
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_58
+timestamp 1762445335
+transform 1 0 10640 0 1 20160
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_59
+timestamp 1762445335
+transform 1 0 10640 0 1 26880
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_60
+timestamp 1762445335
+transform 1 0 10640 0 1 21000
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_61
+timestamp 1762445335
+transform 1 0 10640 0 1 24360
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_62
+timestamp 1762445335
+transform 1 0 10640 0 1 19320
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_63
+timestamp 1762445335
+transform 1 0 10640 0 1 22680
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_64
+timestamp 1762445335
+transform 1 0 10640 0 -1 18480
+box -31 -31 311 451
+use 018SRAM_cell1_dummy_R_512x8m81  018SRAM_cell1_dummy_R_512x8m81_65
+timestamp 1762445335
+transform 1 0 10640 0 1 8400
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_0
+timestamp 1762445335
+transform -1 0 8120 0 1 0
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_1
+timestamp 1762445335
+transform -1 0 3080 0 1 0
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_2
+timestamp 1762445335
+transform -1 0 560 0 1 0
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_3
+timestamp 1762445335
+transform -1 0 3080 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_4
+timestamp 1762445335
+transform -1 0 8120 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_5
+timestamp 1762445335
+transform 1 0 10360 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_6
+timestamp 1762445335
+transform -1 0 5600 0 1 0
+box -31 -31 311 451
+use 018SRAM_strap1_512x8m81  018SRAM_strap1_512x8m81_7
+timestamp 1762445335
+transform -1 0 5600 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_0
+timestamp 1762445335
+transform 1 0 10360 0 1 0
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_1
+timestamp 1762445335
+transform -1 0 560 0 -1 1680
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_2
+timestamp 1762445335
+transform -1 0 560 0 -1 2520
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_3
+timestamp 1762445335
+transform -1 0 560 0 1 840
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_4
+timestamp 1762445335
+transform -1 0 560 0 1 1680
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_5
+timestamp 1762445335
+transform -1 0 560 0 -1 7560
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_6
+timestamp 1762445335
+transform -1 0 560 0 1 2520
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_7
+timestamp 1762445335
+transform -1 0 560 0 1 4200
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_8
+timestamp 1762445335
+transform -1 0 560 0 1 3360
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_9
+timestamp 1762445335
+transform -1 0 560 0 1 5040
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_10
+timestamp 1762445335
+transform -1 0 560 0 1 5880
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_11
+timestamp 1762445335
+transform -1 0 560 0 -1 840
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_12
+timestamp 1762445335
+transform -1 0 560 0 -1 6720
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_13
+timestamp 1762445335
+transform -1 0 560 0 -1 8400
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_14
+timestamp 1762445335
+transform -1 0 560 0 -1 3360
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_15
+timestamp 1762445335
+transform -1 0 560 0 -1 5040
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_16
+timestamp 1762445335
+transform -1 0 560 0 1 6720
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_17
+timestamp 1762445335
+transform -1 0 560 0 -1 5880
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_18
+timestamp 1762445335
+transform -1 0 560 0 -1 4200
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_19
+timestamp 1762445335
+transform -1 0 560 0 1 7560
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_20
+timestamp 1762445335
+transform -1 0 560 0 1 15960
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_21
+timestamp 1762445335
+transform -1 0 560 0 1 16800
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_22
+timestamp 1762445335
+transform -1 0 560 0 1 17640
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_23
+timestamp 1762445335
+transform -1 0 560 0 -1 10920
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_24
+timestamp 1762445335
+transform -1 0 560 0 -1 14280
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_25
+timestamp 1762445335
+transform -1 0 560 0 -1 16800
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_26
+timestamp 1762445335
+transform -1 0 560 0 -1 12600
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_27
+timestamp 1762445335
+transform -1 0 560 0 1 14280
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_28
+timestamp 1762445335
+transform -1 0 560 0 -1 13440
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_29
+timestamp 1762445335
+transform -1 0 560 0 -1 15960
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_30
+timestamp 1762445335
+transform -1 0 560 0 -1 15120
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_31
+timestamp 1762445335
+transform -1 0 560 0 1 12600
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_32
+timestamp 1762445335
+transform -1 0 560 0 -1 17640
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_33
+timestamp 1762445335
+transform -1 0 560 0 1 13440
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_34
+timestamp 1762445335
+transform -1 0 560 0 -1 9240
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_35
+timestamp 1762445335
+transform -1 0 560 0 1 10920
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_36
+timestamp 1762445335
+transform -1 0 560 0 1 11760
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_37
+timestamp 1762445335
+transform -1 0 560 0 1 10080
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_38
+timestamp 1762445335
+transform -1 0 560 0 1 9240
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_39
+timestamp 1762445335
+transform -1 0 560 0 -1 11760
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_40
+timestamp 1762445335
+transform -1 0 560 0 1 15120
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_41
+timestamp 1762445335
+transform -1 0 560 0 -1 10080
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_42
+timestamp 1762445335
+transform -1 0 560 0 -1 23520
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_43
+timestamp 1762445335
+transform -1 0 560 0 1 26880
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_44
+timestamp 1762445335
+transform -1 0 560 0 1 25200
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_45
+timestamp 1762445335
+transform -1 0 560 0 1 21840
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_46
+timestamp 1762445335
+transform -1 0 560 0 1 19320
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_47
+timestamp 1762445335
+transform -1 0 560 0 1 18480
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_48
+timestamp 1762445335
+transform -1 0 560 0 1 20160
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_49
+timestamp 1762445335
+transform -1 0 560 0 1 21000
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_50
+timestamp 1762445335
+transform -1 0 560 0 1 26040
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_51
+timestamp 1762445335
+transform -1 0 560 0 1 24360
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_52
+timestamp 1762445335
+transform -1 0 560 0 1 23520
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_53
+timestamp 1762445335
+transform -1 0 560 0 1 22680
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_54
+timestamp 1762445335
+transform -1 0 560 0 -1 27720
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_55
+timestamp 1762445335
+transform -1 0 560 0 -1 21840
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_56
+timestamp 1762445335
+transform -1 0 560 0 -1 26880
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_57
+timestamp 1762445335
+transform -1 0 560 0 -1 21000
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_58
+timestamp 1762445335
+transform -1 0 560 0 -1 24360
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_59
+timestamp 1762445335
+transform -1 0 560 0 -1 22680
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_60
+timestamp 1762445335
+transform -1 0 560 0 -1 25200
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_61
+timestamp 1762445335
+transform -1 0 560 0 -1 19320
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_62
+timestamp 1762445335
+transform -1 0 560 0 -1 20160
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_63
+timestamp 1762445335
+transform -1 0 560 0 -1 26040
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_64
+timestamp 1762445335
+transform -1 0 560 0 -1 18480
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_65
+timestamp 1762445335
+transform -1 0 560 0 1 8400
+box -31 -31 311 451
+use M1_NWELL$$44998700_512x8m81  M1_NWELL$$44998700_512x8m81_0
+timestamp 1762445335
+transform 1 0 10881 0 1 -10706
+box -102 -106 103 106
+use M1_NWELL$$44998700_512x8m81  M1_NWELL$$44998700_512x8m81_1
+timestamp 1762445335
+transform 1 0 10627 0 1 -10706
+box -102 -106 103 106
+use M1_NWELL$$46277676_512x8m81  M1_NWELL$$46277676_512x8m81_0
+timestamp 1762445335
+transform 1 0 10756 0 1 -6823
+box -176 -106 176 106
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_0
+timestamp 1762445335
+transform 1 0 11020 0 -1 3360
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_1
+timestamp 1762445335
+transform 1 0 11020 0 -1 2520
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_2
+timestamp 1762445335
+transform 1 0 11020 0 -1 840
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_3
+timestamp 1762445335
+transform 1 0 11020 0 -1 112
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_4
+timestamp 1762445335
+transform 1 0 11020 0 -1 7560
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_5
+timestamp 1762445335
+transform 1 0 11020 0 -1 5880
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_6
+timestamp 1762445335
+transform 1 0 11020 0 -1 4200
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_7
+timestamp 1762445335
+transform 1 0 11020 0 -1 6720
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_8
+timestamp 1762445335
+transform 1 0 11020 0 -1 5040
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_9
+timestamp 1762445335
+transform 1 0 11020 0 -1 1680
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_10
+timestamp 1762445335
+transform 1 0 11020 0 -1 10080
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_11
+timestamp 1762445335
+transform 1 0 11020 0 -1 17640
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_12
+timestamp 1762445335
+transform 1 0 11020 0 -1 16800
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_13
+timestamp 1762445335
+transform 1 0 11020 0 -1 15960
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_14
+timestamp 1762445335
+transform 1 0 11020 0 -1 15120
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_15
+timestamp 1762445335
+transform 1 0 11020 0 -1 14280
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_16
+timestamp 1762445335
+transform 1 0 11020 0 -1 12600
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_17
+timestamp 1762445335
+transform 1 0 11020 0 -1 10920
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_18
+timestamp 1762445335
+transform 1 0 11020 0 -1 9240
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_19
+timestamp 1762445335
+transform 1 0 11020 0 -1 13440
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_20
+timestamp 1762445335
+transform 1 0 11020 0 -1 11760
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_21
+timestamp 1762445335
+transform 1 0 11020 0 -1 26040
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_22
+timestamp 1762445335
+transform 1 0 11020 0 -1 25200
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_23
+timestamp 1762445335
+transform 1 0 11020 0 -1 24360
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_24
+timestamp 1762445335
+transform 1 0 11020 0 -1 23520
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_25
+timestamp 1762445335
+transform 1 0 11020 0 -1 22680
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_26
+timestamp 1762445335
+transform 1 0 11020 0 -1 21840
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_27
+timestamp 1762445335
+transform 1 0 11020 0 -1 21000
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_28
+timestamp 1762445335
+transform 1 0 11020 0 -1 20160
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_29
+timestamp 1762445335
+transform 1 0 11020 0 -1 19320
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_30
+timestamp 1762445335
+transform 1 0 11020 0 -1 18480
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_31
+timestamp 1762445335
+transform 1 0 11020 0 -1 26880
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_32
+timestamp 1762445335
+transform 1 0 11020 0 -1 27608
+box -44 -70 44 70
+use M1_POLY2$$44754988_512x8m81  M1_POLY2$$44754988_512x8m81_33
+timestamp 1762445335
+transform 1 0 11020 0 -1 8400
+box -44 -70 44 70
+use M1_POLY2$$46559276_512x8m81_0  M1_POLY2$$46559276_512x8m81_0_0
+timestamp 1762445335
+transform -1 0 10644 0 1 -9120
+box -82 -32 82 32
+use M1_POLY2$$46559276_512x8m81_0  M1_POLY2$$46559276_512x8m81_0_1
+timestamp 1762445335
+transform 1 0 10916 0 1 -7412
+box -82 -32 82 32
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_0
+timestamp 1762445335
+transform 1 0 -100 0 1 65
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_1
+timestamp 1762445335
+transform 1 0 -100 0 1 840
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_2
+timestamp 1762445335
+transform 1 0 -100 0 1 1680
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_3
+timestamp 1762445335
+transform 1 0 -100 0 1 3360
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_4
+timestamp 1762445335
+transform 1 0 -100 0 1 2520
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_5
+timestamp 1762445335
+transform 1 0 -100 0 1 6720
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_6
+timestamp 1762445335
+transform 1 0 -100 0 1 5880
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_7
+timestamp 1762445335
+transform 1 0 -100 0 1 7560
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_8
+timestamp 1762445335
+transform 1 0 -100 0 1 8400
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_9
+timestamp 1762445335
+transform 1 0 -100 0 1 5040
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_10
+timestamp 1762445335
+transform 1 0 -100 0 1 4200
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_11
+timestamp 1762445335
+transform 1 0 -100 0 1 10080
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_12
+timestamp 1762445335
+transform 1 0 -100 0 1 9240
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_13
+timestamp 1762445335
+transform 1 0 -100 0 1 10920
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_14
+timestamp 1762445335
+transform 1 0 -100 0 1 11760
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_15
+timestamp 1762445335
+transform 1 0 -100 0 1 13440
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_16
+timestamp 1762445335
+transform 1 0 -100 0 1 12600
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_17
+timestamp 1762445335
+transform 1 0 -100 0 1 14280
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_18
+timestamp 1762445335
+transform 1 0 -100 0 1 15120
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_19
+timestamp 1762445335
+transform 1 0 -100 0 1 16800
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_20
+timestamp 1762445335
+transform 1 0 -100 0 1 15960
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_21
+timestamp 1762445335
+transform 1 0 -100 0 1 17640
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_22
+timestamp 1762445335
+transform 1 0 -100 0 1 18480
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_23
+timestamp 1762445335
+transform 1 0 -100 0 1 20160
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_24
+timestamp 1762445335
+transform 1 0 -100 0 1 19320
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_25
+timestamp 1762445335
+transform 1 0 -100 0 1 21000
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_26
+timestamp 1762445335
+transform 1 0 -100 0 1 21840
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_27
+timestamp 1762445335
+transform 1 0 -100 0 1 23520
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_28
+timestamp 1762445335
+transform 1 0 -100 0 1 22680
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_29
+timestamp 1762445335
+transform 1 0 -100 0 1 24360
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_30
+timestamp 1762445335
+transform 1 0 -100 0 1 25200
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_31
+timestamp 1762445335
+transform 1 0 -100 0 1 26880
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_32
+timestamp 1762445335
+transform 1 0 -100 0 1 26040
+box -19 -41 19 41
+use M1_POLY24310591302019_512x8m81  M1_POLY24310591302019_512x8m81_33
+timestamp 1762445335
+transform 1 0 -100 0 1 27654
+box -19 -41 19 41
+use M1_PSUB$$46274604_512x8m81  M1_PSUB$$46274604_512x8m81_0
+timestamp 1762445335
+transform 1 0 10783 0 1 -7754
+box -111 -38 111 38
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_0
+timestamp 1762445335
+transform 1 0 11019 0 -1 7559
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_1
+timestamp 1762445335
+transform 1 0 11019 0 -1 5879
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_2
+timestamp 1762445335
+transform 1 0 11019 0 -1 4199
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_3
+timestamp 1762445335
+transform 1 0 11019 0 -1 2519
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_4
+timestamp 1762445335
+transform 1 0 11019 0 -1 839
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_5
+timestamp 1762445335
+transform 1 0 11019 0 -1 5040
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_6
+timestamp 1762445335
+transform 1 0 11019 0 -1 1680
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_7
+timestamp 1762445335
+transform 1 0 11019 0 -1 123
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_8
+timestamp 1762445335
+transform 1 0 11019 0 -1 6720
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_9
+timestamp 1762445335
+transform 1 0 11019 0 -1 3360
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_10
+timestamp 1762445335
+transform 1 0 11019 0 -1 15119
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_11
+timestamp 1762445335
+transform 1 0 11019 0 -1 14279
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_12
+timestamp 1762445335
+transform 1 0 11019 0 -1 12599
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_13
+timestamp 1762445335
+transform 1 0 11019 0 -1 10919
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_14
+timestamp 1762445335
+transform 1 0 11019 0 -1 9239
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_15
+timestamp 1762445335
+transform 1 0 11019 0 -1 11760
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_16
+timestamp 1762445335
+transform 1 0 11019 0 -1 13439
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_17
+timestamp 1762445335
+transform 1 0 11019 0 -1 17639
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_18
+timestamp 1762445335
+transform 1 0 11019 0 -1 10080
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_19
+timestamp 1762445335
+transform 1 0 11019 0 -1 16799
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_20
+timestamp 1762445335
+transform 1 0 11019 0 -1 15959
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_21
+timestamp 1762445335
+transform 1 0 11019 0 -1 26039
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_22
+timestamp 1762445335
+transform 1 0 11019 0 -1 25199
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_23
+timestamp 1762445335
+transform 1 0 11019 0 -1 24359
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_24
+timestamp 1762445335
+transform 1 0 11019 0 -1 23519
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_25
+timestamp 1762445335
+transform 1 0 11019 0 -1 22679
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_26
+timestamp 1762445335
+transform 1 0 11019 0 -1 21839
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_27
+timestamp 1762445335
+transform 1 0 11019 0 -1 20999
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_28
+timestamp 1762445335
+transform 1 0 11019 0 -1 20159
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_29
+timestamp 1762445335
+transform 1 0 11019 0 -1 19319
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_30
+timestamp 1762445335
+transform 1 0 11019 0 -1 18479
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_31
+timestamp 1762445335
+transform 1 0 11019 0 -1 27596
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_32
+timestamp 1762445335
+transform 1 0 11019 0 -1 26879
+box -28 -81 28 81
+use M2_M1$$43375660_512x8m81  M2_M1$$43375660_512x8m81_33
+timestamp 1762445335
+transform 1 0 11019 0 -1 8400
+box -28 -81 28 81
+use M2_M1$$47117356_512x8m81  M2_M1$$47117356_512x8m81_0
+timestamp 1762445335
+transform 1 0 10786 0 1 -9458
+box -30 -1249 30 1249
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_0
+timestamp 1762445335
+transform 1 0 -100 0 1 840
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_1
+timestamp 1762445335
+transform 1 0 -100 0 1 1680
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_2
+timestamp 1762445335
+transform 1 0 -100 0 1 2520
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_3
+timestamp 1762445335
+transform 1 0 -100 0 1 3360
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_4
+timestamp 1762445335
+transform 1 0 -100 0 1 4200
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_5
+timestamp 1762445335
+transform 1 0 -100 0 1 5040
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_6
+timestamp 1762445335
+transform 1 0 -100 0 1 5880
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_7
+timestamp 1762445335
+transform 1 0 -100 0 1 6720
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_8
+timestamp 1762445335
+transform 1 0 -100 0 1 7560
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_9
+timestamp 1762445335
+transform 1 0 -100 0 1 8400
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_10
+timestamp 1762445335
+transform 1 0 -100 0 1 17640
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_11
+timestamp 1762445335
+transform 1 0 -100 0 1 16800
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_12
+timestamp 1762445335
+transform 1 0 -100 0 1 15960
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_13
+timestamp 1762445335
+transform 1 0 -100 0 1 15120
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_14
+timestamp 1762445335
+transform 1 0 -100 0 1 14280
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_15
+timestamp 1762445335
+transform 1 0 -100 0 1 13440
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_16
+timestamp 1762445335
+transform 1 0 -100 0 1 12600
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_17
+timestamp 1762445335
+transform 1 0 -100 0 1 11760
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_18
+timestamp 1762445335
+transform 1 0 -100 0 1 9240
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_19
+timestamp 1762445335
+transform 1 0 -100 0 1 10080
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_20
+timestamp 1762445335
+transform 1 0 -102 0 1 10920
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_21
+timestamp 1762445335
+transform 1 0 -100 0 1 26879
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_22
+timestamp 1762445335
+transform 1 0 -100 0 1 26040
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_23
+timestamp 1762445335
+transform 1 0 -100 0 1 25200
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_24
+timestamp 1762445335
+transform 1 0 -100 0 1 24360
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_25
+timestamp 1762445335
+transform 1 0 -100 0 1 23519
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_26
+timestamp 1762445335
+transform 1 0 -100 0 1 22680
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_27
+timestamp 1762445335
+transform 1 0 -100 0 1 21840
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_28
+timestamp 1762445335
+transform 1 0 -100 0 1 21000
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_29
+timestamp 1762445335
+transform 1 0 -100 0 1 20160
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_30
+timestamp 1762445335
+transform 1 0 -100 0 1 19320
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_31
+timestamp 1762445335
+transform 1 0 -100 0 1 18480
+box -17 -66 17 66
+use M2_M14310591302018_512x8m81  M2_M14310591302018_512x8m81_32
+timestamp 1762445335
+transform 1 0 -100 0 1 27625
+box -17 -66 17 66
+use M3_M24310591302029_512x8m81  M3_M24310591302029_512x8m81_0
+timestamp 1762445335
+transform 0 -1 -100 1 0 -1
+box -17 -66 17 66
+use nmos_5p04310591302096_512x8m81  nmos_5p04310591302096_512x8m81_0
+timestamp 1762445335
+transform 1 0 10705 0 1 -9054
+box -41 -20 201 813
+use nmos_5p04310591302098_512x8m81  nmos_5p04310591302098_512x8m81_0
+timestamp 1762445335
+transform 1 0 10703 0 1 -7615
+box -41 -20 201 149
+use pmos_5p04310591302095_512x8m81  pmos_5p04310591302095_512x8m81_0
+timestamp 1762445335
+transform 1 0 10703 0 1 -7344
+box -97 -56 257 383
+use pmos_5p04310591302097_512x8m81  pmos_5p04310591302097_512x8m81_0
+timestamp 1762445335
+transform 1 0 10705 0 -1 -9185
+box -97 -56 257 1049
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_0
+timestamp 1762445335
+transform 1 0 10865 0 1 -8608
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_1
+timestamp 1762445335
+transform 1 0 10866 0 1 -7219
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_2
+timestamp 1762445335
+transform 1 0 10867 0 1 -10685
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_3
+timestamp 1762445335
+transform 1 0 10661 0 1 -10598
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_4
+timestamp 1762445335
+transform 1 0 10659 0 1 -8357
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_5
+timestamp 1762445335
+transform 1 0 10659 0 1 -8890
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_6
+timestamp 1762445335
+transform 1 0 10657 0 1 -7219
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_7
+timestamp 1762445335
+transform 1 0 10867 0 1 -10598
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_8
+timestamp 1762445335
+transform 1 0 10659 0 1 -8608
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_9
+timestamp 1762445335
+transform 1 0 10661 0 1 -10685
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_10
+timestamp 1762445335
+transform 1 0 10865 0 1 -8357
+box 0 0 43 143
+use via1_2_x2_512x8m81_0  via1_2_x2_512x8m81_0_11
+timestamp 1762445335
+transform 1 0 10865 0 1 -8890
+box 0 0 43 143
+use via1_2_x2_R90_512x8m81_0  via1_2_x2_R90_512x8m81_0_0
+timestamp 1762445335
+transform 0 -1 10820 1 0 -6846
+box 0 0 43 143
+use via1_2_x2_R270_512x8m81_0  via1_2_x2_R270_512x8m81_0_0
+timestamp 1762445335
+transform 0 1 10637 -1 0 -5600
+box 0 0 44 143
+use ypass_gate_512x8m81_0  ypass_gate_512x8m81_0_0
+timestamp 1762445335
+transform -1 0 10917 0 1 -6275
+box -103 0 434 5772
+<< labels >>
+rlabel metal2 s 420 410 420 410 4 VDD
+rlabel metal3 s 10670 848 10670 848 4 VSS
+rlabel metal3 s 249 848 249 848 4 VSS
+rlabel metal3 s 10670 416 10670 416 4 VDD
+rlabel metal3 s 249 416 249 416 4 VDD
+rlabel metal3 s 249 13856 249 13856 4 VDD
+rlabel metal3 s 75 27506 75 27506 4 DWL
+rlabel metal3 s 249 14288 249 14288 4 VSS
+rlabel metal3 s 10519 -9886 10519 -9886 4 vdd
+port 1 nsew
+rlabel metal3 s 10519 -6861 10519 -6861 4 vdd
+port 1 nsew
+rlabel metal3 s 10567 -6142 10567 -6142 4 vss
+port 2 nsew
+rlabel metal3 s 10519 -5617 10519 -5617 4 vdd
+port 1 nsew
+rlabel metal3 s 10519 -3134 10519 -3134 4 vss
+port 2 nsew
+rlabel metal3 s 10519 -595 10519 -595 4 vdd
+port 1 nsew
+rlabel metal1 s 10792 -11784 10792 -11784 4 tblhl
+port 3 nsew
+rlabel metal1 s 10751 -7749 10751 -7749 4 vss
+port 2 nsew
+rlabel metal1 s 10750 -1458 10750 -1458 4 pcb
+port 4 nsew
+rlabel metal1 s 10750 -1458 10750 -1458 4 pcb
+port 4 nsew
+<< end >>

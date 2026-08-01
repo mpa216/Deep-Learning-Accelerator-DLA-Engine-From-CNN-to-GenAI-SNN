@@ -1,0 +1,374 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445605
+<< nwell >>
+rect 626 11137 10577 13593
+rect 567 8123 10411 9315
+rect 10424 8122 10698 9315
+rect 10652 6685 11126 7427
+rect 10677 3915 10735 4284
+<< metal1 >>
+rect 525 13895 601 14077
+rect 3045 13895 3121 14077
+rect 5565 13895 5641 14077
+rect 8085 13895 8161 14077
+rect 10605 13948 10681 14077
+rect 10514 13869 11589 13948
+rect 10389 12614 10692 12649
+rect 10829 8613 10990 9248
+<< metal2 >>
+rect 455 13753 502 14551
+rect 623 12845 670 14551
+rect 5495 13774 5542 14551
+rect 5663 12845 5710 14551
+rect 10535 12845 10582 14551
+rect 10703 12845 10750 14551
+<< metal3 >>
+rect 0 41769 11051 41863
+rect 0 14250 11051 14418
+rect 24 14064 11051 14130
+rect 0 13774 11240 13998
+rect 373 12738 11240 13582
+rect 613 9841 10850 9941
+rect 613 9691 10850 9792
+rect 613 9541 10850 9641
+rect 613 9391 10850 9491
+rect 613 9068 10850 9169
+rect 613 8918 10850 9018
+rect 613 8768 10850 8868
+rect 613 8617 10850 8718
+rect 613 8361 10850 8568
+rect 613 7843 10850 8056
+rect 613 6064 10850 7336
+rect 613 4343 10850 5931
+rect 588 3939 11064 4273
+rect 588 3274 11427 3652
+rect 613 2405 11186 3021
+rect 543 2297 10531 2338
+rect 543 2175 11008 2220
+rect 613 1462 11277 2097
+rect 613 915 11328 1202
+rect 613 600 10850 865
+rect 613 348 11241 550
+rect 613 72 11437 284
+rect 595 -447 11480 -235
+rect 595 -746 10850 -581
+rect 595 -952 10850 -911
+rect 595 -1174 10850 -1010
+rect 595 -1512 10850 -1300
+use dcap_103_novia_512x8m81  dcap_103_novia_512x8m81_0
+array 0 35 288 0 0 0
+timestamp 1762445335
+transform 1 0 134 0 1 13537
+box -94 -132 383 411
+use M2_M1$$43374636_512x8m81  M2_M1$$43374636_512x8m81_0
+timestamp 1762445335
+transform 1 0 10933 0 1 2257
+box -79 -82 79 82
+use M2_M1431059130200_512x8m81  M2_M1431059130200_512x8m81_0
+timestamp 1762445335
+transform -1 0 10708 0 -1 13902
+box -42 -17 42 17
+use M2_M1431059130200_512x8m81  M2_M1431059130200_512x8m81_1
+timestamp 1762445335
+transform -1 0 5516 0 -1 13902
+box -42 -17 42 17
+use M2_M1431059130200_512x8m81  M2_M1431059130200_512x8m81_2
+timestamp 1762445335
+transform -1 0 478 0 -1 13902
+box -42 -17 42 17
+use M3_M2$$201416748_512x8m81  M3_M2$$201416748_512x8m81_0
+timestamp 1762445335
+transform 1 0 10933 0 1 2257
+box -79 -82 79 82
+use M3_M24310591302022_512x8m81  M3_M24310591302022_512x8m81_0
+timestamp 1762445335
+transform 1 0 5686 0 1 13214
+box -17 -356 17 356
+use M3_M24310591302022_512x8m81  M3_M24310591302022_512x8m81_1
+timestamp 1762445335
+transform 1 0 10558 0 1 13214
+box -17 -356 17 356
+use M3_M24310591302022_512x8m81  M3_M24310591302022_512x8m81_2
+timestamp 1762445335
+transform 1 0 646 0 1 13214
+box -17 -356 17 356
+use M3_M24310591302023_512x8m81  M3_M24310591302023_512x8m81_0
+timestamp 1762445335
+transform 1 0 477 0 1 13888
+box -17 -110 17 110
+use M3_M24310591302023_512x8m81  M3_M24310591302023_512x8m81_1
+timestamp 1762445335
+transform 1 0 5518 0 1 13888
+box -17 -110 17 110
+use M3_M24310591302023_512x8m81  M3_M24310591302023_512x8m81_2
+timestamp 1762445335
+transform 1 0 10726 0 1 13888
+box -17 -110 17 110
+use rarray4_512_512x8m81  rarray4_512_512x8m81_0
+timestamp 1762445335
+transform 1 0 423 0 1 14516
+box -931 -31 10656 26911
+use rdummy_512x4_512x8m81  rdummy_512x4_512x8m81_0
+timestamp 1762445335
+transform 1 0 143 0 1 14096
+box -167 -11858 11245 27761
+use saout_m2_512x8m81  saout_m2_512x8m81_0
+timestamp 1762445605
+transform 1 0 5516 0 1 0
+box -125 -1583 3562 14532
+use saout_m2_512x8m81  saout_m2_512x8m81_1
+timestamp 1762445605
+transform 1 0 476 0 1 0
+box -125 -1583 3562 14532
+use saout_R_m2_512x8m81  saout_R_m2_512x8m81_0
+timestamp 1762445605
+transform -1 0 5690 0 1 2
+box -125 -1586 3562 14528
+use saout_R_m2_512x8m81  saout_R_m2_512x8m81_1
+timestamp 1762445605
+transform -1 0 10730 0 1 2
+box -125 -1586 3562 14528
+<< labels >>
+rlabel metal3 s 742 28170 742 28170 4 WL[32]
+port 1 nsew
+rlabel metal3 s 742 28590 742 28590 4 WL[33]
+port 2 nsew
+rlabel metal3 s 742 29010 742 29010 4 WL[34]
+port 3 nsew
+rlabel metal3 s 742 29430 742 29430 4 WL[35]
+port 4 nsew
+rlabel metal3 s 742 29850 742 29850 4 WL[36]
+port 5 nsew
+rlabel metal3 s 742 30270 742 30270 4 WL[37]
+port 6 nsew
+rlabel metal3 s 742 32370 742 32370 4 WL[42]
+port 7 nsew
+rlabel metal3 s 742 33210 742 33210 4 WL[44]
+port 8 nsew
+rlabel metal3 s 742 34050 742 34050 4 WL[46]
+port 9 nsew
+rlabel metal3 s 742 34890 742 34890 4 WL[48]
+port 10 nsew
+rlabel metal3 s 742 35730 742 35730 4 WL[50]
+port 11 nsew
+rlabel metal3 s 742 36570 742 36570 4 WL[52]
+port 12 nsew
+rlabel metal3 s 742 37410 742 37410 4 WL[54]
+port 13 nsew
+rlabel metal3 s 742 38250 742 38250 4 WL[56]
+port 14 nsew
+rlabel metal3 s 742 38670 742 38670 4 WL[57]
+port 15 nsew
+rlabel metal3 s 742 39510 742 39510 4 WL[59]
+port 16 nsew
+rlabel metal3 s 742 41606 742 41606 4 DWL
+port 17 nsew
+rlabel metal3 s 829 41867 829 41867 4 VSS
+port 18 nsew
+rlabel metal3 s 742 40350 742 40350 4 WL[61]
+port 19 nsew
+rlabel metal3 s 742 36150 742 36150 4 WL[51]
+port 20 nsew
+rlabel metal3 s 750 26911 750 26911 4 WL[29]
+port 21 nsew
+rlabel metal3 s 750 25231 750 25231 4 WL[25]
+port 22 nsew
+rlabel metal3 s 750 24811 750 24811 4 WL[24]
+port 23 nsew
+rlabel metal3 s 750 24391 750 24391 4 WL[23]
+port 24 nsew
+rlabel metal3 s 750 23971 750 23971 4 WL[22]
+port 25 nsew
+rlabel metal3 s 750 23131 750 23131 4 WL[20]
+port 26 nsew
+rlabel metal3 s 750 26071 750 26071 4 WL[27]
+port 27 nsew
+rlabel metal3 s 750 27331 750 27331 4 WL[30]
+port 28 nsew
+rlabel metal3 s 750 22291 750 22291 4 WL[18]
+port 29 nsew
+rlabel metal3 s 742 31950 742 31950 4 WL[41]
+port 30 nsew
+rlabel metal3 s 750 21031 750 21031 4 WL[15]
+port 31 nsew
+rlabel metal3 s 742 30690 742 30690 4 WL[38]
+port 32 nsew
+rlabel metal3 s 742 33630 742 33630 4 WL[45]
+port 33 nsew
+rlabel metal3 s 742 32790 742 32790 4 WL[43]
+port 34 nsew
+rlabel metal3 s 742 31530 742 31530 4 WL[40]
+port 35 nsew
+rlabel metal3 s 742 31110 742 31110 4 WL[39]
+port 36 nsew
+rlabel metal3 s 750 27751 750 27751 4 WL[31]
+port 37 nsew
+rlabel metal3 s 750 20611 750 20611 4 WL[14]
+port 38 nsew
+rlabel metal3 s 750 21451 750 21451 4 WL[16]
+port 39 nsew
+rlabel metal3 s 750 21871 750 21871 4 WL[17]
+port 40 nsew
+rlabel metal3 s 750 25651 750 25651 4 WL[26]
+port 41 nsew
+rlabel metal3 s 750 22711 750 22711 4 WL[19]
+port 42 nsew
+rlabel metal3 s 742 39090 742 39090 4 WL[58]
+port 43 nsew
+rlabel metal3 s 742 39930 742 39930 4 WL[60]
+port 44 nsew
+rlabel metal3 s 742 40770 742 40770 4 WL[62]
+port 45 nsew
+rlabel metal3 s 750 26491 750 26491 4 WL[28]
+port 46 nsew
+rlabel metal3 s 742 41190 742 41190 4 WL[63]
+port 47 nsew
+rlabel metal3 s 750 23551 750 23551 4 WL[21]
+port 48 nsew
+rlabel metal3 s 742 35310 742 35310 4 WL[49]
+port 49 nsew
+rlabel metal3 s 742 36990 742 36990 4 WL[53]
+port 50 nsew
+rlabel metal3 s 742 34470 742 34470 4 WL[47]
+port 51 nsew
+rlabel metal3 s 742 37830 742 37830 4 WL[55]
+port 52 nsew
+rlabel metal3 s 112 14129 112 14129 4 VSS
+port 18 nsew
+rlabel metal3 s 829 2709 829 2709 4 VSS
+port 18 nsew
+rlabel metal3 s 750 14731 750 14731 4 WL[0]
+port 53 nsew
+rlabel metal3 s 750 15571 750 15571 4 WL[2]
+port 54 nsew
+rlabel metal3 s 750 19771 750 19771 4 WL[12]
+port 55 nsew
+rlabel metal3 s 750 15991 750 15991 4 WL[3]
+port 56 nsew
+rlabel metal3 s 750 16411 750 16411 4 WL[4]
+port 57 nsew
+flabel metal3 s 774 -364 774 -364 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+rlabel metal3 s 750 17671 750 17671 4 WL[7]
+port 59 nsew
+rlabel metal3 s 750 18091 750 18091 4 WL[8]
+port 60 nsew
+rlabel metal3 s 750 18511 750 18511 4 WL[9]
+port 61 nsew
+rlabel metal3 s 750 15151 750 15151 4 WL[1]
+port 62 nsew
+rlabel metal3 s 795 9875 795 9875 4 ypass[7]
+port 63 nsew
+rlabel metal3 s 829 684 829 684 4 men
+port 64 nsew
+flabel metal3 s 774 -1095 774 -1095 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+rlabel metal3 s 828 684 828 684 4 men
+port 64 nsew
+rlabel metal3 s 749 16831 749 16831 4 WL[5]
+port 65 nsew
+flabel metal3 s 774 -674 774 -674 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+rlabel metal3 s 829 684 829 684 4 men
+port 64 nsew
+rlabel metal3 s 829 684 829 684 4 men
+port 64 nsew
+rlabel metal3 s 795 8675 795 8675 4 ypass[0]
+port 66 nsew
+rlabel metal3 s 750 18931 750 18931 4 WL[10]
+port 67 nsew
+rlabel metal3 s 750 20191 750 20191 4 WL[13]
+port 68 nsew
+rlabel metal3 s 828 684 828 684 4 men
+port 64 nsew
+rlabel metal3 s 795 8826 795 8826 4 ypass[1]
+port 69 nsew
+rlabel metal3 s 795 8974 795 8974 4 ypass[2]
+port 70 nsew
+rlabel metal3 s 795 9122 795 9122 4 ypass[3]
+port 71 nsew
+rlabel metal3 s 795 9428 795 9428 4 ypass[4]
+port 72 nsew
+rlabel metal3 s 795 9579 795 9579 4 ypass[5]
+port 73 nsew
+rlabel metal3 s 795 9727 795 9727 4 ypass[6]
+port 74 nsew
+rlabel metal3 s 827 684 827 684 4 men
+port 64 nsew
+rlabel metal3 s 749 17251 749 17251 4 WL[6]
+port 75 nsew
+rlabel metal3 s 628 2205 628 2205 4 tblhl
+port 76 nsew
+flabel metal3 s 774 -935 774 -935 0 FreeSans 466 0 0 0 GWEN
+port 77 nsew
+flabel metal3 s 774 -1408 774 -1408 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+rlabel metal3 s 628 2325 628 2325 4 GWE
+port 78 nsew
+rlabel metal3 s 829 4121 829 4121 4 VDD
+port 58 nsew
+rlabel metal3 s 750 19351 750 19351 4 WL[11]
+port 79 nsew
+flabel metal3 s 774 182 774 182 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+flabel metal3 s 774 1690 774 1690 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+flabel metal3 s 774 3545 774 3545 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+flabel metal3 s 774 6533 774 6533 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+flabel metal3 s 774 8449 774 8449 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+flabel metal3 s 774 13155 774 13155 0 FreeSans 209 0 0 0 VDD
+port 58 nsew
+flabel metal3 s 147 13884 147 13884 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+flabel metal3 s 774 10790 774 10790 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+flabel metal3 s 774 7922 774 7922 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+flabel metal3 s 774 5710 774 5710 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+flabel metal3 s 774 2872 774 2872 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+flabel metal3 s 774 1048 774 1048 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+flabel metal3 s 774 442 774 442 0 FreeSans 209 0 0 0 VSS
+port 18 nsew
+rlabel metal2 s 711 48 711 48 4 din[4]
+port 80 nsew
+rlabel metal2 s 10496 48 10496 48 4 din[7]
+port 81 nsew
+rlabel metal2 s 5061 64 5061 64 4 q[5]
+port 82 nsew
+rlabel metal2 s 6147 48 6147 48 4 q[6]
+port 83 nsew
+rlabel metal2 s 10095 48 10095 48 4 q[7]
+port 84 nsew
+rlabel metal2 s 5453 48 5453 48 4 din[5]
+port 85 nsew
+rlabel metal2 s 5751 48 5751 48 4 din[6]
+port 86 nsew
+rlabel metal2 s 1106 48 1106 48 4 q[4]
+port 87 nsew
+rlabel metal1 s 3426 7433 3426 7433 4 pcb[6]
+port 88 nsew
+rlabel metal1 s 2763 7433 2763 7433 4 pcb[7]
+port 89 nsew
+rlabel metal1 s 8497 7433 8497 7433 4 pcb[4]
+port 90 nsew
+rlabel metal1 s 852 8476 852 8476 4 vdd
+port 91 nsew
+flabel metal1 s 10483 -1554 10483 -1554 0 FreeSans 280 0 0 0 WEN[4]
+port 92 nsew
+flabel metal1 s 739 -1554 739 -1554 0 FreeSans 280 0 0 0 WEN[7]
+port 93 nsew
+rlabel metal1 s 7741 7433 7741 7433 4 pcb[5]
+port 94 nsew
+flabel metal1 s 5767 -1554 5767 -1554 0 FreeSans 280 0 0 0 WEN[5]
+port 95 nsew
+flabel metal1 s 5433 -1554 5433 -1554 0 FreeSans 280 0 0 0 WEN[6]
+port 96 nsew
+<< end >>

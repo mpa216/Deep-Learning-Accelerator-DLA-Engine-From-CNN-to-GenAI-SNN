@@ -1,0 +1,13 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+use 018SRAM_cell1_512x8m81  018SRAM_cell1_512x8m81_0
+timestamp 1762445335
+transform 1 0 0 0 -1 420
+box -31 -31 311 451
+use 018SRAM_cell1_512x8m81  018SRAM_cell1_512x8m81_1
+timestamp 1762445335
+transform 1 0 0 0 1 420
+box -31 -31 311 451
+<< end >>

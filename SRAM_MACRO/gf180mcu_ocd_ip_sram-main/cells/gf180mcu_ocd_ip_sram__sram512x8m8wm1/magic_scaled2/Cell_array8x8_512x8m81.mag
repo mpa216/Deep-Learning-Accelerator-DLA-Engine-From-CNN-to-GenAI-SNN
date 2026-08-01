@@ -1,0 +1,61 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< error_s >>
+rect 64 26900 215 26908
+rect 2584 26900 2735 26908
+rect 5104 26900 5255 26908
+rect 7624 26900 7775 26908
+rect 10144 26900 10295 26908
+rect 64 -28 215 -20
+rect 2584 -28 2735 -20
+rect 5104 -28 5255 -20
+rect 7624 -28 7775 -20
+rect 10144 -28 10295 -20
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_0
+array 0 7 280 0 31 840
+timestamp 1762445335
+transform -1 0 10080 0 1 0
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_1
+array 0 7 280 0 31 840
+timestamp 1762445335
+transform -1 0 5040 0 1 0
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_2
+array 0 7 280 0 31 840
+timestamp 1762445335
+transform 1 0 280 0 1 0
+box -31 -31 311 871
+use 018SRAM_cell1_2x_512x8m81  018SRAM_cell1_2x_512x8m81_3
+array 0 7 280 0 31 840
+timestamp 1762445335
+transform 1 0 5320 0 1 0
+box -31 -31 311 871
+use 018SRAM_strap1_2x_512x8m81  018SRAM_strap1_2x_512x8m81_0
+array 0 0 0 0 31 840
+timestamp 1762445335
+transform -1 0 7840 0 1 420
+box -31 -451 311 451
+use 018SRAM_strap1_2x_512x8m81  018SRAM_strap1_2x_512x8m81_1
+array 0 0 0 0 31 840
+timestamp 1762445335
+transform -1 0 280 0 1 420
+box -31 -451 311 451
+use 018SRAM_strap1_2x_512x8m81  018SRAM_strap1_2x_512x8m81_2
+array 0 0 0 0 31 840
+timestamp 1762445335
+transform -1 0 2800 0 1 420
+box -31 -451 311 451
+use 018SRAM_strap1_2x_512x8m81  018SRAM_strap1_2x_512x8m81_3
+array 0 0 0 0 31 840
+timestamp 1762445335
+transform -1 0 5320 0 1 420
+box -31 -451 311 451
+use 018SRAM_strap1_2x_bndry_512x8m81  018SRAM_strap1_2x_bndry_512x8m81_0
+array 0 0 0 0 31 840
+timestamp 1762445335
+transform 1 0 10080 0 1 420
+box -31 -451 311 451
+<< end >>

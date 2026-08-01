@@ -1,0 +1,132 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< nwell >>
+rect 3446 2175 3575 3535
+<< metal2 >>
+rect 456 5159 517 5222
+rect 622 5159 683 5222
+rect 1291 5159 1352 5222
+rect 1460 5159 1521 5222
+rect 1903 4676 2068 5825
+rect 2420 4803 2480 5346
+rect 3899 5159 3960 5222
+rect 4066 5159 4126 5222
+rect 4735 5159 4795 5222
+rect 4904 5159 4964 5222
+rect 5863 4803 5923 5346
+rect 6998 5263 7162 5853
+rect 6005 5093 7162 5263
+rect 6005 4676 6169 5093
+rect 7352 5004 7455 5327
+rect 7516 5004 7619 5327
+rect 8114 5004 8218 5327
+rect 8279 5004 8382 5327
+rect 8877 5004 8981 5327
+rect 9041 5004 9144 5327
+rect 9639 5004 9743 5327
+rect 9803 5004 9907 5327
+rect 10240 4676 10405 5825
+rect 10757 4803 10817 5346
+rect 2559 98 2619 161
+rect 3348 98 3409 161
+rect 6002 98 6063 161
+rect 6791 98 6852 161
+rect 10896 98 10956 161
+rect 11685 98 11745 161
+rect 12474 98 12534 161
+<< metal3 >>
+rect 21 5430 12721 5853
+rect 21 5182 10817 5346
+rect 3504 1042 3851 1360
+rect 3504 503 3851 926
+rect 3504 0 3851 423
+use M3_M2$$43368492_512x8m81  M3_M2$$43368492_512x8m81_0
+timestamp 1762445335
+transform 1 0 2450 0 1 5264
+box -29 -82 29 82
+use M3_M2$$43368492_512x8m81  M3_M2$$43368492_512x8m81_1
+timestamp 1762445335
+transform 1 0 5893 0 1 5264
+box -29 -82 29 82
+use M3_M2$$43368492_512x8m81  M3_M2$$43368492_512x8m81_2
+timestamp 1762445335
+transform 1 0 10787 0 1 5264
+box -29 -82 29 82
+use M3_M2$$47115308_512x8m81  M3_M2$$47115308_512x8m81_0
+timestamp 1762445335
+transform 1 0 1986 0 1 5642
+box -79 -183 79 183
+use M3_M2$$47115308_512x8m81  M3_M2$$47115308_512x8m81_1
+timestamp 1762445335
+transform 1 0 10322 0 1 5642
+box -79 -183 79 183
+use M3_M2$$201412652_512x8m81  M3_M2$$201412652_512x8m81_0
+timestamp 1762445335
+transform 1 0 7080 0 1 5642
+box -79 -183 79 183
+use xpredec0_512x8m81  xpredec0_512x8m81_0
+timestamp 1762445335
+transform 1 0 3595 0 1 0
+box -134 0 3479 5346
+use xpredec0_512x8m81  xpredec0_512x8m81_1
+timestamp 1762445335
+transform 1 0 151 0 1 0
+box -134 0 3479 5346
+use xpredec1_512x8m81  xpredec1_512x8m81_0
+timestamp 1762445335
+transform 1 0 7038 0 1 0
+box 0 0 5708 5119
+<< labels >>
+rlabel metal3 s 10566 5278 10566 5278 4 clk
+port 1 nsew
+rlabel metal3 s 11901 5642 11901 5642 4 men
+port 2 nsew
+rlabel metal2 s 10926 130 10926 130 4 A[2]
+port 3 nsew
+rlabel metal2 s 2589 130 2589 130 4 A[6]
+port 4 nsew
+rlabel metal2 s 6033 130 6033 130 4 A[4]
+port 5 nsew
+rlabel metal2 s 3930 5191 3930 5191 4 xb[3]
+port 6 nsew
+rlabel metal2 s 9857 5297 9857 5297 4 xa[0]
+port 7 nsew
+rlabel metal2 s 1491 5189 1491 5189 4 xc[0]
+port 8 nsew
+rlabel metal2 s 1322 5189 1322 5189 4 xc[1]
+port 9 nsew
+rlabel metal2 s 652 5191 652 5191 4 xc[2]
+port 10 nsew
+rlabel metal2 s 486 5191 486 5191 4 xc[3]
+port 11 nsew
+rlabel metal2 s 4765 5189 4765 5189 4 xb[1]
+port 12 nsew
+rlabel metal2 s 4095 5191 4095 5191 4 xb[2]
+port 13 nsew
+rlabel metal2 s 4934 5189 4934 5189 4 xb[0]
+port 14 nsew
+rlabel metal2 s 9689 5297 9689 5297 4 xa[1]
+port 15 nsew
+rlabel metal2 s 9088 5297 9088 5297 4 xa[2]
+port 16 nsew
+rlabel metal2 s 8929 5297 8929 5297 4 xa[3]
+port 17 nsew
+rlabel metal2 s 8331 5297 8331 5297 4 xa[4]
+port 18 nsew
+rlabel metal2 s 8165 5297 8165 5297 4 xa[5]
+port 19 nsew
+rlabel metal2 s 7567 5297 7567 5297 4 xa[6]
+port 20 nsew
+rlabel metal2 s 7403 5297 7403 5297 4 xa[7]
+port 21 nsew
+rlabel metal2 s 12504 130 12504 130 4 A[0]
+port 22 nsew
+rlabel metal2 s 6822 130 6822 130 4 A[3]
+port 23 nsew
+rlabel metal2 s 3378 130 3378 130 4 A[5]
+port 24 nsew
+rlabel metal2 s 11715 130 11715 130 4 A[1]
+port 25 nsew
+<< end >>

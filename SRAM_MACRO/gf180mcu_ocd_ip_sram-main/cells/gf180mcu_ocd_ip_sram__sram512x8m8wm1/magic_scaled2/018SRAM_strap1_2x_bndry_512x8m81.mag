@@ -1,0 +1,16 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< error_s >>
+rect 64 440 215 448
+rect 64 -448 215 -440
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_0
+timestamp 1762445335
+transform 1 0 0 0 -1 0
+box -31 -31 311 451
+use 018SRAM_strap1_bndry_512x8m81  018SRAM_strap1_bndry_512x8m81_1
+timestamp 1762445335
+transform 1 0 0 0 1 0
+box -31 -31 311 451
+<< end >>

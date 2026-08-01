@@ -1,0 +1,169 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< metal1 >>
+rect 9103 4832 9184 4916
+rect 9103 4669 9184 4753
+rect 10517 4609 10567 4661
+rect 10517 4158 10567 4210
+rect 9103 4066 9184 4150
+rect 9103 3904 9184 3988
+rect 9103 3572 9184 3656
+rect 9103 3409 9184 3493
+rect 10517 3349 10567 3401
+rect 10517 2898 10567 2950
+rect 9103 2806 9184 2890
+rect 9103 2644 9184 2728
+rect 9103 2312 9184 2396
+rect 9103 2149 9184 2233
+rect 10517 2089 10567 2141
+rect 10517 1638 10567 1690
+rect 9103 1546 9184 1630
+rect 9103 1384 9184 1468
+rect 9103 1052 9184 1136
+rect 9103 889 9184 973
+rect 10517 829 10567 881
+rect 10517 378 10567 430
+rect 9103 286 9184 370
+rect 9103 124 9184 208
+<< metal2 >>
+rect 4785 -14 4876 78
+<< metal3 >>
+rect 92 4993 182 5086
+rect 550 4685 613 4750
+rect 16365 4685 16427 4750
+rect 92 4363 182 4456
+rect 550 4069 613 4134
+rect 16365 4069 16427 4134
+rect 550 3423 613 3488
+rect 16365 3423 16427 3488
+rect 550 2809 613 2874
+rect 16365 2809 16427 2874
+rect 550 2163 613 2228
+rect 16365 2163 16427 2228
+rect 550 1549 613 1614
+rect 16365 1549 16427 1614
+rect 550 908 613 973
+rect 16365 908 16427 973
+rect 550 289 613 354
+use xdec_512x8m81  xdec_512x8m81_0
+timestamp 1762445335
+transform 1 0 0 0 -1 4410
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_1
+timestamp 1762445335
+transform 1 0 0 0 -1 3150
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_2
+timestamp 1762445335
+transform 1 0 0 0 -1 1890
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_3
+timestamp 1762445335
+transform 1 0 0 0 -1 630
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_4
+timestamp 1762445335
+transform 1 0 0 0 1 4410
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_5
+timestamp 1762445335
+transform 1 0 0 0 1 3150
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_6
+timestamp 1762445335
+transform 1 0 0 0 1 1890
+box 0 -156 16952 789
+use xdec_512x8m81  xdec_512x8m81_7
+timestamp 1762445335
+transform 1 0 0 0 1 630
+box 0 -156 16952 789
+<< labels >>
+rlabel metal3 s 16396 322 16396 322 4 RWL[0]
+port 1 nsew
+rlabel metal3 s 581 3456 581 3456 4 LWL[5]
+port 2 nsew
+rlabel metal3 s 581 2842 581 2842 4 LWL[4]
+port 3 nsew
+rlabel metal3 s 581 1582 581 1582 4 LWL[2]
+port 4 nsew
+rlabel metal3 s 16396 3456 16396 3456 4 RWL[5]
+port 5 nsew
+rlabel metal3 s 16396 2842 16396 2842 4 RWL[4]
+port 6 nsew
+rlabel metal3 s 16396 1582 16396 1582 4 RWL[2]
+port 7 nsew
+rlabel metal3 s 16396 940 16396 940 4 RWL[1]
+port 8 nsew
+rlabel metal3 s 16396 4718 16396 4718 4 RWL[7]
+port 9 nsew
+rlabel metal3 s 16396 4102 16396 4102 4 RWL[6]
+port 10 nsew
+rlabel metal3 s 581 940 581 940 4 LWL[1]
+port 11 nsew
+rlabel metal3 s 581 4718 581 4718 4 LWL[7]
+port 12 nsew
+rlabel metal3 s 581 4102 581 4102 4 LWL[6]
+port 13 nsew
+rlabel metal3 s 581 322 581 322 4 LWL[0]
+port 14 nsew
+rlabel metal3 s 581 2196 581 2196 4 LWL[3]
+port 15 nsew
+rlabel metal3 s 137 4410 137 4410 4 vss
+port 16 nsew
+rlabel metal3 s 137 5040 137 5040 4 vdd
+port 17 nsew
+rlabel metal3 s 16396 2196 16396 2196 4 RWL[3]
+port 18 nsew
+rlabel metal2 s 4830 31 4830 31 4 men
+port 19 nsew
+rlabel metal1 s 9144 166 9144 166 4 xc
+port 20 nsew
+rlabel metal1 s 9144 931 9144 931 4 xb
+port 21 nsew
+rlabel metal1 s 9144 2848 9144 2848 4 xb
+port 21 nsew
+rlabel metal1 s 9144 4108 9144 4108 4 xb
+port 21 nsew
+rlabel metal1 s 9144 1094 9144 1094 4 xc
+port 20 nsew
+rlabel metal1 s 9144 3946 9144 3946 4 xc
+port 20 nsew
+rlabel metal1 s 10542 2924 10542 2924 4 xa[4]
+port 22 nsew
+rlabel metal1 s 10542 2115 10542 2115 4 xa[3]
+port 23 nsew
+rlabel metal1 s 10542 3375 10542 3375 4 xa[5]
+port 24 nsew
+rlabel metal1 s 10542 4184 10542 4184 4 xa[6]
+port 25 nsew
+rlabel metal1 s 10542 4635 10542 4635 4 xa[7]
+port 26 nsew
+rlabel metal1 s 10542 404 10542 404 4 xa[0]
+port 27 nsew
+rlabel metal1 s 10542 855 10542 855 4 xa[1]
+port 28 nsew
+rlabel metal1 s 10542 1664 10542 1664 4 xa[2]
+port 29 nsew
+rlabel metal1 s 9144 328 9144 328 4 xb
+port 21 nsew
+rlabel metal1 s 9144 2686 9144 2686 4 xc
+port 20 nsew
+rlabel metal1 s 9144 1426 9144 1426 4 xc
+port 20 nsew
+rlabel metal1 s 9144 2354 9144 2354 4 xc
+port 20 nsew
+rlabel metal1 s 9144 3614 9144 3614 4 xc
+port 20 nsew
+rlabel metal1 s 9144 4874 9144 4874 4 xc
+port 20 nsew
+rlabel metal1 s 9144 2191 9144 2191 4 xb
+port 21 nsew
+rlabel metal1 s 9144 3451 9144 3451 4 xb
+port 21 nsew
+rlabel metal1 s 9144 4711 9144 4711 4 xb
+port 21 nsew
+rlabel metal1 s 9144 1588 9144 1588 4 xb
+port 21 nsew
+<< end >>

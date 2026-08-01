@@ -1,0 +1,42 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< nwell >>
+rect -145 -84 285 210
+<< pmos >>
+rect 0 0 140 126
+<< pdiff >>
+rect -61 116 0 126
+rect -61 84 -52 116
+rect -20 84 0 116
+rect -61 41 0 84
+rect -61 9 -52 41
+rect -20 9 0 41
+rect -61 0 0 9
+rect 140 116 201 126
+rect 140 84 160 116
+rect 192 84 201 116
+rect 140 41 201 84
+rect 140 9 160 41
+rect 192 9 201 41
+rect 140 0 201 9
+<< pdiffc >>
+rect -52 84 -20 116
+rect -52 9 -20 41
+rect 160 84 192 116
+rect 160 9 192 41
+<< polysilicon >>
+rect 0 126 140 156
+rect 0 -30 140 0
+<< metal1 >>
+rect -52 116 -20 126
+rect -52 41 -20 84
+rect -52 0 -20 9
+rect 160 116 192 126
+rect 160 41 192 84
+rect 160 0 192 9
+<< labels >>
+flabel metal1 -36 63 -36 63 0 FreeSans 280 0 0 0 S
+flabel metal1 176 63 176 63 0 FreeSans 280 0 0 0 D
+<< end >>

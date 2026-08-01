@@ -1,0 +1,42 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1781658053
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_2
+timestamp 1764626446
+transform -1 0 668 0 1 716
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_3
+timestamp 1764626446
+transform -1 0 668 0 1 3140
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_4
+timestamp 1764626446
+transform -1 0 668 0 1 4352
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_31
+timestamp 1764626446
+transform -1 0 668 0 1 1928
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_60
+timestamp 1764626446
+transform -1 0 668 0 -1 4604
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_61
+timestamp 1764626446
+transform -1 0 668 0 -1 3392
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_62
+timestamp 1764626446
+transform -1 0 668 0 -1 968
+box 30 89 570 797
+use 018SRAM_cell1_cutPC_3v64x8m81  018SRAM_cell1_cutPC_3v64x8m81_63
+timestamp 1764626446
+transform -1 0 668 0 -1 2180
+box 30 89 570 797
+<< labels >>
+rlabel metal1 s 570 983 570 983 4 VSS
+rlabel metal1 s 567 232 567 232 4 VDD
+rlabel metal1 s 572 5079 572 5079 4 VDD
+rlabel metal1 s 570 5553 570 5553 4 VSS
+<< end >>

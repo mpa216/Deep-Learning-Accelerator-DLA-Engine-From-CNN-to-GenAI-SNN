@@ -36,6 +36,7 @@ stage2_padring/gf180mcu/
 # over GitHub limits) and recompile in seconds -- see "Post-layout simulation" in docs
 sim/results/dla_engine_top_gls_tb.vvp
 sim/results/g300_pipeline_gls_tb.vvp
+sim/results/gan_gls_b4.vvp
 
 # LaTeX build artifacts (paper sources + PDFs are tracked; intermediates are not)
 APIC_Paper/*.aux

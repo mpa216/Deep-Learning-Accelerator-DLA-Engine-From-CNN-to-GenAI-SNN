@@ -1,0 +1,98 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1781658053
+<< metal1 >>
+rect -614 20863 -450 21173
+rect -661 20744 448 20863
+rect 3294 20818 3458 21167
+rect 7202 20817 7366 21166
+rect 11110 20817 11274 21166
+rect 15016 20815 15180 21164
+rect -284 -468 -50 -416
+rect 6850 -470 7084 -418
+rect 7482 -468 7716 -416
+rect 14616 -470 14850 -418
+<< metal2 >>
+rect -575 15667 -513 20968
+rect -273 1791 -208 1991
+rect 345 1786 411 1986
+rect 6399 1909 6465 2109
+rect 7011 1909 7076 2109
+rect 7493 1791 7558 1991
+rect 8111 1786 8177 1986
+rect 14165 1909 14231 2109
+rect 14777 1909 14842 2109
+<< metal3 >>
+rect 0 20799 448 20892
+use col_64a_3v64x8m81  col_64a_3v64x8m81_0
+timestamp 1781658053
+transform 1 0 -9 0 1 -1003
+box -821 525 15976 28055
+use dcap_103_novia_3v64x8m81  dcap_103_novia_3v64x8m81_0
+array 0 35 452 0 0 553
+timestamp 1765833244
+transform 1 0 -578 0 1 20402
+box -205 -132 492 420
+use ldummy_3v64x4_3v64x8m81  ldummy_3v64x4_3v64x8m81_0
+timestamp 1781658053
+transform 1 0 -6435 0 1 20894
+box 5692 172 22363 6465
+use via2_x2_3v64x8m81  via2_x2_3v64x8m81_0
+timestamp 1765833244
+transform 1 0 -578 0 1 20152
+box -9 0 74 222
+<< labels >>
+rlabel metal3 s 490 27137 490 27137 4 WL[8]
+port 50 nsew
+rlabel metal3 s 490 26507 490 26507 4 WL[7]
+port 51 nsew
+rlabel metal3 s 490 25877 490 25877 4 WL[6]
+port 52 nsew
+rlabel metal3 s 490 25247 490 25247 4 WL[5]
+port 53 nsew
+rlabel metal3 s 490 24617 490 24617 4 WL[4]
+port 54 nsew
+rlabel metal3 s 490 23987 490 23987 4 WL[3]
+port 55 nsew
+rlabel metal3 s 490 23357 490 23357 4 WL[2]
+port 56 nsew
+rlabel metal3 s 490 22727 490 22727 4 WL[1]
+port 57 nsew
+rlabel metal3 s 490 22097 490 22097 4 WL[0]
+port 58 nsew
+flabel metal1 s -565 21774 -565 21774 0 FreeSans 257 0 0 0 VDD
+port 74 nsew
+flabel metal1 s 6981 -445 6981 -445 0 FreeSans 420 0 0 0 WEN[2]
+port 92 nsew
+flabel metal1 s 7540 -445 7540 -445 0 FreeSans 420 0 0 0 WEN[1]
+port 93 nsew
+flabel metal1 s -216 -443 -216 -443 0 FreeSans 420 0 0 0 WEN[3]
+port 91 nsew
+flabel metal1 s 14769 -441 14769 -441 0 FreeSans 420 0 0 0 WEN[0]
+port 94 nsew
+rlabel metal2 s 6427 1932 6427 1932 4 q[1]
+port 83 nsew
+rlabel metal2 s 7056 1922 7056 1922 4 din[1]
+port 79 nsew
+rlabel metal2 s 7522 1832 7522 1832 4 din[2]
+port 81 nsew
+rlabel metal2 s 8153 1882 8153 1882 4 q[2]
+port 84 nsew
+rlabel metal2 s 14185 1932 14185 1932 4 q[3]
+port 85 nsew
+rlabel metal2 s 14810 1932 14810 1932 4 din[3]
+port 80 nsew
+rlabel metal2 s -240 1830 -240 1830 4 din[0]
+port 95 se
+rlabel metal2 s 380 1880 380 1880 4 q[0]
+port 96 se
+rlabel metal1 s 2242 11789 2242 11789 4 pcb[3]
+port 87 nsew
+rlabel metal1 s 4553 11789 4553 11789 4 pcb[2]
+port 86 nsew
+rlabel metal1 s 10008 11789 10008 11789 4 pcb[1]
+port 89 nsew
+rlabel metal1 s 12317 11809 12317 11809 4 pcb[0]
+port 88 nsew
+<< end >>

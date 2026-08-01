@@ -1,0 +1,104 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1762445335
+<< nmos >>
+rect 0 0 84 159
+rect 156 0 240 159
+rect 313 0 397 159
+rect 470 0 554 159
+rect 627 0 711 159
+<< ndiff >>
+rect -61 150 0 159
+rect -61 118 -52 150
+rect -20 118 0 150
+rect -61 41 0 118
+rect -61 9 -52 41
+rect -20 9 0 41
+rect -61 0 0 9
+rect 84 150 156 159
+rect 84 118 104 150
+rect 136 118 156 150
+rect 84 41 156 118
+rect 84 9 104 41
+rect 136 9 156 41
+rect 84 0 156 9
+rect 240 150 313 159
+rect 240 118 261 150
+rect 293 118 313 150
+rect 240 41 313 118
+rect 240 9 261 41
+rect 293 9 313 41
+rect 240 0 313 9
+rect 397 150 470 159
+rect 397 118 417 150
+rect 450 118 470 150
+rect 397 41 470 118
+rect 397 9 417 41
+rect 450 9 470 41
+rect 397 0 470 9
+rect 554 150 627 159
+rect 554 118 574 150
+rect 606 118 627 150
+rect 554 41 627 118
+rect 554 9 574 41
+rect 606 9 627 41
+rect 554 0 627 9
+rect 711 150 772 159
+rect 711 118 731 150
+rect 763 118 772 150
+rect 711 41 772 118
+rect 711 9 731 41
+rect 763 9 772 41
+rect 711 0 772 9
+<< ndiffc >>
+rect -52 118 -20 150
+rect -52 9 -20 41
+rect 104 118 136 150
+rect 104 9 136 41
+rect 261 118 293 150
+rect 261 9 293 41
+rect 417 118 450 150
+rect 417 9 450 41
+rect 574 118 606 150
+rect 574 9 606 41
+rect 731 118 763 150
+rect 731 9 763 41
+<< polysilicon >>
+rect 0 159 84 190
+rect 156 159 240 190
+rect 313 159 397 190
+rect 470 159 554 190
+rect 627 159 711 190
+rect 0 -30 84 0
+rect 156 -30 240 0
+rect 313 -30 397 0
+rect 470 -30 554 0
+rect 627 -30 711 0
+<< metal1 >>
+rect -52 150 -20 159
+rect -52 41 -20 118
+rect -52 0 -20 9
+rect 104 150 136 159
+rect 104 41 136 118
+rect 104 0 136 9
+rect 261 150 293 159
+rect 261 41 293 118
+rect 261 0 293 9
+rect 417 150 450 159
+rect 417 41 450 118
+rect 417 0 450 9
+rect 574 150 606 159
+rect 574 41 606 118
+rect 574 0 606 9
+rect 731 150 763 159
+rect 731 41 763 118
+rect 731 0 763 9
+<< labels >>
+flabel metal1 -36 79 -36 79 0 FreeSans 140 0 0 0 S
+flabel metal1 747 79 747 79 0 FreeSans 140 0 0 0 D
+flabel metal1 120 79 120 79 0 FreeSans 140 0 0 0 D
+flabel metal1 277 79 277 79 0 FreeSans 140 0 0 0 S
+flabel metal1 434 79 434 79 0 FreeSans 140 0 0 0 D
+flabel metal1 590 79 590 79 0 FreeSans 140 0 0 0 S
+<< end >>
