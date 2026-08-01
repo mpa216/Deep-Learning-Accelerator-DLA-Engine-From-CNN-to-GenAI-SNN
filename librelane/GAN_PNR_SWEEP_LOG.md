@@ -26,16 +26,13 @@ trend monotonically. Any netlist change (including the clock period) re-rolls it
 | 2 | `gan_40ns_d60` | **40 ns** | 60 | **2 / 2** (3.24× B-SRAM Metal3; 1.08× net1630 Metal2) | +12.73 ns | +0.125 ns | 0 | 0 | retime lands; antenna got *worse* |
 | 3 | `gan_40ns_d62` | 40 ns | 62 | **5 / 5** (2.64× `_17510_` Metal3 + 4 more) | +12.86 ns | +0.122 ns | 0 | 0 | density re-roll; clearly worse |
 | 4 | `gan_40ns_d58` | 40 ns | 58 | **3 / 3** (1.41/1.24/1.10×, all Metal3) | +12.32 ns | +0.121 ns | 0 | 0 | all violations now marginal; no SRAM net |
-| 5 | `gan_40ns_d59` | 40 ns | 59 | **2 / 2** (2.76× ACT-SRAM `gwen`; 1.04× net2593) | +11.88 ns | +0.133 ns | 0 | (see note) | ties d60; best hold of the 40 ns runs |
+| 5 | `gan_40ns_d59` | 40 ns | 59 | **2 / 2** (2.76× ACT-SRAM `gwen`; 1.04× net2593) | +11.88 ns | +0.133 ns | 0 | 0 | ties d60; best hold of the 40 ns runs |
 
 *(rows appended as runs complete)*
 
-> Run 5 was committed while its `Netgen.LVS` step was still running, at the user's request to
-> stop and commit. Everything up to and including Magic DRC had completed clean (DRC 0, XOR 0,
-> routing DRC 0, illegal overlap clear) and LVS had already matched device and net counts
-> (29,215 nets on both sides) — but the `Circuits match uniquely` verdict is **not** recorded
-> here. Confirm it from `librelane/runs/gan_40ns_d59/final/metrics.json`
-> (`design__lvs_error__count`) before treating run 5 as signed off.
+> Run 5's LVS was still running when the sweep was committed; it finished afterwards with
+> **"Circuits match uniquely", `design__lvs_error__count` = 0**, confirming the row above.
+> Run 5 is a complete signoff: Magic DRC 0, LVS 0, XOR 0, routing DRC 0.
 
 ---
 
