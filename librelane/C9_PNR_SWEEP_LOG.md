@@ -22,8 +22,10 @@ antenna 0/0, setup +15.12 ns, hold +0.150 ns, 161 mW.
 | 4 | `c9_sq_d56` | 1400x1350 | 56 | 52.9% | 1 / 1 | 1.09x Metal3 `net896` — marginal | +16.02 | +0.120 | 81,981 |
 | 5 | `c9_sq_d54` | 1400x1350 | 54 | 52.9% | 1 / 1 | 1.10x Metal2 `net440` — marginal | +16.22 | +0.106 | 82,830 |
 | 6 | `c9_sq_d51` | 1400x1350 | 51 | 52.9% | 4 / 4 | 1.49x Metal3 `…GEN_B_COLS[1].sram_q_raw[7]` + 3 more, worst structural again | +15.84 | +0.121 | 83,383 |
-| 7 | `c9_swapB1_d56` | 1400x1350 | 56 | | | B_COLS[1] <-> C swap | | | |
-| 8 | `c9_marg50_d56` | 1400x1350 | 56 | | | GRT repair margin 25 -> 50 | | | |
+| **7** | **`c9_swapB1_d56`** | 1400x1350 | 56 | 52.9% | **0 / 0** ✅ | B_COLS[1] <-> C swap | **+16.46** | +0.118 | 81,847 |
+| 8 | `c9_marg50_d56` | 1400x1350 | 56 | 52.9% | **0 / 0** ✅ | GRT repair margin 25 -> 50 | +16.11 | +0.119 | 81,992 |
+| 9 | `c9_confirm_d56` | 1400x1350 | 56 | 52.9% | **0 / 0** ✅ | re-run of promoted config | +16.46 | +0.118 | 81,847 |
+| 10 | `c9_swap_d54` | 1400x1350 | 54 | 52.9% | **0 / 0** ✅ | swap, robustness at another density | +16.56 | +0.118 | 82,330 |
 
 Magic DRC 0, LVS 0, XOR 0 and 9 macros on every completed run.
 
@@ -98,3 +100,59 @@ Timing is untroubled throughout: setup stays +15.66 to +16.44 ns and hold +0.111
 +0.120 ns across the whole sweep, all comfortably past the 11-macro baseline's
 +15.12 ns. Instance count barely moves (80,467 - 81,981), so nothing here is
 buying antennas with gates.
+
+
+## Resolution — antenna 0/0, and it is the placement that did it
+
+`c9_swapB1_d56` is the deliverable: **antenna 0 nets / 0 pins**, Magic DRC 0,
+LVS 0, XOR 0, 9 macros, setup **+16.46 ns** / hold **+0.118 ns** at the worst of
+9 corners @ 40 ns, 133 mW, on a **1400x1350 = 1,890,000 um2** die.
+
+`config.yaml` is promoted to it (`PL_TARGET_DENSITY_PCT: 56` plus the swapped
+macro coordinates) and **reproduces it**: re-run untouched as `c9_confirm_d56`,
+the final DEF is byte-identical (21,620,402 B) and every metric matches to the
+last decimal.
+
+### Against the signed-off 11-macro chip (`as3v3_k256_d63`)
+
+| | 11-macro | 9-macro 3x3 | |
+|---|---|---|---|
+| die | 2,400,000 um2 | **1,890,000 um2** | **-21%** |
+| macros | 11 | **9** | C: 3x256 -> 1x64 |
+| SRAM area | 745,485 um2 | **588,029 um2** | -21% |
+| instances | 93,172 | **81,847** | -12% |
+| power | 161 mW | **133 mW** | -17% |
+| setup ws | +15.12 ns | **+16.46 ns** | more margin |
+| hold ws | +0.150 ns | +0.118 ns | thinner, still positive |
+| antenna | 0 / 0 | **0 / 0** | held |
+
+### What actually closed it
+
+Density did not. Five runs across a 12-point span (63, 59, 56, 54, 51) never
+reached zero; they bottomed out in a basin at 54-56 holding one ~1.1x net, with
+both directions worse. What the sweep *did* produce was a diagnosis: every
+recurrence pointed at the same macro. `u_b_buffer…GEN_B_COLS[1]`'s `sram_q_raw`
+outputs were the 2.18x structural violator at density 63 and came back at 1.49x
+and 1.18x at 51, while its eight neighbours never violated once. It sat at
+[120, 953], the top-left corner of the 3x3 — the furthest slot from the PE array
+that its column-broadcast has to reach.
+
+Swapping it into the centre slot [545, 559] and moving C — 48 bytes, a short net,
+never a violator — out to the corner took the design to literal zero. The fix is
+robust rather than a re-roll: the same swap is **also 0/0 at density 54**
+(`c9_swap_d54`), where the unswapped floorplan sat at 1.10x. Two densities, two
+zeros.
+
+The independent confirmation is `c9_marg50_d56`, which reached 0/0 from the
+opposite direction — same floorplan, post-GRT diode repair margin raised 25 -> 50.
+Two unrelated levers converging on zero says the residual really was those B-bank
+nets and not routing noise. The swap is the one promoted, because it shortens the
+nets rather than compensating for them, and it costs nothing: +16.46 vs +16.11 ns
+setup and 145 fewer instances.
+
+**Lesson for the next design.** When a density sweep plateaus, stop sweeping and
+read the net names. A violator that survives every density is not a routing
+lottery — it is a placement error, and the sweep's real output is its identity.
+This is the same shape as the earlier finding that direction mattered more than
+value, one level deeper: here neither direction nor value helped, and only the
+floorplan did.

@@ -140,20 +140,20 @@ MACROS:
       #
       # --- A buffer: 4 macros (one per matrix row) ---
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
-        location: [120.0, 165.0]
+        location: [118.0, 162.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
-        location: [545.0, 165.0]
+        location: [537.0, 162.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
-        location: [970.0, 165.0]
+        location: [956.0, 162.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
-        location: [120.0, 559.0]
+        location: [118.0, 549.0]
         orientation: N
       # --- B buffer: 4 macros (one per matrix col) ---
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
-        location: [970.0, 559.0]
+        location: [956.0, 549.0]
         orientation: N
       # B_COLS[1] sits CENTRE, not in the corner: at [120,953] its sram_q_raw
       # outputs were the only recurring antenna violator of the whole sweep
@@ -161,13 +161,13 @@ MACROS:
       # whose net is short and never violated -- is what took the design to
       # literal 0.  See C9_PNR_SWEEP_LOG.md.
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
-        location: [545.0, 559.0]
+        location: [537.0, 549.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
-        location: [545.0, 953.0]
+        location: [537.0, 936.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
-        location: [970.0, 953.0]
+        location: [956.0, 936.0]
         orientation: N
       # --- C buffer moved OUT of this cell: it is now a single 64-deep macro,
       #     registered separately below. ---
@@ -195,7 +195,7 @@ MACROS:
       # grid pitch unchanged and the old y=1130 row simply has two empty slots
       # now, which is extra routing channel rather than wasted die.
       u_c_buffer.GEN_SRAM.u_sram.u_sram:
-        location: [120.0, 953.0]
+        location: [118.0, 936.0]
         orientation: N
 
 # --- Floorplan -------------------------------------------------------
@@ -208,7 +208,7 @@ MACROS:
 # DIE SIZING: 11 macros (~745k um2) + ~375k um2 std cells = ~1.12M um2 inst area.
 # 1600x1500 core ~2.40M um2 -> ~47% util (proven band; denser failed [DPL-0036]).
 FP_SIZING: absolute
-DIE_AREA: [0, 0, 1400, 1350]
+DIE_AREA: [0, 0, 1375, 1325]
 PL_TARGET_DENSITY_PCT: 56   # 9-macro/3x3 antenna-0 WIN (run c9_swapB1_d56, 2026-08-03).
 # Superseded note, kept for the trail -- 63 was the 11-macro K=256 winner:
 # LITERAL 0 net/0 pin, DRC=0, LVS=0, setup +15.12ns / hold +0.150ns (all 9 corners, best

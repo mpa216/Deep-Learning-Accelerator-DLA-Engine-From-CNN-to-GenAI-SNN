@@ -209,7 +209,7 @@ MACROS:
 # 1600x1500 core ~2.40M um2 -> ~47% util (proven band; denser failed [DPL-0036]).
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1400, 1350]
-PL_TARGET_DENSITY_PCT: 56   # 9-macro/3x3 antenna-0 WIN (run c9_swapB1_d56, 2026-08-03).
+PL_TARGET_DENSITY_PCT: 54   # 9-macro/3x3 antenna-0 WIN (run c9_swapB1_d56, 2026-08-03).
 # Superseded note, kept for the trail -- 63 was the 11-macro K=256 winner:
 # LITERAL 0 net/0 pin, DRC=0, LVS=0, setup +15.12ns / hold +0.150ns (all 9 corners, best
 # hold margin of the whole K=256 series), 11 macros. RTL was re-synthesized with
