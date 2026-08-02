@@ -1,25 +1,43 @@
-# LibreLane Classic config for the EXPERIMENTAL full-GAN engine (gan_engine_top).
+# FLOORPLAN VARIANT 2 ("the sandwich") of config_gan.yaml -- an antenna experiment.
 #
-# Sibling of config.yaml (which hardens the main-branch dla_engine_top, 11 macros,
-# 1600x1500).  This variant hardens the whole GAN -- generator + discriminator +
-# 9-segment PWL activations + BCE loss/metrics -- into ONE Stage-1 macro:
+# Identical to config_gan.yaml in every respect except WHERE THE 13 SRAM MACROS SIT.
+# Regenerate it from that file rather than editing both: only the `location:` and
+# `orientation:` lines differ.
 #
-#     13 SRAM macros = A(4x256) + B(4x256) + C(3x64)  [inside dla_engine_top]
-#                    + ACT(1x1024) + IMG(1x1024)      [activations and the digit]
+# WHY.  Six densities (58-63) never got the antenna count below 2, and the violations
+# that survive are not the marginal ~1.1x nets that a density re-roll clears on the main
+# branch.  They are >2x, they are on Metal3, and they are always on whichever macro sits
+# at an extreme of the floorplan: `GEN_B_COLS[3]` at x=1440 (3.24x, run d60) and
+# `u_act` at x=120 (2.76x, run d59).  Metal3 runs horizontally, so those are long
+# HORIZONTAL wires -- the direct consequence of spreading each bank across four columns
+# 1.6 mm wide while the logic that reads it is one compact cluster.
 #
-# The array runs up to FOUR batch lanes (CFG_BATCH): B's four columns hold four
-# independent input vectors and C's sixteen words are four neurons x four lanes, so one
-# streamed weight tile serves four images.  Weight streaming dominates run time, so this
-# is a ~4x throughput win -- and right-sizing the macros pays for it, leaving the design
-# SMALLER than the 16x 256x8 arrangement it replaces.
+# THE MOVE.  Every signal pin on these macros is on the macro's bottom edge (Metal2,
+# y = 0..3), so a macro flipped in Y (orientation FS) presents its pins on its TOP edge.
+# That allows a sandwich: four macros below a channel with pins facing UP, four above it
+# with pins facing DOWN, and the PE array placed in the channel between them.
 #
-# Run it exactly like config.yaml, from librelane/ inside the container:
-#     librelane config_gan.yaml --run-tag gan_v1
+#     y 1300-1452   C0   C1   C2                (pins down, into a 75 um channel)
+#     y 1000-1225   A2   B2   B3   A3     N     (pins down, into the shared channel)
+#     y  900-1000   <<<< shared pin channel: the PE array and its broadcast buffers >>>>
+#     y  675- 900   A0   B0   B1   A1     FS    (pins up, into the shared channel)
+#     y  100- 616   .    ACT  .    IMG          (ACT is FS: pins up, toward postproc)
 #
-# >>> NOTHING BELOW HAS BEEN THROUGH PnR YET. <<<  DIE_AREA, the macro grid,
-# PL_TARGET_DENSITY_PCT and CLOCK_PERIOD are sized from Yosys area estimates plus the
-# measured Yosys->placed scaling of the signed-off as3v3_k256_d63 run; they are a
-# reasoned starting point, not a verified floorplan.  See "FLOORPLAN SIZING" below.
+# B takes the two centre columns because it is the recurring violator; A takes the outer
+# two.  Column pitch is 341.3 um (301.3 macro + 40 um channel) rather than 440, which
+# also shrinks each bank's horizontal span 1621 -> 1324 um.  ACT moves from the top-left
+# corner (x=120, y=1250) to centre-bottom with its pins facing up, because its violating
+# net was `u_act.u_sram.gwen` -- a write enable driven from gan_postproc.  IMG is the one
+# macro that genuinely does not care: it is a host drain window, so it takes the far
+# corner.
+#
+# RISK.  This is a much larger perturbation than a density nudge, and the main branch's
+# own study found that big floorplan moves usually make antennas WORSE (clustering there
+# went 1 -> 4).  It is tried here because the cause is different and identified: a
+# structurally long macro-to-array bus, which no density value can shorten.  Validate
+# macro legality and PDN with a short `--to OpenROAD.GlobalRouting` run before spending
+# a full flow on it.
+#
 meta:
   version: 3
   flow: Classic
@@ -120,29 +138,29 @@ MACROS:
       # 4 columns at x = 120 / 560 / 1000 / 1440 (138.7 um channels)
       # --- row 0, y = 120: A buffer, one macro per weight row ---
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
-        location: [120.0, 120.0]
-        orientation: N
+        location: [250.0, 675.0]
+        orientation: FS
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
-        location: [560.0, 120.0]
-        orientation: N
+        location: [1273.9, 675.0]
+        orientation: FS
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
-        location: [1000.0, 120.0]
+        location: [250.0, 1000.0]
         orientation: N
       "u_dla.u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
-        location: [1440.0, 120.0]
+        location: [1273.9, 1000.0]
         orientation: N
       # --- row 1, y = 520: B buffer, one macro per batch lane ---
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
-        location: [120.0, 520.0]
-        orientation: N
+        location: [591.3, 675.0]
+        orientation: FS
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
-        location: [560.0, 520.0]
-        orientation: N
+        location: [932.6, 675.0]
+        orientation: FS
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
-        location: [1000.0, 520.0]
+        location: [591.3, 1000.0]
         orientation: N
       "u_dla.u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
-        location: [1440.0, 520.0]
+        location: [932.6, 1000.0]
         orientation: N
 
   gf180mcu_ocd_ip_sram__sram64x8m8wm1:
@@ -160,13 +178,13 @@ MACROS:
     instances:
       # --- row 2, y = 920: C buffer, 3 byte planes of the 24-bit result ---
       u_dla.u_c_buffer.GEN_SRAM.GEN_D64.u_sram0.u_sram:
-        location: [120.0, 920.0]
+        location: [250.0, 1300.0]
         orientation: N
       u_dla.u_c_buffer.GEN_SRAM.GEN_D64.u_sram1.u_sram:
-        location: [560.0, 920.0]
+        location: [591.3, 1300.0]
         orientation: N
       u_dla.u_c_buffer.GEN_SRAM.GEN_D64.u_sram2.u_sram:
-        location: [1000.0, 920.0]
+        location: [932.6, 1300.0]
         orientation: N
 
   gf180mcu_ocd_ip_sram__sram1024x8m8wm1:
@@ -184,10 +202,10 @@ MACROS:
     instances:
       # --- row 3, y = 1250: the two deep buffers (515.81 um tall) ---
       u_act.u_sram.u_sram:
-        location: [120.0, 1250.0]
-        orientation: N
+        location: [591.3, 100.0]
+        orientation: FS
       u_img.u_sram.u_sram:
-        location: [560.0, 1250.0]
+        location: [1273.9, 100.0]
         orientation: N
 
 # --- FLOORPLAN SIZING --------------------------------------------------------
@@ -223,27 +241,12 @@ DIE_AREA: [0, 0, 1900, 1900]
 #   60 @ 40 ns clock -> 2 net / 2 pin (3.24x B-SRAM Metal3 + 1.08x net1630) [gan_40ns_d60]
 #   62 @ 40 ns clock -> 5 net / 5 pin (2.64x _17510_ Metal3 + 4 more)       [gan_40ns_d62]
 #   58 @ 40 ns clock -> 3 net / 3 pin (1.41/1.24/1.10x, all marginal Metal3) [gan_40ns_d58]
-#   61 @ 40 ns clock -> 6 net / 6 pin                                        [gan_40ns_d61]
-#   63 @ 40 ns clock -> 12 net / 12 pin  -- worst of the sweep                [gan_40ns_d63]
-#   57 @ 40 ns clock -> 4 net / 4 pin (1.41/1.26/1.04/1.01x, all marginal)    [gan_40ns_d57]
-#   56 @ 40 ns clock -> 0 net / 0 pin  <-- PROMOTED                           [gan_40ns_d56]
 #
-# ANTENNA-ZERO AT 56 (2026-08-02).  Nine densities were sampled and they fall into two
-# regimes.  At 61-63 the count explodes (6, 5, 12).  From 60 downward it falls and, below
-# 59, the violations also change KIND: 59 and 60 each carry one >2.7x net on a B-SRAM or
-# ACT-SRAM bus that no density value shifts, while 58 and 57 are all-marginal (<=1.41x) --
-# and 56 clears entirely, post-detailed-route, 0 net / 0 pin.
-#
-# So the earlier reading -- "density floors at 2, the rest is structural, only the floorplan
-# can fix it" -- was drawn from a sweep that had only ever gone UP from 58.  It was wrong in
-# its conclusion and right in its mechanism: the >2x nets really are the long B-bank
-# broadcasts, and they really do survive 59-63.  What clears them is a LOOSER placement
-# (lower density = more room for the router to detour), not a tighter one.
-#
-# 56 is also, for the third time on this project, the density that closed antennas -- the
-# 5 V main-branch macro closed at 56 too.  Coincidence across different netlists, but worth
-# trying first on any future variant of this design.
-PL_TARGET_DENSITY_PCT: 56
+# Note the 3.24x net is a B-buffer SRAM read-data broadcast -- structurally long because of
+# where the macros sit, not because of how this particular placement rolled.  Density may
+# well clear net1630 and leave that one standing; if so the fix is floorplan-side (B macros
+# nearer the PE array, or route it above Metal3), not a further density nudge.
+PL_TARGET_DENSITY_PCT: 59
 
 GPL_CELL_PADDING: 1
 DPL_CELL_PADDING: 2
