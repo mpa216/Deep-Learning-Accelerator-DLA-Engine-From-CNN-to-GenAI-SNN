@@ -61,13 +61,30 @@ module chip_core_gan_tb;
 
     localparam int PIN_SCLK = 0, PIN_MOSI = 1, PIN_CS_N = 2, PIN_MISO = 3,
                    PIN_BUSY = 4, PIN_VERDICT = 7,
-                   PIN_PDATA_LO = 8, PIN_PDATA_HI = 15;
+                   PIN_PDATA_LO = 8, PIN_PDATA_HI = 15,
+                   PIN_MISO_MIRROR = 16;
 
     wire miso    = bidir_in[PIN_MISO];
+    wire miso_m  = bidir_in[PIN_MISO_MIRROR];
     wire busy    = bidir_in[PIN_BUSY];
     wire verdict = bidir_in[PIN_VERDICT];
 
     integer errors = 0;
+
+    // bidir[16] mirrors MISO so that readback survives one dead pad or bond wire.  The
+    // mirror is only worth its pad if it is bit-identical at every instant, not merely
+    // at sample points, so watch both pads continuously rather than checking in the read
+    // task -- a mirror that lagged by a delta cycle would pass the latter and fail on
+    // silicon.
+    integer mirror_errors = 0;
+    always @(miso or miso_m) begin
+        if (miso_m !== miso) begin
+            mirror_errors = mirror_errors + 1;
+            if (mirror_errors <= 5)
+                $display("  [MIRROR] t=%0t bidir[%0d]=%b does not match MISO=%b",
+                         $time, PIN_MISO_MIRROR, miso_m, miso);
+        end
+    end
     integer i;
     integer edges = 0;             // every SCLK pulse, for measuring link cost
 
@@ -400,6 +417,10 @@ module chip_core_gan_tb;
                  e_burst8);
 
         $display("");
+        $display("  [7] MISO mirror on bidir[%0d]: %0d divergences over the whole run",
+                 PIN_MISO_MIRROR, mirror_errors);
+        errors = errors + mirror_errors;
+
         if (errors == 0) $display("PASS: all serial-protocol checks matched");
         else             $display("FAIL: %0d mismatches", errors);
         $finish;

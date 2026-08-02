@@ -15,7 +15,17 @@
 //   [6] dla_done (out)  MAC pass complete
 //   [7] verdict (out)   D(generated) > 0.5 -- the generator fooled the discriminator
 //   [8..15] pdata[7:0] (in)  parallel write bus for the WR_BURST8 command
-//   [16..19] unused (inputs, pulled down)
+//   [16] MISO mirror (out)   second copy of [3] -- bond ONE of them, see below
+//   [17..19] unused (inputs, pulled down)
+//
+// Why [16] mirrors MISO.  This chip has no scan chain, no JTAG and no BIST, so every
+// value it can report -- buffer contents, scores, losses, all 28 metric registers --
+// leaves through the single MISO pad.  One open bond wire or one damaged pad there and
+// the die is unreadable, with only busy/dla_busy/dla_done left to prove it is alive at
+// all.  The mirror is a wire to a spare pad: no logic, no timing path that did not
+// already exist, and it turns that single point of failure into two.  Bond whichever
+// one you like, or both -- they are driven from the same net by two independent pad
+// drivers, so shorting them at the board is safe.
 //
 // The parallel bus is what makes the link stop dominating run time.  Streaming weights
 // is ~99% of the time on the wire, and a single-byte serial frame costs 24 SCLK edges;
@@ -59,7 +69,7 @@ module chip_core #(
     assign input_pd = '0;
 
     wire _unused;
-    assign _unused = &{1'b0, input_in, bidir_in[NUM_BIDIR_PADS-1:16], analog};
+    assign _unused = &{1'b0, input_in, bidir_in[NUM_BIDIR_PADS-1:17], analog};
 
     localparam int PIN_SCLK     = 0;
     localparam int PIN_MOSI     = 1;
@@ -71,7 +81,8 @@ module chip_core #(
     localparam int PIN_VERDICT  = 7;
     localparam int PIN_PDATA_LO = 8;         // pdata[7:0] on bidir[8..15]
     localparam int PIN_PDATA_HI = 15;
-    localparam int PIN_FIRST_SPARE = 16;
+    localparam int PIN_MISO_MIRROR = 16;     // second copy of MISO -- see header note
+    localparam int PIN_FIRST_SPARE = 17;
 
     wire sclk_pad = bidir_in[PIN_SCLK];
     wire mosi_pad = bidir_in[PIN_MOSI];
@@ -142,6 +153,11 @@ module chip_core #(
     generate
         for (i = 0; i < NUM_BIDIR_PADS; i = i + 1) begin : GEN_BIDIR
             if (i == PIN_MISO) begin : G_MISO
+                assign bidir_out[i] = miso_pad;
+                assign bidir_oe[i]  = 1'b1;
+            end else if (i == PIN_MISO_MIRROR) begin : G_MISO_MIRROR
+                // Same net, second pad.  Costs one spare pad and no logic, and it is the
+                // only readback path this chip has -- see the header note.
                 assign bidir_out[i] = miso_pad;
                 assign bidir_oe[i]  = 1'b1;
             end else if (i == PIN_BUSY) begin : G_BUSY

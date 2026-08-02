@@ -89,14 +89,23 @@ def main() -> int:
             "~99% of run time, and this takes a 1024-byte tile from 24,576 SCLK edges "
             "to 1,040 (23.6x). Tie low if only the serial commands are used.")
 
+    # ---- readback redundancy ---------------------------------------------
+    put(bidir_row(16), "MISO_mirror", "Output",
+        'bidir_PAD[16] (bond "config17"), west edge. Second copy of MISO, driven from '
+        "the same net by an independent pad driver. This chip has no scan chain, JTAG "
+        "or BIST, so every readable value leaves through MISO; one open bond or damaged "
+        "pad there makes the die unreadable. Bond this pad INSTEAD OF or AS WELL AS "
+        "bidir_PAD[3] - shorting both at the board is safe.")
+
     # ---- summary lines ----------------------------------------------------
     ws.cell(row=ROW_SUMMARY, column=2).value = (
-        "Summary: 91 bond pads total - 8 supply (single 3.3 V rail), 18 used digital "
+        "Summary: 91 bond pads total - 8 supply (single 3.3 V rail), 19 used digital "
         "signals (clk, rst_n, 4-wire serial link, 4 status outputs, 8-bit parallel "
-        "write bus), 65 unused (4 bidir spares + 60 analog + 1 slot spare input). "
-        "Versus the main chip this is +9 used pads, of which EIGHT are the parallel "
-        "burst bus and exactly ONE (verdict) is the discriminator - and that one is "
-        "optional. The 60 analog pads cannot absorb digital signals: gf180mcu_fd_io__"
+        "write bus, 1 MISO mirror), 64 unused (3 bidir spares + 60 analog + 1 slot "
+        "spare input). Versus the main chip this is +10 used pads, of which EIGHT are "
+        "the parallel burst bus, ONE is readback redundancy and exactly ONE (verdict) "
+        "is the discriminator - and the last two are optional. Minimum viable bring-up "
+        "is 7 signals: clk, rst_n, SCLK, MOSI, CS_N, MISO, busy. The 60 analog pads cannot absorb digital signals: gf180mcu_fd_io__"
         "asig_5p0 exposes only a pass-through ASIG5V pin, with no A/Y/OE/IE.")
     ws.cell(row=ROW_PROTO, column=2).value = (
         "Serial protocol (12 commands, CMD[3:0]+ADDR[11:0] header): WR_A 0, WR_B 1, "
@@ -113,8 +122,9 @@ def main() -> int:
     wb.save(DST)
     print(f"wrote {DST}")
     print("  main chip:         7 of 20 bidir pads used")
-    print("  experimental chip: 16 of 20 bidir pads used")
-    print("  attribution: +1 discriminator (verdict, optional), +8 parallel burst bus")
+    print("  experimental chip: 17 of 20 bidir pads used")
+    print("  attribution: +1 discriminator (verdict, optional), +8 parallel burst bus,")
+    print("               +1 MISO mirror (readback redundancy, optional)")
     return 0
 
 

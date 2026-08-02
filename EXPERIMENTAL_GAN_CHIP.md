@@ -212,8 +212,9 @@ CMD[3:0] ADDR[11:0] then:
 ```
 
 Pads: `bidir[0..3]` = SCLK/MOSI/CS_N/MISO, `[4]` busy, `[5]` dla_busy, `[6]` dla_done,
-`[7]` verdict, `[8..15]` pdata[7:0] (parallel write bus), `[16..19]` spare.
-**16 of 20 bidir pads used; 18 of the slot's 92 signal/power pads connected.**
+`[7]` verdict, `[8..15]` pdata[7:0] (parallel write bus), `[16]` MISO mirror,
+`[17..19]` spare.
+**17 of 20 bidir pads used; 19 of the slot's 91 signal/power pads connected.**
 (The 60 analog pads cannot help: `gf180mcu_fd_io__asig_5p0` has only a pass-through
 `ASIG5V` pin — no `A`/`Y`/`OE`/`IE`, so no digital driver or receiver.)
 
@@ -228,7 +229,8 @@ the difference precisely because the obvious reading is wrong:
 | `[4..6]` | busy, done, wb_done | busy, dla_busy, dla_done | same three status pads, renamed as the sequencer took ownership of the array |
 | `[7]` | spare | **verdict** | **the only pin the discriminator adds** |
 | `[8..15]` | spare | pdata[7:0] | the parallel burst bus — a throughput feature, nothing to do with D |
-| `[16..19]` | spare | spare | 4 still free |
+| `[16]` | spare | **MISO mirror** | readback redundancy — see below |
+| `[17..19]` | spare | spare | 3 still free |
 
 So of the nine newly used pads, **eight are the burst bus** and would have been just as
 useful on a generator-only chip, and **one is the discriminator**. Even that one is a
@@ -648,16 +650,27 @@ a protocol from this prose.
 | `dla_busy`, `dla_done` | `bidir[5..6]` | out | optional, scope-only |
 | `verdict` | `bidir[7]` | out | optional — same bit is in `MET_STATUS` |
 | `pdata[7:0]` | `bidir[8..15]` | **in** | only for `WR_BURST8` |
-| `bidir[16..19]`, 60 analog, spare input | — | — | leave unconnected |
+| MISO mirror | `bidir[16]` | **out** | no — bond it *instead of* or *as well as* `bidir[3]` |
+| `bidir[17..19]`, 60 analog, spare input | — | — | leave unconnected |
+
+**`bidir[16]` mirrors MISO** (added 2026-08-02). This chip has no scan chain, no JTAG
+and no BIST: every value it can report — buffer contents, scores, losses, all 28 metric
+registers — leaves through MISO. A single open bond wire or damaged pad there makes the
+die unreadable, leaving only `busy`/`dla_busy`/`dla_done` to show it is alive. The mirror
+is one wire to a spare pad: no logic, no new timing path, and it turns that single point
+of failure into two. The two pads are driven from the same net by independent pad
+drivers, so bonding either one, or shorting both at the board, is safe.
+`tb/chip_core_gan_tb.sv` watches both pads continuously (not just at sample points) and
+reports 0 divergences.
 
 **`pdata[7:0]` has no pull-down.** `chip_core_gan.sv` enables the on-die pull-down only
-for `bidir[16..19]`, so if you wire the burst bus you must drive all eight lines at all
+for `bidir[17..19]`, so if you wire the burst bus you must drive all eight lines at all
 times, and if you *don't* wire it, tie those pads to ground. Floating CMOS inputs
 oscillate and burn supply current — this is the one thing on this chip that will bite you
 electrically.
 
 Minimum viable bring-up is 3.3 V + GND + `clk` + `rst_n` + the four link wires + `busy` =
-**8 signals**; the burst bus adds 8 more. Everything works without it, just ~24× slower on
+**7 signals** (`clk`, `rst_n`, SCLK, MOSI, CS_N, MISO, `busy`); the burst bus adds 8 more. Everything works without it, just ~24× slower on
 weight streaming.
 
 Clock: fully static design, so anything from DC up to the target 60 ns (16.7 MHz) works.
