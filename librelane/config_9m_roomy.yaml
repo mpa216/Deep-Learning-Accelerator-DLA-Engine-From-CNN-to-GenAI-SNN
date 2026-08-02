@@ -121,7 +121,10 @@ MACROS:
       "*_ff_n40C_3v60":
         - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib
     instances:
-      # 9-MACRO VARIANT, 3x3 GRID (2026-08-02).  C collapsed from three 256-deep
+      # 9-MACRO VARIANT, 3x3 GRID -- ROOMY SIBLING of config.yaml (2026-08-02).
+      # Same 3x3 layout on a 1450x1430 die instead of 1400x1350: ~48.6% utilisation,
+      # matching the proven as3v3_k256_d63 point exactly, as a safety net in case
+      # the squeezed die trips DPL-0036 detailed placement.  C collapsed from three 256-deep
       # byte planes to one 64-deep macro (see dla_c_buffer_bank.v), so the old 4x3
       # grid became a 3x3 one and the die shrank with it: 1600x1500 -> 1400x1350,
       # 2.40 -> 1.89 Mum2, -21%.  Macro area 745,485 -> 588,029 um2.
@@ -140,29 +143,29 @@ MACROS:
       #
       # --- A buffer: 4 macros (one per matrix row) ---
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
-        location: [120.0, 165.0]
+        location: [136.0, 188.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
-        location: [545.0, 165.0]
+        location: [574.0, 188.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
-        location: [970.0, 165.0]
+        location: [1012.0, 188.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
-        location: [120.0, 559.0]
+        location: [136.0, 602.0]
         orientation: N
       # --- B buffer: 4 macros (one per matrix col) ---
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
-        location: [970.0, 559.0]
+        location: [1012.0, 602.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
-        location: [120.0, 953.0]
+        location: [136.0, 1016.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
-        location: [545.0, 953.0]
+        location: [574.0, 1016.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
-        location: [970.0, 953.0]
+        location: [1012.0, 1016.0]
         orientation: N
       # --- C buffer moved OUT of this cell: it is now a single 64-deep macro,
       #     registered separately below. ---
@@ -190,7 +193,7 @@ MACROS:
       # grid pitch unchanged and the old y=1130 row simply has two empty slots
       # now, which is extra routing channel rather than wasted die.
       u_c_buffer.GEN_SRAM.u_sram.u_sram:
-        location: [545.0, 559.0]
+        location: [574.0, 602.0]
         orientation: N
 
 # --- Floorplan -------------------------------------------------------
@@ -203,7 +206,7 @@ MACROS:
 # DIE SIZING: 11 macros (~745k um2) + ~375k um2 std cells = ~1.12M um2 inst area.
 # 1600x1500 core ~2.40M um2 -> ~47% util (proven band; denser failed [DPL-0036]).
 FP_SIZING: absolute
-DIE_AREA: [0, 0, 1400, 1350]
+DIE_AREA: [0, 0, 1450, 1430]
 PL_TARGET_DENSITY_PCT: 63   # 3.3V/K=256 antenna-0 WIN (run as3v3_k256_d63, 2026-07-02):
 # LITERAL 0 net/0 pin, DRC=0, LVS=0, setup +15.12ns / hold +0.150ns (all 9 corners, best
 # hold margin of the whole K=256 series), 11 macros. RTL was re-synthesized with
