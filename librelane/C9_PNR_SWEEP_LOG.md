@@ -26,6 +26,10 @@ antenna 0/0, setup +15.12 ns, hold +0.150 ns, 161 mW.
 | 8 | `c9_marg50_d56` | 1400x1350 | 56 | 52.9% | **0 / 0** ✅ | GRT repair margin 25 -> 50 | +16.11 | +0.119 | 81,992 |
 | 9 | `c9_confirm_d56` | 1400x1350 | 56 | 52.9% | **0 / 0** ✅ | re-run of promoted config | +16.46 | +0.118 | 81,847 |
 | 10 | `c9_swap_d54` | 1400x1350 | 54 | 52.9% | **0 / 0** ✅ | swap, robustness at another density | +16.56 | +0.118 | 82,330 |
+| **11** | **`c9_tiny1`** | **1375x1325 = 1,821,875** | 56 | 54.8% | **0 / 0** ✅ | same layout, die shaved 25 um per edge | **+16.24** | +0.116 | **79,676** |
+| 12 | `c9_tiny2` | 1350x1300 = 1,755,000 | 56 | 56.9% | 2 / 2 | 1.04x + 1.01x Metal3 — barely over | +16.00 | +0.123 | 76,629 |
+| 13 | `c9_tiny2_d57` | 1350x1300 | 57 | 56.9% | 1 / 1 | 1.75x Metal3 — worse | | | |
+| 14 | `c9_tiny2_d55` | 1350x1300 | 55 | 56.9% | 1 / 1 | 1.31x Metal3 — worse | | | |
 
 Magic DRC 0, LVS 0, XOR 0 and 9 macros on every completed run.
 
@@ -156,3 +160,50 @@ lottery — it is a placement error, and the sweep's real output is its identity
 This is the same shape as the earlier finding that direction mattered more than
 value, one level deeper: here neither direction nor value helped, and only the
 floorplan did.
+
+
+## Squeezing past the first win — where the die actually stops
+
+With the swap holding antenna-0, the die was pushed two sizes further. The layout
+was **not** re-rolled: runs 11-14 are the promoted swapped topology (B_COLS[1]
+centre, C corner) with only `DIE_AREA` and the nine coordinates scaled, so the
+macro channels tighten and everything else stays put.
+
+| | `c9_swapB1_d56` | `c9_tiny1` | `c9_tiny2` |
+|---|---|---|---|
+| die | 1,890,000 um2 | **1,821,875** | 1,755,000 |
+| H / V macro channel | 123.7 / 169.1 um | 117.7 / 162.1 um | 111.7 / 156.1 um |
+| utilisation | 52.9% | 54.8% | 56.9% |
+| antenna | 0 / 0 | **0 / 0** | 2 / 2 |
+| setup / hold | +16.46 / +0.118 | +16.24 / +0.116 | +16.00 / +0.123 |
+| instances | 81,847 | **79,676** | 76,629 |
+
+**`c9_tiny1` is the better chip and is the one to promote.** Shaving 25 um off
+each die edge cost 0.22 ns of a 16 ns setup margin and *saved* 2,171 instances —
+the same relationship seen throughout, where the looser placement is the one
+carrying more buffering, so tightening pays twice.
+
+**1350x1300 is past the knee.** At 56.9% utilisation `c9_tiny2` leaves two nets
+barely over the limit (1.04x, 1.01x), and unlike every earlier plateau a density
+nudge made it *worse* in both directions — 1.75x at 57, 1.31x at 55, against
+1.04x at 56. That is the opposite of the marginal-net behaviour that a nudge
+closed at every previous size, so it reads as genuine congestion rather than a
+re-roll, and it is where the squeeze was stopped rather than forced.
+
+## OPEN — first thing next session
+
+`config.yaml` is still promoted to **`c9_swapB1_d56`** (1400x1350), not to the
+better `c9_tiny1` (1375x1325). `tiny1` was found afterwards and its exact config
+is `librelane/config_tiny1.yaml`; the two files differ **only** in `DIE_AREA` and
+the nine macro locations — same swap, same density 56, verified by diff.
+
+Two steps to finish:
+
+1. Copy `config_tiny1.yaml`'s `DIE_AREA: [0, 0, 1375, 1325]` and its nine
+   coordinates into `config.yaml`.
+2. Re-run it untouched as `c9_tiny1_confirm` and check the final DEF is
+   byte-identical to `c9_tiny1`'s, the way `c9_confirm_d56` reproduced
+   `c9_swapB1_d56` at 21,620,402 B.
+
+Until step 2 passes, `c9_swapB1_d56` remains the only *proven-reproducible*
+antenna-0 result and stays the fallback deliverable.
