@@ -131,6 +131,13 @@ module g300_pipeline_top #(
     localparam [3:0] S_REQ        = 4'd8;
     localparam [3:0] S_TILE_NEXT  = 4'd9;
     localparam [3:0] S_DONE       = 4'd10;
+    localparam [3:0] S_READ_WAIT  = 4'd11;
+
+    // The C buffer folds a 24-bit word into three planes of one 8-bit macro, so a
+    // read takes 3 plane accesses plus the macro's 1-cycle registered latency:
+    // rd_data is valid on the 4th cycle after rd_en rises, with rd_addr held
+    // steady throughout.  See dla_c_buffer_bank.v.
+    localparam [1:0] C_RD_WAIT    = 2'd2;   // SET + 3 wait cycles, sample on the 4th
 
     reg [3:0]  state;
     reg [1:0]  layer;            // 0=L0, 1=L2, 2=L4
@@ -139,10 +146,12 @@ module g300_pipeline_top #(
     reg [9:0]  tile;
     reg [8:0]  k_cnt;
     reg [1:0]  row_cnt;
+    reg [1:0]  rwait;            // C-buffer read latency counter
     reg signed [ACC_W-1:0] accv [0:3];
 
     assign busy        = (state != S_IDLE) && (state != S_DONE);
-    assign dla_rd_en   = (state == S_READ_SET) || (state == S_READ_GET);
+    assign dla_rd_en   = (state == S_READ_SET) || (state == S_READ_WAIT) ||
+                         (state == S_READ_GET);
     assign dla_rd_addr = {{(C_ADDR_W-2){1'b0}}, rcnt, 2'b00}; // flat C addr = rcnt*N (col 0)
 
     // Helpers reused for the requant math.
@@ -262,9 +271,16 @@ module g300_pipeline_top #(
                     end
                 end
 
-                // Read C[rcnt][0] (1-cycle SRAM latency: address presented here, captured next).
+                // Read C[rcnt][0].  rd_en/rd_addr go up here and are held while the
+                // C bank walks its three byte planes; sample on the 4th cycle.
                 S_READ_SET: begin
-                    state <= S_READ_GET;
+                    rwait <= 2'd0;
+                    state <= S_READ_WAIT;
+                end
+
+                S_READ_WAIT: begin
+                    if (rwait == C_RD_WAIT) state <= S_READ_GET;
+                    else                    rwait <= rwait + 2'd1;
                 end
 
                 S_READ_GET: begin

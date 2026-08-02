@@ -137,9 +137,21 @@ module dla_engine_top_g3005_tb;
         @(posedge clk);
         start <= 1'b0;
 
-        // Read the result and apply bias.
+        // Read the result and apply bias.  The C buffer holds a 24-bit word as
+        // three byte planes of one 8-bit macro, so a read needs 3 plane accesses
+        // plus the macro's 1-cycle registered latency: hold rd_en/rd_addr steady
+        // for 4 edges before sampling.  See dla_c_buffer_bank.v.
         rd_en <= 1'b1;
         rd_addr <= {C_ADDR_W{1'b0}};
+        // Five edges, not four: a testbench samples rd_data in the active
+        // region straight after an edge, whereas the RTL callers sample it
+        // from a clocked block one region later.  The last byte plane is
+        // latched by a nonblocking assign on the 4th edge, so it only
+        // becomes visible here on the 5th.
+        @(posedge clk);
+        @(posedge clk);
+        @(posedge clk);
+        @(posedge clk);
         @(posedge clk);
         rd_en <= 1'b0;
 

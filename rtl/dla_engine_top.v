@@ -59,6 +59,7 @@ module dla_engine_top #(
 
     reg wb_active;
     reg [C_ADDR_W-1:0] wb_idx;
+    wire c_wr_ack;              // C bank pulses this on the last byte plane of a word
     reg done_use_q;
 
     dla_controller #(
@@ -110,7 +111,11 @@ module dla_engine_top #(
             if (start_wb) begin
                 wb_active <= 1'b1;
                 wb_idx    <= {C_ADDR_W{1'b0}};
-            end else if (wb_active) begin
+            end else if (wb_active && c_wr_ack) begin
+                // c_wr_ack pulses on the last byte plane of the current word, so
+                // each accumulator occupies 3 cycles here rather than 1 -- the C
+                // bank now folds 24 bits into one 8-bit macro.  See
+                // dla_c_buffer_bank.v.  Writeback is 48 cycles, not 16.
                 if (wb_idx == C_LAST) begin
                     wb_active <= 1'b0;
                     wb_done   <= 1'b1;
@@ -179,9 +184,11 @@ module dla_engine_top #(
         .USE_SRAM(1)
     ) u_c_buffer (
         .clk(clk),
+        .rst_n(rst_n),
         .wr_en(c_wr_en),
         .wr_addr(c_wr_addr),
         .wr_data(c_wr_data),
+        .wr_ack(c_wr_ack),
         .rd_en(rd_en),
         .rd_addr(rd_addr),
         .rd_data(c_sram_rd_data)

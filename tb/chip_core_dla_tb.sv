@@ -130,6 +130,13 @@ module chip_core_dla_tb;
             clk_wait(SCLK_HALF_PERIOD_CLKS);
             shift_out_bits(2, 2'b11);
             shift_out_bits(10, {6'd0, addr});
+            // READ_C turnaround.  The C buffer now assembles a 24-bit word from
+            // three byte planes of one 8-bit macro, so the bridge needs ~9 core
+            // clocks after the last address edge before dout_shreg is loaded --
+            // it used to be ~4.  Give it a full SCLK period of slack before the
+            // first data edge, otherwise that edge lands while the bridge is
+            // still walking planes and the whole word shifts out misaligned.
+            clk_wait(2 * SCLK_HALF_PERIOD_CLKS);
             shift_in_bits(24, raw);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
             bidir_in[PIN_CS_N] = 1'b1;

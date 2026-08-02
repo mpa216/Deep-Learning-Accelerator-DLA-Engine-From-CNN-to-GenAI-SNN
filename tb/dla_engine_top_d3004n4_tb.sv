@@ -150,12 +150,21 @@ module dla_engine_top_d3004n4_tb;
             reg signed [ACC_W-1:0] bias_ext;
             reg signed [ACC_W-1:0] result;
 
-            // C buffer is a shared read/write single-port SRAM (1-cycle registered
-            // read): the address presented THIS cycle is only captured at the next
-            // edge, so rd_data isn't valid until a second edge after that. Spend one
-            // cycle presenting rd_addr (rd_en high), then one more before sampling.
+            // C buffer is a shared read/write single-port SRAM, and it now folds a
+            // 24-bit word into three byte planes of ONE 8-bit macro.  A read is
+            // therefore 3 plane accesses plus the macro's 1-cycle registered
+            // latency: hold rd_en/rd_addr steady for 4 edges, then sample.
+            // See dla_c_buffer_bank.v.
             rd_en <= 1'b1;
             rd_addr <= row * N;
+            // Five edges, not four: a testbench samples rd_data in the active
+            // region straight after an edge, whereas the RTL callers sample it
+            // from a clocked block one region later.  The last byte plane is
+            // latched by a nonblocking assign on the 4th edge, so it only
+            // becomes visible here on the 5th.
+            @(posedge clk);
+            @(posedge clk);
+            @(posedge clk);
             @(posedge clk);
             @(posedge clk);
             rd_en <= 1'b0;

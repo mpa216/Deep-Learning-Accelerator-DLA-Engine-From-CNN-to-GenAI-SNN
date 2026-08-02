@@ -1,0 +1,621 @@
+magic
+tech gf180mcuD
+magscale 1 10
+timestamp 1781710637
+<< metal2 >>
+rect 1304 0 1461 140
+rect 2017 0 2174 140
+rect 2766 0 2922 140
+rect 8073 0 8229 140
+rect 8544 0 8701 140
+rect 8822 0 8979 140
+rect 9137 0 9294 140
+rect 9417 0 9574 140
+rect 9888 0 10045 140
+rect 15595 0 15752 140
+rect 16382 0 16539 140
+rect 16656 0 16813 140
+rect 19555 0 19712 140
+rect 21601 0 21758 140
+rect 22786 0 22943 140
+rect 23970 0 24126 140
+rect 28411 0 28568 140
+rect 35239 0 35396 140
+rect 38091 0 38248 140
+rect 38614 0 38771 140
+rect 39385 0 39542 140
+rect 42812 0 42969 140
+rect 43280 0 43437 140
+rect 43870 0 44027 140
+rect 49376 0 49533 140
+rect 49847 0 50004 140
+rect 50126 0 50282 140
+rect 50641 0 50797 140
+rect 50921 0 51077 140
+rect 51392 0 51548 140
+rect 57098 0 57255 140
+rect 57686 0 57843 140
+rect 58160 0 58317 140
+<< metal3 >>
+rect 1018 30302 1717 30442
+rect 1874 30302 2574 30442
+rect 2896 30302 3595 30442
+rect 3753 30302 4452 30442
+rect 4926 30302 5625 30442
+rect 5782 30302 6482 30442
+rect 6676 30302 7375 30442
+rect 7533 30302 8232 30442
+rect 8834 30302 9533 30442
+rect 9690 30302 10390 30442
+rect 10456 30302 11155 30442
+rect 11313 30302 12012 30442
+rect 12742 30302 13441 30442
+rect 13598 30302 14298 30442
+rect 14457 30302 15156 30442
+rect 16080 30302 16780 30442
+rect 16937 30302 17636 30442
+rect 17761 30302 18461 30442
+rect 18600 30302 19299 30442
+rect 19664 30302 20364 30442
+rect 20641 30302 21341 30442
+rect 21497 30302 22196 30442
+rect 22817 30302 23517 30442
+rect 23967 30302 24667 30442
+rect 24790 30302 25489 30442
+rect 26014 30302 26714 30442
+rect 27009 30302 27708 30442
+rect 28068 30302 28768 30442
+rect 28861 30302 29560 30442
+rect 29851 30302 30551 30442
+rect 30749 30302 31449 30442
+rect 31548 30302 32247 30442
+rect 32419 30302 33118 30442
+rect 33275 30302 33975 30442
+rect 34231 30302 34930 30442
+rect 35476 30302 36176 30442
+rect 36798 30302 37497 30442
+rect 37983 30302 38682 30442
+rect 39343 30302 40043 30442
+rect 40283 30302 40982 30442
+rect 41104 30302 41804 30442
+rect 42104 30302 42803 30442
+rect 42961 30302 43660 30442
+rect 44399 30302 45098 30442
+rect 45255 30302 45955 30442
+rect 46012 30302 46711 30442
+rect 46868 30302 47568 30442
+rect 48179 30302 48878 30442
+rect 49035 30302 49735 30442
+rect 49920 30302 50619 30442
+rect 50776 30302 51476 30442
+rect 51959 30302 52658 30442
+rect 52815 30302 53515 30442
+rect 53828 30302 54527 30442
+rect 54684 30302 55384 30442
+rect 55860 30302 56559 30442
+rect 57166 30302 57866 30442
+rect 58023 30302 58722 30442
+rect 59066 30302 59765 30442
+rect 0 29198 140 29688
+rect 60120 29215 60260 29705
+rect 0 28616 140 29106
+rect 60120 28613 60260 29103
+rect 0 27986 140 28476
+rect 60120 28003 60260 28493
+rect 0 27404 140 27894
+rect 60120 27401 60260 27891
+rect 0 26774 140 27264
+rect 60120 26791 60260 27281
+rect 0 26192 140 26682
+rect 60120 26189 60260 26679
+rect 0 25562 140 26052
+rect 60120 25579 60260 26069
+rect 0 24980 140 25470
+rect 60120 24977 60260 25467
+rect 0 24350 140 24840
+rect 60120 24367 60260 24857
+rect 0 23768 140 24258
+rect 60120 23765 60260 24255
+rect 0 23138 140 23628
+rect 60120 23155 60260 23645
+rect 0 22270 140 22823
+rect 60120 22270 60260 22823
+rect 0 19035 140 21982
+rect 60120 19034 60260 21982
+rect 0 17379 140 18766
+rect 60120 17379 60260 18766
+rect 0 14971 140 15671
+rect 60120 14971 60260 15671
+rect 0 13872 140 14572
+rect 60120 13872 60260 14572
+rect 0 11641 140 13547
+rect 60120 11641 60260 13547
+rect 0 9594 140 11441
+rect 60120 9590 60260 11441
+rect 0 8026 140 9464
+rect 60120 8003 60260 9464
+rect 0 6723 140 7645
+rect 60120 6723 60260 7645
+rect 0 5306 140 6260
+rect 60120 5306 60260 6260
+rect 0 3962 140 5092
+rect 60120 3962 60260 5092
+rect 0 2842 140 3870
+rect 60120 2841 60260 3870
+rect 0 1751 140 2640
+rect 60120 1750 60260 2639
+rect 0 858 140 1558
+rect 60120 862 60260 1562
+rect 494 0 1194 140
+rect 1427 0 2127 140
+rect 2409 0 3109 140
+rect 3249 0 3949 140
+rect 4089 0 4789 140
+rect 4929 0 5629 140
+rect 5769 0 6469 140
+rect 6609 0 7309 140
+rect 7449 0 8149 140
+rect 8710 0 9410 140
+rect 9969 0 10669 140
+rect 10809 0 11509 140
+rect 11649 0 12349 140
+rect 12489 0 13189 140
+rect 13329 0 14029 140
+rect 14169 0 14869 140
+rect 15337 0 16037 140
+rect 16177 0 16877 140
+rect 17087 0 17787 140
+rect 17997 0 18697 140
+rect 18907 0 19607 140
+rect 19817 0 20517 140
+rect 20727 0 21427 140
+rect 21926 0 22626 140
+rect 23115 0 23815 140
+rect 24381 0 25081 140
+rect 25221 0 25921 140
+rect 26619 0 27319 140
+rect 27459 0 28159 140
+rect 28863 0 29563 140
+rect 29703 0 30403 140
+rect 30543 0 31243 140
+rect 31383 0 32083 140
+rect 32223 0 32923 140
+rect 33063 0 33763 140
+rect 33996 0 34696 140
+rect 34913 0 35613 140
+rect 35863 0 36563 140
+rect 36734 0 37434 140
+rect 38120 0 38820 140
+rect 39030 0 39730 140
+rect 39940 0 40640 140
+rect 40850 0 41550 140
+rect 41760 0 42460 140
+rect 42670 0 43370 140
+rect 43606 0 44306 140
+rect 44752 0 45452 140
+rect 45592 0 46292 140
+rect 46432 0 47132 140
+rect 47272 0 47972 140
+rect 48112 0 48812 140
+rect 48952 0 49652 140
+rect 50211 0 50911 140
+rect 51472 0 52172 140
+rect 52312 0 53012 140
+rect 53152 0 53852 140
+rect 53992 0 54692 140
+rect 54832 0 55532 140
+rect 55672 0 56372 140
+rect 56712 0 57412 140
+rect 57693 0 58393 140
+rect 59066 0 59766 140
+<< labels >>
+flabel metal3 s 70 24058 70 24058 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 23383 70 23383 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 22520 70 22520 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 20858 70 20858 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 24595 70 24595 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 25807 70 25807 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 27019 70 27019 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 28231 70 28231 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 25222 70 25222 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 26434 70 26434 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 27646 70 27646 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 28858 70 28858 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 22520 60196 22520 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 20858 60196 20858 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 25267 60196 25267 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 24055 60196 24055 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 26479 60196 26479 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 27691 60196 27691 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 28903 60196 28903 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 28248 60196 28248 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 27036 60196 27036 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 25824 60196 25824 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 24612 60196 24612 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 23400 60196 23400 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 18236 70 18236 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 15311 70 15311 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 14401 70 14401 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 10254 70 10254 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 11783 70 11783 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 8107 70 8107 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 5448 70 5448 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 7039 70 7039 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 4392 70 4392 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 2914 70 2914 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 70 2214 70 2214 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 70 1178 70 1178 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 18236 60196 18236 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 15311 60196 15311 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 14401 60196 14401 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 10254 60196 10254 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 11783 60196 11783 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 8107 60196 8107 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 7039 60196 7039 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 5757 60196 5757 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 4392 60196 4392 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 3320 60196 3320 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 2213 60196 2213 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 60196 1182 60196 1182 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 2759 70 2759 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 22276 70 22276 70 0 FreeSans 280 180 0 0 VSS
+port 1 nsew
+flabel metal3 s 23464 70 23464 70 0 FreeSans 280 180 0 0 VSS
+port 1 nsew
+flabel metal3 s 24732 70 24732 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 26970 70 26970 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 29213 70 29213 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 844 70 844 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 6958 70 6958 70 0 FreeSans 280 180 0 0 VSS
+port 1 nsew
+flabel metal3 s 14518 70 14518 70 0 FreeSans 280 180 0 0 VSS
+port 1 nsew
+flabel metal3 s 20167 70 20167 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 15687 70 15687 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 16527 70 16527 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 17437 70 17437 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 18347 70 18347 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 19257 70 19257 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 1777 70 1777 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 25571 70 25571 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 27809 70 27809 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 30053 70 30053 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 4439 70 4439 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 5279 70 5279 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 6119 70 6119 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 7799 70 7799 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 9060 70 9060 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 10319 70 10319 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 11999 70 11999 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 12839 70 12839 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 13679 70 13679 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 3600 70 3600 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 11160 70 11160 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 36213 70 36213 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 41200 70 41200 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 39380 70 39380 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 40290 70 40290 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 30893 70 30893 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 42110 70 42110 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 32573 70 32573 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 31733 70 31733 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 33413 70 33413 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 38470 70 38470 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 34346 70 34346 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 37085 70 37085 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 35263 70 35263 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal2 s 19633 70 19633 70 0 FreeSans 280 0 0 0 CLK
+port 5 nsew
+flabel metal2 s 1383 70 1383 70 0 FreeSans 280 0 0 0 D[0]
+port 6 nsew
+flabel metal2 s 21679 70 21679 70 0 FreeSans 280 0 0 0 A[2]
+port 8 nsew
+flabel metal2 s 22864 70 22864 70 0 FreeSans 280 0 0 0 A[1]
+port 9 nsew
+flabel metal2 s 24048 70 24048 70 0 FreeSans 280 0 0 0 A[0]
+port 10 nsew
+flabel metal2 s 9967 70 9967 70 0 FreeSans 280 180 0 0 Q[2]
+port 11 nsew
+flabel metal2 s 15673 70 15673 70 0 FreeSans 280 180 0 0 Q[3]
+port 12 nsew
+flabel metal2 s 35317 70 35317 70 0 FreeSans 280 0 0 0 CEN
+port 13 nsew
+flabel metal2 s 38170 70 38170 70 0 FreeSans 280 0 0 0 A[5]
+port 14 nsew
+flabel metal2 s 38693 70 38693 70 0 FreeSans 280 0 0 0 A[4]
+port 15 nsew
+flabel metal2 s 16461 70 16461 70 0 FreeSans 280 180 0 0 WEN[3]
+port 16 nsew
+flabel metal2 s 16734 70 16734 70 0 FreeSans 280 180 0 0 D[3]
+port 19 nsew
+flabel metal2 s 8622 70 8622 70 0 FreeSans 280 180 0 0 D[1]
+port 20 nsew
+flabel metal2 s 9496 70 9496 70 0 FreeSans 280 180 0 0 D[2]
+port 21 nsew
+flabel metal2 s 39463 70 39463 70 0 FreeSans 280 0 0 0 A[3]
+port 22 nsew
+flabel metal2 s 8151 70 8151 70 0 FreeSans 280 180 0 0 Q[1]
+port 23 nsew
+flabel metal2 s 9216 70 9216 70 0 FreeSans 280 180 0 0 WEN[2]
+port 28 nsew
+flabel metal2 s 8901 70 8901 70 0 FreeSans 280 180 0 0 WEN[1]
+port 29 nsew
+flabel metal2 s 28490 70 28490 70 0 FreeSans 280 0 0 0 GWEN
+port 37 nsew
+flabel metal3 s 59416 70 59416 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 43756 70 43756 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 57843 70 57843 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 42820 70 42820 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 56862 70 56862 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal2 s 58238 70 58238 70 0 FreeSans 280 180 0 0 D[7]
+port 17 nsew
+flabel metal2 s 57176 70 57176 70 0 FreeSans 280 180 0 0 Q[7]
+port 18 nsew
+flabel metal2 s 51470 70 51470 70 0 FreeSans 280 180 0 0 Q[6]
+port 24 nsew
+flabel metal2 s 43949 70 43949 70 0 FreeSans 280 180 0 0 Q[4]
+port 26 nsew
+flabel metal2 s 43358 70 43358 70 0 FreeSans 280 180 0 0 WEN[4]
+port 30 nsew
+flabel metal2 s 57764 70 57764 70 0 FreeSans 280 180 0 0 WEN[7]
+port 31 nsew
+flabel metal2 s 50719 70 50719 70 0 FreeSans 280 180 0 0 WEN[6]
+port 32 nsew
+flabel metal2 s 42891 70 42891 70 0 FreeSans 280 180 0 0 D[4]
+port 33 nsew
+flabel metal2 s 50999 70 50999 70 0 FreeSans 280 180 0 0 D[6]
+port 34 nsew
+flabel metal2 s 49925 70 49925 70 0 FreeSans 280 180 0 0 D[5]
+port 25 nsew
+flabel metal2 s 50204 70 50204 70 0 FreeSans 280 180 0 0 WEN[5]
+port 27 nsew
+flabel metal2 s 49454 70 49454 70 0 FreeSans 280 180 0 0 Q[5]
+port 35 nsew
+flabel metal3 s 55822 70 55822 70 0 FreeSans 280 180 0 0 VSS
+port 1 nsew
+flabel metal3 s 53302 70 53302 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 47422 70 47422 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 49102 70 49102 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 50361 70 50361 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 51622 70 51622 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 46582 70 46582 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 45742 70 45742 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 54982 70 54982 70 0 FreeSans 280 180 0 0 VDD
+port 2 nsew
+flabel metal3 s 54142 70 54142 70 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 48262 70 48262 70 0 FreeSans 280 180 0 0 VSS
+port 1 nsew
+flabel metal3 s 44902 70 44902 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 52462 70 52462 70 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal2 s 2844 70 2844 70 0 FreeSans 280 0 0 0 Q[0]
+port 36 nsew
+flabel metal2 s 2095 70 2095 70 0 FreeSans 280 0 0 0 WEN[0]
+port 38 nsew
+flabel metal3 s 70 29443 70 29443 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 60196 29460 60196 29460 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 31898 30377 31898 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 32769 30377 32769 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 40632 30377 40632 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 37148 30377 37148 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 38333 30377 38333 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 34580 30377 34580 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 25140 30377 25140 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 7025 30377 7025 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 10805 30377 10805 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 4103 30377 4103 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 11663 30377 11663 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 3245 30377 3245 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 7883 30377 7883 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 27359 30377 27359 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 21847 30377 21847 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 14807 30377 14807 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 18950 30377 18950 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 29211 30377 29211 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 13948 30377 13948 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 20991 30377 20991 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 30201 30377 30201 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 31099 30377 31099 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 39693 30377 39693 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 48529 30377 48529 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 52309 30377 52309 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 44749 30377 44749 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 59416 30377 59416 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 43311 30377 43311 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 42453 30377 42453 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 56210 30377 56210 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 1368 30377 1368 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 2224 30377 2224 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 5276 30377 5276 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 6132 30377 6132 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 9184 30377 9184 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 10040 30377 10040 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 13092 30377 13092 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 16430 30377 16430 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 17286 30377 17286 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 18111 30377 18111 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 20014 30377 20014 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 23167 30377 23167 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 24317 30377 24317 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 26364 30377 26364 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 28418 30377 28418 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 33625 30377 33625 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 35826 30377 35826 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 41454 30377 41454 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 45605 30377 45605 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 46361 30377 46361 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 47218 30377 47218 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 49385 30377 49385 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 50270 30377 50270 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 51126 30377 51126 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 53165 30377 53165 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 54178 30377 54178 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+flabel metal3 s 55034 30377 55034 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 57516 30377 57516 30377 0 FreeSans 280 0 0 0 VSS
+port 1 nsew
+flabel metal3 s 58373 30377 58373 30377 0 FreeSans 280 0 0 0 VDD
+port 2 nsew
+<< properties >>
+string FIXED_BBOX 0 0 60260 30442
+string path 63.580 0.000 63.580 1.000 
+<< end >>

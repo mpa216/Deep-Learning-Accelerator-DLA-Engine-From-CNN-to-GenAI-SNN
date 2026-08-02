@@ -16,6 +16,16 @@
 //     CMD 10 START   : (address bits ignored)              -- 12 bits in
 //     CMD 11 READ_C  : (low 4 addr bits = rd_addr)          -- 12 bits in,
 //                        + DATA_OUT[23:0] shifted out on MISO after
+//
+// HOST RULE, READ_C TURNAROUND (changed when the C buffer went to one macro):
+// after the last address edge, wait at least ~9 core clocks -- one full SCLK
+// period at the documented SCLK <= clk/8 rate is comfortably enough -- before
+// driving the first data edge.  The C buffer no longer returns 24 bits in a
+// single access: it assembles them from three byte planes of one 8-bit SRAM
+// macro (see dla_c_buffer_bank.v), which is 3 plane reads plus the macro's
+// registered-read latency.  A first data edge that arrives early lands while
+// the bridge is still walking planes, so that edge is lost and the whole word
+// shifts out misaligned.  WRITE_A/WRITE_B/START are unaffected.
 module dla_serial_bridge #(
     parameter AB_ADDR_W = 10,
     parameter C_ADDR_W  = 4,
@@ -85,6 +95,16 @@ module dla_serial_bridge #(
 
     reg [3:0] state;
     reg [4:0] bitcnt;
+    reg [1:0] rwait;                     // C-buffer read latency counter
+
+    // The C bank folds a 24-bit word into three byte planes of one 8-bit macro, so
+    // a read is 3 plane accesses plus the macro's 1-cycle registered latency.
+    //
+    // 3, where g300_pipeline_top uses 2, because rd_en is registered here: this FSM
+    // assigns it with a nonblocking assign in S_READ_SET, so the bank does not see
+    // it until the following cycle, whereas g300_pipeline_top drives its rd_en
+    // combinationally from the state and so starts a cycle earlier.
+    localparam [1:0] C_RD_WAIT = 2'd3;
     reg [1:0] cmd_reg;
     reg [AB_ADDR_W-1:0] addr_reg;
     reg [DATA_W-1:0] data_in_reg;
@@ -178,14 +198,19 @@ module dla_serial_bridge #(
                     S_READ_SET: begin
                         rd_addr <= addr_reg[C_ADDR_W-1:0];
                         rd_en   <= 1'b1;
+                        rwait   <= 2'd0;
                         state   <= S_READ_WAIT;
                     end
 
                     S_READ_WAIT: begin
-                        // rd_addr only becomes visible to the C buffer's SRAM mux
-                        // this cycle; give its registered output one more cycle
-                        // to catch up before sampling rd_data in S_READ_GET.
-                        state <= S_READ_GET;
+                        // rd_en is a pulse-type output defaulted low every cycle
+                        // above, so it has to be re-asserted here or the C bank
+                        // sees a one-cycle request, restarts its plane walk and
+                        // never assembles a word.  rd_addr is not defaulted and
+                        // holds by itself.
+                        rd_en <= 1'b1;
+                        if (rwait == C_RD_WAIT) state <= S_READ_GET;
+                        else                    rwait <= rwait + 2'd1;
                     end
 
                     S_READ_GET: begin
