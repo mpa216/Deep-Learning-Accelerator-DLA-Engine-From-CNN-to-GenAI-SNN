@@ -190,20 +190,31 @@ nudge made it *worse* in both directions — 1.75x at 57, 1.31x at 55, against
 closed at every previous size, so it reads as genuine congestion rather than a
 re-roll, and it is where the squeeze was stopped rather than forced.
 
-## OPEN — first thing next session
+## Promoted and confirmed — `c9_tiny1` (2026-08-04)
 
-`config.yaml` is still promoted to **`c9_swapB1_d56`** (1400x1350), not to the
-better `c9_tiny1` (1375x1325). `tiny1` was found afterwards and its exact config
-is `librelane/config_tiny1.yaml`; the two files differ **only** in `DIE_AREA` and
-the nine macro locations — same swap, same density 56, verified by diff.
+`config.yaml` is now promoted to **`c9_tiny1`**: `DIE_AREA: [0, 0, 1375, 1325]` and the
+nine macro locations copied from `config_tiny1.yaml`, which differed from the previous
+`c9_swapB1_d56` promotion in exactly those ten values and nothing else (verified by
+`diff` before the copy). Density stays 56 and the swapped topology — B_COLS[1] centre,
+C corner — is unchanged.
 
-Two steps to finish:
+Re-run untouched as **`c9_tiny1_confirm`**, it reproduces `c9_tiny1` exactly:
 
-1. Copy `config_tiny1.yaml`'s `DIE_AREA: [0, 0, 1375, 1325]` and its nine
-   coordinates into `config.yaml`.
-2. Re-run it untouched as `c9_tiny1_confirm` and check the final DEF is
-   byte-identical to `c9_tiny1`'s, the way `c9_confirm_d56` reproduced
-   `c9_swapB1_d56` at 21,620,402 B.
+| | `c9_tiny1` | `c9_tiny1_confirm` |
+|---|---|---|
+| final DEF | 21,677,031 B | **byte-identical** (`cmp` clean) |
+| antenna nets / pins | 0 / 0 | 0 / 0 |
+| Magic DRC / LVS / XOR | 0 / 0 / 0 | 0 / 0 / 0 |
+| routing DRC | 0 | 0 |
+| setup ws / hold ws | +16.236 / +0.1163 ns | +16.236 / +0.1163 ns |
+| instances / macros | 79,676 / 9 | 79,676 / 9 |
+| core area | 1,761,060 um2 | 1,761,060 um2 |
+| power | 132.7 mW | 132.7 mW |
 
-Until step 2 passes, `c9_swapB1_d56` remains the only *proven-reproducible*
-antenna-0 result and stays the fallback deliverable.
+Every key in `final/metrics.json` matches — zero differing entries, not just the headline
+numbers. `c9_tiny1` is therefore the deliverable, and `c9_swapB1_d56` is superseded rather
+than merely tied: same antenna-0, same reproducibility evidence, 1,821,875 um2 against
+1,890,000 and 2,171 fewer instances, for 0.22 ns of a 16 ns setup margin.
+
+The squeeze stops here. `c9_tiny2` (1350x1300) is past the knee, and its two residual
+nets do not respond to a density nudge in either direction — see the previous section.
