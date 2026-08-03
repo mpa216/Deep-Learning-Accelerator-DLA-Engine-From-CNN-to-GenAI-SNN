@@ -158,7 +158,10 @@ module dla_engine_top_gls_tb;
         start <= 1'b0;
 
         // Read back C[row][0] (flat address row*N) and apply each row's bias.
-        // Same SET -> WAIT -> GET pacing as the RTL TB (registered C read).
+        // Same pacing as the RTL TB: the C buffer now folds a 24-bit word into
+        // three byte planes of ONE 8-bit macro, so a read is 3 plane accesses
+        // plus the macro's 1-cycle registered latency -- hold rd_en/rd_addr
+        // steady across the walk. See dla_c_buffer_bank.v.
         mismatches = 0;
         for (row = 0; row < N; row = row + 1) begin
             reg signed [ACC_W-1:0] bias_ext;
@@ -166,6 +169,14 @@ module dla_engine_top_gls_tb;
 
             rd_en <= 1'b1;
             rd_addr <= row * N;
+            // Five edges, not four: a testbench samples rd_data in the active
+            // region straight after an edge, whereas the RTL callers sample it
+            // from a clocked block one region later. The last byte plane is
+            // latched by a nonblocking assign on the 4th edge, so it only
+            // becomes visible here on the 5th.
+            @(posedge clk);
+            @(posedge clk);
+            @(posedge clk);
             @(posedge clk);
             @(posedge clk);
             rd_en <= 1'b0;
@@ -185,7 +196,7 @@ module dla_engine_top_gls_tb;
             $display("GLS FAIL: %0d row mismatches", mismatches);
             $fatal(1);
         end else begin
-            $display("GLS PASS: all %0d rows match expected (post-layout netlist as3v3_k256_d63)", N);
+            $display("GLS PASS: all %0d rows match expected (post-layout netlist)", N);
         end
 
         #20;
