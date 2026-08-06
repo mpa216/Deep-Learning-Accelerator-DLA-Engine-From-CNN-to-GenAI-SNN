@@ -1,0 +1,32 @@
+{
+	"STD_CELL_LIBRARY": "gf180mcu_as_sc_mcu7t3v3",
+	"INCLUDE_CONFIGS": [
+		"$LVS_ROOT/tech/$PDK/lvs_config.base.json"
+	],
+	"TOP_SOURCE": "dla_engine_top",
+	"TOP_LAYOUT": "$TOP_SOURCE",
+	"EXTRACT_FLATGLOB": [
+		""
+	],
+	"EXTRACT_ABSTRACT": [
+		""
+	],
+	"LVS_FLATTEN": [
+		""
+	],
+	"LVS_NOFLATTEN": [
+		""
+	],
+	"LVS_IGNORE": [
+		""
+	],
+	"LVS_SPICE_FILES": [
+		"$UPRJ_ROOT/3V3lib/gf180mcu_as_sc_mcu7t3v3-main/pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/spice/gf180mcu_as_sc_mcu7t3v3.spice",
+		"$UPRJ_ROOT/gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.spice",
+		"$UPRJ_ROOT/SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1.spice"
+	],
+	"LVS_VERILOG_FILES": [
+		"$UPRJ_ROOT/verilog/dla_engine_top.nl.v"
+	],
+	"LAYOUT_FILE": "$UPRJ_ROOT/gds/$TOP_LAYOUT.gds"
+}

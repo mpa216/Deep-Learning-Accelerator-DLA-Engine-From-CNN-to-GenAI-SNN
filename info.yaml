@@ -1,0 +1,19 @@
+# ----- ------ ----- ----- ------ ----- ----- ------ -----
+# Chipathon 2026: Project configuration
+# LICENSE: Apache License Version 2.0
+# http://www.apache.org/licenses/
+# ----- ------ ----- ----- ------ ----- ----- ------ -----
+
+# data will be pulled from main branch of the repo.
+# please be sure that the main branch contains the data you want to submit.
+# This file will be updated with more information later
+
+# ======================================================
+# Project metadata (used for documentation / review)
+# ======================================================
+project:
+  title: "Deep Learning Accelerator (DLA) Engine"   # Project title (e.g. "Simple CPU", "PLL", "ADC")
+  team: "FindingSRAM"                               # Your Team name
+  discord: "mpa216"                                 # Optional: Discord username (for support / communication)
+  description: "Area-optimized INT8 systolic DLA (nine SRAM macros) running a pretrained MNIST GAN generator on GF180MCU, single-supply 3.3 V, open LibreLane flow"  # Short one-line description
+  lvs_config: "lvs_config.json"                     # relative path (from repo root) to the lvs_config.json file
