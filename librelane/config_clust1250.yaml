@@ -121,42 +121,42 @@ MACROS:
       "*_ff_n40C_3v60":
         - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib
     instances:
-      # 9-MACRO VARIANT, 3x3 CLUSTER -- WIDENED (branch tiny2, 2026-08-07).  Follow-up
-      # to clust1250 (~16 um channels), which hardened clean on DRC/LVS/XOR/timing at
-      # 1250x1250 but left 5 antenna nets -- four marginal (<=1.31x) plus one STRUCTURAL
-      # 2.63x Metal3 net (net409): a SRAM->PE broadcast forced to cross the packed
-      # cluster to reach the perimeter logic.  This run widens the channels ~16 -> ~35 um
-      # (same 1250x1250 die) so some logic + routing tracks sit back between the macros,
-      # shortening that broadcast.  Same 9 macros, same topology as c9_tiny1 (B1 centre,
-      # C top-left corner).  Global fill stays 61.8% (die unchanged); the perimeter ring
-      # narrows 157 -> 138 um to pay for the wider channels.
+      # 9-MACRO VARIANT, 3x3 CLUSTER (branch tiny2, 2026-08-07).  Same 9 macros and
+      # same topology as the signed-off c9_tiny1 (B1 centre, C top-left corner), but
+      # the macros are SQUEEZED TOGETHER: channels collapsed 118/162 um -> ~16 um and
+      # the cluster centred in a 1250x1250 die (was 1375x1325).  Goal: push the die
+      # below the c9_tiny1/c9_tiny2 floor by reclaiming the wide channels for the
+      # perimeter, at 61.8% global fill.
       #
       # Layout, 301.3(W) x 224.93(H) parts except C at 152.21(H):
-      #   cols x = 138 / 474 / 811   (~35 um channels)
-      #   rows y = 253 / 513 / 772   (~35 um channels)
+      #   cols x = 157 / 474 / 792   (~16 um channels)
+      #   rows y = 272 / 513 / 754   (~16 um channels)
       #   row 2  C  B2 B3
       #   row 1  A3 B1 B0    <- B1 centre (its sram_q_raw was the tiny1 antenna
       #   row 0  A0 A1 A2       violator; the swap with C is what closed tiny1)
-      # A stays low, B stays high, so the row-broadcast and column-broadcast nets keep
-      # their separation.  If 35 um does not clear net409, widen further or give the die
-      # back toward 1300x1300.
+      # A stays low, B stays high, so the row-broadcast and column-broadcast nets
+      # keep their separation.  RISK, flagged: the 5V antenna study found clustering
+      # made antennas WORSE (1 -> 4) because the SRAM->PE broadcast nets have to
+      # cross the cluster to reach the perimeter logic.  This run tests whether that
+      # holds for the tiny chip; if it re-opens antennas, back off to 1300x1300 or
+      # widen these channels.
       #
       # --- A buffer: 4 macros (one per matrix row) ---
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
-        location: [138.0, 252.6]
+        location: [157.0, 272.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
-        location: [474.3, 252.6]
+        location: [474.0, 272.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
-        location: [810.6, 252.6]
+        location: [792.0, 272.0]
         orientation: N
       "u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
-        location: [138.0, 512.5]
+        location: [157.0, 513.0]
         orientation: N
       # --- B buffer: 4 macros (one per matrix col) ---
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
-        location: [810.6, 512.5]
+        location: [792.0, 513.0]
         orientation: N
       # B_COLS[1] sits CENTRE, not in the corner: at [120,953] its sram_q_raw
       # outputs were the only recurring antenna violator of the whole sweep
@@ -164,13 +164,13 @@ MACROS:
       # whose net is short and never violated -- is what took the design to
       # literal 0.  See C9_PNR_SWEEP_LOG.md.
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
-        location: [474.3, 512.5]
+        location: [474.0, 513.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
-        location: [474.3, 772.5]
+        location: [474.0, 754.0]
         orientation: N
       "u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
-        location: [810.6, 772.5]
+        location: [792.0, 754.0]
         orientation: N
       # --- C buffer moved OUT of this cell: it is now a single 64-deep macro,
       #     registered separately below. ---
@@ -197,7 +197,7 @@ MACROS:
       # 152.21 um -- same width as the 256-deep ones, 72.7 um shorter -- so it sits
       # on the row2 baseline (y=754) and leaves a short gap above it inside the row.
       u_c_buffer.GEN_SRAM.u_sram.u_sram:
-        location: [138.0, 772.5]
+        location: [157.0, 754.0]
         orientation: N
 
 # --- Floorplan -------------------------------------------------------
@@ -211,17 +211,13 @@ MACROS:
 # std cells = 965,841 um2 hard demand.  1250x1250 = 1,562,500 um2 -> 61.8% global
 # fill.  This is BELOW the c9_tiny1 floor (1375x1325, 53%) and denser than the
 # c9_tiny2 point that already missed (1350x1300, 55%): only viable because the
-# macros are clustered (~35 um channels, widened from clust1250's 16), freeing the
-# old wide channels for the perimeter.  Aggressive by design -- if placement won't
-# legalise this is where [DPL-0036] shows up; if it does, 1300x1300 is the fallback.
+# macros are clustered (~16 um channels), freeing the old wide channels for the
+# perimeter.  Aggressive by design -- if placement won't legalise this is where
+# [DPL-0036] shows up; if it does, 1300x1300 is the fallback.
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1250, 1250]
-PL_TARGET_DENSITY_PCT: 56   # PROMOTED to run clust1250w (branch tiny2, 2026-08-07):
-# clustered nine-macro squeeze to 1250x1250 (-14.2% die / -12.8% instances vs c9_tiny1),
-# antenna 0/0, DRC 0, LVS 0, XOR 0, route DRC 0, setup +16.01 / hold +0.121 ns (9 corners),
-# 132.7 mW.  Confirmed reproducible: re-run clust1250w_confirm -> final DEF byte-identical
-# (20,308,037 B) and every metric matches.  Density kept at c9_tiny1's 56; the antenna lever
-# here was the ~35 um macro channel (see C9_PNR_SWEEP_LOG.md "Clustered squeeze" section).
+PL_TARGET_DENSITY_PCT: 56   # kept at the c9_tiny1 value (change one thing at a time:
+# this run moves only the macro placement + die).  9-macro/3x3 antenna-0 WIN. run c9_tiny1
 # (1375x1325, 2026-08-03): antenna 0/0, DRC 0, LVS 0, XOR 0, setup +16.24 / hold
 # +0.116 ns, 79,676 instances -- 2,171 fewer than the 1400x1350 c9_swapB1_d56 it
 # supersedes, for 0.22 ns of a 16 ns setup margin. 1350x1300 is past the knee (2

@@ -216,12 +216,8 @@ MACROS:
 # legalise this is where [DPL-0036] shows up; if it does, 1300x1300 is the fallback.
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1250, 1250]
-PL_TARGET_DENSITY_PCT: 56   # PROMOTED to run clust1250w (branch tiny2, 2026-08-07):
-# clustered nine-macro squeeze to 1250x1250 (-14.2% die / -12.8% instances vs c9_tiny1),
-# antenna 0/0, DRC 0, LVS 0, XOR 0, route DRC 0, setup +16.01 / hold +0.121 ns (9 corners),
-# 132.7 mW.  Confirmed reproducible: re-run clust1250w_confirm -> final DEF byte-identical
-# (20,308,037 B) and every metric matches.  Density kept at c9_tiny1's 56; the antenna lever
-# here was the ~35 um macro channel (see C9_PNR_SWEEP_LOG.md "Clustered squeeze" section).
+PL_TARGET_DENSITY_PCT: 56   # kept at the c9_tiny1 value (change one thing at a time:
+# this run moves only the macro placement + die).  9-macro/3x3 antenna-0 WIN. run c9_tiny1
 # (1375x1325, 2026-08-03): antenna 0/0, DRC 0, LVS 0, XOR 0, setup +16.24 / hold
 # +0.116 ns, 79,676 instances -- 2,171 fewer than the 1400x1350 c9_swapB1_d56 it
 # supersedes, for 0.22 ns of a 16 ns setup margin. 1350x1300 is past the knee (2

@@ -218,3 +218,76 @@ than merely tied: same antenna-0, same reproducibility evidence, 1,821,875 um2 a
 
 The squeeze stops here. `c9_tiny2` (1350x1300) is past the knee, and its two residual
 nets do not respond to a density nudge in either direction — see the previous section.
+
+
+## Clustered squeeze past c9_tiny1 — the channel is the antenna lever (branch tiny2, 2026-08-07)
+
+`c9_tiny1` stopped at 1375x1325 with the macros SPREAD (channels 118/162 um). Branch
+`tiny2` asks the opposite question: cluster the nine macros as tight as the router
+tolerates and shrink the die with them. Two runs, same 9 macros and same topology as
+`c9_tiny1` (B1 centre, C top-left corner) — only the channel width and die move.
+
+### clust1250 — macros clustered to ~16 um channels, die 1250x1250
+
+Legalised clean at 61.8% fill (no [DPL-0036]; PDN connected through the 16 um channels),
+DRC 0 / LVS 0 / XOR 0 / route DRC 0, setup +15.36 / hold +0.118 ns, 68,692 instances. But
+antenna came back **5 nets / 5 pins** (authoritative post-detailed-route check):
+
+| net | layer | ratio | kind |
+|---|---|---|---|
+| net409 | Metal3 | **2.63x** | **structural** |
+| net910 | Metal4 | 1.31x | marginal |
+| net911 | Metal4 | 1.29x | marginal |
+| c_wr_addr[2] | Metal2 | 1.27x | marginal |
+| net399 | Metal3 | 1.01x | marginal |
+
+This is the 5V study's "clustering makes antennas worse (1 -> 4)" reproduced on the tiny
+chip. Tight channels leave no room for logic between the macros, so the standard cells go
+to the perimeter and the SRAM->PE broadcasts have to cross the packed cluster. net409 at
+2.63x is structural: a density nudge can re-roll the four marginal nets but cannot shorten
+a net that is long because the floorplan forces it to be.
+
+### clust1250w — widen the channels to ~35 um, same 1250x1250 die
+
+Widening the channels 16 -> 35 um (same die; the perimeter ring narrows 157 -> 138 um)
+re-admits logic + routing tracks between the macros, shortening the cluster-crossing
+broadcasts. Result: **antenna 0 net / 0 pin**, all five cleared including the structural
+net409. DRC 0 / LVS 0 / XOR 0 / route DRC 0, setup +16.01 / hold +0.121 ns (9 corners),
+69,478 instances, 132.7 mW. Confirmed reproducible: re-run **clust1250w_confirm** -> final
+DEF byte-identical (20,308,037 B), every metric matches to the last decimal.
+
+### clust1250w vs the signed-off c9_tiny1
+
+| | c9_tiny1 | clust1250w | |
+|---|---|---|---|
+| die | 1,821,875 um2 (1375x1325) | **1,562,500 um2 (1250x1250)** | **-14.2%** |
+| macro channels | 118 / 162 um | ~35 / 35 um | clustered |
+| instances | 79,676 | **69,478** | -12.8% |
+| fill | 54.8% | 63.7% | |
+| antenna | 0 / 0 | **0 / 0** | held |
+| DRC / LVS / XOR | 0 / 0 / 0 | 0 / 0 / 0 | |
+| setup / hold ws | +16.24 / +0.116 ns | +16.01 / +0.121 ns | within noise |
+| power | 132.7 mW | 132.7 mW | same |
+| max-slew / max-cap | 70 / 125 | 142 / 161 | see note |
+
+**DRV note.** max-slew (142) and max-cap (161) are higher, but they are the same non-gating
+blanket-constraint class `c9_tiny1` already carries — checked against LibreLane's template
+limits (MAX_TRANSITION 1.5 ns, MAX_CAPACITANCE 0.2 pF), not liberty ratings. Worst cap is
+the clock-root buffer (clkbuf_1_0__f_clk/Y at 1.75 pF, sized for the whole clock tree it
+drives); ~half the slew flags (42 of 86 at ss_125C) are ANTENNA-diode nets — the diodes
+that hold antenna-0 load their nets and slow the edge past the 1.5 ns blanket at the slow
+corner. Timing closes across all 9 corners with these modelled, so nothing is violated; the
+~2x count is the clustered layout's antenna-diode tax.
+
+### Lesson
+
+On a clustered floorplan the antenna lever is the **channel width**, not density. A
+structural cluster-crossing net (net409, 2.63x) that no density value moves is closed by
+widening the channel to re-admit logic between the macros — the inverse of the `c9_tiny1`
+grid, where wide channels already kept every broadcast short. **clust1250w is the smallest
+antenna-0 nine-macro die found (1250x1250, 63.7% fill), and that is the practical floor** —
+below it, legalisation or antennas break (900x900 and 1000x1000 are impossible on area
+alone: the 9 macros are 588,032 um2 = 59% of a 1000x1000 die before any logic).
+
+`config.yaml` is promoted to clust1250w and the submission gds/verilog refreshed;
+`config_clust1250.yaml` (16 um) and `config_clust1250w.yaml` (35 um) are kept as the record.
