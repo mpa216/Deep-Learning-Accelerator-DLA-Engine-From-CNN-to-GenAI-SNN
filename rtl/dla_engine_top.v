@@ -176,12 +176,19 @@ module dla_engine_top #(
         .c_bus(c_bus)
     );
 
-    // Store the completed C matrix into SRAM for host/testbench reads.
+    // Store the completed C matrix for host/testbench reads.
+    // longtin variant (branch longtin): USE_SRAM(0) -> the C buffer is flip-flops
+    // (dla_c_buffer_bank GEN_REG branch: N*N=16 words x 24 bits of registers plus a
+    // 1-cycle registered read), NOT the folded 64x8 SRAM macro.  This removes the 9th
+    // SRAM macro entirely, leaving A(4)+B(4)=8 macros for the 4x2 floorplan, and makes
+    // writeback complete in 16 cycles (the GEN_REG branch ties wr_ack=wr_en) instead of
+    // the folded macro's 48.  Read latency drops from 4-5 cycles to 1.  See
+    // dla_c_buffer_bank.v and librelane/config_longtin.yaml.
     dla_c_buffer_bank #(
         .N(N),
         .ACC_W(ACC_W),
         .ADDR_W(C_ADDR_W),
-        .USE_SRAM(1)
+        .USE_SRAM(0)
     ) u_c_buffer (
         .clk(clk),
         .rst_n(rst_n),

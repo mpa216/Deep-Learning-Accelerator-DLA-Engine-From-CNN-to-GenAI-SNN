@@ -1,0 +1,173 @@
+# LibreLane Classic config to harden dla_engine_top -- longtin CLUSTERED variant (Option 3b: central 4x2, 55 um channels, density 48).
+#
+# WHAT IS DIFFERENT FROM THE NINE-MACRO TINY CHIP (branch tiny2, config.yaml):
+#   1. C buffer is FLIP-FLOPS, not SRAM.  rtl/dla_engine_top.v instantiates
+#      dla_c_buffer_bank with USE_SRAM(0), so the 24-bit x 16-word result buffer
+#      elaborates as ~408 std-cell registers instead of the folded 64x8 macro.
+#      -> the 9th SRAM macro is gone; only A(4) + B(4) = 8 macros remain.
+#   2. FLOORPLAN is a rectangular 1600 x 1100 um die (1.76 mm^2) with the 8
+#      macros on a clean 4x2 grid: the four A-buffer macros on the bottom row,
+#      the four B-buffer macros on the top row.  This keeps A (row broadcast)
+#      and B (column broadcast) on separate rows -- the same "A low / B high"
+#      separation the tiny2 cluster used to keep the broadcast nets apart.
+#
+# Everything else (3.3V AS std cells, the SRAM macro views, PDN, antenna
+# mitigation, 40 ns clock) is inherited unchanged from the signed-off tiny
+# lineage.  Paths resolve relative to THIS file (dir::).
+meta:
+  version: 3
+  flow: Classic
+
+DESIGN_NAME: dla_engine_top
+
+PDK: gf180mcuD
+
+# --- 3.3V standard-cell library (third-party "AS" native-3.3V 7-track cells) ---
+# The OCD SRAM is a 3.3V IP, so 3.3V logic + 3.3V SRAM = a single 3.3V supply
+# with no level shifting.  The AS lib ships the 9 STA corners
+# (nom/min/max x tt_025C_3v30 / ss_125C_3v00 / ff_n40C_3v60) and the LibreLane
+# PDK integration.  It must already be merged into the ciel PDK on the build
+# host (done in the apic_headless container's /foss/pdks/gf180mcuD).
+STD_CELL_LIBRARY: gf180mcu_as_sc_mcu7t3v3
+
+# --- Synthesizable RTL ONLY (the sim-only g300 harness is NOT listed) --------
+VERILOG_FILES:
+  - dir::../rtl/dla_engine_top.v
+  - dir::../rtl/dla_controller.v
+  - dir::../rtl/dla_pe.v
+  - dir::../rtl/dla_pe_array.v
+  - dir::../rtl/dla_a_buffer_bank.v
+  - dir::../rtl/dla_b_buffer_bank.v
+  - dir::../rtl/dla_c_buffer_bank.v
+  - dir::../rtl/gf180_sram_1rw_256x8.v
+  # gf180_sram_1rw_64x8.v is intentionally NOT listed: the C buffer no longer
+  # instantiates the 64x8 macro (USE_SRAM(0) => the GEN_SRAM branch that would
+  # reference dla_sram_1rw_64x8 is not elaborated).
+
+# Force the `ifdef SYNTHESIS` branch in gf180_sram_1rw_256x8.v so the A/B SRAMs
+# elaborate as (* blackbox *) macros, not ~22k behavioral flip-flops.
+VERILOG_DEFINES:
+  - SYNTHESIS
+
+CLOCK_PORT: clk
+# 40 ns (~25 MHz).  Removing the C SRAM does not touch the SRAM->mux->PE-MAC->
+# accumulator critical path (that path is A/B, still SRAM), and the C read is
+# now a 1-cycle flop read instead of the folded macro's 4-5 cycle walk, so this
+# is if anything easier to close than the nine-macro build.  Same clock as the
+# whole signed-off tiny lineage.
+CLOCK_PERIOD: 40
+
+# --- Pre-hardened GF180 SRAM macro (foundry views) ---------------------------
+# One macro module (gf180mcu_ocd_ip_sram__sram256x8m8wm1), EIGHT instances:
+# 4 A-rows + 4 B-cols.  Each part is 301.30 (W) x 224.930 (H) um.
+MACROS:
+  gf180mcu_ocd_ip_sram__sram256x8m8wm1:
+    gds:
+      - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.gds
+    lef:
+      - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.lef
+    lib:
+      "*_tt_025C_3v30":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__tt_025C_3v30.lib
+      "*_ss_125C_3v00":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ss_125C_3v00.lib
+      "*_ff_n40C_3v60":
+        - dir::../gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib
+    instances:
+      # 8-MACRO 4x2 GRID -- CLUSTERED CENTRAL (Option 3b) on 1600 x 1100.
+      #   Corrected cluster: 55 um channels (A3 used 35 um and crashed CTS/DPL-0036 -- no legal
+      #   sites for 3 clock buffers in the packed centre).  55 um columns + 55 um mid channel give
+      #   a 1370 x 505 um block centered in the die, still tight enough to shorten the SRAM->PE
+      #   broadcast nets, and PL_TARGET_DENSITY_PCT is lowered 56->48 for legalization headroom.
+      #   A stays low / B stays high.
+      #   columns x = 114.90 / 471.20 / 827.50 / 1183.80   (55 um channels, 114.90 um side margins)
+      #   rows    y = 297.57 (bottom, A) / 577.50 (top, B)  (55 um mid channel, 297.57 um margins)
+      #
+      #   top row (y=635.00)     B0   B1   B2   B3     <- B buffer (column broadcast)
+      #   bottom row (y=240.07)  A0   A1   A2   A3     <- A buffer (row broadcast)
+      #
+      # The PE array, controller, C-buffer flip-flops and the read/write glue are
+      # standard cells; the placer fills the 170 um mid channel and the 240 um
+      # top/bottom margins with them, so the memory-to-datapath nets stay short.
+      #
+      # --- A buffer: 4 macros (one per matrix row), bottom row ---
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[0].u_sram.u_sram":
+        location: [114.90, 297.57]
+        orientation: N
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[1].u_sram.u_sram":
+        location: [471.20, 297.57]
+        orientation: N
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[2].u_sram.u_sram":
+        location: [827.50, 297.57]
+        orientation: N
+      "u_a_buffer.GEN_SRAM.GEN_A_ROWS[3].u_sram.u_sram":
+        location: [1183.80, 297.57]
+        orientation: N
+      # --- B buffer: 4 macros (one per matrix col), top row ---
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[0].u_sram.u_sram":
+        location: [114.90, 577.50]
+        orientation: N
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[1].u_sram.u_sram":
+        location: [471.20, 577.50]
+        orientation: N
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[2].u_sram.u_sram":
+        location: [827.50, 577.50]
+        orientation: N
+      "u_b_buffer.GEN_SRAM.GEN_B_COLS[3].u_sram.u_sram":
+        location: [1183.80, 577.50]
+        orientation: N
+
+# --- Floorplan ---------------------------------------------------------------
+# 1600 x 1100 um (1.76 mm^2), rectangular by request.
+#   8 macros x (301.30 x 224.93) = 542,247 um^2  (30.8% of the die)
+#   std cells (incl. the C-buffer flops) ~ 380,000 um^2 (~22%)
+#   => ~52% global fill: a roomy floorplan, deliberately looser than the tiny2
+#      1250x1250 squeeze (61.8%).  PL_TARGET_DENSITY_PCT still guides local fill.
+FP_SIZING: absolute
+DIE_AREA: [0, 0, 1600, 1100]
+PL_TARGET_DENSITY_PCT: 50   # A3b cluster density sweep
+
+# Cell padding for pin access to the antenna-repair diodes (gf180 default is 0).
+GPL_CELL_PADDING: 1
+DPL_CELL_PADDING: 2
+
+# --- Power / ground ----------------------------------------------------------
+VDD_NETS:
+  - VDD
+GND_NETS:
+  - VSS
+# Connect every SRAM instance's physical VDD/VSS pins to the chip PDN.
+PDN_MACRO_CONNECTIONS:
+  - ".*u_sram.* VDD VSS VDD VSS"
+
+# --- PDN straps (proven gf180 values) ----------------------------------------
+PDN_MULTILAYER: false
+PDN_VWIDTH: 5
+PDN_HWIDTH: 5
+PDN_VSPACING: 1
+PDN_HSPACING: 1
+PDN_VPITCH: 75
+PDN_HPITCH: 75
+PDN_EXTEND_TO: boundary
+
+# The gf180 OCD SRAM power pins top out at Metal3, so the stock Metal4<->Metal5
+# macro grid connect makes no vias ([PDN-0232]/[PDN-0233]).  pdn_cfg.tcl is the
+# proven chipathon script with the macro connect changed to "Metal3 <vstrap>".
+PDN_CFG: dir::pdn_cfg.tcl
+
+# --- Routing / signoff -------------------------------------------------------
+# Allow routing up to Metal5 so antenna repair can layer-hop (PDN is Metal4-only).
+RT_MAX_LAYER: Metal5
+
+# --- Antenna mitigation ------------------------------------------------------
+# Attack antennas PRE-route (heuristic diode insertion places + legalises diodes
+# next to their load pin, so they always have access), NOT in the detailed
+# router (ITERS>=1 triggers a verification re-route that cannot reach clock-tree
+# cells -> [DRT-0073], a confirmed dead end on this design).  Antenna is
+# non-gating on gf180 here (Magic DRC is authoritative; KLayout antenna off).
+RUN_HEURISTIC_DIODE_INSERTION: true
+GRT_ANTENNA_REPAIR_MARGIN: 25
+DRT_ANTENNA_REPAIR_ITERS: 0
+DRT_ANTENNA_REPAIR_JUMPER_ONLY: true
+DIODE_ON_PORTS: in
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout
