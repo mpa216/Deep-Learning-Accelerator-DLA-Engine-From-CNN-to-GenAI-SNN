@@ -235,7 +235,7 @@
           <tr><td>Target density</td><td class="mono">50 % → 57.09 % achieved</td><td>Chosen by the antenna sweep (slide 7). Clustering shortens the broadcast nets; density 50 is the placement that routes them all clean.</td></tr>
           <tr><td>Instances</td><td class="mono">84,875 total</td><td>31,844 std cells · 10,002 antenna diodes · 8 macros · balance = fill/tap/decap/endcap.</td></tr>
           <tr><td>PDN</td><td class="mono">Metal4 ∥ + Metal5 ⟂ straps</td><td>Single 3.3 V VDD/VSS grid, 5 µm straps @ 75 µm pitch. Macro pins connect on <b>Metal3</b> (OCD SRAM tops out at Metal3 — custom <code>pdn_cfg.tcl</code>). No core ring (a core macro; the ring is a padring‑stage job).</td></tr>
-          <tr><td>Ports</td><td class="mono">13 signal ports</td><td>clk, rst_n, start, wr_en/sel/addr/data, rd_en/addr/data, busy, done, wb_done — on the core boundary; VDD/VSS enter through the grid.</td></tr>
+          <tr><td>Ports</td><td class="mono">13 ports → 55 pins</td><td>Named ports expand to one pin per bit (<code>rd_data</code> alone = 24) — see slide 7. On the core boundary; VDD/VSS enter through the grid.</td></tr>
         </tbody>
       </table>
     </div>
@@ -256,6 +256,19 @@
         <figcaption class="cap"><b>OpenROAD — signal nets only.</b> Datapath + control routing (green/red/pink by layer) concentrated over the clustered macros and the mid‑channel — the traffic that the clustering keeps short.</figcaption>
       </figure>
     </div>
+    <p class="eyebrow" style="margin-top:18px">IR‑drop — OpenROAD PDNSim static analysis (nom_tt)</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Worst VDD drop</td><td class="mono">0.348 mV</td><td>worst cell sees 3.29965 V instead of 3.300</td></tr>
+          <tr><td>Worst VSS bounce</td><td class="mono">0.798 mV</td><td>ground rail rises at most this much</td></tr>
+          <tr><td>Average drop</td><td class="mono">0.006 mV</td><td>5.8 µV — essentially nothing</td></tr>
+          <tr><td>Power‑grid violations</td><td class="mono">0 / 0</td><td>VDD / VSS — grid fully connected</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin:8px 0 0"><b>Caveats:</b> static analysis on the flow's <i>estimated</i> 121 mW (117 internal + 4 switching); core‑level, so this is the on‑die grid only — package/pad delivery is a padring‑stage concern. Worst droop ≈ 0.8 mV of 3.3 V (~0.02%), negligible against the +15 ns setup margin.</p>
     <div class="rail" style="margin-top:16px">
       <ul class="tight" style="margin:0">
         <li><b>Single 3.3 V domain</b> (VDD/VSS) — no domain crossings, no level shifting. Running VDD/VSS as closely‑spaced interleaved straps is intentional: it lowers PDN loop inductance and adds decoupling capacitance.</li>
@@ -300,9 +313,61 @@
     </div>
   </section>
 
-  <!-- 7 · ANTENNA CLOSURE -->
+  <!-- 7 · PINS -->
   <section class="slide">
     <span class="snum">07</span>
+    <p class="eyebrow">Rubric 5 · Connectivity — ports vs pins</p>
+    <h2>Pin requirements</h2>
+    <p>A <b>port</b> is a named signal; a bus becomes <b>one physical pin per bit</b>. So the 13 ports of
+      <code>dla_engine_top</code> expand to <b>55 pins</b> on the die edge (what the layout shows). The
+      packaged chip needs far fewer — a serial bridge trades those 55 for a 4‑wire link.</p>
+    <div class="grid2 tight">
+      <div class="card">
+        <h3>Core <code>dla_engine_top</code> — 13 ports → 55 pins</h3>
+        <div class="tw" style="margin:8px 0 0">
+          <table>
+            <thead><tr><th>Port</th><th>Bits</th><th>Dir</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">clk, rst_n, start</td><td class="mono">1 ea</td><td>in</td></tr>
+              <tr><td class="mono">wr_en, wr_sel</td><td class="mono">1 ea</td><td>in</td></tr>
+              <tr><td class="mono">wr_addr</td><td class="mono">10</td><td>in</td></tr>
+              <tr><td class="mono">wr_data</td><td class="mono">8</td><td>in</td></tr>
+              <tr><td class="mono">rd_en</td><td class="mono">1</td><td>in</td></tr>
+              <tr><td class="mono">rd_addr</td><td class="mono">4</td><td>in</td></tr>
+              <tr><td class="mono">rd_data</td><td class="mono">24</td><td>out</td></tr>
+              <tr><td class="mono">wb_done, done, busy</td><td class="mono">1 ea</td><td>out</td></tr>
+              <tr style="font-weight:700"><td>total</td><td class="mono">55</td><td>+ VDD/VSS via grid</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Bonded chip (+ serial bridge) — ~9 pins</h3>
+        <div class="tw" style="margin:8px 0 0">
+          <table>
+            <thead><tr><th>Pad</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">SCLK, MOSI,<br>CS_N, MISO</td><td>4‑wire serial link — carries all 55 bits</td></tr>
+              <tr><td class="mono">busy, done, wb_done</td><td>status, wired straight out (scope‑visible)</td></tr>
+              <tr><td class="mono">clk, rst_n</td><td>dedicated clock / reset pads</td></tr>
+              <tr><td class="mono">VDD, VSS</td><td>power (slot: 4 DVDD + 4 DVSS)</td></tr>
+              <tr style="font-weight:700"><td>total</td><td>9 digital pins + power</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="rail" style="margin-top:14px">
+      <p style="margin:0"><b>Why the bridge:</b> the shuttle slot has only 20 general‑purpose digital pads — you
+      can't bond out 55. <code>dla_serial_bridge.v</code> collapses the parallel bus onto SCLK/MOSI/CS_N/MISO,
+      so the die's 55 pins stay on‑chip and the part talks to a host over 4 wires. <b>This layout is the
+      Stage‑1 core</b> (all 55 pins on its edge); the bridge + padring are a separate Stage‑2 wrapper.</p>
+    </div>
+  </section>
+
+  <!-- 8 · ANTENNA CLOSURE -->
+  <section class="slide">
+    <span class="snum">08</span>
     <p class="eyebrow">Reliability deep‑dive · how antennas reached zero</p>
     <h2>Antenna closure: 4 → 2 → 0</h2>
     <div class="grid2">
@@ -331,9 +396,9 @@
     </div>
   </section>
 
-  <!-- 8 · UVM -->
+  <!-- 9 · UVM -->
   <section class="slide">
-    <span class="snum">08</span>
+    <span class="snum">09</span>
     <p class="eyebrow">Functional verification — the intended design</p>
     <h2>UVM environment (pyuvm on cocotb)</h2>
     <p>UVM (IEEE 1800.2) builds a testbench from cooperating components that speak in <b>transactions</b>, not
@@ -374,9 +439,9 @@
     <p style="font-size:12.5px;color:var(--muted);margin-top:6px">Source: <code>tb/uvm/dla_uvm.py</code> + <code>tb/uvm/Makefile</code>; transcript <code>tb/uvm/uvm_run.log</code>. RTL‑level (behavioral SRAM models).</p>
   </section>
 
-  <!-- 9 · DECISIONS / HOW-TO -->
+  <!-- 10 · DECISIONS / HOW-TO -->
   <section class="slide">
-    <span class="snum">09</span>
+    <span class="snum">10</span>
     <p class="eyebrow">Decisions &amp; reproducing the views</p>
     <h2>Notes for the reviewer</h2>
     <div class="grid2">

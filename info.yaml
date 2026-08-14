@@ -15,5 +15,5 @@ project:
   title: "Deep Learning Accelerator (DLA) Engine"   # Project title (e.g. "Simple CPU", "PLL", "ADC")
   team: "FindingSRAM"                               # Your Team name
   discord: "mpa216"                                 # Optional: Discord username (for support / communication)
-  description: "Area-optimized INT8 systolic DLA (nine SRAM macros) running a pretrained MNIST GAN generator on GF180MCU, single-supply 3.3 V, open LibreLane flow"  # Short one-line description
+  description: "Area-optimized INT8 systolic DLA (eight SRAM macros, register-file result buffer) running a pretrained MNIST GAN generator on GF180MCU, single-supply 3.3 V, antenna-free, open LibreLane flow"  # Short one-line description
   lvs_config: "lvs_config.json"                     # relative path (from repo root) to the lvs_config.json file

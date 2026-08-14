@@ -22,8 +22,7 @@
 	],
 	"LVS_SPICE_FILES": [
 		"$UPRJ_ROOT/3V3lib/gf180mcu_as_sc_mcu7t3v3-main/pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/spice/gf180mcu_as_sc_mcu7t3v3.spice",
-		"$UPRJ_ROOT/gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.spice",
-		"$UPRJ_ROOT/SRAM_MACRO/gf180mcu_ocd_ip_sram-main/cells/gf180mcu_ocd_ip_sram__sram64x8m8wm1/gf180mcu_ocd_ip_sram__sram64x8m8wm1.spice"
+		"$UPRJ_ROOT/gf180mcu_ocd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.spice"
 	],
 	"LVS_VERILOG_FILES": [
 		"$UPRJ_ROOT/verilog/dla_engine_top.nl.v"
