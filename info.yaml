@@ -17,3 +17,40 @@ project:
   discord: "mpa216"                                 # Optional: Discord username (for support / communication)
   description: "Area-optimized INT8 systolic DLA (eight SRAM macros, register-file result buffer) running a pretrained MNIST GAN generator on GF180MCU, single-supply 3.3 V, antenna-free, open LibreLane flow"  # Short one-line description
   lvs_config: "lvs_config.json"                     # relative path (from repo root) to the lvs_config.json file
+
+# ======================================================
+# Pin list (used pads only). The accelerator's 53-bit interface is wrapped
+# behind a 4-wire serial bridge, so only 9 digital signals + supplies leave
+# the die. These map onto the fixed workshop-slot padframe as noted; the 60
+# analog pads and 13 spare bidir pads are unused (tied off / left open).
+# ======================================================
+pins:
+  # --- dedicated input pads (stock single-instance cells) ---
+  - name: clk                       # slot clk_pad  (gf180mcu_fd_io__in_s)
+    io_type: input_schmitt
+  - name: rst_n                     # slot rst_n_pad (gf180mcu_fd_io__in_c)
+    io_type: input_cmos
+
+  # --- serial host link, on bi_24t bidirectional pads bidir[0..3] ---
+  - name: SCLK                      # bidir[0]  host -> chip (serial clock, treated as data)
+    io_type: bidirectional_24ma
+  - name: MOSI                      # bidir[1]  host -> chip (command/address/data in)
+    io_type: bidirectional_24ma
+  - name: CS_N                      # bidir[2]  host -> chip (frame select, active low)
+    io_type: bidirectional_24ma
+  - name: MISO                      # bidir[3]  chip -> host (READ_C result out)
+    io_type: bidirectional_24ma
+
+  # --- status outputs, on bi_24t bidirectional pads bidir[4..6] ---
+  - name: busy                      # bidir[4]  chip -> host (compute in progress)
+    io_type: bidirectional_24ma
+  - name: done                      # bidir[5]  chip -> host (tile done)
+    io_type: bidirectional_24ma
+  - name: wb_done                   # bidir[6]  chip -> host (writeback done)
+    io_type: bidirectional_24ma
+
+  # --- supplies: single 3.3 V domain, spread over the slot's 4 DVDD / 4 DVSS pads ---
+  - name: DVDD                      # dvdd_pads[0..3] (gf180mcu_ws_io__dvdd)
+    io_type: power
+  - name: DVSS                      # dvss_pads[0..3] (gf180mcu_ws_io__dvss)
+    io_type: ground
