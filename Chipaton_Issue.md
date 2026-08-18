@@ -43,9 +43,11 @@ hold **+0.118 ns** (worst corner). ~24 ns critical path (~42 MHz true speed); 25
 deliberate guard band on a first tapeout in an unfamiliar library. Clean macro sign-off: Magic /
 KLayout DRC **0**, routing DRC **0**, Netgen LVS **0** (23,540 devices), GDS XOR **0**, antenna
 **0 nets / 0 pins**; power ≈ 121 mW (tool estimate); worst on-die IR drop 0.80 mV. Functionally
-verified against golden vectors at the tile level (N=4/K=256, all four output rows) and with a
-**UVM** environment (pyuvm on cocotb); full-image and gate-level re-simulation of the eight-macro
-netlist are the remaining verification steps.
+verified bit-exact against Python golden vectors across the full directed suite — single-lane
+GEMM, the N=4/K=256 tile (all four output rows), a layer row, the full 784-pixel image, and the
+pad-level serial protocol — plus gate-level re-simulation of the eight-macro routed netlist at
+both unit and full-image level, and a **UVM** environment (pyuvm on cocotb) checking the design
+transaction-by-transaction against an independent reference model.
 
 **Links**
 - [Github repo(s)](https://github.com/mpa216/Deep-Learning-Accelerator-DLA-Engine-From-CNN-to-GenAI-SNN)
