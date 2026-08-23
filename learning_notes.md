@@ -491,3 +491,36 @@ pad is < 0.3 µm from the opposite net). Only when all four are green do you spe
 Reproducible build: `librelane/build_acv_connected.sh` (harden `--to Odb.CellFrequencyTables` →
 `connect_power_v3.py` on the pristine ODB → resume `--from Magic.StreamOut`). Renders in
 `librelane/acv_render/` (full chip + DVDD/DVSS connector zooms).
+
+### 9.8 Under the hood — what the script reads, writes, and draws on
+The connector **touches no source file** — no RTL, no config, no GDS. It works purely on the routed
+**OpenROAD database (ODB)**, the binary snapshot LibreLane hands between flow steps:
+- **Reads** (arg 1): the *pristine pre-streamout* ODB
+  `runs/acv_ring/54-odb-cellfrequencytables/dla_engine_chip.odb` (stashed as `_patched/_clean_base.odb`).
+- **Writes** (args 2–3): a **new** `_patched/dla_engine_chip.{odb,def}` — the input is never edited in
+  place. The **GDS is produced later**, by the flow's streamout step reading this patched ODB (I then
+  copy that GDS to `gds/dla_engine_chip.gds` for the submission). So the only *repo* files the whole
+  fix changes are the submission artifacts (`gds/`, `verilog/`, `lvs_config.json`, `info.yaml`), not
+  anything the script edits directly.
+
+*What it draws on, inside that ODB* (all via the OpenROAD `odb` Python API):
+- the **DVDD/DVSS nets** and their **BTerm pins** (`block.findBTerm("DVDD").getBPins()`) → the template
+  power-pin rectangles to hook up;
+- the existing **PDN special-wire geometry** (`net.getSWires()` → metal boxes + vias) → to locate the
+  ring segments and the clean gaps between existing vias;
+- the **via masters** pdngen already generated (`block.findVia("via2_3_2500_1200_1_2_1040_1040")`,
+  `via3_4_2500…`, `via4_5_3200…`) → DRC-clean by construction, so the stacks inherit legal enclosures.
+
+*How the shapes are actually drawn* — two `odb` primitives, appended to the net's special wire
+(`net.getSWires()[0]`):
+- a **metal rectangle**: `odb.dbSBox.create(swire, Metal2, x0,y0,x1,y1, STRIPE)` — the reach;
+- a **via** at a point: `odb.dbSBox.create(swire, via_master, x, y, STRIPE)` — stacked
+  `via2_3`+`via3_4` for DVDD (up to the M4 ring) or `via2_3`+`via3_4`+`via4_5` for DVSS (up to the M5
+  ring). Coordinates are in DB units (2000/µm here); a small `UM()` helper converts from microns.
+Because the shapes go straight onto the DVDD/DVSS nets, extraction sees them connected with no
+connect-by-label needed.
+> **To build one yourself:** first run a *read-only* `odb` dump of the ring (layers, positions, the
+> concentric order — this project's `_pdn_introspect.py`); pick a clean landing x/y per pin; stamp
+> reach+stack with the two `dbSBox.create` calls; verify locally (opposite-net same-layer overlap
+> scan + `check_power_grid`) before spending a full DRC/LVS pass. The finished recipe is
+> `connect_power_v3.py` driven by `build_acv_connected.sh`.
