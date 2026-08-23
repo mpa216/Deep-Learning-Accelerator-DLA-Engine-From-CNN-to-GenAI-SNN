@@ -1,0 +1,30 @@
+- The block tab describes the available block configurations. Be aware that there are extended block configurations that were not previously announced. ACV, ACH, ACE, ACE2. See the linked document for details.
+
+- Allocation of extended configurations may be limited to teams with high schematic/layout review scores. 
+
+- Multiple grounds require multiple pads. Your power pins should be paired with a ground pin. **Initially a global ground connection was planned, but closer examination of the I/O cells seems to make that implausible. ** 
+
+- There is one fixed down bonded ground per quadrant (the first quadrant pin). Use the first pin for a quiet ground.
+
+- Your top level design should have a boundary on layer 0/0. This will determine the size and (with pin counts) the available blocks.
+
+- The pin list in the info.yaml file must correspond to the top pins in the layout. (use a ground pin first). The audit sheet flags missing layout text with an *.  
+
+- Currently, the downloader does not handle lfs files, but should be updated soon.
+
+- We are looking for individuals that have the resources to help with chip level integration verification. You will be responsible for chip level LVS and DRC.
+
+See the Problem tab on the Project GDS Audit sheet for missing information.
+
+Tag me if you have trouble resolving the problem or want we to retry the data.
+
+I have begun uploading project def files as tar files to your github issue. For digital designs, add this to your config file. 
+`"FP_DEF_TEMPLATE": "<def_file>"
+
+For analog designs, open the def file in klayout or magic, place your layout inside and connect the pins.
+
+You do not need to name the top cell as the def cell name. You can change it.
+
+The def file may contain multiple orientations - you only need to pick one.
+
+For reference, there is a verilog file, and a top level def file that contains the locally modified pad frame. You can use this for simulation because it corresponds to the padframe that you will be actually using.

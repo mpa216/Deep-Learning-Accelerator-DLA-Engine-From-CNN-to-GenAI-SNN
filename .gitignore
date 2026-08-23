@@ -1,5 +1,7 @@
 # LibreLane / OpenLane flow output (regenerable, huge)
 librelane/runs/
+# ACV power-connector working ODBs (regenerable via build_acv_connected.sh, ~115MB)
+librelane/_patched/
 librelane_rtl2gds_gf180/runs/
 **/runs/
 stage2_padring/librelane/runs_archive/

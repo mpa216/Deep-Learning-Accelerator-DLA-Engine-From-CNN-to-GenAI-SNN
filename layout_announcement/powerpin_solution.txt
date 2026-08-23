@@ -1,0 +1,37 @@
+<@738396032295108721> Quick update on team D10 
+
+  We got the agentic flow to consume the FP_DEF_TEMPLATE (D10_D.def) and hardened the macro to the padframe contract.
+
+Full signoff clean across all 9 gf180 corners: DRC, antenna, LVS all 0; setup + hold closed (independently re-verified LVS by extracting the final GDS with magic → netgen: "Circuits
+  match uniquely").
+
+  One open item we'd like your guidance on: VDD/VSS.
+ The template places VDD/VSS as Metal2 pins on the west edge (at the dvdd/dvss pad slots W19/W18).
+ Our LibreLane PDN brings power out as a Metal5 ring/straps instead, so our VDD/VSS aren't sitting on those Metal2 template pins.
+
+  Is Metal5 VDD/VSS acceptable for integration or it must  be M2 and we need to adjust the PDN and re-harden?
+  
+  Congratulations! The I/O cell power/ground outputs are on metal2, so we need something to connect them. I've seen some digital designs create a small connecter macro with just the metal and vias and place it with librelane at the intersection. That way you can keep your full automated flow. I'm pretty sure ChipFoundry's `caravel_openframe` does that.
+  
+  Just to recap,  Metal5 VDD/VSS is NOT acceptable for integration. Correct?
+  
+  That is correct.
+  
+  <@738396032295108721> Following up on the VSS/VDD connection for team D10. 
+Your connector-macro tip did the trick. 🙏
+
+We built a small connector cell (Metal2→Via2/3/4→Metal5 via stack, layers/pitches taken from caravel-gf180mcu's power routing) and, rather than ship it standalone, got it placed and welded inside the macro in our automated LibreLane flow. So  our gds is now self-contained, power reaches the padframe's Metal2 pins at the template coordinates, no integration-time placement needed.
+
+Full signoff is clean across all 9 gf180 corners: DRC 0, antenna 0, setup/hold met, LVS "Circuits match uniquely" (independent magic DRC on the GDS also 0).
+
+One note for your integration LVS: **the connector power is resolved via connect-by-label (extract unique none), the same way caravel handles its vccd1/vssd1_connection cells — the bridge via is physically there, but the hierarchical extractor needs connect-by-label to see it as one net rather than a uniquified island. As long as the chip-level LVS uses connect-by-label (as caravel does), it'll match cleanly.**
+
+Updated gds + gate-level netlist are on main in our repo, with lvs_config.json/info.yaml pointing at them. Anything else you need from our side for the dry run?
+
+Thanks again !
+
+Thanks for the update. I'd recommend using the `EXTRACT_FLATGLOB` directive to flatten the bridge cell before extraction. That should eliminate any connect by label problems. It the macro in the gate level verilog, use can use `LVS_FLATTEN` to remove it.
+
+I'll let you know if there's anything else needed.
+
+
