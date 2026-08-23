@@ -491,18 +491,3 @@ pad is < 0.3 µm from the opposite net). Only when all four are green do you spe
 Reproducible build: `librelane/build_acv_connected.sh` (harden `--to Odb.CellFrequencyTables` →
 `connect_power_v3.py` on the pristine ODB → resume `--from Magic.StreamOut`). Renders in
 `librelane/acv_render/` (full chip + DVDD/DVSS connector zooms).
-
-### 9.8 The right long-term fix: fold the connector into the LibreLane flow
-The post-route weld is legitimate and scriptable, but the *clean* home for it is **inside the flow**
-so a single `librelane config_acv.yaml` emits the connected GDS. Two ways, in increasing effort:
-1. **Custom flow step.** LibreLane 2/3 lets you subclass a `Step` (e.g. `OdbPowerConnector`) and
-   insert it in a custom `Flow` **between `Odb.CellFrequencyTables` and `Magic.StreamOut`** — it just
-   runs the `connect_power_v3.py` logic on the in-flow ODB. This is the least-surprising option: it
-   reuses the proven geometry and everything downstream (DRC/LVS/XOR/save-views) is automatic.
-2. **Reorder so pdngen does it natively.** Move `Odb.ApplyDEFTemplate` **before** `GeneratePDN`, then
-   add the template power-pin locations to the PDN grid (an M2 stripe over the pins + `add_pdn_connect`
-   for M2→M3→M4→M5) so pdngen stamps DRC-correct vias itself. Most "native," but reordering the
-   Classic flow is real surgery and pdngen must be taught the exact pin rects.
-Either would make the connector a first-class, reproducible part of the harden rather than a
-documented post-step. Worth doing if this padframe style recurs across projects. See CLAUDE.md and
-memory `[[acv-padframe-integration]]` for the operational details.
