@@ -637,3 +637,58 @@ explicit signed handling (`.to_signed()` / manual 24-bit wrap) since the bus is 
 this env verifies the **core** `dla_engine_top`, which sits unchanged inside the ACV submission
 `dla_engine_chip`; the bridge-wrapped chip itself is covered by the directed pad-level
 `tb/dla_engine_chip_tb.sv`, not by UVM.
+
+## Part 12 — Gate-level sim of the *taped-out* chip (2026-08-25): does the serial bridge really work?
+
+RTL sign-off proves the *design* is right; **GLS on the hardened netlist proves what actually got taped
+out is right** — i.e. that synthesis + P&R (buffering, CTS, ~11k antenna diodes) didn't change the
+function. We ran two GLS on the post-P&R netlists.
+
+### 12.1 Chip-level GLS — the serial bridge on the hardened `dla_engine_chip.nl.v`
+`tb/dla_engine_chip_tb.sv` drives the pad terminals exactly like an external host and replays the
+`d3004n4` vectors through the whole chain (pads → serial bridge → 8 SRAM macros + PE array + flip-flop
+C). Against the **hardened netlist** (not the RTL) it passes **4/4 rows bit-exact**
+(−34139 / 59877 / −36996 / −23021). Compile rules (same as the Stage-1 GLS): **no `-DSYNTHESIS`** (the
+netlist's SRAM instances resolve to the *behavioral* branch of `gf180_sram_1rw_256x8.v`) and **do not
+add `rtl/*.v`** (else `dla_engine_chip` collides between RTL and netlist). Exact command: README
+§Verification.
+
+![Serial-bridge READ_C on the hardened netlist](learning_notes_figs/chip_serial_bridge_gls_waveform.png)
+*Waveform (VCD → matplotlib) of one `READ_C` on the taped-out netlist. Flow: `wb_done`↑ (writeback done,
+result ready) → host drops `CS_N` and bursts `SCLK` → `MOSI` shifts the `READ_C` command in → the chip
+shifts the 24-bit result out MSB-first on `MISO`, then the next `READ_C` frame begins.*
+
+### 12.2 Read the waveform from the VCD, do NOT eyeball it (a real mistake, corrected)
+Two traps here, both of which I fell into first and a review caught:
+1. **Direction:** `MOSI` is host→chip (command **in**); `MISO` is chip→host (result **out**). `MOSI`
+   never outputs.
+2. **`MISO` carries the RAW accumulator `A·B`, not the biased golden.** The DLA does the matrix-multiply;
+   the **host adds the bias after reading**. So the bits on the wire ≠ the `expected` value.
+
+Ground truth, reconstructed by sampling the four serial signals at each of the 36 `SCLK` rising edges of
+the first `READ_C` (`addr=0`) in the VCD:
+```
+MOSI command : 110000000000            -> cmd=11 (READ_C) + addr=0
+MISO result  : 1111 1111 0111 1011 0010 0100
+MISO 24-bit  : 0xFF7B24 = -34012        (raw A·B in C[0][0])
+host adds bias: -34012 + (-127) = -34139 = expected[0]   ✓
+```
+So the plateau of **8 leading 1s** is `0xFF` (sign-extension of a negative number), then `0x7B` and `0x24`
+(whose sparse 1s are the narrow tail pulses). **Lesson:** never narrate a bus bit-by-bit off a low-res
+trace — I first mis-decoded it as the *biased* `-34139` and even "saw" a `1010` alternation that isn't
+there. Sampling the actual VCD at the clock edges is the only honest read; it also surfaced the
+raw-vs-biased subtlety that makes the value on the wire different from the golden.
+
+### 12.3 Full-GAN GLS — the whole image on the hardened core
+`g300_pipeline_tb` with `-DGLS` runs the complete 64→256→256→784 generator (all tiling + requant +
+Q20-tanh) through the hardened **core** netlist `runs/longtin_a3b_d50/final/nl/dla_engine_top.nl.v` (the
+identical core embedded in `dla_engine_chip`): **`PASS: output matches expected`, 784/784 pixels
+bit-exact**, rendering a recognisable digit.
+
+![Full GAN on the hardened core — digit "0"](learning_notes_figs/full_gan_gls_digit0.png)
+*The full MNIST GAN (seed 4 = "0") generated on the routed core netlist, bit-exact vs the Python golden.*
+
+Together: **bridge ✓ (12.1, gate level) + full-GAN math ✓ (12.3, gate level)**. The one thing not yet
+combined into a single run is the *full GAN driven through the serial bridge* on the chip netlist — a
+new tb + a ~40 min–1.5 h sim, deferred (tracked in memory), because it only *combines* two already-proven
+halves.
