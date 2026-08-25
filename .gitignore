@@ -16,18 +16,34 @@ stage2_padring/gf180mcu_stage2_final/
 *.zip
 *.tar
 *.tar.gz
+*.tgz
 
 # Local-only chipathon trackers (removed from the remote 2026-07-05, keep local copies untracked)
-GAN_CHIP_Pin_Requirement.xlsx
-GAN_CHIP_Progress_Tracker_1.xlsx
+GAN_CHIP_*.xlsx
 
 # Common junk
 __pycache__/
 *.log
 CLAUDE.md
 
+# macOS metadata junk
+.DS_Store
+._*
+
+# LaTeX build intermediates anywhere (paper sources + PDFs are tracked; these regenerate)
+*.aux
+*.out
+*.synctex.gz
+*.toc
+*.bbl
+*.blg
+
 # Nested PDK git clone (separate repo, ~1.2GB, not part of this project's history)
 stage2_padring/gf180mcu/
+
+# Vendored caravel-gf180mcu reference clone (~1.1GB of signoff artifacts; reference
+# only, kept locally under layout_announcement/ but not in this project's history)
+layout_announcement/caravel-gf180mcu-main/
 
 # Claude Code settings (local only, not part of project history)
 .claude/

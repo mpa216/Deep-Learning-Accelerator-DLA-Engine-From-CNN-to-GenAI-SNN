@@ -1,0 +1,21 @@
+{
+  "project_size": {
+    "source_gds": "gds/A56/dla_engine_top.gds",
+    "top_cell": "dla_engine_top",
+    "layer": 0,
+    "datatype": 0,
+    "layout_dbu_microns": 0.001,
+    "rectangle_dbu": [
+      0,
+      0,
+      1600000,
+      1100000
+    ],
+    "width_microns": "1600",
+    "height_microns": "1100"
+  },
+  "participant_pin_count": 11,
+  "selected_variants": [
+    "ACV"
+  ]
+}
