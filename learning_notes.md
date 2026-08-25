@@ -582,3 +582,58 @@ A completion-waiter `while pgrep -f "run-tag acv_ring2"; do sleep 60; done` **ne
 string is in the waiter's *own* command line, so `pgrep` always finds itself. It made a 21-minute harden
 look like it had run for hours. Track a long job with the harness's own `run_in_background` (single
 process, real completion signal), not a hand-rolled pgrep loop.
+
+## Part 11 — How UVM works (using this project's `tb/uvm/dla_uvm.py` as the worked example)
+
+**The idea.** UVM (IEEE 1800.2) is a *methodology* + class library for building a testbench out of
+**standard, reusable components that talk in transactions** — high-level objects like "do one matmul" —
+instead of wiggling individual wires in every test. You describe *what* to test (streams of
+transactions), and a thin layer converts that to/from pins. `pyuvm` is a faithful Python port of the SV
+UVM classes; it runs on **cocotb**, which drives the DUT through a simulator (Icarus here). Every class
+name is identical to SystemVerilog UVM, so the concepts transfer both ways.
+
+**The standard components, each mapped to our env** (`tb/uvm/dla_uvm.py`, DUT = `dla_engine_top`):
+
+| UVM role | base class | ours | what it does here |
+|---|---|---|---|
+| transaction | `uvm_sequence_item` | **DlaOp** / **DlaResult** | one matmul job (A 4×256 weights, B 256×4 inputs) / the 16 observed C values |
+| sequence | `uvm_sequence` | **DlaSequence.body()** | emits 1 *directed* op (A=B=1 ⇒ every C=256) + 3 *constrained-random* ops |
+| sequencer | `uvm_sequencer` | **DlaSequencer** | arbitrates/routes items from sequence → driver |
+| driver | `uvm_driver` | **DlaDriver.drive_op()** | the ONLY pin-wiggler: stream A/B into the buffers, pulse `start`, wait `wb_done`, read the 16 C. Also broadcasts the *applied* (A,B) on an analysis port |
+| monitor | `uvm_monitor` | **DlaMonitor** | passive: watches the read-back bus, reconstructs the 16 C, broadcasts them — never drives |
+| agent | `uvm_agent` | **DlaAgent** | bundles sequencer + driver + monitor for one interface |
+| scoreboard | `uvm_component` | **DlaScoreboard** | the checker: predicts golden `C = A·B` (INT8, 24-bit wrap) and compares to observed |
+| env | `uvm_env` | **DlaEnv** | assembles agent + scoreboard and **wires the analysis ports** |
+| test | `uvm_test` | **DlaTest** | builds the env, starts the sequence, reports the pass/fail tally |
+
+**The phases.** UVM constructs the bench in ordered phases so wiring is deterministic: `build_phase`
+(construct components, top-down), `connect_phase` (hook analysis ports to exports), then the async
+`run_phase` (stimulus + checking actually run). That's why every class above has those methods — e.g.
+`DlaEnv.connect_phase()` does `driver.ap → sb.stim_fifo` and `monitor.ap → sb.result_fifo`.
+
+**The data flow (the mental model).** Two independent streams meet at the scoreboard:
+```
+DlaSequence --(DlaOp)--> Sequencer --> Driver --(pins)--> DUT
+                                       Driver --(applied A,B)--> Scoreboard   (analysis port)
+   DUT --(pins)--> Monitor --(observed C)--> Scoreboard                       (analysis port)
+   Scoreboard:  golden C = A·B   vs   observed C   ->   pass/fail tally
+```
+Only the **driver** and **monitor** know about pins; everything above them is transaction-level and
+design-independent. Swap the driver/monitor for a different block and the sequence/scoreboard machinery
+is reusable.
+
+**Why bother (vs a directed testbench).** (1) *Separation*: stimulus (sequences), pin protocol
+(driver), and checking (scoreboard) are decoupled — a new test is a new *sequence*, not a new bench.
+(2) *Constrained-random*: sequences emit randomized-but-legal transactions, covering cases you'd never
+hand-write (here, 3 random matmuls beside the 1 directed one). (3) *Self-checking*: the scoreboard's
+golden model flags any mismatch automatically. The cost is more up-front structure — so in this project
+the **directed** tests (`d3004n4`, `chip_core_dla_tb`, …) stay the workhorses for specific vectors, and
+UVM adds a randomized, black-box, transaction-level check on top.
+
+**Running it + pyuvm/cocotb gotchas (this project).** `cd tb/uvm && make` (cocotb + Icarus;
+`TOPLEVEL=dla_engine_top`, `MODULE=dla_uvm`) → "ALL 4 TRANSACTIONS PASSED". cocotb-2.0 specifics that
+bit us: the DUT handle is `cocotb.top`; `Timer` takes `unit=` (not `units=`); and read-back values need
+explicit signed handling (`.to_signed()` / manual 24-bit wrap) since the bus is unsigned. **Scope note:**
+this env verifies the **core** `dla_engine_top`, which sits unchanged inside the ACV submission
+`dla_engine_chip`; the bridge-wrapped chip itself is covered by the directed pad-level
+`tb/dla_engine_chip_tb.sv`, not by UVM.

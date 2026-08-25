@@ -2,13 +2,16 @@
 
 **APIC_A** — a tapeout-oriented Deep Learning Accelerator (DLA) that runs a quantized
 MNIST GAN generator on a structural INT8 matrix engine, backed by physical GlobalFoundries
-180nm (GF180MCU) SRAM macros. The current design is the **area-optimized nine-macro** chip: the 24-bit result
-buffer is folded from three 256×8 SRAM byte-planes into a single 64×8 macro, cutting the
-macro count 11→9 and the die 24%. The hardened `dla_engine_top` macro is **signed off** —
-Magic/KLayout DRC = 0, LVS = 0, XOR = 0, antenna = 0, and 9-corner timing closure at 25 MHz on
-a single 3.3 V supply (setup +16.24 ns / hold +0.116 ns @ 40 ns). Its eleven-macro predecessor
-additionally completed the full **padring chip** (`chip_top`, Stage 2 — chip-level LVS 0 over
-71,668 devices); re-running that padring on the nine-macro macro is the remaining physical step.
+180nm (GF180MCU) SRAM macros. The current submission is the **bridge-wrapped chip `dla_engine_chip`**,
+hardened into the Chipathon 2026 **A56 / ACV project block** (1675 × 1110 µm): the eight-macro DLA
+core (A×4 + B×4 SRAM, with the 24-bit result buffer moved out of SRAM into flip-flops) plus a 4-wire
+serial host bridge, presenting the block's 11 pad terminals. It is **signed off** — Magic/KLayout
+DRC = 0, Netgen LVS "Circuits match uniquely", XOR = 0, **antenna = 0**, and 9-corner timing closure
+at 25 MHz on a single 3.3 V supply (setup +14.98 ns / hold +0.117 ns @ 40 ns, SPEF), ≈ 125 mW. The
+padframe's Metal2 DVDD/DVSS power pins are welded to the block's PDN core ring by an in-flow connector
+(`librelane/connect_power_v4.py`). Predecessor lineages — the nine-macro *tiny* chip (C folded into a
+single 64×8 macro) and the eleven-macro chip with its full Stage-2 padring (`chip_top`, chip-level
+LVS 0 over 71,668 devices) — are preserved for reference.
 
 ---
 
@@ -21,10 +24,10 @@ ReLU/ReLU/Tanh) is mapped onto a structural, synthesizable `N×N` Processing-Ele
 array. The flow covers **8-bit (INT8) model quantization**, Verilog memory generation,
 **physical SRAM-macro integration** (`gf180mcu_ocd_ip_sram`, 256×8 and 64×8 1RW macros),
 bit-true RTL verification against Python golden references, **post-layout gate-level
-simulation**, and a complete **RTL→GDS physical flow (LibreLane)**. The result buffer is
-**folded** from three 256×8 byte-planes into one 64×8 macro — nine SRAM macros instead of
-eleven, 24% less die area and 18% less power at *more* setup margin — and the accelerator is
-hardened and signed off as a macro. The original scalar, simulation-only MLP
+simulation**, and a complete **RTL→GDS physical flow (LibreLane)**. The result buffer moved
+**out of SRAM into flip-flops** — eight SRAM macros (A×4 + B×4), the operand-bandwidth floor — and
+the accelerator, wrapped behind a 4-wire serial host bridge, is hardened and signed off as the
+Chipathon A56 / ACV project block `dla_engine_chip`. The original scalar, simulation-only MLP
 (`g300_pipeline_top`) was re-architected so its dense layers execute as **INT8 matrix-vector
 tiles on the DLA**, demonstrating an end-to-end "checkpoint → quantized weights → accelerator
 → generated image" pipeline all the way to a signed-off GDS.
@@ -84,20 +87,21 @@ IDLE ──(start)──► CLEAR ──► COMPUTE ──(K cycles)──► DO
 To avoid unsynthesizable standard-cell `reg` memories, the A/B/C buffers instantiate physical
 1RW foundry SRAM macros via thin wrappers (`gf180_sram_1rw_256x8.v`, `gf180_sram_1rw_64x8.v`)
 that abstract the active-low macro signals (`CEN`, `GWEN`, `WEN`) into a simple active-high
-synchronous port. **9 macros total**: A uses one 256×8 macro per row (4), B one per column (4),
-and C is a single **64×8** macro. C holds only `N×N = 16` accumulators of 24 bits (48 bytes);
-the predecessor spent three 256×8 macros as **byte planes** of that word, but folding the three
-planes onto the address axis of one 64×8 macro (`addr = word×3 + plane`) cuts that buffer 77%.
-The cost is that a 24-bit access now walks the planes: writeback takes 48 cycles instead of 16,
-and a read is valid on the fourth cycle after read-enable. SRAM reads are registered (1-cycle
-latency), so the top level uses `SRAM_LATENCY=1` to align PE enable/status.
+synchronous port. **8 macros total**: A uses one 256×8 macro per row (4) and B one per column (4).
+The C result buffer holds only `N×N = 16` accumulators of 24 bits (48 bytes) — too little to justify
+a macro — so it lives in **flip-flops** (`dla_c_buffer_bank` with `USE_SRAM(0)`), which also keeps
+writeback at 16 cycles and the C read latency at 1. (Two predecessors sized C differently: the
+eleven-macro chip spent three 256×8 macros as **byte planes** of the 24-bit word, and the nine-macro
+*tiny* chip folded those planes onto one 64×8 macro.) A/B stay SRAM because they each need four
+parallel 8-bit lanes. SRAM reads are registered (1-cycle latency), so the top level uses
+`SRAM_LATENCY=1` to align PE enable/status.
 
 The wrapper switches model by `` `ifdef SYNTHESIS ``: a behavioral model for simulation, and a
 `(* blackbox *)` stub for synthesis (real `.lef`/`.gds`/`.lib` linked at place-and-route).
 
-**D. Serial Host Bridge (`dla_serial_bridge.v`, `chip_core_dla.sv`) — Stage 2**
-The DLA's parallel interface is 53 signal bits, but the chip's padring budget is 20
-general-purpose digital pads. A 4-wire synchronous serial link (`SCLK`/`MOSI`/`MISO`/`CS_N`,
+**D. Serial Host Bridge (`dla_serial_bridge.v`, `dla_engine_chip.sv`)**
+The DLA's parallel interface is 53 signal bits, but the A56 / ACV project block exposes only nine
+digital pad terminals. A 4-wire synchronous serial link (`SCLK`/`MOSI`/`MISO`/`CS_N`,
 double-flop synchronized — SCLK is edge-detected data, not a clock domain) carries framed
 commands: `WRITE_A`/`WRITE_B` (2-bit cmd + 10-bit addr + 8-bit data), `START`, and `READ_C`
 (24-bit result shifted out on MISO). `busy`/`done`/`wb_done` are additionally wired straight
@@ -138,8 +142,8 @@ native **4×4** DLA (`N=4, K=256`):
 Because the GAN is **unconditional** (64-D noise input, no class label), the generated digit is
 chosen by selecting a latent vector (`--seed N`), not by requesting a class.
 
-The on-chip SRAM holds one tile at a time (A 1 KiB + B 1 KiB + C 64 B = 2,112 B); the GAN's
-~280 KB of INT8 weights stream through these tiles from the host.
+The on-chip SRAM holds one tile at a time (A 1 KiB + B 1 KiB = 2 KiB; C lives in flip-flops); the
+GAN's ~280 KB of INT8 weights stream through these tiles from the host.
 
 ---
 
@@ -148,23 +152,23 @@ The on-chip SRAM holds one tile at a time (A 1 KiB + B 1 KiB + C 64 B = 2,112 B)
 ```
 APIC_A/
 ├── rtl/                            # Synthesizable DLA + sim-only orchestrator
-│   ├── dla_engine_top.v            #   GEMM engine top (N=4, K=256)  ◄── STAGE-1 TAPEOUT TARGET
+│   ├── dla_engine_top.v            #   GEMM engine core (N=4, K=256) — wrapped by dla_engine_chip
 │   ├── dla_controller.v            #   4-state controller FSM
 │   ├── dla_pe.v / dla_pe_array.v   #   PE and N×N grid
-│   ├── dla_{a,b,c}_buffer_bank.v   #   SRAM-backed A/B/C buffers (9 macros: A4/B4/C1)
+│   ├── dla_{a,b,c}_buffer_bank.v   #   A/B SRAM-backed (8 macros: A4/B4); C in flip-flops
 │   ├── gf180_sram_1rw_{256,64}x8.v #   SRAM macro wrappers (behavioral/blackbox)
-│   ├── dla_serial_bridge.v         #   4-wire serial host link (Stage 2)
-│   ├── chip_core_dla.sv            #   Padring core: bridge + hardened DLA (Stage 2)
+│   ├── dla_serial_bridge.v         #   4-wire serial host link
+│   ├── dla_engine_chip.sv          #   ◄── ACV SUBMISSION TOP: serial bridge + DLA core
 │   ├── g300_pipeline_top.v         #   GAN orchestrator (sim-only verification harness)
 │   └── g300_quant_params.vh        #   GENERATED requant constants
-├── librelane/                      # Stage-1 physical flow (config_tiny1.yaml → run c9_tiny1)
-├── stage2_padring/                 # Stage-2 padring chip (chip_top; eleven-macro full_flow)
+├── librelane/                      # Physical flow: config_acv.yaml → run acv_ring4;
+│                                   #   connect_power_v4.py (power-pin connector) · A56_ACV.def template
 ├── 3V3lib/                         # Third-party 3.3 V std-cell lib (AS 7t3v3) + fixes
 ├── gf180mcu_ocd_ip_sram__sram256x8m8wm1/   # Hardened 256×8 SRAM IP (GDS/LEF/LIB/SPICE)
 ├── SRAM_MACRO/                     # OCD SRAM IP family (incl. the folded-C 64×8 macro)
-├── gds/ , verilog/                 # Signed-off nine-macro dla_engine_top GDS + netlist
-├── info.yaml , lvs_config.json     # Chipathon dry-run submission (LVS targets dla_engine_top)
-├── APIC_Paper_Tiny/                # APSIPA 2026 paper (nine-macro chip)
+├── gds/ , verilog/                 # Signed-off dla_engine_chip GDS + netlist (ACV submission)
+├── info.yaml , lvs_config.json     # Chipathon submission (LVS targets dla_engine_chip)
+├── Papers/                         # APSIPA 2026 papers (tiny / longtin / GAN variants)
 ├── weights/mnist_gan_mlp/          # Original PyTorch checkpoints
 ├── weights_vh/mnist_gan_mlp/       # INT8 .memh/.vh + weights_manifest.json
 ├── scripts/                        # Quantization, vector gen, image render, LEF patch
@@ -178,7 +182,9 @@ APIC_A/
 │   ├── dla_engine_top_d3004n4_tb.sv#   Same at N=4/K=256 — the real hardened config
 │   ├── dla_engine_top_g3005_tb.sv  #   DLA single GAN-layer-row test
 │   ├── g300_pipeline_tb.sv         #   Full GAN-on-DLA image test
-│   ├── chip_core_dla_tb.sv         #   Serial bridge → DLA, driven pad-level (Stage 2)
+│   ├── chip_core_dla_tb.sv         #   Serial bridge → DLA, driven pad-level
+│   ├── dla_engine_chip_tb.sv       #   ACV chip at the pad terminals (directed, bit-exact)
+│   ├── uvm/dla_uvm.py              #   pyuvm/cocotb UVM env for the DLA core
 │   └── dla_engine_top_gls_tb.sv    #   Post-layout gate-level sim of the routed netlist
 └── sim/run_iverilog.ps1            # Compile + run all testbenches (Icarus Verilog)
 ```
@@ -252,49 +258,65 @@ digit through the routed netlist bit-exactly (~11 min) — closing the gap betwe
 golden" and "what was taped out matches golden". (Timing signoff is 9-corner STA; the GLS is
 functional/zero-delay, as the cell models carry no `specify` blocks.)
 
+Beyond these directed vectors, the DLA core is exercised by a **pyuvm / cocotb UVM** environment
+(`tb/uvm/`) — constrained-random matmul transactions checked by a golden scoreboard — and the ACV
+submission chip is driven at its pad terminals by `tb/dla_engine_chip_tb.sv`, both bit-exact against
+the same goldens. (The UVM env verifies the core `dla_engine_top`, which sits unchanged inside
+`dla_engine_chip`; the bridge-wrapped chip itself is covered by the directed pad-level test.)
+
 ---
 
 ## VIII. Physical Implementation
 
-Two-stage **LibreLane** flow on GF180MCU (`gf180mcuD`), single-supply **3.3 V** throughout:
-logic in the third-party `gf180mcu_as_sc_mcu7t3v3` standard cells, SRAM already a 3.3 V IP,
-and the foundry I/O pads operated at their 3.3 V-characterized corner.
+Single-supply **3.3 V** **LibreLane** flow on GF180MCU (`gf180mcuD`): logic in the third-party
+`gf180mcu_as_sc_mcu7t3v3` standard cells, SRAM already a 3.3 V IP, and the foundry I/O pads at their
+3.3 V-characterized corner.
 
-**Stage 1 — hardened accelerator macro** (`librelane/`, config `config_tiny1.yaml`, run
-`c9_tiny1`) — **signed off**: `dla_engine_top` at N=4/**K=256**, **9 SRAM macros** (A4/B4/C1)
-on a 3×3 grid, 79,676 instances, **1375×1325 µm** (1.82 mm²; −24% die / −18% power vs the
-eleven-macro predecessor).
+Chipathon 2026 moved to **per-project blocks**: the auditor generates the padframe and hands back a
+DEF template (`librelane/A56_ACV.def`), and the participant hardens their design *into* that block.
+Our submission is the bridge-wrapped **`dla_engine_chip`** (serial bridge + eight-macro DLA core),
+hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config_acv.yaml`, run
+**`acv_ring4`** — **signed off**:
 
 | Metric | Value |
 |---|---|
 | Magic / KLayout DRC | 0 / 0 |
-| Netgen LVS / GDS XOR | 0 / 0 |
+| Netgen LVS / GDS XOR | 0 / 0 — "Circuits match uniquely" (25,342 devices) |
 | Antenna | 0 nets / 0 pins |
-| Setup / hold ws (worst of 9 corners, 40 ns) | +16.24 ns / +0.116 ns |
-| Power (tt, tool estimate) | ≈ 133 mW |
+| Setup / hold ws (worst of 9 corners, 40 ns, SPEF) | +14.98 ns / +0.117 ns |
+| Power (tt, SPEF) | ≈ 125 mW |
+| Block IR-drop (PSM, connected design) | DVDD 54.8 mV / DVSS 70.6 mV (≤3.8% of 3.3 V) |
+| SRAM macros · die | 8 · 1675 × 1110 µm (1.859 mm²) |
 
-Antenna closure here needed a method a plain density sweep could not supply: the sweep
-plateaued at one residual net, but the *violating net names* identified a single B-column SRAM
-macro whose broadcast sat too far from the array. Swapping it with the small C buffer reached
-zero violations at two independent densities — read the net names, don't just re-roll placement.
+**Power-pin connector — the fix that closed sign-off.** The gf180 I/O cells deliver a block's power
+as **Metal2 pins in the die margin** (the ACV template puts DVDD and DVSS on the west edge), but
+LibreLane's PDN delivers it on a **Metal4/Metal5 core ring ~33 µm inland** — so a straight harden
+leaves the power pins electrically islanded (chip LVS fails). `librelane/connect_power_v4.py` welds
+each template pin to its own-net ring with a short in-margin Metal2 reach + a via column, landing in
+the clean gaps between the existing PDN vias — symmetric across both nets, so it is also
+current-robust. It runs between detailed-route and streamout (`librelane/build_acv_connected.sh`).
 
-**Stage 2 — padring chip** (`stage2_padring/`, run `full_flow`): the workshop slot is a
-**fixed, shared padframe** (2935×2935 µm; 60 analog + 20 bidir + power/clk/rst pads), so the
-padring is standardized boilerplate. It was carried through the full 83-stage Chip flow on the
-**eleven-macro predecessor** — `chip_top` signed off with Magic/KLayout DRC 0/0, chip-level LVS
-0 (71,668 devices), antenna 0/0, setup +21.67 ns / hold +0.329 ns @ 40 ns — proving the frame
-closes. **It has not been re-run on the nine-macro macro** (that eleven-macro `chip_top` lineage
-is preserved on the `main-eleven-macro` branch); the re-run is the one remaining physical step,
-if the shuttle requires a participant-hardened `chip_top` rather than the bare core.
+**Antenna — a config knob, not a re-roll.** The new pin template re-rolled routing to 5 antenna nets;
+raising `GRT_ANTENNA_REPAIR_MARGIN` **25 → 50 → 75** (more aggressive pre-route diode insertion) drove
+them **5 → 3 → 0**, clearing even the one structurally-long buffer→output net a density sweep could
+not. Because the pin positions are auditor-fixed, the diode-margin knob was more targeted than moving
+cells.
 
-The chipathon **dry-run submission** on this branch (`info.yaml`, `lvs_config.json`,
-`gds/dla_engine_top.gds`, `verilog/dla_engine_top.nl.v`) points LVS at the signed-off
-nine-macro `dla_engine_top` macro.
+**Post-layout timing** is signed off by **SPEF-backed 9-corner STA**, not SDF simulation: the 3.3 V AS
+cell library carries no `specify` timing blocks, so SDF-annotated dynamic gate-level sim is not
+possible in this open toolset — a library, not a toolset, limitation. Functional equivalence of the
+routed netlist is covered by zero-delay GLS instead.
 
-Key flow techniques (documented in-repo): `-DSYNTHESIS` SRAM blackboxing with PDN-only power
-hookup, explicit `MACROS` placement, Metal3 PDN macro connects, pre-route heuristic diode
-insertion for antenna repair, per-corner pad liberty for non-vacuous chip STA, and false-path
-constraints on the synchronizer-guarded async serial inputs.
+The **submission** (`info.yaml`, `lvs_config.json`, `gds/dla_engine_chip.gds`,
+`verilog/dla_engine_chip.nl.v`) points LVS at the signed-off `dla_engine_chip`. Predecessors are
+preserved for reference: the nine-macro *tiny* chip (`config_tiny1.yaml` → `c9_tiny1`) and the
+eleven-macro chip with its full Stage-2 padring (`chip_top`, chip-level LVS 0 over 71,668 devices, on
+the `main-eleven-macro` branch).
+
+Key flow techniques (documented in-repo): `-DSYNTHESIS` SRAM blackboxing with PDN-only power hookup,
+explicit `MACROS` placement, Metal3 PDN macro connects, pre-route heuristic diode insertion for
+antenna repair, `FP_DEF_TEMPLATE` floorplan matching against the auditor's padframe, and the
+in-margin ODB power-pin connector (`connect_power_v4.py`).
 
 **Post-silicon bring-up** targets a 3.3 V MCU (ESP32 / Pi Pico) bit-banging the 4-wire serial
 protocol: power-on current check → status pins after reset → zero-fill + null START → replay

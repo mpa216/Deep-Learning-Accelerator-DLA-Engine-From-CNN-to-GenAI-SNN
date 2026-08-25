@@ -165,7 +165,7 @@ RT_MAX_LAYER: Metal5
 # so PSM reports them "unconnected" and aborts. Per OpenROAD's own note this is
 # ignorable for a block that is not itself the top-level manufactured chip (the
 # organiser integrates power at chip level). DRC/LVS remain the real signoff.
-RUN_IRDROP_REPORT: false
+RUN_IRDROP_REPORT: false  # plain-harden default (PSM aborts on the pre-connector islanded pins). On the CONNECTED design IR IS measurable -- resume `--from OpenROAD.RCX` with this set true: worst DVDD drop 54.8 mV / DVSS bounce 70.6 mV @ ~125 mW, <=3.8% of 3.3 V (measured 2026-08-25, run acv_ring4).
 
 # --- Antenna mitigation (pre-route heuristic diodes; no in-router repair) -----
 RUN_HEURISTIC_DIODE_INSERTION: true
