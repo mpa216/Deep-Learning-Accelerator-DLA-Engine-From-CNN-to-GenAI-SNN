@@ -3,8 +3,8 @@
 # Build the power-connected A56/ACV block GDS (design: dla_engine_chip) from RTL.
 #
 # WHY THIS EXISTS: the gf180 I/O cells hand power to a project block as Metal2
-# pins sitting in the die margin (this block: DVDD on the WEST edge, DVSS on the
-# NORTH edge -- see librelane/A56_ACV.def). LibreLane's PDN, however, delivers
+# pins sitting in the die margin (this block, 2026-08-24 padframe: DVDD and DVSS
+# both on the WEST edge -- see librelane/A56_ACV.def). LibreLane's PDN, however, delivers
 # power on a Metal4/Metal5 core ring ~33 um inland, so a straight harden leaves
 # the template DVDD/DVSS pins electrically islanded -> chip LVS reports them
 # disconnected (each net splits into a main net + isolated pin pieces).
@@ -40,7 +40,7 @@ FILL=$(ls -d "$RUN"/*-openroad-fillinsertion)
 #    PRISTINE pre-streamout ODB above -- never final/odb or an already-patched odb
 #    (the resume's save-views overwrites final/odb, and re-patching stacks vias ->
 #    a phantom "abut/overlap between subcells" DRC).
-openroad-librelane -no_init -exit -python connect_power_v3.py \
+openroad-librelane -no_init -exit -python connect_power_v4.py \
     "$CLEAN_ODB" "$RUN/_connected.odb" "$RUN/_connected.def"
 
 # 3) Resume: streamout -> Magic/KLayout DRC -> XOR -> SPICE extract -> Netgen LVS

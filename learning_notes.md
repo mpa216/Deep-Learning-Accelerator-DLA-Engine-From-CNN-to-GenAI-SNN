@@ -524,3 +524,61 @@ connect-by-label needed.
 > reach+stack with the two `dbSBox.create` calls; verify locally (opposite-net same-layer overlap
 > scan + `check_power_grid`) before spending a full DRC/LVS pass. The finished recipe is
 > `connect_power_v3.py` driven by `build_acv_connected.sh`.
+
+## Part 10 — The padframe changed under us (2026-08-25): re-harden + a symmetric connector
+
+Mid dry-run, the auditor re-issued the ACV floorplan template (`layout_announcement/A56.def_new`).
+Same die (1675×1110), but the power moved: **DVSS relocated from the NORTH edge to the WEST edge**,
+paired next to DVDD (now W21/W22), the auto-inserted "quiet-ground" pads were removed, and **every
+signal pin shifted down one slot** (clk W13→W12 … wb_done W21→W20). Nothing electrical changed — same
+RTL, same synthesis, same 8 macros — so this was a pure *physical* re-close, but a fresh sign-off.
+
+### 10.1 What a template swap actually invalidates
+The signed-off `e1fe9cf` GDS was hardened against the OLD template, so its pins **and its whole power
+connector** were in the wrong place. Only two things had to change:
+1. **Swap `A56_ACV.def` + re-harden.** `FP_DEF_TEMPLATE` relocates every pin to the new coordinates.
+   Macro placement and the PDN core-ring come from `config_acv.yaml`, *not* the template, so they were
+   untouched — only the die-edge pins moved. Confirmed by dumping the post-`ApplyDEFTemplate` pin
+   coordinates (DVSS BTerms now at x≈0, west) before trusting the run.
+2. **Rewrite the connector.** `connect_power_v3.py` welded DVSS from the *north* edge to a *north* M5
+   ring — dead code the moment DVSS becomes a west pin.
+
+### 10.2 `connect_power_v4.py` — symmetric, west-edge, current-robust
+Both power pins on the west edge made the geometry *simpler*: each pin runs a Metal2 reach EAST to its
+own west M4 ring (DVSS outer @x30, DVDD inner @x33; DVDD passes UNDER the DVSS ring — M2-under-M4, no
+short). This was also the chance to fix v3's flagged current weakness (wide DVDD plates but thin DVSS
+strips, both only 2-cut vias): v4 gives **both** nets full-height Metal2 plates + a vertical **column**
+of via2_3+via3_4 stacks per finger — **90 stacks total (~4× v3)**, each landing in a clean y-gap
+between the existing M5-strap→ring vias (the same "don't straddle a subcell via" rule as §9.4).
+Sign-off run `acv_ring4`: Magic DRC 0, Netgen LVS "Circuits match uniquely", XOR 0.
+
+### 10.3 Antenna: a config knob beat the blind re-roll (but watch *which* net)
+The moved pins re-rolled routing to **5 antenna nets** (from the prior 1). Instead of a blind
+`PL_TARGET_DENSITY_PCT` sweep, we raised `GRT_ANTENNA_REPAIR_MARGIN` (more aggressive pre-route diode
+insertion): **25 → 50 → 75 gave 5 → 3 → 0 nets.** The diagnostic that steered it: `net5` violated in
+*every* harden (it's the same synthesis-named net each time — a structurally long buffer→output route),
+while the marginal nets re-rolled run-to-run. So for antennas driven by **fixed, auditor-owned pin
+positions you cannot move**, the diode-margin knob is more targeted than a density re-roll, and the
+higher margin eventually cleared even the structural net. Lesson from Part 5.8 still holds — antenna is
+empirical — but *which knob* you turn should match *why* the net is long.
+
+### 10.4 Why each signal pin appears ~8× in the layout (`*_IN/_OUT/_OE/_IE/_CS/_SL/_PU/_PD`)
+A foundry I/O pad is **not a wire** — it's a configurable buffer, and this block sits *inside* the
+padframe and must drive every core-side pin of each pad cell at the template coordinates. So one
+logical signal like `SCLK` presents **8 top-level terminals** (hence 8 pin boxes on the die edge):
+- `_IN` = pad→core data, `_OUT` = core→pad data — the two data pins;
+- `_OE` / `_IE` = output-driver / input-receiver enables (which direction the pad is);
+- `_CS` = CMOS-vs-schmitt input threshold, `_SL` = output slew rate, `_PU`/`_PD` = pull-up/down —
+  four static electrical-config pins.
+
+The serial bridge drives data on `_IN`/`_OUT` and ties the six config pins to make each pad an **input**
+(SCLK/MOSI/CS_N) or an **output** (MISO/busy/done/wb_done). Dedicated input pads (`in_s`/`in_c`, for
+clk/rst_n) are simpler — plain signal + `_PU`/`_PD` only. Pin map: `rtl/dla_engine_chip.sv:23-27`. This
+is why the top netlist has 60-odd ports for 9 logical signals, and why the audit sheet lists pins as
+`SCLK_IN|SCLK_OUT` etc.
+
+### 10.5 A self-inflicted lesson: don't let a monitor match itself
+A completion-waiter `while pgrep -f "run-tag acv_ring2"; do sleep 60; done` **never exits** — the search
+string is in the waiter's *own* command line, so `pgrep` always finds itself. It made a 21-minute harden
+look like it had run for hours. Track a long job with the harness's own `run_in_background` (single
+process, real completion signal), not a hand-rolled pgrep loop.

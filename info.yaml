@@ -22,37 +22,38 @@ project:
 # Pin list (used pads only). The accelerator's 53-bit interface is wrapped
 # behind a 4-wire serial bridge, so only 9 digital signals + supplies leave
 # the die. These are the 11 user pins of the A56 / ACV project block (1675 x
-# 1110 um); they sit on the block's WEST + NORTH edges as annotated below.
+# 1110 um); they sit on the block's WEST edge as annotated below (the 2026-08-24
+# padframe update moved DVSS from the north edge to the west, paired with DVDD).
 # DVDD/DVSS reach the block's internal PDN through the in-margin power-pin
-# connector welded at the die edge (see librelane/connect_power_v3.py).
+# connector welded at the die edge (see librelane/connect_power_v4.py).
 # ======================================================
 pins:
   # --- dedicated input pads (stock single-instance cells) ---
-  - name: clk                       # ACV slot W13 (gf180mcu_fd_io__in_s, schmitt)
+  - name: clk                       # ACV slot W12 (gf180mcu_fd_io__in_s, schmitt)
     io_type: input_schmitt
-  - name: rst_n                     # ACV slot W14 (gf180mcu_fd_io__in_c, cmos)
+  - name: rst_n                     # ACV slot W13 (gf180mcu_fd_io__in_c, cmos)
     io_type: input_cmos
 
-  # --- serial host link, on bi_24t bidirectional pads (ACV slots W15..W18) ---
-  - name: SCLK                      # W15  host -> chip (serial clock, treated as data)
+  # --- serial host link, on bi_24t bidirectional pads (ACV slots W14..W17) ---
+  - name: SCLK                      # W14  host -> chip (serial clock, treated as data)
     io_type: bidirectional_24ma
-  - name: MOSI                      # W16  host -> chip (command/address/data in)
+  - name: MOSI                      # W15  host -> chip (command/address/data in)
     io_type: bidirectional_24ma
-  - name: CS_N                      # W17  host -> chip (frame select, active low)
+  - name: CS_N                      # W16  host -> chip (frame select, active low)
     io_type: bidirectional_24ma
-  - name: MISO                      # W18  chip -> host (READ_C result out)
-    io_type: bidirectional_24ma
-
-  # --- status outputs, on bi_24t bidirectional pads (ACV slots W19..W21) ---
-  - name: busy                      # W19  chip -> host (compute in progress)
-    io_type: bidirectional_24ma
-  - name: done                      # W20  chip -> host (tile done)
-    io_type: bidirectional_24ma
-  - name: wb_done                   # W21  chip -> host (writeback done)
+  - name: MISO                      # W17  chip -> host (READ_C result out)
     io_type: bidirectional_24ma
 
-  # --- supplies: single 3.3 V domain (ACV slots W22 = DVDD, N01 = DVSS) ---
-  - name: DVDD                      # ACV slot W22 (gf180mcu_ws_io__dvdd)
+  # --- status outputs, on bi_24t bidirectional pads (ACV slots W18..W20) ---
+  - name: busy                      # W18  chip -> host (compute in progress)
+    io_type: bidirectional_24ma
+  - name: done                      # W19  chip -> host (tile done)
+    io_type: bidirectional_24ma
+  - name: wb_done                   # W20  chip -> host (writeback done)
+    io_type: bidirectional_24ma
+
+  # --- supplies: single 3.3 V domain (ACV slots W21 = DVDD, W22 = DVSS) ---
+  - name: DVDD                      # ACV slot W21 (gf180mcu_fd_io__dvdd)
     io_type: power
-  - name: DVSS                      # ACV slot N01 (gf180mcu_ws_io__dvss)
+  - name: DVSS                      # ACV slot W22 (gf180mcu_fd_io__dvss)
     io_type: ground

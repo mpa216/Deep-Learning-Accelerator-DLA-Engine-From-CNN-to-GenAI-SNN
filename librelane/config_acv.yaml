@@ -100,8 +100,8 @@ MACROS:
         orientation: N
 
 # --- Floorplan: fixed by the ACV project template ----------------------------
-# A56_ACV.def sets the 1675 x 1110 um die + the 62 signal pins (west + north
-# edges).  DIE_AREA is set to match so the pre-template floorplan agrees.
+# A56_ACV.def sets the 1675 x 1110 um die + the 62 signal pins (all on the west
+# edge).  DIE_AREA is set to match so the pre-template floorplan agrees.
 FP_SIZING: absolute
 DIE_AREA: [0, 0, 1675, 1110]
 # Shrink the core to a ~40 um die-to-core margin (was ~7 um) so a PDN core ring
@@ -124,8 +124,8 @@ GPL_CELL_PADDING: 1
 DPL_CELL_PADDING: 2
 
 # --- Power / ground: single 3.3 V supply, named to match the ACV pads --------
-# The padframe's power pin is DVDD (W22) and ground is DVSS (N01), so the chip
-# power/ground nets are DVDD/DVSS (not VDD/VSS).  set_global_connections and
+# The padframe's power pin is DVDD (W21) and ground is DVSS (W22), both on the west
+# edge, so the chip power/ground nets are DVDD/DVSS (not VDD/VSS).  set_global_connections and
 # pdn_cfg.tcl are fully parametrized on $VDD_NET/$GND_NET, so this just renames.
 VDD_NETS:
   - DVDD
@@ -169,7 +169,12 @@ RUN_IRDROP_REPORT: false
 
 # --- Antenna mitigation (pre-route heuristic diodes; no in-router repair) -----
 RUN_HEURISTIC_DIODE_INSERTION: true
-GRT_ANTENNA_REPAIR_MARGIN: 25
+# Bumped 25 -> 50 -> 75 (2026-08-25): the new west-edge pin template re-rolled routing
+# to 5 antenna nets (from 1); a more aggressive global-route diode margin inserts diodes
+# on more near-limit nets pre-detailed-route.  25->5 nets, 50->3 nets (acv_ring2/3);
+# 75 targets the two ~1.1x marginals to land at just net5 (the structural net the prior
+# submission also shipped with).
+GRT_ANTENNA_REPAIR_MARGIN: 75
 DRT_ANTENNA_REPAIR_ITERS: 0
 DRT_ANTENNA_REPAIR_JUMPER_ONLY: true
 DIODE_ON_PORTS: in
