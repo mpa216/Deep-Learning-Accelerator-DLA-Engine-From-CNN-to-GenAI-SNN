@@ -688,7 +688,31 @@ bit-exact**, rendering a recognisable digit.
 ![Full GAN on the hardened core — digit "0"](learning_notes_figs/full_gan_gls_digit0.png)
 *The full MNIST GAN (seed 4 = "0") generated on the routed core netlist, bit-exact vs the Python golden.*
 
-Together: **bridge ✓ (12.1, gate level) + full-GAN math ✓ (12.3, gate level)**. The one thing not yet
-combined into a single run is the *full GAN driven through the serial bridge* on the chip netlist — a
-new tb + a ~40 min–1.5 h sim, deferred (tracked in memory), because it only *combines* two already-proven
-halves.
+Together: **bridge ✓ (12.1, gate level) + full-GAN math ✓ (12.3, gate level)**.
+
+### 12.4 Combined — the whole image *through the serial bridge* on the taped-out netlist (2026-08-29)
+
+The last gap in 12.1+12.3 — the *full GAN driven through the serial bridge* on the chip netlist, in
+one run — is now closed. `tb/dla_engine_chip_gan_tb.sv` drives the ACV pad terminals as an external
+host would: it ports `g300_pipeline_top`'s tiling + host-side bias/requant/ReLU/Q20-tanh onto the
+serial-frame tasks (`do_write` WRITE_A/WRITE_B, `do_start`, `do_read`), so the accelerator is reached
+**only** over the 4-wire link. The chip does the INT8 matrix-multiply; the host owns the schedule and
+the per-neuron activation, exactly reproducing the parallel-port pipeline. Against the **hardened
+netlist** `verilog/dla_engine_chip.nl.v` (behavioral SRAM, AS cell models; no `-DSYNTHESIS`, no
+`rtl/*.v`): **`PASS: all 784 pixels match expected`** — byte-identical to the same golden 12.3 uses.
+It also passes identically at RTL (`rtl/dla_engine_chip.sv`), which de-risked the testbench first.
+
+![Full GAN through the serial bridge on the taped-out netlist — digit "0"](learning_notes_figs/full_gan_serial_bridge_digit.png)
+*The complete MNIST digit, generated over the serial link on the gate-level `dla_engine_chip` (784 px, bit-exact).*
+
+![Serial protocol on the gates](learning_notes_figs/serial_bridge_gls_waveform.png)
+*One 4-neuron tile of the run, captured at gate level (`tb/dla_engine_chip_wave_tb.sv` → VCD →
+`scripts/render_waveform.py`): `START → busy → wb_done → READ_C ×4`, with each 24-bit accumulator
+shifting out MSB-first on MISO (the zoom shows a negative result's 0xFF sign-extension plateau). A
+full-run VCD would be unrenderable, so this is a representative slice of the identical protocol.*
+
+**Runtime note:** the gate-level full run took **~6 h wall** (not the ~40 min–1.5 h an earlier note
+guessed): the serial framing is ~25–30× slower/clock than RTL because the ~90k-gate netlist is
+evaluated across all ~43M mostly-idle serial-shift clocks (~1.2 min/tile × 324 tiles). RTL ~13 min.
+This is the true cost of a purely serial-fed accelerator, and is exactly what the experimental
+branch's burst commands were designed to cut.

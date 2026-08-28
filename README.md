@@ -252,6 +252,7 @@ levels — RTL, pad-level (through the serial bridge), and post-layout gate-leve
 | `g300_pipeline_tb` | RTL | Full 784-pixel GAN image vs golden, bit-exact |
 | `chip_core_dla_tb` | Pad-level | Serial bridge → DLA, driven exactly like an external host |
 | `dla_engine_top_gls_tb` | **Gate-level** | The routed Stage-1 netlist (`.nl.v`) vs the d3004n4 goldens |
+| `dla_engine_chip_gan_tb` | Pad-level + **Gate-level** | **Full 784-px GAN image driven through the serial bridge** — bit-exact at RTL *and* on the hardened netlist |
 
 The full-GAN pipeline test also runs at gate level (`-DGLS`), rendering the complete MNIST
 digit through the routed netlist bit-exactly (~11 min) — closing the gap between "RTL matches
@@ -263,6 +264,41 @@ Beyond these directed vectors, the DLA core is exercised by a **pyuvm / cocotb U
 submission chip is driven at its pad terminals by `tb/dla_engine_chip_tb.sv`, both bit-exact against
 the same goldens. (The UVM env verifies the core `dla_engine_top`, which sits unchanged inside
 `dla_engine_chip`; the bridge-wrapped chip itself is covered by the directed pad-level test.)
+
+**Chip-level GLS** — run the directed pad-level test against the *hardened* ACV netlist (the actual
+taped-out `dla_engine_chip`, not the RTL), driven through the serial bridge:
+
+```bash
+AS=3V3lib/gf180mcu_as_sc_mcu7t3v3-main/pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/verilog/gf180mcu_as_sc_mcu7t3v3.v
+iverilog -g2012 -s dla_engine_chip_tb -o sim/results/dla_engine_chip_gls.vvp \
+  verilog/dla_engine_chip.nl.v rtl/gf180_sram_1rw_256x8.v "$AS" tb/dla_engine_chip_tb.sv
+vvp sim/results/dla_engine_chip_gls.vvp   # -> PASS: all 4 rows match expected via dla_engine_chip (SRAM+Core+Bridge)
+```
+
+Rules (same as the Stage-1 GLS): **no `-DSYNTHESIS`** — the netlist's SRAM instances must resolve to
+the *behavioral* branch of `gf180_sram_1rw_256x8.v`; and **do not add `rtl/*.v`** — `dla_engine_chip`
+must come from the hardened `.nl.v`, not the RTL (same-name collision otherwise). This proves the
+whole taped-out chain — pads → serial bridge → 8 SRAM macros + PE array + flip-flop C — reproduces
+the `d3004n4` goldens bit-exactly on the post-P&R netlist (functional/zero-delay; timing is the STA).
+
+**Full GAN image through the serial bridge, gate level** — the combined end-to-end demo:
+`tb/dla_engine_chip_gan_tb.sv` drives the *entire* 64→256→256→784 generator over the 4-wire link
+(WRITE_B/WRITE_A/START/READ_C frames + host-side bias/requant/ReLU/Q20-tanh), with the accelerator
+reachable only through the pads. It passes bit-exact at RTL and on the hardened netlist:
+
+```bash
+AS=3V3lib/gf180mcu_as_sc_mcu7t3v3-main/pdk/libs.ref/gf180mcu_as_sc_mcu7t3v3/verilog/gf180mcu_as_sc_mcu7t3v3.v
+iverilog -g2012 -I rtl -s dla_engine_chip_gan_tb -o sim/results/gan_serial_gls.vvp \
+  verilog/dla_engine_chip.nl.v rtl/gf180_sram_1rw_256x8.v "$AS" tb/dla_engine_chip_gan_tb.sv
+vvp sim/results/gan_serial_gls.vvp ACTUAL_MEMH=tb/data/g300_int8/g300_int8_serial_gls.memh
+# -> PASS: all 784 pixels match expected -- full GAN image generated through the serial bridge
+```
+
+Render the digit with `python scripts/render_serial_digit.py`; a gate-level waveform of one tile
+(START → busy → wb_done → READ_C ×4, the 24-bit accumulators shifting out on MISO) is captured by
+`tb/dla_engine_chip_wave_tb.sv` and drawn by `scripts/render_waveform.py`. The gate-level full run is
+~6 h wall (the serial framing evaluates the ~90k-gate netlist across ~43M mostly-idle shift clocks);
+RTL is ~13 min. Figures in `learning_notes.md` §12.4.
 
 ---
 
