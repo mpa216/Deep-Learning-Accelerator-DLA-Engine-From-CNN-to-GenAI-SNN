@@ -312,7 +312,7 @@ Chipathon 2026 moved to **per-project blocks**: the auditor generates the padfra
 DEF template (`librelane/A56_ACV.def`), and the participant hardens their design *into* that block.
 Our submission is the bridge-wrapped **`dla_engine_chip`** (serial bridge + eight-macro DLA core),
 hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config_acv.yaml`, run
-**`acv_ring4`** — **signed off**:
+**`acv_ring6`** — **signed off** (curated reports in [`signoff/A56/`](signoff/A56/)):
 
 | Metric | Value |
 |---|---|
@@ -337,6 +337,15 @@ raising `GRT_ANTENNA_REPAIR_MARGIN` **25 → 50 → 75** (more aggressive pre-ro
 them **5 → 3 → 0**, clearing even the one structurally-long buffer→output net a density sweep could
 not. Because the pin positions are auditor-fixed, the diode-margin knob was more targeted than moving
 cells.
+
+**Metal2 corner keep-out (2026-09-01 padframe revision).** The auditor re-issued the template with a
+Metal2 keep-out in the NE die corner (1610–1675 µm × 1108–1110 µm) to remove an integration shorting
+risk. The block already clears it — Metal2 tops out at **y = 1078.6 µm**, 29.4 µm below — and the
+re-harden (`acv_ring6`) also enforces it during routing via
+`ROUTING_OBSTRUCTIONS: [["Metal2", 1610, 1108, 1675, 1110]]` (added before routing, stripped before
+streamout so it is never painted as metal). Note: the template's blockage is delivered with a
+non-standard `+ RECT` spelling that OpenROAD's DEF reader rejects, so the keep-out is enforced as a
+routing obstruction rather than via the template blockage.
 
 **Post-layout timing** is signed off by **SPEF-backed 9-corner STA**, not SDF simulation: the 3.3 V AS
 cell library carries no `specify` timing blocks, so SDF-annotated dynamic gate-level sim is not

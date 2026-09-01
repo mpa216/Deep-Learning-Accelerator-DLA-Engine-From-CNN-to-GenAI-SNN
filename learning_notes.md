@@ -716,3 +716,142 @@ guessed): the serial framing is ~25–30× slower/clock than RTL because the ~90
 evaluated across all ~43M mostly-idle serial-shift clocks (~1.2 min/tile × 324 tiles). RTL ~13 min.
 This is the true cost of a purely serial-fed accelerator, and is exactly what the experimental
 branch's burst commands were designed to cut.
+
+---
+
+## Part 13 — Two lessons for the general reader (2026-08-29)
+
+Two things this project runs into are worth explaining from scratch, because they are general
+truths about building chips, not quirks of this one.
+
+### 13.1 How do you get power to a chip without breaking the "does the layout match the drawing?" test?
+
+Before a chip is manufactured it must pass **LVS — "Layout Versus Schematic."** A program looks at
+the *drawn shapes* (the metal, the transistors — the GDS file) and rebuilds the circuit they form,
+then checks it is electrically identical to the circuit you *intended* (the netlist). Match = you
+are taping out what you meant to. Mismatch = something is mis-wired, and you find out in software
+instead of in a $10k+ silicon run.
+
+A surprisingly tricky spot is **power**. Our block sits inside a shared frame of *I/O pads* (the
+bond-pad cells that connect the die to the outside world). Those pads hand us the 3.3 V supply as
+little **Metal2** fingers right at the die edge. But our block's internal power grid — the mesh that
+feeds every logic gate — is built on **Metal4/Metal5**, a few tens of microns further in. So there
+is a gap: the supply arrives on one metal layer at the edge, and the circuit expects it on a
+different layer inland. Something has to bridge the two.
+
+There are two ways to build that bridge, and under LVS they behave very differently:
+
+- **Option A — a little "connector cell" that you place at the junction** (a tiny block of nothing
+  but metal and stacked vias). This is clean to *build*, but it can confuse the extractor. A
+  hierarchical LVS tool can see the pad's Metal2 piece and the block's Metal4 piece as **two
+  separate nets that merely share the same name** — an *islanded* net. It only treats them as one
+  wire because of a rule called **connect-by-label**: "if two nets are named the same, assume
+  they're connected." That works — *as long as* whoever runs the final chip-level LVS remembers to
+  turn that rule on. If they don't, LVS sees a duplicated/broken supply and fails. The escape hatch
+  is to **flatten** the connector cell: dissolve it so its shapes merge into the parent, and the
+  extractor sees the physical via directly instead of guessing from names.
+
+- **Option B — stamp the bridging metal straight onto the existing power net** (what we do, in
+  `connect_power_v4.py`). Instead of a separate cell, we write the connector geometry *directly onto
+  the block's DVDD/DVSS "special nets."* Now there is no second net and no naming crutch — the
+  extractor sees one continuous, physically-joined piece of copper. LVS matches with nothing special
+  enabled.
+
+**The lesson:** *when the correctness of a connection depends on a naming convention, you have quietly
+added an assumption that someone downstream has to honor.* Making the connection be *one physical net*
+removes the assumption entirely. Our post-connector LVS prints **"Circuits match uniquely"** with the
+flatten options left empty — proof the crutch was never needed.
+
+*(A real footnote from this session: we briefly mistook another team's "you should flatten the
+connector" advice as applying to us — they had built Option A. The giveaway that it didn't apply was
+in our own connector script's comment: "shapes go straight onto the special nets, no connect-by-label
+needed." Reading what the code actually does beats pattern-matching someone else's fix.)*
+
+### 13.2 Why did generating one 28×28 image take six hours?
+
+We simulated the whole taped-out chip producing one handwritten "0" (784 pixels), and it took **~6
+hours** of computer time — for a chip that would do the same job in a *fraction of a second* in real
+silicon. Two ideas explain the gap, and both are general.
+
+**First: the chip talks through a keyhole.** To fit inside the shared pad frame, the accelerator is
+reached over just **four wires** (a serial link). To load the neural network's ~330,000 weight
+bytes, the host has to *shift them in one bit at a time* — about 20 clock ticks per byte, plus
+framing. That's tens of millions of clock ticks spent doing nothing but shuffling bits through a
+narrow opening. A narrow interface is a genuine bottleneck; it's exactly why an experimental version
+of this design added **"burst" commands** to send many bytes per handshake.
+
+**Second: a digital simulator's cost is counted in *clock ticks*, not in useful work.** A logic
+simulator advances the design one tiny time-step at a time and re-evaluates whatever changed. Crucially,
+**every clock tick still steps the entire ~90,000-gate netlist forward — even while the big multiply
+array is idle**, just waiting for the next serial bit to arrive. So the six hours isn't the *math*
+(the actual multiply-accumulates are a rounding error); it's the **~43 million mostly-idle clock
+cycles** of feeding the chip through that four-wire keyhole, each cycle costing a full sweep of the
+gate-level model. (Tellingly, the run reports only ~0.43 *milliseconds* of simulated "chip time" —
+but each nanosecond of chip time is thousands of simulator operations.)
+
+**Two takeaways:** (1) simulation *wall-clock* scales with the number of clock cycles you make the
+model step through, far more than with how much "real work" happens — so a slow serial protocol is
+expensive to simulate even though the compute is trivial. (2) That's why we **proved the logic at RTL
+first (~13 min)**, where the same run is ~25–30× faster, and only *then* spent the six hours
+confirming it on the exact taped-out gates. Cheap check first, expensive check second — never burn
+six hours to discover a testbench typo.
+
+## Part 14 — Bending the LibreLane flow: add, remove, or modify a step (2026-09-01)
+
+The auditor re-issued the padframe with a small **"keep this die corner free of Metal2"** rule
+(an anti-short measure). Honouring it meant reaching into the automated flow — a good excuse to
+write down, in plain terms, how you steer a flow like LibreLane. No prior EDA knowledge needed.
+
+**The mental model: an assembly line.** A "flow" is just an **ordered list of named steps** run one
+after another, like stations on an assembly line. Each step does one job — place the cells, route
+the wires, check spacing (DRC), check the layout matches the schematic (LVS) — and hands the design
+to the next step. Every step writes its work into its own **numbered folder** under `runs/<tag>/`,
+so `runs/acv_ring6/45-openroad-detailedrouting/` literally means "step 45, detailed routing." Read
+those folder names top-to-bottom and you can see exactly what ran, in order. **That list is the
+ground truth — read it, never guess it** (I wasted time reasoning about step order until I just
+listed the folders). The thing travelling down the line is the **state**: a small bundle of files
+(the database `.odb`, a `DEF`, the netlist `.nl.v`, …). A step reads some of those and writes new ones.
+
+Three ways to change what the line does, simplest first:
+
+**1. Turn a step off (or on) — a config switch.** Many steps have an on/off flag named `RUN_<x>`
+(default on). No IR-drop report? `RUN_IRDROP_REPORT: false`. Others: `RUN_LVS`, `RUN_MCSTA`
+(multi-corner timing), `RUN_SPEF_EXTRACTION`, `RUN_FILL_INSERTION`. This is how you *remove* a step —
+no code.
+
+**2. Modify a step by handing it a value it already understands.** Often a "change" is not new code
+at all — a built-in step already reads a config field. To keep the router out of the auditor's
+corner we added one line:
+`ROUTING_OBSTRUCTIONS: [["Metal2", 1610, 1108, 1675, 1110]]` (a box, in microns).
+The built-in `Odb.AddRoutingObstructions` step reads it and forbids the router from that box; a later
+built-in `Odb.RemoveRoutingObstructions` deletes it again before the layout is written out.
+
+**3. Run only part of the line, and splice in your own work — `--to` / `--from`.**
+`--to <Step>` runs from the start up to that step and stops; `--from <Step>` picks up from that step
+(reusing the saved state) and continues. **Between them you can run your own script** on the saved
+database, then resume feeding the modified files back in. That is exactly how the power connector is
+welded: run `--to Odb.CellFrequencyTables`, then a hand-written script (`connect_power_v4.py`) opens
+the saved `.odb`, stamps the extra metal, saves it, and we resume `--from Magic.StreamOut` pointed at
+the patched file. Nothing inside LibreLane changed — we opened the line between two stations, did a
+custom operation, and closed it again. You point a resumed step at specific files with
+`-e <view>=<path>` (e.g. `-e odb=…/_connected.odb`).
+
+**(Advanced) A real new step.** To make your operation a permanent, reusable station you subclass
+`Step` in Python, declare which views it reads/writes, and slot it into the list. More work; worth it
+only if you'll run it often. For a one-off, the splice in #3 is far simpler.
+
+**Three traps this session actually hit:**
+- **`-e` feeds a *file view*, not a config knob.** `-e odb=…` works; `-e RUN_SPEF_EXTRACTION=true`
+  errors with "Invalid design format ID." Config values live in the config file; `-e` is only for
+  odb/def/nl/… Cost me one failed launch.
+- **A "keep-out" left in the final layout can become real metal.** A blockage rectangle in a DEF is
+  read by the layout tool (Magic) as a *sheet of metal* unless told otherwise (`MAGIC_DEF_NO_BLOCKAGES`).
+  That is the whole reason the router keep-out must be *removed before stream-out* — hence the paired
+  add/remove-obstruction steps. (It's also why the auditor's blockage can't just be left in the
+  template: OpenROAD's DEF reader even rejects its `+ RECT` spelling — standard DEF is `RECT`.)
+- **When you splice, feed the pristine pre-write database, not `final/`** — the resume overwrites
+  `final/`, and re-patching an already-patched file stacks duplicate geometry (a self-inflicted DRC error).
+
+**One-line summary:** *a flow is an ordered list of steps passing a bundle of files along; remove a
+step with its `RUN_*` switch, tweak one by handing it a config value, and add one either by splicing
+a script between `--to`/`--from` or — for keeps — writing a real Step.*

@@ -179,3 +179,16 @@ DRT_ANTENNA_REPAIR_ITERS: 0
 DRT_ANTENNA_REPAIR_JUMPER_ONLY: true
 DIODE_ON_PORTS: in
 PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+
+# --- Auditor keep-out (2026-09-01 padframe revision) -------------------------
+# The re-issued A56_ACV.def adds a Metal2 BLOCKAGE in the NE die corner
+# (DEF: RECT 322000 221600 335000 222000 @ 200 dbu/um = x 1610-1675, y 1108-1110 um)
+# to remove an integration shorting risk.  Odb.ApplyDEFTemplate only relocates pins
+# -- it ignores template blockages -- so the keep-out is enforced natively here:
+# Odb.AddRoutingObstructions honours it during global+detailed routing, and
+# Odb.RemoveRoutingObstructions strips it again before Magic.StreamOut (so it is
+# NOT painted as a metal sheet).  Our route already clears this corner by ~29 um,
+# so this is belt-and-suspenders that also makes the layout provably respect the
+# official template.  Coords are in microns (layer, llx, lly, urx, ury).
+ROUTING_OBSTRUCTIONS:
+- ["Metal2", 1610.0, 1108.0, 1675.0, 1110.0]

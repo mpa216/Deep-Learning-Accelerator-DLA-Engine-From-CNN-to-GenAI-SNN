@@ -5,74 +5,78 @@ block: ACV
 team_code: A56_ACV
 design_name: A56_ACV_padring
 pin_count: 11
-user_slot_count: 26
+user_slot_count: 27
 pads:
 - pin_index: 0
   pin_name: clk
-  slot: W13
-  instance: W13
+  slot: W12
+  instance: W12
   io_type: input_schmitt
   cell: gf180mcu_fd_io__in_s
 - pin_index: 1
   pin_name: rst_n
-  slot: W14
-  instance: W14
+  slot: W13
+  instance: W13
   io_type: input_cmos
   cell: gf180mcu_fd_io__in_c
 - pin_index: 2
   pin_name: SCLK
-  slot: W15
-  instance: W15
+  slot: W14
+  instance: W14
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 3
   pin_name: MOSI
-  slot: W16
-  instance: W16
+  slot: W15
+  instance: W15
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 4
   pin_name: CS_N
-  slot: W17
-  instance: W17
+  slot: W16
+  instance: W16
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 5
   pin_name: MISO
-  slot: W18
-  instance: W18
+  slot: W17
+  instance: W17
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 6
   pin_name: busy
-  slot: W19
-  instance: W19
+  slot: W18
+  instance: W18
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 7
   pin_name: done
-  slot: W20
-  instance: W20
+  slot: W19
+  instance: W19
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 8
   pin_name: wb_done
-  slot: W21
-  instance: W21
+  slot: W20
+  instance: W20
   io_type: bidirectional_24ma
   cell: gf180mcu_fd_io__bi_24t
 - pin_index: 9
   pin_name: DVDD
-  slot: W22
-  instance: W22
+  slot: W21
+  instance: W21
   io_type: power
   cell: gf180mcu_fd_io__dvdd
 - pin_index: 10
   pin_name: DVSS
-  slot: N01
-  instance: N01
+  slot: W22
+  instance: W22
   io_type: ground
   cell: gf180mcu_fd_io__dvss
+- slot: N01
+  instance: N01
+  generated: true
+  cell: gf180mcu_fd_io__asig_5p0
 - slot: N02
   instance: N02
   generated: true
@@ -134,6 +138,9 @@ pads:
   generated: true
   cell: gf180mcu_fd_io__asig_5p0
 breaks:
+- instance: BRK_BEFORE_ACV
+  reason: project_boundary
+  before_slot: W12
 - instance: BRK_AFTER_ACV
   reason: project_boundary
-  after_slot: N01
+  after_slot: W22
