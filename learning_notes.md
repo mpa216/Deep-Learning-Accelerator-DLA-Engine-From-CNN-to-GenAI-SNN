@@ -855,3 +855,410 @@ only if you'll run it often. For a one-off, the splice in #3 is far simpler.
 **One-line summary:** *a flow is an ordered list of steps passing a bundle of files along; remove a
 step with its `RUN_*` switch, tweak one by handing it a config value, and add one either by splicing
 a script between `--to`/`--from` or — for keeps — writing a real Step.*
+
+---
+
+## Part 15 — Five verification & front-end add-ons (2026-09-13): closing the methodology gaps
+
+Everything up to here got a working chip *taped out*. This part is different: it adds five things
+that a professional digital-design/verification flow is *expected* to have, but that this project
+had never actually demonstrated. None of them change the taped-out chip — they are extra checks and
+one extra interface built *around* the same, unchanged RTL. All five run in the open-source
+`apic_headless` container. I'm writing this for study, so each one starts from scratch, says why it
+matters, then the nuance that actually bit me.
+
+A useful mental split first. Two of these are **front-end design** (things you *write* that shape
+the chip): the timing constraints (15.1) and the APB bus wrapper (15.4). Three are **verification**
+(things that *check* the chip without changing it): formal proofs (15.2), functional coverage (15.3),
+and the X-propagation test (15.5). Different jobs advertise for different halves, which is the whole
+reason for building both.
+
+### 15.1 Hand-written timing constraints (SDC)
+
+**The concept.** A synchronous chip has a heartbeat — the clock. On every tick, data must travel
+from one flip-flop, through some logic, and *arrive* at the next flip-flop **before the next tick**.
+If it arrives late, the chip computes garbage at speed. Checking this is *static timing analysis*
+(STA), and STA needs you to tell it the ground rules: how fast is the clock? how much of each clock
+period is eaten by the outside world before/after our chip? which paths are *not* real and should be
+ignored? Those rules live in a file called an **SDC** (Synopsys Design Constraints — an industry
+format).
+
+**What was missing.** The automated flow (LibreLane/OpenROAD) had always *generated* its own SDC
+from one number, the clock period. Perfectly fine for closing the chip — but it means nobody had
+ever *authored* constraints by hand, which is a core front-end skill. So I wrote two by hand:
+`constraints/dla_engine_top.sdc` (the accelerator core) and `constraints/dla_engine_chip.sdc` (the
+padframe-facing chip), each with a comment explaining *why* every line is there.
+
+**The nuance that matters — the "false path."** The chip's serial link (SCLK/MOSI/CS_N) comes from
+an outside host that has **no idea** about our clock. Those signals land in a "double-flop
+synchroniser" — two back-to-back flip-flops whose only job is to safely catch a signal from an
+unknown timing world (more on why in 15.2's cousin, CDC, in 15.6). Here's the trap: if you let STA
+time those input wires normally, it will try to grade a race that is *meant* to be a race, and
+report failures that are not real. The correct instruction is `set_false_path` — literally "don't
+grade this path; a safety net downstream handles it." The auto-generated SDC never does this; a
+human who understands the design does. That one line is the difference between an SDC that
+understands the chip and one that just parrots the clock.
+
+**A second, subtler nuance — don't over-constrain the clock tree.** I first added a blanket rule
+"no gate may drive more than 20 others" (`set_max_fanout 20`). Re-running STA, it flagged dozens of
+violations — but *only on the clock-distribution buffers*, which by design fan out to 20–50
+flip-flops each. No actual logic violated it. Lesson: a design-wide fanout cap is the wrong tool for
+clock nets (those are shaped by a dedicated step, clock-tree synthesis). I dropped it and kept the
+physically-meaningful limit (`set_max_transition`, an edge-sharpness rule) that passed clean.
+
+**"Verify your constraints, don't just write them."** Anyone can write an SDC; the skill is showing
+it *works*. So `constraints/validate_sdc.sh` re-runs STA (standalone OpenSTA) on the **actual routed
+netlists** using my hand-written file, and reports the result. Both designs come back with a real
+40 ns clock, all timing **MET** (setup ≈ +26.6 ns, hold ≈ +0.24–0.34 ns), and zero unconstrained
+endpoints. One honest caveat baked into the script: this check has *no wire parasitics* loaded, so
+the setup number is rosier than the true sign-off (+15.7 ns with parasitics). That's fine — the goal
+is to prove the *constraints* are valid and complete, not to re-do sign-off. (Tooling footnote: the
+full OpenROAD app refused this because it wanted a physical tech file for `read_verilog`; the
+lighter standalone `sta` does pure timing with just the libraries, which is exactly what this needs.)
+
+### 15.2 Formal verification + assertions (proving, not just testing)
+
+**The concept — the biggest idea here.** Normal testing (everything in Parts 7, 11, 12) *runs
+examples*: feed inputs, check outputs, hope you tried the case that breaks it. **Formal
+verification** is different in kind: it's a mathematical proof that a property holds for **every
+possible input and every reachable state, forever** — no examples, no hoping. It's the difference
+between "I spot-checked 100 additions and they were right" and "I proved addition is right."
+
+Two ingredients:
+1. **An assertion (SVA — SystemVerilog Assertions):** a rule the design must *never* break, written
+   as one line. E.g. "the command counter never counts past 23," or "the engine only signals *done*
+   after a *full* 256-step multiply."
+2. **A prover (SymbiYosys + a solver called yices):** software that tries, exhaustively and
+   symbolically, to find *any* way to break the rule. If it can't, the rule is proven.
+
+**What I proved.** Two small control brains: the matmul controller and the serial-bridge protocol
+engine (`formal/`). 13 rules total — no illegal state is ever reachable, the frame counter can't
+overrun, the command pulses can't collide, dropping the chip-select always returns cleanly to idle,
+and the "done only after a full contraction" rule. That last one is special: it is the *exact* bug
+from Part 5.1 (a controller that finished after 4 steps instead of 256). A machine now proves that
+class of bug is impossible, not just absent from my test vectors. Both proofs pass in seconds by
+"k-induction" (the prover's proof technique).
+
+**Nuance 1 — reaching inside without vandalising the blueprint (`bind`).** The best bridge
+properties are about *internal* signals (its hidden state, its counter), not its output pins. The
+tempting way to reach them is to scribble the assertions directly into the tapeout RTL behind an
+`ifdef` — but I did not want to touch the signed-off `dla_serial_bridge.v`. SystemVerilog's `bind`
+solves this: it "staples" a separate rulebook module onto the design from the outside, wiring itself
+to the internal signals, while the original file stays byte-for-byte untouched. Clean separation of
+"the design" from "the checks on the design."
+
+**Nuance 2 — the prover imagined an impossible power-on (basecase vs induction).** My first
+controller proof half-passed: the *induction* step passed ("if the rules hold this cycle, they hold
+next cycle") but the *base case* failed ("the rules hold at the very start"). The reason is subtle
+and worth internalising: the prover doesn't know the chip gets reset unless you tell it. Left free,
+it invented a nonsense power-on state — the engine already claiming "done" with a garbage counter —
+and correctly reported that as a rule violation. The fix is one line that says "assume the first
+cycle applies reset." (Telling detail: the *bridge* proof needed no such assumption — its safety
+rules hold from **any** starting state, which is a genuinely stronger result and a nice thing to be
+able to say about your own protocol engine.)
+
+**Nuance 3 — the open-source tool speaks a dialect.** The textbook way to write a clocked assertion
+is `assert property (@(posedge clk) ...)`. Yosys 0.64 rejects that syntax (and the `default
+clocking` shorthand). The portable form it *does* accept is the older "immediate assertion inside a
+clocked `always` block." Same meaning, different spelling — the kind of tool-specific friction that
+only shows up when you actually run the thing.
+
+### 15.3 Functional coverage (did the tests try the *hard* cases?)
+
+**The concept.** A test suite can pass with flying colours and still be nearly worthless if it only
+ever exercised the easy cases. **Functional coverage** answers "did we actually hit the situations
+that matter?" You write down a checklist of *interesting* conditions — the coverpoints — and the
+testbench ticks each one off as it occurs. At the end you get a percentage and a list of what was
+*never* hit. It turns "the tests pass" into "the tests pass **and** provably exercised these 25
+corner situations."
+
+**What I added.** The UVM testbench (Part 11) had good random stimulus but no coverage — so no
+number to quote. I added a 25-bin coverage model (`tb/uvm/dla_uvm.py`) over the things that matter
+for an INT8 multiplier: does the input include the awkward extremes (−128, the one value with no
+positive twin; +127; zero)? both signs? does the *result* ever come out negative, zero, or huge? did
+we ever compute the extreme products −128×−128 and 127×127? The run now reports **100% (25/25)**.
+
+**The nuance that makes it real — random alone can't finish the job.** I deliberately chose
+coverpoints that pure random stimulus almost never hits: a result of *exactly zero* (random 256-term
+sums are essentially never zero), or a specific corner product landing in the array. So random gets
+you most of the way, then a handful of **directed** ops — all-zeros, all-(−128), etc. — close the
+last bins. That is exactly the professional loop: *constrained-random for breadth, directed tests to
+close the coverage holes.* If every bin had filled on random alone, the coverpoints would have been
+too easy to be meaningful.
+
+**Second nuance — the tool I "should" have used wasn't there.** The standard library for this in
+this ecosystem is `cocotb-coverage`, but it isn't installed and doesn't play well with the very new
+cocotb 2.0 anyway. Rather than fight it, I wrote a ~60-line coverage model by hand (just dictionaries
+of bins and counts). Less magic, zero dependencies, and it makes the concept transparent — which for
+studying is arguably better.
+
+**A free finding.** Watching the magnitudes, the largest possible result is 128×128×256 = 4,194,304,
+which is 2²². The accumulator is 24 bits (holds up to ~8.4 million). So the hardware *provably cannot
+overflow* for INT8 inputs — a fact the coverage run made obvious that I hadn't stated before.
+
+### 15.4 An APB bus wrapper (giving the accelerator a standard plug)
+
+**The concept.** Inside a real system-on-chip, blocks don't wire to each other with ad-hoc bespoke
+signals — they hang off a shared **bus** with a standard handshake, so any block can talk to any
+other without custom glue. **APB** (part of ARM's AMBA family) is the simplest such bus: address,
+data, a "select," an "enable," and a "ready" line. Our accelerator only ever had a *custom*
+control interface (my own `wr_en/wr_addr/...`). It works, but "can you integrate to a standard bus?"
+is a distinct, very employable skill it didn't show.
+
+**What I built.** `rtl/dla_apb_slave.v` — a wrapper that presents the accelerator as a standard APB
+peripheral with a clean **memory map**: write matrix A to one address window, matrix B to another,
+read the results from a third, "go" via a control register, poll a status register. From the
+outside it now looks like any other memory-mapped IP block.
+
+**The nuance — the memory answers one beat late (wait states).** APB has a `PREADY` line so a slow
+peripheral can say "hold on, not ready yet." Our result memory has a **one-cycle registered read**:
+you ask this cycle, the data appears next cycle. So a naive single-cycle APB read would sample the
+*old* value. The wrapper handles it correctly by de-asserting `PREADY` for exactly one cycle on a
+result read — inserting one "wait state" — and the testbench confirms all 16 reads did exactly that.
+This is a small thing that shows you understand both the bus protocol *and* your own IP's timing,
+and that the two have to be reconciled. (It's the same class of "the C buffer answers late" issue
+the serial bridge hit in its own way — see Part 5's read-turnaround notes.)
+
+**How it was checked.** A self-checking testbench (`tb/dla_apb_tb.sv`) drives a full matrix-multiply
+entirely over APB and compares all 16 results to a golden computed in the testbench — plus it checks
+the bus's error line (`PSLVERR`) fires on an illegal access and stays quiet on a legal one. It
+passes, and the wrapper synthesises with **zero inferred latches** (a latch here would be an
+accidental, bad memory element — its absence means the logic is clean).
+
+### 15.5 An X-propagation test (making "unknown" visible)
+
+**The concept — the third digital value.** Real wires are 0 or 1, but a *simulator* tracks a third
+value, **X = "unknown."** Freshly powered-up memory contains X (it holds whatever random charge it
+wakes with). The rule of X is "garbage in, garbage out": multiply or add anything by X and you get
+X. This is a *good* feature — it lets a simulator scream "you used something uninitialised" instead
+of silently inventing a plausible-looking wrong answer.
+
+**What I built and why.** The chip's bring-up plan already says "zero-fill both input memories before
+the first compute, or the accelerator sums garbage." That was written as an *argument*. `tb/
+dla_xprop_tb.sv` turns it into a *demonstration* in two phases: **(1)** reset, then compute
+**without** filling the input memories — and the test asserts that all 16 results come back **X**
+(16/16 do); **(2)** fill the memories, compute again — and every result is the exact number. So it
+proves both that the hazard is real *and* that the documented fix cures it.
+
+**The nuance — X is a double-edged sword, which is why a dedicated test earns its keep.** In
+simulation X propagates and exposes the bug. But real silicon has no "X" — those memory cells power
+up as *actual* 0s and 1s, just unpredictable ones, so hardware would compute a confident wrong
+answer with no warning at all. And the reverse trap exists too: sometimes a simulator is *too*
+pessimistic and shows X where real hardware would resolve to a clean value (this project already hit
+one such artifact — a vendor memory model that stayed X until it saw a specific enable wiggle; see
+Part 7 / the GLS notes). So "reason about X deliberately" is a real methodology, not a checkbox —
+this test makes that reasoning runnable and repeatable.
+
+### 15.6 What I deliberately did *not* build, and why (the honest part)
+
+Two related items on the gap list I left open — on purpose, because doing them properly needs tools
+that the open-source flow here doesn't have, and a half-built version would be worse than an honest
+"not yet":
+
+- **A CDC (clock-domain-crossing) tool run.** CDC is the discipline around signals passing between
+  parts of a chip running on *different, unrelated clocks* — exactly what the serial link is (15.1's
+  false path is its timing-side twin). Our design handles it correctly *by construction*: there's
+  only one real crossing, and it's guarded by the double-flop synchroniser. But *proving* that with a
+  dedicated CDC analysis tool is a specific step, and the credible tools are commercial
+  (SpyGlass/Questa/JasperGold); the open-source stack here has no real equivalent. So the honest
+  statement stays "handled by design, one crossing, two-flop synchroniser" rather than a fake
+  tool report.
+- **Power-aware (UPF) simulation.** This verifies behaviour when parts of a chip get their power
+  switched *off* to save energy (isolation cells, state retention, etc.). Our chip is single-supply,
+  single-domain — nothing ever powers off — so there is literally nothing for such a simulation to
+  check, and no open-source engine to run it anyway. Noted as awareness, not built.
+
+Knowing *which* gaps are worth closing with the tools you have — and being straight about the ones
+that aren't — is itself part of the skill.
+
+### 15.7 The through-line
+
+Each add-on answers a different question about the *same* unchanged accelerator: **will it meet
+timing** (15.1), **is it provably correct by the rules that matter** (15.2), **did the tests really
+exercise the hard cases** (15.3), **can it plug into a standard system** (15.4), and **does it fail
+loudly instead of silently on uninitialised state** (15.5). And a recurring meta-lesson runs through
+all five: on an open-source flow, *the tool you have shapes what you can claim* — the SDC needed the
+lighter STA engine, the assertions needed Yosys's older dialect, coverage needed a hand-rolled model,
+and two whole items were best left honest rather than faked. Building the check is half the job;
+knowing what the check does and doesn't prove is the other half.
+
+**How to re-run all five** (inside `apic_headless`, from `/foss/designs`):
+`bash constraints/validate_sdc.sh` · `cd formal && bash run_formal.sh` · `cd tb/uvm && make` · the
+`iverilog`/`vvp` lines in the headers of `tb/dla_apb_tb.sv` and `tb/dla_xprop_tb.sv`.
+
+---
+
+## Part 16 — Implementation how-to: the actual code (2026-09-13)
+
+Part 15 is the *what & why* (and the nuances) in plain language. This part is the *how* — the
+load-bearing code for each add-on, so the approach is reproducible. Each subsection here pairs with
+the same-numbered one in Part 15.
+
+### 16.1 SDC — the constraints and how they're validated
+Files: `constraints/dla_engine_top.sdc`, `dla_engine_chip.sdc`, `validate_sdc.{tcl,sh}`.
+
+An SDC is a list of Tcl commands; each answers one question the timing tool needs:
+```tcl
+create_clock -name clk -period 40.0 [get_ports clk]     ;# the heartbeat is 40 ns
+set_propagated_clock [get_clocks clk]                   ;# use the REAL clock-tree delay, not ideal
+set_clock_uncertainty -setup 0.25 [get_clocks clk]      ;# shave margin for jitter/skew (setup)
+set_clock_uncertainty -hold  0.10 [get_clocks clk]      ;# smaller margin for hold
+set_input_delay  8.0 -clock clk [get_ports {wr_en wr_addr[*] wr_data[*] ...}] ;# world used 8 ns before our input
+set_output_delay 8.0 -clock clk [get_ports {rd_data[*] done busy ...}]        ;# leave 8 ns after our output
+set_input_transition 0.50 <inputs>   ;# model a real driver's edge (auto-SDC omits this)
+set_load             0.05 <outputs>  ;# model a real load capacitance
+```
+`[get_ports {wr_addr[*]}]` is a wildcard over all 10 bits — why the hand file is short and the
+auto one was hundreds of lines. The one line that encodes design knowledge, in the **chip** SDC:
+```tcl
+set_false_path -from [get_ports {SCLK_IN MOSI_IN CS_N_IN}]  ;# async serial ins -> don't time (synchroniser handles it)
+```
+
+Validation (`validate_sdc.tcl`) points a real timing engine at the *finished* gates using this file:
+```tcl
+read_liberty <std-cell .lib> ; read_liberty <SRAM .lib>   ;# how fast each gate is
+read_verilog <routed .nl.v>  ; link_design dla_engine_top ;# the actual gates
+read_sdc     <my .sdc>                                     ;# my rules
+report_checks -path_delay max   ;# worst setup -> +26.6 ns MET
+report_checks -path_delay min   ;# worst hold  -> +0.34 ns MET
+```
+Driven by `validate_sdc.sh`, which sets the file paths as env vars and calls `sta -no_init -exit`.
+**Tool gotcha:** the full OpenROAD app's `read_verilog` demands a physical tech/LEF; the lighter
+standalone **`sta`** (OpenSTA) does pure timing from just the `.lib`s — which is all this needs.
+
+### 16.2 Formal — assertion form, wrapper vs bind, the runner
+Files: `formal/dla_controller_props.sv`, `dla_serial_bridge_props.sv`, `*.sby`, `run_formal.sh`.
+
+The portable assertion form (Yosys 0.64 rejects concurrent `assert property (@...)`): an `assert`
+in a clocked block, reading "on every tick out of reset this must be true":
+```verilog
+always @(posedge clk) if (rst_n) begin
+  a_bitcnt_bound : assert (bitcnt <= 5'd23);        // frame counter never overruns
+  a_excl_start_wr: assert (!(start && wr_en));       // two commands can't fire together
+end
+```
+
+**Reaching signals — technique A, a wrapper** (controller: everything needed is a port):
+```verilog
+module dla_controller_props (input clk, rst_n, start);
+  dla_controller #(.K(256)) dut (.clk(clk), ..., .done(done), .k_idx(k_idx));
+  reg f_init = 1'b1; always @(posedge clk) f_init <= 1'b0;
+  always @(*) if (f_init) assume (!rst_n);           // <-- force cycle-0 reset (the base-case fix)
+  always @(posedge clk) if (rst_n) a_kidx: assert (k_idx <= 8'd255);
+endmodule
+```
+**Technique B, `bind`** (bridge: the useful signals are internal, and I won't touch the tapeout RTL):
+```verilog
+module dla_serial_bridge_props (input clk, rst_n, input [3:0] state, input [4:0] bitcnt, ...);
+  always @(posedge clk) if (rst_n) a_state_legal: assert (state <= 4'd10);
+endmodule
+// staple it on from outside, wiring props ports to the bridge's internal wires of the same name:
+bind dla_serial_bridge dla_serial_bridge_props u_props (.clk(clk), .state(state), .bitcnt(bitcnt), ...);
+```
+
+The runner (`.sby`): `read` the **design first, props second** (so `bind`'s target exists), then prove:
+```
+[engines]
+smtbmc yices
+[script]
+read -sv /foss/designs/rtl/dla_serial_bridge.v
+read -sv dla_serial_bridge_props.sv
+prep -top dla_serial_bridge
+```
+`sby -f x.sby` runs **k-induction** = two sub-proofs: **base case** (from reset, step forward N
+cycles, no rule breaks — this is what failed until the `assume(!rst_n)` above) and **induction step**
+(assume the rules held N cycles, prove they hold at N+1). Both pass ⇒ true for all time.
+
+### 16.3 Functional coverage — bins, sampling, closure, report
+File: `tb/uvm/dla_uvm.py` (`DlaCoverage` + directed ops in `DlaSequence`).
+
+Coverage is a nested dict, coverpoint → {bin: count}, all starting at 0:
+```python
+self.cg = {"c_sign": {"neg":0,"zero":0,"pos":0},
+           "prod_corner": {"min_min":0,"max_max":0,"min_max":0,"times_zero":0}, ...}
+```
+`sample()` looks at the real inputs/result of each transaction and ticks matching bins:
+```python
+aflat = [v for row in op.a for v in row]                 # flatten 4x256 A
+if -128 in aflat: self._hit("a_corner", "has_min")        # drove the awkward -128?
+mx = max(abs(v) for v in cvals)                            # biggest |result|
+self._hit("c_mag", "z" if mx==0 else "lo" if mx<=1000 else "mid" if mx<=100000 else "hi")
+def term_exists(av, bv):                                   # aligned corner product a*b?
+    return any(any(op.a[i][k]==av for i in range(N)) and any(op.b[k][j]==bv for j in range(N))
+               for k in range(K))
+if term_exists(-128,-128): self._hit("prod_corner","min_min")
+```
+Directed ops in the sequence close the bins random can't reach:
+```python
+directed_specs = [("directed_zero",0,0), ("directed_minmin",-128,-128), ...]  # forces C==0, the -128*-128 corner
+```
+Report + assert closure:
+```python
+pct = 100.0 * hit / total          # 25/25 = 100%
+assert pct >= 100.0
+```
+
+### 16.4 APB wrapper — decode, write path, the wait state, the master
+Files: `rtl/dla_apb_slave.v`, `tb/dla_apb_tb.sv`.
+
+Address decode — top 2 bits select the region, low bits the item:
+```verilog
+wire [1:0] region = PADDR[13:12];   // REG_A=0, REG_B=1, REG_C=2, REG_CTRL=3
+wire access = PSEL & PENABLE;        // APB "data phase"
+```
+Write path — an APB write to A/B is just a DLA buffer write; a write to CTRL pulses start:
+```verilog
+wire dla_wr_en   = access & PWRITE & (region==REG_A || region==REG_B);
+wire dla_wr_sel  = (region==REG_B);
+wire [9:0] dla_wr_addr  = PADDR[11:2];       // item index = byte addr / 4
+wire signed [7:0] dla_wr_data = PWDATA[7:0];
+wire dla_start   = (access & PWRITE & region==REG_CTRL & PADDR[3:2]==0) & PWDATA[0];
+```
+The wait state (the nuance): the result memory answers one cycle late, so one flip-flop inserts
+exactly one wait cycle:
+```verilog
+always @(posedge PCLK or negedge PRESETn)
+  if (!PRESETn)           cwait <= 0;
+  else if (rd_c & ~cwait) cwait <= 1;   // 1st C-read cycle: enter wait
+  else                    cwait <= 0;   // 2nd cycle: leave
+assign PREADY    = ~(rd_c & ~cwait);     // "not ready" only during the 1st C-read cycle
+wire   dla_rd_en = rd_c & ~cwait;        // issue read in cycle 1; data valid in cycle 2
+```
+Read-data mux + error line:
+```verilog
+if (rd_c)           PRDATA = {{8{dla_rd_data[23]}}, dla_rd_data};    // sign-extend 24->32
+else if (rd_status) PRDATA = {29'd0, dla_wb_done, dla_done, dla_busy};
+assign PSLVERR = (is_wr & ~(wr_ab|wr_ctrl)) | (is_rd & ~(rd_c|rd_status));  // bad access
+```
+The testbench master drives APB's two-phase handshake as a task, then checks against a golden:
+```verilog
+task apb_write(addr, data);
+  @(negedge PCLK); PSEL=1; PWRITE=1; PADDR=addr; PWDATA=data; PENABLE=0;  // SETUP
+  @(negedge PCLK); PENABLE=1;                                             // ACCESS
+  @(posedge PCLK); while(!PREADY) @(posedge PCLK);                        // honour wait states
+endtask
+// flow: fill A/B via apb_write windows -> write CTRL=1 -> poll STATUS bit2 (wb_done)
+//       -> apb_read the 16 C values -> compare each to a TB-computed golden.
+```
+
+### 16.5 X-propagation — two phases and the detector
+File: `tb/dla_xprop_tb.sv`. The behavioral SRAM is `reg [7:0] mem[0:255]` with **no init**, so in
+Icarus every unwritten cell reads X.
+```verilog
+// PHASE 1: reset, then compute WITHOUT writing A/B
+run_start;
+for (each of 16 C) begin rd_c(i*N+j, c);
+  if (^c === 1'bx) x_seen = x_seen + 1;   // ^c = XOR of all bits (X if ANY bit unknown); === is 4-state exact
+end                                        // -> x_seen==16: uninit SRAM propagates to X
+
+// PHASE 2: reset, WRITE all A=1,B=1, compute
+run_start;
+for (each of 16 C) if (c !== K) error;    // -> all exactly 256: init cures it
+```
+The whole detector is `^c === 1'bx`: reduce all 24 bits with XOR (any X ⇒ X), then compare with the
+4-state `===` (a plain `==` against X returns X, never true).
+
+**Through-line (implementation view):** four of the five just point a new tool at the *existing*
+design — a timing engine (16.1), a prover (16.2), a coverage tracker (16.3), an X-aware sim (16.5).
+Only the APB wrapper (16.4) is new hardware, and it only re-shapes the accelerator's existing pins
+into a standard protocol. Nothing regenerates layout, which is why the GDS is untouched.

@@ -118,10 +118,23 @@ class DlaSequence(uvm_sequence):
         self.n_random = n_random
 
     async def body(self):
-        directed = DlaOp("directed_ones")
-        directed.fill(1, 1)                     # C[i][j] must be exactly K=256
-        await self.start_item(directed)
-        await self.finish_item(directed)
+        # Directed ops chosen to CLOSE the corner coverpoints that random
+        # stimulus rarely/never hits (see DlaCoverage): known-answer anchor,
+        # a mid-magnitude value, all-zero, and the four INT8 sign/corner mixes.
+        directed_specs = [
+            ("directed_ones",   1,     1),      # C=256      -> c_mag lo, sign pp, anchor
+            ("directed_mid",    1,   100),      # C=25600    -> c_mag mid
+            ("directed_zero",   0,     0),      # C=0        -> c_sign zero, times_zero, c_mag z
+            ("directed_minmin", -128, -128),    # -128*-128  -> prod min_min, sign nn, c_mag hi
+            ("directed_maxmax", 127,  127),     # 127*127    -> prod max_max
+            ("directed_minmax", -128, 127),     # -128*127   -> prod min_max, sign np, c_sign neg
+            ("directed_maxmin", 127, -128),     # 127*-128   -> prod min_max, sign pn
+        ]
+        for name, aval, bval in directed_specs:
+            op = DlaOp(name)
+            op.fill(aval, bval)
+            await self.start_item(op)
+            await self.finish_item(op)
 
         for n in range(self.n_random):
             op = DlaOp(f"rand_{n}")
@@ -260,6 +273,80 @@ class DlaSequencer(uvm_sequencer):
 
 
 # ===========================================================================
+# 5b. FUNCTIONAL COVERAGE -- a self-contained coverage model (no external
+#     cocotb-coverage dependency, which is unavailable on cocotb 2.x here).
+#     Coverpoints are chosen so pure-random stimulus leaves several bins COLD
+#     (C==0, the INT8 corner products -128*-128 / 127*127 / -128*127, both
+#     all-positive and all-negative operand mixes); the directed ops in
+#     DlaSequence exist to CLOSE them -- i.e. coverage-driven closure on top of
+#     the constrained-random base, with a reported %.
+# ===========================================================================
+class DlaCoverage:
+    def __init__(self):
+        self.cg = {
+            "op_kind":     {b: 0 for b in ["directed", "random"]},
+            "a_corner":    {b: 0 for b in ["has_neg", "has_zero", "has_min", "has_max"]},
+            "b_corner":    {b: 0 for b in ["has_neg", "has_zero", "has_min", "has_max"]},
+            "sign_cross":  {b: 0 for b in ["pp", "pn", "np", "nn"]},   # (A has neg?)x(B has neg?)
+            "c_sign":      {b: 0 for b in ["neg", "zero", "pos"]},
+            "c_mag":       {b: 0 for b in ["z", "lo", "mid", "hi"]},   # max|C| bucket
+            "prod_corner": {b: 0 for b in ["min_min", "max_max", "min_max", "times_zero"]},
+        }
+
+    def _hit(self, cp, b):
+        self.cg[cp][b] += 1
+
+    def sample(self, op, res, kind):
+        aflat = [v for row in op.a for v in row]
+        bflat = [v for row in op.b for v in row]
+        self._hit("op_kind", kind)
+
+        a_neg = any(v < 0 for v in aflat); b_neg = any(v < 0 for v in bflat)
+        for tag, cond in (("has_neg", a_neg), ("has_zero", 0 in aflat),
+                          ("has_min", -128 in aflat), ("has_max", 127 in aflat)):
+            if cond: self._hit("a_corner", tag)
+        for tag, cond in (("has_neg", b_neg), ("has_zero", 0 in bflat),
+                          ("has_min", -128 in bflat), ("has_max", 127 in bflat)):
+            if cond: self._hit("b_corner", tag)
+
+        self._hit("sign_cross", ("n" if a_neg else "p") + ("n" if b_neg else "p"))
+
+        cvals = [res.c[i][j] for i in range(N) for j in range(N)]
+        if any(v < 0 for v in cvals): self._hit("c_sign", "neg")
+        if any(v == 0 for v in cvals): self._hit("c_sign", "zero")
+        if any(v > 0 for v in cvals): self._hit("c_sign", "pos")
+        mx = max(abs(v) for v in cvals)
+        self._hit("c_mag", "z" if mx == 0 else "lo" if mx <= 1000
+                  else "mid" if mx <= 100000 else "hi")
+
+        # A MAC term a[i][k]*b[k][j] hits a corner product iff, for some k, column
+        # k of A holds the A-factor and row k of B holds the B-factor.
+        def term_exists(av, bv):
+            for k in range(K):
+                if any(op.a[i][k] == av for i in range(N)) and \
+                   any(op.b[k][j] == bv for j in range(N)):
+                    return True
+            return False
+        if term_exists(-128, -128): self._hit("prod_corner", "min_min")
+        if term_exists(127, 127):   self._hit("prod_corner", "max_max")
+        if term_exists(-128, 127) or term_exists(127, -128):
+            self._hit("prod_corner", "min_max")
+        if (0 in aflat) or (0 in bflat): self._hit("prod_corner", "times_zero")
+
+    def report(self, logger):
+        total = hit = 0
+        for cp, bins in self.cg.items():
+            b_hit = sum(1 for c in bins.values() if c > 0)
+            total += len(bins); hit += b_hit
+            cold = [b for b, c in bins.items() if c == 0]
+            logger.info(f"  cover {cp:12s} {b_hit}/{len(bins)}"
+                        + (f"   COLD: {cold}" if cold else ""))
+        pct = 100.0 * hit / total
+        logger.info(f"FUNCTIONAL COVERAGE: {hit}/{total} bins = {pct:.1f}%")
+        return pct
+
+
+# ===========================================================================
 # 6. SCOREBOARD -- reference model + checker.  Two analysis FIFOs: one fed by the
 #    driver (stimulus), one by the monitor (observed result).  For each pair it
 #    predicts C from A,B and compares.
@@ -270,12 +357,15 @@ class DlaScoreboard(uvm_component):
         self.result_fifo = uvm_tlm_analysis_fifo("result_fifo", self)
         self.passed = 0
         self.failed = 0
+        self.cov = DlaCoverage()
 
     async def run_phase(self):
         while True:
             op = await self.stim_fifo.get()          # what we applied
             res = await self.result_fifo.get()       # what the DUT produced
             expected = matmul_ref(op.a, op.b)
+            self.cov.sample(op, res,
+                            "directed" if op.get_name().startswith("directed") else "random")
             mism = [(i, j, expected[i][j], res.c[i][j])
                     for i in range(N) for j in range(N)
                     if expected[i][j] != res.c[i][j]]
@@ -315,9 +405,9 @@ class DlaTest(uvm_test):
 
     async def run_phase(self):
         self.raise_objection()
-        seq = DlaSequence(n_random=3)
+        seq = DlaSequence(n_random=16)         # random breadth + the directed corners
         await seq.start(self.env.agent.sequencer)
-        await ClockCycles(cocotb.top.clk, 20)  # drain: let the scoreboard finish
+        await ClockCycles(cocotb.top.clk, 200)  # drain: let the scoreboard finish
         self.drop_objection()
 
     def check_phase(self):
@@ -326,6 +416,10 @@ class DlaTest(uvm_test):
         assert sb.failed == 0 and total > 0, \
             f"UVM scoreboard: {sb.failed} failed / {total} total"
         self.logger.info(f"ALL {total} TRANSACTIONS PASSED")
+        self.logger.info("---- functional coverage ----")
+        pct = sb.cov.report(self.logger)
+        assert pct >= 100.0, f"coverage closure incomplete: {pct:.1f}%"
+        self.logger.info("COVERAGE CLOSURE: 100% of bins hit")
 
 
 # ===========================================================================

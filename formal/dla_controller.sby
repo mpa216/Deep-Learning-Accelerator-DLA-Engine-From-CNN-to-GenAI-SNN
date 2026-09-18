@@ -1,0 +1,14 @@
+[options]
+mode prove
+depth 40
+
+[engines]
+smtbmc yices
+
+[script]
+read -sv dla_controller_props.sv
+read -sv /foss/designs/rtl/dla_controller.v
+prep -top dla_controller_props
+
+[files]
+dla_controller_props.sv

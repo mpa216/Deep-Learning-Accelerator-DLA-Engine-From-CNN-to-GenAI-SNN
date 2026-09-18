@@ -1,0 +1,777 @@
+<title>A56 Export-Control Answers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  /* light palette — cool technical neutrals, slight blue bias */
+  --paper:#eef1f5;
+  --card:#ffffff;
+  --card-2:#f5f7fa;
+  --ink:#161b23;
+  --ink-soft:#454e5c;
+  --ink-faint:#6b7482;
+  --line:#d9dfe7;
+  --line-soft:#e7ebf1;
+  --accent:#2e4ea8;         /* signoff indigo */
+  --accent-soft:#e6ebf8;
+  --accent-ink:#243e86;
+  --on-ink:#ffffff;         /* ink drawn on the accent fill (checkbox tick) */
+  --no:#1c7c54;             /* cleared / No */
+  --no-bg:#e4f2ea;
+  --na:#5a6472;             /* not applicable */
+  --na-bg:#e9edf2;
+  --amber:#9a6410;          /* needs your data */
+  --amber-bg:#f8eede;
+  --flag:#b23a2e;           /* disclosed Yes / caution */
+  --flag-bg:#f7e6e3;
+  --shadow:0 1px 2px rgba(20,26,38,.05),0 8px 24px -14px rgba(20,26,38,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1218;
+    --card:#161c26;
+    --card-2:#1b2230;
+    --ink:#e7ecf3;
+    --ink-soft:#b3bdcc;
+    --ink-faint:#828d9d;
+    --line:#2a3342;
+    --line-soft:#222a37;
+    --accent:#8aa4ee;
+    --accent-soft:#1f2a45;
+    --accent-ink:#b9caf6;
+    --on-ink:#0e1218;
+    --no:#5fce9d;
+    --no-bg:#122a20;
+    --na:#8b94a3;
+    --na-bg:#1c232f;
+    --amber:#e0ad63;
+    --amber-bg:#2c2415;
+    --flag:#e88b7f;
+    --flag-bg:#2f1c19;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -16px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1218;
+  --card:#161c26;
+  --card-2:#1b2230;
+  --ink:#e7ecf3;
+  --ink-soft:#b3bdcc;
+  --ink-faint:#828d9d;
+  --line:#2a3342;
+  --line-soft:#222a37;
+  --accent:#8aa4ee;
+  --accent-soft:#1f2a45;
+  --accent-ink:#b9caf6;
+  --on-ink:#0e1218;
+  --no:#5fce9d;
+  --no-bg:#122a20;
+  --na:#8b94a3;
+  --na-bg:#1c232f;
+  --amber:#e0ad63;
+  --amber-bg:#2c2415;
+  --flag:#e88b7f;
+  --flag-bg:#2f1c19;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -16px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-weight:400;
+  line-height:1.6;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px 96px}
+
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- header ---------- */
+header.top{
+  max-width:920px;margin:0 auto;padding:44px 22px 26px;
+}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);font-weight:500;margin:0 0 14px;
+}
+h1{
+  font-family:"Spectral",Georgia,serif;font-weight:600;
+  font-size:clamp(29px,5vw,44px);line-height:1.08;letter-spacing:-.01em;
+  margin:0 0 14px;text-wrap:balance;
+}
+.lede{font-size:17px;color:var(--ink-soft);margin:0;max-width:64ch}
+.lede b{color:var(--ink);font-weight:600}
+
+/* chip identity strip */
+.idstrip{
+  display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 4px;
+}
+.idstrip .pill{
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  padding:5px 11px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--ink-soft);white-space:nowrap;
+}
+.idstrip .pill b{color:var(--ink);font-weight:500}
+.idstrip .pill.ok{color:var(--no);border-color:color-mix(in srgb,var(--no) 40%,var(--line));background:var(--no-bg)}
+
+/* ---------- verdict banner ---------- */
+.verdict{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:22px 24px;margin:26px 0 8px;box-shadow:var(--shadow);
+  border-left:4px solid var(--accent);
+}
+.verdict h2{
+  font-family:"Spectral",serif;font-size:20px;font-weight:600;margin:0 0 8px;letter-spacing:-.01em;
+}
+.verdict p{margin:0 0 10px;color:var(--ink-soft);font-size:15.5px}
+.verdict p:last-child{margin-bottom:0}
+.verdict .eccn{color:var(--accent-ink);font-weight:600;font-family:"IBM Plex Mono",monospace}
+
+/* ---------- nav ---------- */
+nav.toc{
+  position:sticky;top:0;z-index:5;
+  margin:28px 0 8px;padding:11px 0;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);
+  border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+  display:flex;flex-wrap:wrap;gap:6px 4px;
+}
+nav.toc a{
+  font-size:12.5px;color:var(--ink-faint);text-decoration:none;
+  padding:4px 9px;border-radius:7px;white-space:nowrap;transition:background .15s,color .15s;
+}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--accent-soft);color:var(--accent-ink);outline:none}
+
+/* ---------- legend ---------- */
+.legend{
+  display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;
+  margin:24px 0 6px;padding:14px 18px;border:1px dashed var(--line);border-radius:12px;
+  background:var(--card-2);font-size:13.5px;color:var(--ink-soft);
+}
+.legend .li{display:flex;align-items:center;gap:8px}
+
+/* ---------- section ---------- */
+section{margin-top:40px;scroll-margin-top:64px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:0 0 4px;flex-wrap:wrap}
+.sec-h .num{
+  font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);font-weight:500;
+}
+.sec-h h2{
+  font-family:"Spectral",serif;font-weight:600;font-size:24px;letter-spacing:-.01em;margin:0;
+}
+.sec-sub{color:var(--ink-faint);font-size:13.5px;margin:2px 0 18px;font-family:"IBM Plex Mono",monospace}
+
+/* ---------- qa card ---------- */
+.qa{
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  padding:16px 18px;margin:10px 0;box-shadow:var(--shadow);
+}
+.qa-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+.qid{
+  font-size:12px;font-weight:500;color:var(--ink-faint);
+  background:var(--card-2);border:1px solid var(--line-soft);
+  padding:2px 8px;border-radius:6px;white-space:nowrap;
+}
+.qtext{margin:0 0 10px;font-size:15px;color:var(--ink);font-weight:450}
+.why{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.55}
+.why::before{content:"↳ ";color:var(--ink-faint)}
+
+/* answer chips */
+.ans{
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:500;
+  padding:3px 11px;border-radius:999px;white-space:nowrap;letter-spacing:.01em;
+}
+.c-no{color:var(--no);background:var(--no-bg);border:1px solid color-mix(in srgb,var(--no) 34%,transparent)}
+.c-na{color:var(--na);background:var(--na-bg);border:1px solid color-mix(in srgb,var(--na) 30%,transparent)}
+.c-yes{color:var(--flag);background:var(--flag-bg);border:1px solid color-mix(in srgb,var(--flag) 34%,transparent)}
+.c-input{color:var(--amber);background:var(--amber-bg);border:1px solid color-mix(in srgb,var(--amber) 38%,transparent)}
+.c-pick{color:var(--accent-ink);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 34%,transparent)}
+
+/* free-text answer block */
+.ans-block{
+  background:var(--card-2);border:1px solid var(--line-soft);border-left:3px solid var(--accent);
+  border-radius:0 9px 9px 0;padding:11px 14px;margin:0 0 10px;
+  font-size:14px;color:var(--ink);line-height:1.55;
+}
+.ans-block .lbl{
+  display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:5px;font-weight:500;
+}
+.ans-block.amber{border-left-color:var(--amber)}
+.ans-block.amber .lbl{color:var(--amber)}
+
+/* ---------- identity table ---------- */
+.idtable{
+  background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.idrow{
+  display:grid;grid-template-columns:minmax(160px,220px) 1fr;gap:0;
+  border-bottom:1px solid var(--line-soft);
+}
+.idrow:last-child{border-bottom:none}
+.idrow .k{
+  padding:12px 16px;font-size:13.5px;color:var(--ink-soft);
+  background:var(--card-2);border-right:1px solid var(--line-soft);font-weight:500;
+}
+.idrow .v{padding:12px 16px;font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idrow .v .val{color:var(--ink)}
+.idrow .v .val.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;word-break:break-all}
+.tag-supply{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;
+  color:var(--amber);background:var(--amber-bg);padding:2px 8px;border-radius:6px;
+  border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);
+}
+
+/* ---------- checkbox lists (IP / devices) ---------- */
+.checks{display:flex;flex-direction:column;gap:6px;margin:4px 0 0}
+.chk{display:flex;align-items:flex-start;gap:9px;font-size:14px;color:var(--ink)}
+.chk .box{
+  flex:none;width:17px;height:17px;border-radius:4px;border:1.5px solid var(--line);
+  margin-top:2px;position:relative;background:var(--card-2);
+}
+.chk.on .box{background:var(--accent);border-color:var(--accent)}
+.chk.on .box::after{
+  content:"";position:absolute;left:5px;top:1.5px;width:4px;height:8px;
+  border:solid var(--on-ink);border-width:0 2px 2px 0;transform:rotate(42deg);
+}
+.chk .tk{font-family:"IBM Plex Mono",monospace;font-size:13px}
+.chk.off{color:var(--ink-faint)}
+
+/* ---------- todo / open items ---------- */
+.item{
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  padding:15px 18px;margin:10px 0;box-shadow:var(--shadow);
+  border-left:4px solid var(--na);
+}
+.item.high{border-left-color:var(--flag)}
+.item.medium{border-left-color:var(--amber)}
+.item.low{border-left-color:var(--no)}
+.item .ih{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.item .ih h3{font-family:"IBM Plex Sans";font-size:15.5px;font-weight:600;margin:0;color:var(--ink)}
+.prio{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;padding:2px 8px;border-radius:6px;
+}
+.prio.high{color:var(--flag);background:var(--flag-bg)}
+.prio.medium{color:var(--amber);background:var(--amber-bg)}
+.prio.low{color:var(--no);background:var(--no-bg)}
+.item p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.55}
+.item code{font-size:12.5px;background:var(--card-2);padding:1px 5px;border-radius:4px;border:1px solid var(--line-soft)}
+
+/* signoff metric grid */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin:12px 0 4px}
+.metric{
+  background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 14px;
+}
+.metric .m-k{font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;font-family:"IBM Plex Mono",monospace}
+.metric .m-v{font-family:"IBM Plex Mono",monospace;font-size:16px;font-weight:500;color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums}
+.metric .m-v.good{color:var(--no)}
+
+/* callout */
+.callout{
+  background:var(--amber-bg);border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);
+  border-radius:12px;padding:14px 18px;margin:14px 0;font-size:14px;color:var(--ink);line-height:1.55;
+}
+.callout .lbl{font-weight:600;color:var(--amber)}
+
+.note{
+  font-size:13.5px;color:var(--ink-faint);margin:12px 0 0;line-height:1.55;
+}
+
+hr.div{border:none;border-top:1px solid var(--line-soft);margin:8px 0}
+
+/* footer */
+footer{
+  max-width:920px;margin:56px auto 0;padding:22px;
+  border-top:1px solid var(--line);color:var(--ink-faint);font-size:13px;line-height:1.6;
+}
+footer b{color:var(--ink-soft)}
+
+@media (max-width:560px){
+  .idrow{grid-template-columns:1fr}
+  .idrow .k{border-right:none;border-bottom:1px solid var(--line-soft)}
+  nav.toc{gap:2px}
+}
+</style>
+
+<header class="top">
+  <p class="eyebrow">Chipathon 2026 · Project A56 · Block ACV</p>
+  <h1>Export-Control &amp; GF180 Answer Key</h1>
+  <p class="lede">Transcription-ready answers for the 11-page GlobalFoundries
+  <b>“Export Control &amp; GF180 Configuration Information”</b> intake form. Every value in the
+  exported PDF snapshots (<span class="mono">aa</span>, <span class="mono">111</span>, stray
+  <b>Yes</b> toggles) is a placeholder — the answers below are the real ones for
+  <span class="mono">dla_engine_chip</span>, cross-checked by an independent export-control /
+  classification / device-inventory review.</p>
+
+  <div class="idstrip">
+    <span class="pill"><b>dla_engine_chip</b> · A56 / ACV block</span>
+    <span class="pill">1675 × 1110 µm · GF180MCU</span>
+    <span class="pill">single-supply 3.3 V · ≤25 MHz</span>
+    <span class="pill">INT8 MNIST-GAN accelerator</span>
+    <span class="pill ok">self-classified EAR99</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="verdict">
+    <h2>Bottom line</h2>
+    <p>A benign, open-source (Apache-2.0) <b>180 nm fixed-function digital ASIC</b> — a 16-MAC INT8
+    inference accelerator (~0.8 GOP/s) with <b>no</b> RF/mmWave, encryption, floating-point, ≥32-bit
+    ALU, processor core, quantum content, or military design intent. Self-classified
+    <span class="eccn">EAR99</span>.</p>
+    <p>Two answers are deliberately <b>Yes</b> and honest: <b>EC 12</b> — the physical chip <i>is</i>
+    subject to the EAR (as <span class="eccn">EAR99</span>); and <b>EC 7</b> — it genuinely <i>is</i>
+    a fixed-function ASIC (disclosed; the “for other equipment” clause is not met, so the outcome
+    stays EAR99). It sits ~6 orders of magnitude below the 3A090 advanced-computing threshold, so
+    every advanced-computing / military / encryption item resolves <b>No</b>.</p>
+    <p>Only the <b>private-party fields</b> — the end user (EC 20) and the authorized signatory
+    block (Page 11) — need your real data. Until those are filled, the <b>Completion check</b> is
+    <b>“Needs follow-up.”</b></p>
+  </div>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#s1">1 · Project &amp; org</a>
+    <a href="#s2">2 · Product / RF</a>
+    <a href="#s3">3 · Parties &amp; end use</a>
+    <a href="#s4">4 · Military / crypto</a>
+    <a href="#s5">5 · EAR / 3A090</a>
+    <a href="#s6">6 · HS &amp; end uses</a>
+    <a href="#s7">7 · GF180 config</a>
+    <a href="#s8">8 · Foundry IP</a>
+    <a href="#s9">9 · Device models</a>
+    <a href="#s10">10 · Contact / sign-off</a>
+    <a href="#state">▹ Chip status &amp; TODO</a>
+  </nav>
+
+  <div class="legend" aria-hidden="false">
+    <span class="li"><span class="ans c-no">No</span> answered / cleared</span>
+    <span class="li"><span class="ans c-na">N/A</span> not applicable</span>
+    <span class="li"><span class="ans c-yes">Yes</span> disclosed (still EAR99)</span>
+    <span class="li"><span class="ans c-pick">pick</span> select this option</span>
+    <span class="li"><span class="ans c-input">your data</span> you must supply</span>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <section id="s1">
+    <div class="sec-h"><span class="num">01</span><h2>Project &amp; organization</h2></div>
+    <p class="sec-sub">Form pages 1–2 · identity fields</p>
+
+    <div class="idtable">
+      <div class="idrow"><div class="k">Team name (incl. team code)</div>
+        <div class="v"><span class="val">FindingSRAM — project <span class="mono">A56</span> / block <span class="mono">ACV</span></span><span class="tag-supply">confirm code format</span></div></div>
+      <div class="idrow"><div class="k">Project name / title</div>
+        <div class="v"><span class="val">Deep Learning Accelerator (DLA) Engine</span></div></div>
+      <div class="idrow"><div class="k">GitHub repository URL</div>
+        <div class="v"><span class="val mono">https://github.com/mpa216/Deep-Learning-Accelerator-DLA-Engine-From-CNN-to-GenAI-SNN</span></div></div>
+      <div class="idrow"><div class="k">Top-level design / cell name</div>
+        <div class="v"><span class="val mono">dla_engine_chip</span></div></div>
+      <div class="idrow"><div class="k">Team lead / technical contact</div>
+        <div class="v"><span class="val">your full name</span><span class="tag-supply">your data</span></div></div>
+      <div class="idrow"><div class="k">Contact email</div>
+        <div class="v"><span class="val mono">mahardhika.adipratama@gmail.com</span></div></div>
+      <div class="idrow"><div class="k">Contact phone</div>
+        <div class="v"><span class="val">—</span><span class="tag-supply">your data</span></div></div>
+      <div class="idrow"><div class="k">Organization — full legal name</div>
+        <div class="v"><span class="val">university / company / institute</span><span class="tag-supply">your data</span></div></div>
+      <div class="idrow"><div class="k">Organization — postal address</div>
+        <div class="v"><span class="val">—</span><span class="tag-supply">your data</span></div></div>
+      <div class="idrow"><div class="k">Organization — country / region</div>
+        <div class="v"><span class="val">— (not an embargoed/restricted region → EC 3 = No)</span><span class="tag-supply">your data</span></div></div>
+    </div>
+    <p class="note">Everything except the amber “your data” fields is drawn straight from
+    <span class="mono">info.yaml</span>, <span class="mono">lvs_config.json</span> and the git remote.</p>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section id="s2">
+    <div class="sec-h"><span class="num">02</span><h2>Product description &amp; RF / mmWave</h2></div>
+    <p class="sec-sub">GF EC 1a – 1c</p>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">GF EC 1a</span></div>
+      <p class="qtext">Briefly describe the product/chiplet/structure and its final end use.</p>
+      <div class="ans-block"><span class="lbl">Enter</span>The product (top cell <span class="mono">dla_engine_chip</span>) is a GlobalFoundries GF180MCU (180 nm) fixed-function digital ASIC: a 16-element (4×4) output-stationary INT8 multiply-accumulate inference accelerator with eight 256×8 on-chip SRAM operand buffers, accessed over a 4-wire synchronous serial host interface (SCLK/MOSI/CS_N/MISO). It is a single-supply 3.3 V, fully static device (DC to ~25 MHz, ~125 mW, ~0.4 GMAC/s INT8) with no processor core, no floating-point unit, no ≥32-bit ALU, no RF/wireless, and no cryptography. Its sole final end use is an educational, open-source (Apache-2.0) demonstration of on-chip machine-learning inference: running a small pretrained MNIST handwritten-digit GAN generator to render 28×28 images. Manufactured samples are returned to the design team for laboratory-bench evaluation driven by a 3.3 V MCU/FPGA host and are not incorporated into any commercial product or end item.</div>
+      <p class="why">States the exact device type, benign parameters and demonstration-only end use — the facts that support the EAR99 self-classification.</p>
+    </div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 1b-i</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Peak saturated power output.</p>
+      <p class="why">Baseband digital ASIC — no RF/amplifier output stage. (DC power ~125 mW, but there is no saturated RF output power.)</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 1b-ii</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Operating frequency.</p>
+      <p class="why">This field targets an RF operating frequency. The device has only a static digital clock (DC to ~25 MHz); enter <span class="mono">N/A (digital clock ≤25 MHz)</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 1b-iii</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Fractional bandwidth.</p>
+      <p class="why">An RF/mmWave parameter; undefined for a digital ASIC with no RF signal path.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 1b-iv</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Planar side length.</p>
+      <p class="why">A phased-array / monolithic-microwave dimension (3A001.b-type). Enter <span class="mono">N/A</span>; for reference only, the block outline is 1.675 × 1.110 mm.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 1c</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Is the product a millimeter-wave (mmWave) product (MMIC amplifier or discrete microwave transistor)?</p>
+      <p class="why">No RF, mmWave, radio, antenna or phase shifter of any kind — it is a DC-to-25 MHz digital accelerator. <b>This is the placeholder’s most important error to fix (currently Yes).</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 1c-i … 1c-iv</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">mmWave follow-ups: graph URL, phase shifter, other-application, USML/ECCN control (+ details).</p>
+      <p class="why">All conditional on 1c = Yes. Since 1c = No, every 1c-sub item is <span class="mono">N/A</span> (leave the radios cleared / text “N/A”). The placeholder wrongly set 1c-iii and 1c-iv to Yes — clear them.</p></div>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section id="s3">
+    <div class="sec-h"><span class="num">03</span><h2>Parties, destinations, variants &amp; end use</h2></div>
+    <p class="sec-sub">GF EC 2 – 9</p>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 2</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Any party on a trade-controls restriction list (or ≥50% owned by / acting for such a party)?</p>
+      <p class="why">The only party is the design team itself (samples returned, not transferred onward); no party is on the Denied Persons / Entity / Unverified / SDN lists. Still run a restricted-party screen on your own legal entity + any end user before shipment. Detail field: <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 3</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Any party organized under / located in / resident in a comprehensively restricted country or region?</p>
+      <p class="why">No party in Belarus, Cuba, Iran, North Korea, Russia, Syria or occupied Ukraine. Confirm your org country (Section 1) is not one of these. Detail: <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 5</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Subject to export controls in a non-U.S. jurisdiction?</p>
+      <p class="why">A GF180MCU commodity whose design is published open-source (Apache-2.0); no controlled foreign-origin content and no known EU/UK/Wassenaar-national control. Detail: <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 6</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Will the chiplet include variants that do not change the end-use / export-control outcome?</p>
+      <p class="why">The submission is a single ACV block. Repo siblings (eight-/nine-macro cores, an experimental GAN variant) are not part of this submission and would share the same EAR99 outcome anyway. Detail: <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 7</span> <span class="ans c-yes">Yes — disclosed</span></div>
+      <p class="qtext">Is the product an ASIC or otherwise unalterably programmed/designed for a specific function for other equipment?</p>
+      <div class="ans-block"><span class="lbl">Detail — enter</span>Fixed-function INT8 multiply-accumulate inference accelerator ASIC (hardwired 4×4 MAC datapath, no programmable core). It is a standalone bench-evaluation device, not designed as a component for any specific other equipment, and performs no controlled function. Self-classified EAR99.</div>
+      <p class="why">Answer honestly: it genuinely <i>is</i> a fixed-function ASIC. The “for other equipment” clause does not push it into a control category — it is a standalone eval die, not designed into any specific controlled equipment — so the net outcome stays EAR99. Being an ASIC is not, by itself, a controlling characteristic.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 8</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Intended/likely for nuclear, chemical/biological weapons, unsafeguarded nuclear, maritime nuclear propulsion, or missiles/rockets/UAVs?</p>
+      <p class="why">An MNIST-digit image-generation demonstration chip returned for lab-bench evaluation — none of these end uses apply. <b>Placeholder wrongly set to Yes — fix.</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 9</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Known export to a transaction involving an Entity List party designated with Footnote 1, 3, 4 or 5?</p>
+      <p class="why">No such export; samples are returned only to the design team. <b>Placeholder wrongly set to Yes — fix.</b> Detail: <span class="mono">N/A</span>.</p></div>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section id="s4">
+    <div class="sec-h"><span class="num">04</span><h2>Military / intelligence &amp; encryption</h2></div>
+    <p class="sec-sub">GF EC 10 – 11</p>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 10</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Specially designed/modified for military or intelligence application, or an ITAR / EAR 500/600-series end use?</p>
+      <p class="why">An educational open-source ML-inference demonstrator; no military, intelligence, cryptographic or ruggedized features. <b>Placeholder wrongly set to Yes — fix.</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 10-I … 10-v</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Supporting docs available, doc URLs, and the ITAR/USML / 500- / 600-series classifications at product / GDSII / next-higher-assembly levels.</p>
+      <p class="why">All conditional on EC 10 = Yes. Since 10 = No, every sub-item is <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Specially designed or modified to use encryption?</p>
+      <p class="why">The device contains no cryptography of any kind — no cipher engine, key management or authentication crypto. Category 5 Part 2 does not apply. <b>Placeholder wrongly set to Yes — fix.</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-i … 11-vi</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Encryption protocols/algorithms/key lengths, CCATS review, self-classification date, CCATS number, doc URLs, report date.</p>
+      <p class="why">All conditional on EC 11 = Yes → <span class="mono">N/A</span> (CCATS number field: <span class="mono">N/A</span>).</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-vii</span> <span class="ans c-pick">N/A — Not applicable</span></div>
+      <p class="qtext">ENC §740.17 subparagraph (radio list).</p>
+      <p class="why">Select <span class="mono">“N/A — Not applicable”</span>; there is no encryption, so no §740.17 subparagraph applies.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-viii</span> <span class="ans c-pick">EAR99</span></div>
+      <p class="qtext">Non-encryption technology ECCN for the product’s performance/function control.</p>
+      <p class="why">The device carries no CCL classification → enter <span class="mono">EAR99</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-ix</span> <span class="ans c-pick">None</span></div>
+      <p class="qtext">Is the product a cryptanalytic item / network-penetration tool / automated vulnerability tool?</p>
+      <p class="why">Select <span class="mono">None</span> — it is none of these.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-x</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Will it affect confidentiality/integrity/availability of information systems without authorization?</p>
+      <p class="why">No cryptographic or security function at all — it cannot bypass or defeat authorization.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-xi</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">Basis for exclusion if it uses encryption but is excluded.</p>
+      <p class="why">Not applicable — the device uses no encryption.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 11-xii</span> <span class="ans c-pick">EAR99</span></div>
+      <p class="qtext">U.S. ECCN at subparagraph level — product / design-file / software.</p>
+      <p class="why">None contains encryption → <span class="mono">EAR99</span> for product and design; software: <span class="mono">N/A</span> (none shipped).</p></div>
+  </section>
+
+  <!-- ============ SECTION 5 ============ -->
+  <section id="s5">
+    <div class="sec-h"><span class="num">05</span><h2>EAR, advanced computing &amp; quantum</h2></div>
+    <p class="sec-sub">GF EC 12 – 16</p>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 12</span> <span class="ans c-yes">Yes — EAR99</span></div>
+      <p class="qtext">Is the product or associated technical data/design subject to the U.S. EAR?</p>
+      <p class="why">The physical manufactured chip is a tangible commodity subject to the EAR (classified <span class="mono">EAR99</span> — not on the CCL, not USML). Note: the Apache-2.0 <i>published</i> design/technology is “published” and thus not subject to the EAR under §734.7 — but the tangible item is, so answer <b>Yes</b>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 12-i</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">If Yes: are supporting classification/jurisdiction documents available?</p>
+      <p class="why">No formal CCATS or classification report — the item is <b>self-classified</b> EAR99. Its basis is this questionnaire plus the device description; no separate supporting document exists.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 12-ii</span> <span class="ans c-pick">EAR99</span></div>
+      <p class="qtext">U.S. ECCN — product / design-file-technology / software (subparagraph level).</p>
+      <div class="ans-block"><span class="lbl">Enter</span><b>Product (wafer/die):</b> EAR99. &nbsp;<b>Design file / technology:</b> published open-source (Apache-2.0, public GitHub) → not subject to the EAR per 15 CFR 734.7 / 734.3(b)(3); enter EAR99 as the conservative fallback if an ECCN is required. &nbsp;<b>Software:</b> N/A — none shipped (any host bring-up code is part of the same published repo, EAR99).</div>
+      <p class="why">A benign 180 nm fixed-function digital ASIC with no CCL-listed characteristics.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 13</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Does the item meet or exceed the ECCN 3A090 performance parameters?</p>
+      <div class="ans-block"><span class="lbl">Detail — enter</span>Performance is ~0.4 GMAC/s (~0.8 GOP/s) INT8 from 16 MAC units at ≤25 MHz, all integer, with no floating point and no high-bandwidth interconnect — roughly six orders of magnitude below the 3A090 TPP threshold. Not an advanced-computing IC.</div>
+      <p class="why">3A090 targets high-performance AI/compute ICs by Total Processing Performance (TPP ≥ 4800, or ≥ 1600 with performance density). 16 MACs × 25 MHz ≈ 8×10⁻⁴ INT8 TOPS ⇒ ~4800 / 8×10⁻⁴ ≈ <b>6 million×</b> below threshold. Clearly No. <b>Placeholder wrongly set to Yes — fix.</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 13-i / 13-ii</span> <span class="ans c-na">N/A</span></div>
+      <p class="qtext">“Approved IC Designer” / “Authorized IC Designer” status.</p>
+      <p class="why">Both apply only to 3A090-class advanced-computing designs. Not applicable here; leave radios cleared. 13-detail: use the performance note above.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 14</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Does the product meet technical criteria in any other ECCN on the Commerce Control List?</p>
+      <p class="why">No RF (Cat 3/5), no crypto (Cat 5 Pt 2), no processor meeting 3A/4A thresholds, no sensors/navigation. Overall EAR99. <b>Placeholder wrongly set to Yes — fix.</b> Detail: <span class="mono">N/A — EAR99</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 15</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Is the product a qubit device/circuit specially designed for quantum computers?</p>
+      <p class="why">A classical CMOS digital ASIC — no qubits. <b>Placeholder wrongly set to Yes — fix.</b> 15-i (qubit count) / 15-ii (C-NOT error): <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 16</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Are non-U.S. export-control classifications being supplied for the product/design/software?</p>
+      <p class="why">The team is not providing/relying on any foreign-government classification. <b>Placeholder wrongly set to Yes — fix.</b> Product/design/software fields: <span class="mono">N/A</span>.</p></div>
+  </section>
+
+  <!-- ============ SECTION 6 ============ -->
+  <section id="s6">
+    <div class="sec-h"><span class="num">06</span><h2>HS classification &amp; restricted end uses</h2></div>
+    <p class="sec-sub">GF EC 17 – 20</p>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 17</span> <span class="ans c-pick">8542.31.0070</span></div>
+      <p class="qtext">Harmonized System classification for your project.</p>
+      <div class="ans-block"><span class="lbl">Select</span><b>8542.31.0070 — System on chip (SoCs)</b>. Alternative / fallback: <b>8542.31.0030 — Other</b> (same heading) if the organizer reads “SoC” strictly as requiring an embedded programmable CPU.</div>
+      <p class="why">A monolithic digital IC — a processor/controller combined with memories (heading 8542.31). Not a memory (8542.32), amplifier (8542.33), RF/converter (8542.39) or bare part (8542.9). It integrates compute + on-chip SRAM + serial interface + I/O ring on one die → SoC. The device has no programmable CPU core, so if “SoC” is read strictly, the “Other” suffix (.0030) applies. Either way it stays in 8542.31 (duty-free); the suffix is only a statistical distinction. Bit-width suffixes .0015/.0020/.0025 do <i>not</i> apply — those describe programmable-processor word length.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 18a</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Military end use/user (or military-intelligence) connected with Belarus, Burma, Cambodia, China, Iraq, Nicaragua, Russia or Venezuela?</p>
+      <p class="why">No military end use/user in any of those destinations (EAR §744.21). Samples return to the civilian/academic design team. <b>Placeholder wrongly set to Yes — fix.</b> 18a-i: <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 18b</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">If a qualifying microprocessor (≥5 GFLOPS &amp; ≥32-bit ALU), intended/likely for military end use in a Country Group D:1 destination?</p>
+      <p class="why">Not a qualifying microprocessor: 0 GFLOPS (no floating point, well below the ≥5 GFLOPS trigger) and no ≥32-bit ALU (fixed 8-bit/24-bit MAC datapath, no programmable processor). §744.17 does not apply. <b>Placeholder wrongly set to Yes — fix.</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 19</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Do any advanced-chip / computing / supercomputer end-use restrictions apply?</p>
+      <p class="why">None (EAR §744.23) — not a 3A090/4A090-class part, far below any performance threshold, not destined for a restricted advanced-computing/supercomputer end use. <b>Placeholder wrongly set to Yes — fix.</b> Detail: <span class="mono">N/A</span>.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">GF EC 20</span> <span class="ans c-input">your data</span></div>
+      <p class="qtext">End user(s) of the manufactured IC — legal name and full postal address for each.</p>
+      <div class="ans-block amber"><span class="lbl">Enter (your data)</span>The end user is the design team itself — the returned samples are evaluated on a lab bench. Enter your team’s legal entity and mailing address, e.g. <span class="mono">Team FindingSRAM (A56 / ACV) — [full legal name], [street, city, region, postal code, country]</span>.</div>
+      <p class="why">Requires your real private data (legal name + postal address of whoever receives the samples).</p></div>
+  </section>
+
+  <!-- ============ SECTION 7 ============ -->
+  <section id="s7">
+    <div class="sec-h"><span class="num">07</span><h2>GF180 project configuration</h2></div>
+    <p class="sec-sub">Form page 8</p>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Automotive?</span> <span class="ans c-no">No</span></div>
+      <p class="qtext">Is this an automotive device/application?</p>
+      <p class="why">An educational MNIST-GAN demonstration chip — not automotive. <b>Placeholder wrongly set to Yes — fix.</b></p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Core voltage</span> <span class="ans c-pick">3.3 V</span></div>
+      <p class="qtext">Core voltage(s) used by this project (select every one).</p>
+      <p class="why">Single-supply 3.3 V design; core logic (AS 3.3 V std cells + OCD 3.3 V SRAM) runs at 3.3 V only. ✓ matches the placeholder.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">I/O voltage</span> <span class="ans c-pick">3.3 V</span></div>
+      <p class="qtext">I/O voltage(s) used by this project (select every one).</p>
+      <p class="why">The chip operates single-supply at 3.3 V, so the applied I/O rail is 3.3 V. ✓ matches the placeholder. (Note only: the <span class="mono">gf180mcu_fd_io</span> pads are 5 V-capable silicon operated at 3.3 V — mention that in the “special requirements” box below if the organizer wants the pad rating rather than the applied voltage.)</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Custom voltage</span> <span class="ans c-na">none</span></div>
+      <p class="qtext">Custom voltage(s), if any.</p>
+      <p class="why">Leave blank — no custom rails.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Special reqs</span> <span class="ans c-na">none</span></div>
+      <p class="qtext">Other special process/configuration requirements.</p>
+      <div class="ans-block"><span class="lbl">Optional note</span>Standard open digital flow (LibreLane). Single-supply 3.3 V. The padframe’s Metal2 DVDD/DVSS pins reach the block PDN through a small in-margin metal-only power-connector cell. <span class="mono">gf180mcu_fd_io</span> pads are 5 V-capable, operated at 3.3 V.</div>
+      <p class="why">Nothing special is required; the note is only for completeness.</p></div>
+  </section>
+
+  <!-- ============ SECTION 8 ============ -->
+  <section id="s8">
+    <div class="sec-h"><span class="num">08</span><h2>Foundry IP used</h2></div>
+    <p class="sec-sub">Form page 9 · memory macros</p>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">Memory IP — select all used</span></div>
+      <div class="checks">
+        <div class="chk off"><span class="box"></span><span>Globalfoundries 0.18 µm 3.3 V Single-Port 8192×16 SRAM</span></div>
+        <div class="chk off"><span class="box"></span><span>GF 180nm Green 5V single-port 128×8M8WM1 SRAM</span></div>
+        <div class="chk on"><span class="box"></span><span class="tk">GF 180nm Green 5V single-port 256×8M8WM1 SRAM &nbsp;— ✓ tick (×8 instances)</span></div>
+        <div class="chk off"><span class="box"></span><span>GF 180nm Green 5V single-port 512×8M8WM1 SRAM</span></div>
+        <div class="chk off"><span class="box"></span><span>GF 180nm Green 5V single-port 64×8M8WM1 SRAM</span></div>
+      </div>
+      <div class="callout"><span class="lbl">Flag to the configurator:</span> the checklist only lists the foundry <b>5 V</b> macros, but this design uses the open-source <b>OCD 3.3 V</b> variant of the 256×8 (same 256×8 M8WM1 geometry, nominal 3.3 V). Tick the 256×8 box and clarify the exact IP in the “Other” field below.</div>
+      <div class="ans-block"><span class="lbl">Other foundry / third-party IP — enter</span><b>gf180mcu_ocd_ip_sram__sram256x8m8wm1</b> — open-source OCD 256×8 single-port SRAM macro, 8 instances, nominal 3.3 V (not the foundry 5 V fd_ip variant). &nbsp;<b>gf180mcu_as_sc_mcu7t3v3</b> — open AS 3.3 V 7-track digital standard-cell library. &nbsp;<b>gf180mcu_fd_io</b> — foundry I/O pad ring (in_s Schmitt input, in_c CMOS input, bi_24t bidirectional-24 mA, dvdd, dvss). &nbsp;<b>Custom power-connector bridge cell</b> — metal/via only (Metal2→via→Metal5), contains no transistors.</div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 9 ============ -->
+  <section id="s9">
+    <div class="sec-h"><span class="num">09</span><h2>Device models used</h2></div>
+    <p class="sec-sub">Form page 10 · populates the Devices_Used worksheet</p>
+
+    <div class="callout" style="margin-top:0">
+      <span class="lbl">How to read this:</span> the design instantiates <b>no primitive devices directly</b> — every transistor comes from the AS 3.3 V standard cells, the OCD 256×8 SRAM, and the <span class="mono">fd_io</span> pad ring. The list below is the <b>union of devices inside those cells</b>, extracted from the SRAM/std-cell <span class="mono">.cdl</span>/<span class="mono">.spice</span>. Core + SRAM devices are extraction-confirmed; the pad-ring devices are inferred from the <span class="mono">fd_io</span> reference netlists — confirm them against the final extracted LVS netlist before submitting. This worksheet is informational; the form says “leave a group blank if none.”
+    </div>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">MOSFET</span></div>
+      <div class="checks">
+        <div class="chk on"><span class="box"></span><span class="tk">nmos_3p3</span> &nbsp;— 3.3 V NMOS (core std cells + SRAM) · confirmed</div>
+        <div class="chk on"><span class="box"></span><span class="tk">pmos_3p3</span> &nbsp;— 3.3 V PMOS (core std cells + SRAM) · confirmed</div>
+        <div class="chk on"><span class="box"></span><span class="tk">nmos_6p0</span> &nbsp;— 6 V NMOS (fd_io pad ring; GF180 “5 V” I/O uses 6 V devices) · confirm from extraction</div>
+        <div class="chk on"><span class="box"></span><span class="tk">pmos_6p0</span> &nbsp;— 6 V PMOS (fd_io pad ring) · confirm from extraction</div>
+      </div>
+      <p class="why">Extracted SRAM + AS std-cell SPICE contain only <span class="mono">nfet_03v3 / pfet_03v3</span> (→ <span class="mono">nmos_3p3 / pmos_3p3</span>). The <span class="mono">fd_io</span> pads add the 6 V I/O FETs.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">ESD SAB MOSFET</span></div>
+      <div class="checks">
+        <div class="chk on"><span class="box"></span><span class="tk">nmos_6p0_sab</span> &nbsp;— pad ESD device (from <span class="mono">nfet_06v0_dss</span>) · confirm</div>
+        <div class="chk on"><span class="box"></span><span class="tk">pmos_6p0_sab</span> &nbsp;— pad ESD device (from <span class="mono">pfet_06v0_dss</span>) · confirm</div>
+      </div>
+      <p class="why">The pad ring’s ESD clamps use SAB / drain-extended 6 V devices.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">Diode</span></div>
+      <div class="checks">
+        <div class="chk on"><span class="box"></span><span class="tk">pn_6p0</span> &nbsp;— 5V/6V P+/Nwell ESD diode (from <span class="mono">diode_pd2nw_06v0</span>) · confirm</div>
+        <div class="chk on"><span class="box"></span><span class="tk">np_6p0</span> &nbsp;— 5V/6V N+/LVPWELL ESD diode (from <span class="mono">diode_nd2ps_06v0</span>) · confirm</div>
+      </div>
+      <p class="why">Pad ESD protection diodes; map the exact well/substrate reference from the extracted netlist.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">Resistor</span></div>
+      <div class="checks">
+        <div class="chk on"><span class="box"></span><span class="tk">ppolyf_u</span> &nbsp;— P+ poly unsalicided (pad ring) · confirm</div>
+      </div>
+      <p class="why">Unsalicided poly resistor used in the pad cells.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qa-head"><span class="qid">BJT · HRS · MOS-cap · Special</span> <span class="ans c-na">none</span></div>
+      <p class="qtext">BJT, high-resistance resistor, MOS-capacitor, and special/additional device groups.</p>
+      <p class="why">Leave all blank. No BJT/NPN/PNP, no dedicated capacitor primitive (the SRAM “MOS-cap” is a <span class="mono">pfet/nfet_03v3</span> sub-circuit, not a separate model), no MIM / fuse / eFUSE. “Other device not listed”: leave blank.</p>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 10 ============ -->
+  <section id="s10">
+    <div class="sec-h"><span class="num">10</span><h2>Authorized contact &amp; completion check</h2></div>
+    <p class="sec-sub">Form page 11</p>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Authorized to bind?</span> <span class="ans c-input">confirm</span></div>
+      <p class="qtext">Are you personally authorized to certify export-control representations and bind the organization?</p>
+      <p class="why">For a small open-source team the team lead usually has this authority — but confirm the actual signer can certify for the organization. If not, name the person who can (or “TBD”).</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Signatory block</span> <span class="ans c-input">your data</span></div>
+      <p class="qtext">Authorized signatory name, title, email, phone.</p>
+      <div class="ans-block amber"><span class="lbl">Enter (your data)</span>Name: <span class="mono">[team lead full name]</span> · Title: <span class="mono">[e.g. Project Lead / Principal Investigator]</span> · Email: <span class="mono">mahardhika.adipratama@gmail.com</span> · Phone: <span class="mono">[contact phone]</span>. &nbsp;(Only the email is known from project facts; confirm the rest.)</div>
+      <p class="why">Signatory identity, title and phone are private team data.</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Completion check</span> <span class="ans c-input">Needs follow-up</span></div>
+      <p class="qtext">Complete — no “Unknown/review” answers remain &nbsp;vs&nbsp; Needs follow-up.</p>
+      <p class="why">Select <b>“Needs follow-up.”</b> The classification answers are complete and defensible, but the form can’t be certified until the end-user (EC 20) and the signatory block are filled in with your real data. Flip to “Complete” once those are done and no answer is left “Unknown / review required.”</p></div>
+
+    <div class="qa"><div class="qa-head"><span class="qid">Team-lead ack</span> <span class="ans c-input">you check</span></div>
+      <p class="qtext">“I confirm these answers are complete and accurate to the best of my knowledge …”</p>
+      <p class="why">You (the team lead) tick this after reviewing and completing the private fields. It is a data-quality acknowledgement, not the official GF export-control certification.</p></div>
+  </section>
+
+  <!-- ============ CHIP STATE ============ -->
+  <section id="state">
+    <div class="sec-h"><span class="num">▹</span><h2>Current chip state &amp; what still needs doing</h2></div>
+    <p class="sec-sub">Repo audit · A56 / ACV submission</p>
+
+    <p class="lede" style="font-size:15.5px;margin-bottom:6px">The A56 / ACV submission is <b>signed off and pushed</b>. <span class="mono">dla_engine_chip</span>
+    (eight-macro INT8 DLA + 4-wire serial bridge, 11 ACV pins) was re-hardened against the auditor’s
+    updated west-edge padframe (<span class="mono">A56.def_new</span>) in run <span class="mono">acv_ring4</span>,
+    with the Metal2 DVDD/DVSS pins welded to the PDN by <span class="mono">connect_power_v4.py</span>.
+    The organizer’s GDS audit lists <b>zero problems</b> for A56. Remaining work is submission-process &amp;
+    housekeeping — not silicon.</p>
+
+    <div class="metrics">
+      <div class="metric"><div class="m-k">Magic / KLayout DRC</div><div class="m-v good">0 / 0</div></div>
+      <div class="metric"><div class="m-k">Netgen LVS</div><div class="m-v good">match uniquely</div></div>
+      <div class="metric"><div class="m-k">XOR / antenna</div><div class="m-v good">0 / 0</div></div>
+      <div class="metric"><div class="m-k">Setup / hold (SPEF, 9 corners)</div><div class="m-v good">+14.98 / +0.117 ns</div></div>
+      <div class="metric"><div class="m-k">Power</div><div class="m-v">≈125 mW</div></div>
+      <div class="metric"><div class="m-k">Die</div><div class="m-v">1675 × 1110 µm</div></div>
+    </div>
+
+    <div class="item high">
+      <div class="ih"><h3>Export-control &amp; GF180 form still on placeholders</h3><span class="prio high">high</span></div>
+      <p>The 11-page GF form (snapshots in <code>Export_control/1–10.pdf</code>) is filled with junk
+      (<code>aa</code>, <code>111</code>) and several wrong <b>Yes</b> toggles (mmWave, military, 3A090,
+      quantum, encryption…). <b>This document is the fix</b> — transcribe the answers above, supply the
+      private-party fields, then submit before tapeout.</p>
+    </div>
+
+    <div class="item low">
+      <div class="ih"><h3>Integration-LVS flatten — checked, <em>not</em> needed</h3><span class="prio low">no action</span></div>
+      <p>The <code>EXTRACT_FLATGLOB</code> / <code>LVS_FLATTEN</code> advice in
+      <code>layout_announcement/powerpin_solution.txt</code> was addressed to <b>team D10</b>, whose
+      power connector is a separate placed cell relying on connect-by-label. <b>Our</b> connector
+      (<code>connect_power_v4.py</code>) stamps the metal/vias directly onto the DVDD/DVSS special nets
+      (“no connect-by-label needed”), so there is no connector cell to flatten — the empty flatten keys
+      are correct, and block-level LVS already reports “Circuits match uniquely.” Nothing to change.</p>
+    </div>
+
+    <div class="item medium">
+      <div class="ih"><h3>Fold <code>connect_power_v4.py</code> into the LibreLane flow</h3><span class="prio medium">medium</span></div>
+      <p>The power connector still runs as a post-route ODB weld rather than a native flow step, so one
+      <code>librelane config_acv.yaml</code> doesn’t emit the connected GDS in a single pass. Quality /
+      maintainability only — signoff is already clean.</p>
+    </div>
+
+    <div class="item low">
+      <div class="ih"><h3>Deferred: full serial-GAN gate-level sim</h3><span class="prio low">low</span></div>
+      <p>Running the full 784-pixel GAN image <i>through the serial bridge</i> on the hardened netlist
+      (one combined GLS demo) was deferred by you. Not a correctness gap — the two halves are already
+      verified separately (bridge protocol 4/4 + full-GAN math digit “0”).</p>
+    </div>
+
+    <div class="item low">
+      <div class="ih"><h3>Uncommitted / untracked working files</h3><span class="prio low">low</span></div>
+      <p><code>README.md</code> modified, <code>my_latent.txt</code> deleted; untracked
+      <code>Export_control/</code>, render/helper scripts, and ~28 <code>sim/results/*.vvp</code>.
+      Core submission artifacts (<code>gds/</code>, <code>verilog/</code>, <code>info.yaml</code>,
+      <code>lvs_config.json</code>, <code>connect_power_v4.py</code>) are committed and pushed at
+      <code>23ebaf5</code>. Decide commit-or-ignore for the rest.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p><b>Not legal advice, and not the official GlobalFoundries certification.</b> This is a prepared
+  self-classification answer key to help you complete the GF intake form accurately; the form’s own
+  electronic certification (a person authorized to bind the organization) still applies separately.
+  Answers reflect the design facts as of 2026-08-28. Before submitting: fill the amber “your data”
+  fields, and run a standard restricted-party / destination screen on your organization and any end
+  user. The classification conclusion — a benign, self-classified <b>EAR99</b> item — is well supported
+  by the technical facts (no RF, no crypto, no floating point, ~6 orders of magnitude below 3A090).</p>
+</footer>

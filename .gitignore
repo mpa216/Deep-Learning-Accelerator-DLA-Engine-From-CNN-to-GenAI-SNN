@@ -60,3 +60,19 @@ APIC_Paper/*.synctex.gz
 APIC_Paper/*.toc
 APIC_Paper/*.bbl
 APIC_Paper/*.blg
+
+# Compiled Icarus binaries -- every .vvp embeds the netlist/testbench it was built
+# from (~900 MB total here) and rebuilds in seconds from the commands in the docs
+sim/results/*.vvp
+
+# cocotb/pyuvm build + result artifacts (regenerate with `make` in tb/uvm/)
+tb/uvm/sim_build/
+tb/uvm/results.xml
+
+# SymbiYosys work dirs (regenerate with formal/run_formal.sh; the .sby + props are tracked)
+formal/dla_controller/
+formal/dla_serial_bridge/
+
+# Personal (non-chip) application material kept alongside the repo, not in its history
+answers.txt
+Application_Plan_and_Questions.md

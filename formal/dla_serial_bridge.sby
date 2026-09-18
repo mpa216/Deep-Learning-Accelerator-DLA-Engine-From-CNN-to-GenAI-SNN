@@ -1,0 +1,14 @@
+[options]
+mode prove
+depth 30
+
+[engines]
+smtbmc yices
+
+[script]
+read -sv /foss/designs/rtl/dla_serial_bridge.v
+read -sv dla_serial_bridge_props.sv
+prep -top dla_serial_bridge
+
+[files]
+dla_serial_bridge_props.sv
