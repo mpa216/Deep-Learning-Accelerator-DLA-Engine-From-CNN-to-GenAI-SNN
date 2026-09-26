@@ -13,6 +13,7 @@ git-ignored (regenerable); this folder is the curated, tracked copy.
 | Check | Tool | Result | File |
 |---|---|---|---|
 | DRC | Magic | **0 violations** (`COUNT: 0`) | `magic_drc.rpt` |
+| DRC (foundry deck) | KLayout gf180mcuD `run_drc.py`, variant D | **0 violations** (598 rules; antenna 0; via-array Vn.2b 0). Density: whole-die metal coverage < 30 % — no dummy fill in the block | `klayout_drc/` |
 | LVS | Netgen | **"Circuits match uniquely"** (0 errors, 0 shorts) | `netgen_lvs.rpt` |
 | GDS XOR | Magic ↔ KLayout | **0 differences** | `xor.xml` |
 | Antenna | OpenROAD | **0 nets / 0 pins** (empty violation table) | `antenna_summary.rpt` |
@@ -42,6 +43,12 @@ west-edge DVDD/DVSS connector, ~1600 µm away, zoomed).
   `Odb.AddRoutingObstructions` enforces it, `Odb.RemoveRoutingObstructions` strips it before streamout).
 - **Build:** `librelane/build_acv_connected.sh acv_ring6` — harden `--to Odb.CellFrequencyTables`,
   weld the padframe power pins with `librelane/connect_power_v4.py`, resume `--from Magic.StreamOut`.
+  (The build script now calls the general `connect_power.py`; on this layout it produces the same
+  weld minus one redundant via stack that overhung the ring end — DRC/LVS re-verified, see
+  `learning_notes.md` Part 17. The GDS here is the v4-welded one.)
+- **KLayout foundry DRC** (2026-09-26): LibreLane's own KLayout DRC step was skipped in `acv_ring6`
+  (`KLAYOUT_DRC_RUNSET` unset), so the PDK deck was run directly on the submitted GDS — see
+  `klayout_drc/README.md`.
 - **SPEF timing:** resume `--from OpenROAD.RCX --to OpenROAD.STAPostPNR` on the connected design
   (parasitic-backed 9-corner STA).
 

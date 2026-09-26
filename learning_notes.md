@@ -1262,3 +1262,128 @@ The whole detector is `^c === 1'bx`: reduce all 24 bits with XOR (any X ⇒ X), 
 design — a timing engine (16.1), a prover (16.2), a coverage tracker (16.3), an X-aware sim (16.5).
 Only the APB wrapper (16.4) is new hardware, and it only re-shapes the accelerator's existing pins
 into a standard protocol. Nothing regenerates layout, which is why the GDS is untouched.
+
+---
+
+## Part 17 — One power connector for any pad slot (2026-09-26): `connect_power.py`
+
+`connect_power_v3.py` (north edge) and `connect_power_v4.py` (west edge) each solved *one* padframe.
+Every template change so far (north→west DVSS, the slot shift) meant rewriting the script. Part 17
+replaces both with one script that reads everything from the routed database, and explains how it
+is built so it can be changed without fear.
+
+### 17.1 The job, in plain words
+Picture the block as a walled town. The pad cells outside the wall hand us power through a few
+**plugs** on the wall itself — Metal2 "fingers", each ~10 µm long and 1 µm deep. Inside the town, the
+power actually travels on a **ring road** ~30 µm in from the wall, on a higher floor (Metal4 on the
+west/east sides, Metal5 on north/south). Nothing joins the plug to the ring road, so without a
+connector the two power nets are each split in two and chip-level LVS fails. The connector builds,
+for every finger:
+- a **driveway** (a Metal2 "plate", exactly as wide as the finger) from the plug across the empty
+  margin to just past the ring road, and
+- a row of **elevator shafts** (via stacks Metal2→Metal3→Metal4[→Metal5]) from the driveway up to the
+  ring road's floor, one every 1.2 µm.
+
+### 17.2 What v4 hard-coded (and why that was fragile)
+| v4 assumption | Where | Breaks when… |
+|---|---|---|
+| pins are on the **west** edge | the plate is drawn "east" | a pin moves to N/E/S |
+| ring x-positions `RINGX = {"DVDD": 33.52, "DVSS": 30.22}` | line 59 | the core area or ring width changes |
+| via pad size `V34_M4 = (0.625, 0.19)` | line 50 | a different via master is used |
+| only the other *power* net's Metal4 is "foreign" | `opp_m4_boxes` | a signal wire runs through the margin (they do — e.g. `wb_done_OUT` runs 40 µm on Metal3 at its pin height) |
+| "≥ 3 vias per finger" = connected | line 124 | a via is placed past the **end** of the ring — it counts, but lands on nothing |
+
+That last one is real: v4 put one DVSS via stack at y = 1078.09 µm, but the DVSS ring ends at
+1077.14 µm, so that stack's Metal4 pad touches nothing. Harmless here (it hangs off a same-net plate,
+DRC/LVS were clean), but it shows v4 never checked that a via *lands*.
+
+### 17.3 The new script, step by step
+1. **Read the plugs.** Every pin box of every POWER/GROUND net (`--nets` to override); only Metal2
+   shapes count (that is where the pads land).
+2. **Which wall?** The die edge each finger is closest to (must be within 2 µm).
+3. **Rotate the world.** The key trick. Instead of four copies of the logic, every edge is described in
+   *edge coordinates*: **u = distance inward from that edge, v = position along it**. In (u,v), every
+   edge looks like the west edge (u = x, v = y), so one piece of code handles all four.
+   `to_uv`/`to_xy` convert positions; `rel_uv` rotates a via pad (which is relative to its own
+   centre, so it must *not* be shifted — the first draft shifted it, which would only have shown up
+   on the east and north edges; caught on desk-check before the first run).
+4. **Find its own ring road.** Among the net's `RING` shapes (the PDN tags them), pick the segment that
+   runs *parallel* to that edge, lies *beyond* the finger, and is *closest*. Its layer tells us how tall
+   the elevator must be (Metal4 → 2 vias, Metal5 → 3 vias).
+5. **Driveway.** Plate from the finger to the ring centre + half the top via pad + 0.2 µm. Same width
+   as the finger — the connection never gets *wider* on the way in, which is what the Week-37 slide
+   asks ("connections from power/ground pads should get progressively narrower").
+6. **Elevators — only where four safety rules pass.** Candidates are tried along the finger at a
+   spacing taken from the elevator's own size: 1.2 µm when the ring is on Metal4 (small 1×2 vias),
+   ~1.9 µm when the ring is on Metal5 (the top via is a 3×3 block 1.6 µm wide — at 1.2 µm neighbours
+   would overlap, see 17.5).
+   - (a) the top pad lands **fully on** the ring road (not past its end);
+   - (b) it doesn't collide with vias **already there**: on the same cut layer the cut blocks stay
+     ≥ 0.36 µm apart (Magic's "can't abut or partially overlap between subcells"), and no metal pad
+     leaves a 0–0.3 µm sliver next to the net's own metal. Overlapping *same-net* metal is fine — it
+     just merges;
+   - (c) on **every** floor it touches (Metal2 included), it keeps ≥ 0.3 µm from anyone else's metal;
+   - (d) rule (b) again, against the elevators already planned in this run.
+7. **Stranded fingers → spine.** A finger that gets fewer than 3 elevators (e.g. it hangs past the end
+   of the ring, as a DVSS pad in the bottom slot W12 would) is joined by a 10 µm Metal2 **spine** along
+   the wall to the nearest finger **of the same pad** that has enough. Never to a different pad: that
+   spine would run along the wall across other pads' pins.
+8. **Check twice, then write — or refuse.** Driveways and spines must also be 0.3 µm from foreign
+   Metal2 and overlap no cell; every elevator's top pad must sit inside its ring; every finger must
+   reach ≥ 3 elevators (its own or through a spine). Any failure → it prints *why* and exits 2
+   **without writing anything**.
+
+### 17.4 How it finds "everyone else's metal"
+- **Power nets** (`special_shapes`): all their shapes; vias get their box grown by 0.3 µm (v4's rule).
+- **Signal wires** (`signal_shapes`): OpenROAD stores routes compressed, so the script *decodes*
+  them with `odb.dbWireDecoder` — each segment arrives as `PATH <layer>`, `POINT`, `POINT`; a via
+  arrives as `VIA`/`TECH_VIA` at the current point. Only nets whose bounding box comes within 5 µm
+  of the connector's area are decoded (the other ~14 000 nets are skipped cheaply).
+- **Other pins** and **cell instances** near the connector.
+
+Two Python-binding gotchas cost a run each, and are now comments in the code:
+- `net == other_net` compares the *Python wrappers*, not the nets — it was `False` for the same net,
+  so each net's own ring counted as "foreign" and the safety check (correctly!) refused to write.
+  Compare `getName()` instead.
+- `dbWireDecoder.getRect()` needs C++ out-parameters and cannot be called from Python; the rare
+  `RECT` patch is replaced by a conservative 2 × 2 µm box.
+
+### 17.5 How it was proven
+| Test | Input | Result |
+|---|---|---|
+| A — identity | the real `acv_ring6` routed database | DEF **byte-identical to v4** except the one overhanging stack (89 vs 90 stacks); re-running v4 itself reproduces the signed-off `_connected.def` byte-for-byte |
+| B — sign-off | test A's output → streamout, XOR, Magic DRC, extraction, Netgen LVS (replayed from the saved `acv_ring6` state) | **Magic DRC 0 · XOR 0 · illegal overlap 0 · LVS "Circuits match uniquely"** |
+| C — generality, 1st try | synthetic copy: DVSS moved to the **north** edge, DVDD pushed up so 3 fingers **overhang** the ring | LVS **matched** (every finger, spine and north stack connected) but **Magic DRC 288 / XOR 222** — all "can't abut or partially overlap between subcells" on the north Metal5 ring |
+| C2 — after the fix | same synthetic layout, fixed script (north stacks now ~1.9 µm apart; the finger next to the strap vias bridged by a same-pad spine) | **Magic DRC 0 · XOR 0 · illegal overlap 0 · LVS "Circuits match uniquely"** |
+
+**What test C and the review caught (the most useful lesson here).** The first version stepped
+elevators every 1.2 µm on *every* edge — a number tuned on the west Metal4 ring, where the top via is
+a small 1×2 block. On a Metal5 ring the top via is a 3×3 block 1.3 µm wide, so neighbours overlapped by
+0.1 µm, and rule (b) only measured *centre* distance (1.6 µm) to existing vias, which on Metal5 are
+~4.4 µm-wide strap blocks. The script said "all OK" and wrote the file; Magic found 288 overlaps. An
+independent code review (three reviewers, each finding challenged by a skeptic) predicted exactly
+this *before* the DRC finished, plus four smaller real issues: spines could bridge to a *different*
+pad, Metal2 via pads were never clearance-checked, a pin shape on a non-Metal2 layer was silently
+ignored, and the wire decoder didn't switch layer after a via. All are fixed. Along the way a first
+attempt at rule (b) was *too strict* — it rejected one v4 stack whose Metal4 pad overlaps a strap via's
+Metal4 pad by 0.05 µm (same net, different cut layer: harmless, and Magic/KLayout agree). The rule
+that matches the tools is: same cut layer ≥ 0.36 µm apart; same-net metal may overlap. Lesson: a check
+that passes the case you tuned it on proves little — build a test that exercises the *other* case.
+
+### 17.6 How to modify it
+| Knob | Default | Meaning |
+|---|---|---|
+| `MINCLR` | 0.30 µm | clearance to foreign metal (gf180 metal spacing ≈ 0.28) |
+| `VPITCH` | 1.20 µm | spacing between elevators |
+| `AVOIDV` | 1.60 µm | keep-away from existing ring vias |
+| `INSET` | 0.55 µm | first/last elevator distance from the finger ends |
+| `OVERHNG` | 0.20 µm | driveway overshoot past the elevator pad |
+| `SPINE_W` | 10 µm | spine width |
+| `--min-vias` | 3 | elevators each finger must reach |
+| `--nets DVDD,DVSS` | all P/G nets | which nets to weld |
+| `--check-only` | off | plan + verify, write nothing (use it first on a new padframe) |
+
+To add a new safety rule, put it next to (a)/(b)/(c) in the elevator loop (per-via rules) or in the
+plate/spine check (Metal2 rules), and append a message to `fail` — the refuse-to-write path is then
+automatic. Always re-run test A (byte-compare) after a change to prove the current layout is
+untouched.

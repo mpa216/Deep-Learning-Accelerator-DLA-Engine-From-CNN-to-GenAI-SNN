@@ -40,7 +40,10 @@ FILL=$(ls -d "$RUN"/*-openroad-fillinsertion)
 #    PRISTINE pre-streamout ODB above -- never final/odb or an already-patched odb
 #    (the resume's save-views overwrites final/odb, and re-patching stacks vias ->
 #    a phantom "abut/overlap between subcells" DRC).
-openroad-librelane -no_init -exit -python connect_power_v4.py \
+#    connect_power.py is the edge/slot-agnostic connector (reads pin edge + ring
+#    from the ODB); it refuses to write (exit 2) if any finger can't be welded
+#    safely. connect_power_v4.py is what produced the signed-off acv_ring6 GDS.
+openroad-librelane -no_init -exit -python connect_power.py \
     "$CLEAN_ODB" "$RUN/_connected.odb" "$RUN/_connected.def"
 
 # 3) Resume: streamout -> Magic/KLayout DRC -> XOR -> SPICE extract -> Netgen LVS

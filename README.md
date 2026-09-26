@@ -5,11 +5,12 @@ MNIST GAN generator on a structural INT8 matrix engine, backed by physical Globa
 180nm (GF180MCU) SRAM macros. The current submission is the **bridge-wrapped chip `dla_engine_chip`**,
 hardened into the Chipathon 2026 **A56 / ACV project block** (1675 × 1110 µm): the eight-macro DLA
 core (A×4 + B×4 SRAM, with the 24-bit result buffer moved out of SRAM into flip-flops) plus a 4-wire
-serial host bridge, presenting the block's 11 pad terminals. It is **signed off** — Magic/KLayout
-DRC = 0, Netgen LVS "Circuits match uniquely", XOR = 0, **antenna = 0**, and 9-corner timing closure
-at 25 MHz on a single 3.3 V supply (setup +14.98 ns / hold +0.117 ns @ 40 ns, SPEF), ≈ 125 mW. The
-padframe's Metal2 DVDD/DVSS power pins are welded to the block's PDN core ring by an in-flow connector
-(`librelane/connect_power_v4.py`). Predecessor lineages — the nine-macro *tiny* chip (C folded into a
+serial host bridge, presenting the block's 11 pad terminals. It is **signed off** — Magic DRC = 0,
+the PDK's KLayout foundry deck = 0 (598 rules, plus antenna), Netgen LVS "Circuits match uniquely",
+XOR = 0, **antenna = 0**, and 9-corner timing closure at 25 MHz on a single 3.3 V supply (setup
++14.98 ns / hold +0.117 ns @ 40 ns, SPEF), ≈ 125 mW. The padframe's Metal2 DVDD/DVSS power pins are
+welded to the block's PDN core ring by an in-flow connector (`librelane/connect_power.py`, which works
+on any pad edge/slot). Predecessor lineages — the nine-macro *tiny* chip (C folded into a
 single 64×8 macro) and the eleven-macro chip with its full Stage-2 padring (`chip_top`, chip-level
 LVS 0 over 71,668 devices) — are preserved for reference.
 
@@ -162,7 +163,7 @@ APIC_A/
 │   ├── g300_pipeline_top.v         #   GAN orchestrator (sim-only verification harness)
 │   └── g300_quant_params.vh        #   GENERATED requant constants
 ├── librelane/                      # Physical flow: config_acv.yaml → run acv_ring4;
-│                                   #   connect_power_v4.py (power-pin connector) · A56_ACV.def template
+│                                   #   connect_power.py (power-pin connector) · A56_ACV.def template
 ├── 3V3lib/                         # Third-party 3.3 V std-cell lib (AS 7t3v3) + fixes
 ├── gf180mcu_ocd_ip_sram__sram256x8m8wm1/   # Hardened 256×8 SRAM IP (GDS/LEF/LIB/SPICE)
 ├── SRAM_MACRO/                     # OCD SRAM IP family (incl. the folded-C 64×8 macro)
@@ -316,7 +317,9 @@ hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config
 
 | Metric | Value |
 |---|---|
-| Magic / KLayout DRC | 0 / 0 |
+| Magic DRC | 0 |
+| KLayout foundry deck (gf180mcuD variant D, run on the submitted GDS) | 0 — 598 rules incl. connectivity & off-grid; antenna 0; via-array Vn.2b 0 ([report](signoff/A56/klayout_drc/)) |
+| KLayout density (whole-die) | metal coverage 14.5–28 % < 30 % — no dummy fill in the block (see open questions) |
 | Netgen LVS / GDS XOR | 0 / 0 — "Circuits match uniquely" (25,342 devices) |
 | Antenna | 0 nets / 0 pins |
 | Setup / hold ws (worst of 9 corners, 40 ns, SPEF) | +14.98 ns / +0.117 ns |
@@ -327,10 +330,16 @@ hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config
 **Power-pin connector — the fix that closed sign-off.** The gf180 I/O cells deliver a block's power
 as **Metal2 pins in the die margin** (the ACV template puts DVDD and DVSS on the west edge), but
 LibreLane's PDN delivers it on a **Metal4/Metal5 core ring ~33 µm inland** — so a straight harden
-leaves the power pins electrically islanded (chip LVS fails). `librelane/connect_power_v4.py` welds
-each template pin to its own-net ring with a short in-margin Metal2 reach + a via column, landing in
-the clean gaps between the existing PDN vias — symmetric across both nets, so it is also
-current-robust. It runs between detailed-route and streamout (`librelane/build_acv_connected.sh`).
+leaves the power pins electrically islanded (chip LVS fails). The connector welds each template pin
+to its own-net ring with a short in-margin Metal2 reach + a via column, landing in the clean gaps
+between the existing PDN vias — symmetric across both nets, so it is also current-robust. It runs
+between detailed-route and streamout (`librelane/build_acv_connected.sh`). The signed-off GDS was
+welded by `connect_power_v4.py` (west edge only, coordinates hard-coded); it is superseded by the
+general **`librelane/connect_power.py`**, which reads the pin edge and ring from the database (any
+edge, any slot), bridges pad fingers that overhang the ring end, refuses to draw within 0.3 µm of
+foreign metal, and verifies every via lands on the ring before writing. On this layout it reproduces
+v4 exactly minus one redundant via stack whose top pad overhung the ring (see `learning_notes.md`
+Part 17).
 
 **Antenna — a config knob, not a re-roll.** The new pin template re-rolled routing to 5 antenna nets;
 raising `GRT_ANTENNA_REPAIR_MARGIN` **25 → 50 → 75** (more aggressive pre-route diode insertion) drove
@@ -347,6 +356,37 @@ streamout so it is never painted as metal). Note: the template's blockage is del
 non-standard `+ RECT` spelling that OpenROAD's DEF reader rejects, so the keep-out is enforced as a
 routing obstruction rather than via the template blockage.
 
+**Open questions for the organizers (raised on the A56 GitHub issue; nothing flagged by the audit).**
+The submission uses the auditor's DEF exactly as issued (2026-08-31) — pin order `clk, rst_n, SCLK,
+MOSI, CS_N, MISO, busy, done, wb_done, DVDD, DVSS` on slots W12…W22 — and we are not changing it
+unilaterally. Two items are noted here as concerns until the organizers confirm:
+
+1. **First pin / "ground first".** Pin 1 lands on **W12**, the first pad of the NW quadrant — and in
+   our layout that is **`clk`**. The history:
+   - *2026-08-20/21* — the padframe generator made the first pin of each quadrant a fixed, down-bonded
+     ground ("Each quadrant has one down bonded ground — the first pin"); our first DEF had an
+     organizer-owned `dvss` on W12 and `clk` on W13. The same day the `info.yaml` template gained
+     *"the first pin must be a ground connection"*.
+   - *2026-08-23* — "Remove fixed down bonded vss connections": W12 became an ordinary project slot,
+     and because slots are filled in `info.yaml` order our `clk` moved onto W12 (the re-harden that
+     became `acv_ring4`/`acv_ring6`).
+   - *2026-09-11 (Week-37 slides)* — "The first pad should be a ground pad" is **struck through**;
+     the slide now says user grounds are shorted through the pad ring and substrate and each extra
+     power/ground pin breaks the pad-ring VDD rails.
+   - *2026-09-21 (latest `info.yaml` template)* — still says *"the first pin must be a ground
+     connection"*.
+
+   The generator does not enforce ground-first for ACV and the audit (names/counts) passes. The
+   only risk is packaging: **if W12 is still down-bonded to the package ground, `clk` would be tied
+   to ground** (the die is not damaged — `clk` is an input-only `in_s` pad with pulls off — but it
+   could not be clocked). If the organizers require ground-first, the fix is the order
+   `[DVSS, clk, …, wb_done, DVDD]` (signals back on W13–W21, where the earlier `e1fe9cf` layout
+   already closed), a regenerated DEF and one re-harden; `connect_power.py` already handles a DVSS
+   pad at W12 whose lower fingers overhang the ring end.
+2. **Dummy fill / density.** The block carries no dummy metal, so whole-die metal-coverage rules
+   (M1.4–M5.4, MT.3: > 30 %) read 14.5–28 % on the block alone. We assume fill is inserted at chip
+   integration; to be confirmed.
+
 **Post-layout timing** is signed off by **SPEF-backed 9-corner STA**, not SDF simulation: the 3.3 V AS
 cell library carries no `specify` timing blocks, so SDF-annotated dynamic gate-level sim is not
 possible in this open toolset — a library, not a toolset, limitation. Functional equivalence of the
@@ -361,7 +401,7 @@ the `main-eleven-macro` branch).
 Key flow techniques (documented in-repo): `-DSYNTHESIS` SRAM blackboxing with PDN-only power hookup,
 explicit `MACROS` placement, Metal3 PDN macro connects, pre-route heuristic diode insertion for
 antenna repair, `FP_DEF_TEMPLATE` floorplan matching against the auditor's padframe, and the
-in-margin ODB power-pin connector (`connect_power_v4.py`).
+in-margin ODB power-pin connector (`connect_power.py`).
 
 **Post-silicon bring-up** targets a 3.3 V MCU (ESP32 / Pi Pico) bit-banging the 4-wire serial
 protocol: power-on current check → status pins after reset → zero-fill + null START → replay
