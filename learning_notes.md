@@ -3,9 +3,13 @@
 A study guide for understanding this project deeply: what the chip is, how it is built,
 and — the main purpose of this file — a worked log of the **errors, problems, nuances, and
 key insights** encountered while integrating the accelerator into the Chipathon 2026 **A56 /
-ACV** padframe (the 2026-08-22/23 session). Each problem is written as *symptom → diagnosis →
+ACV** padframe. Parts 3–8 cover the first integration session (2026-08-22/23); the later parts
+are dated in their headings — the power connector (Part 9, 08-23), the re-harden on the
+re-issued template (Part 10, 08-25), gate-level sim (Parts 12–13, 08-29), flow steps (Part 14,
+09-01), verification add-ons (Parts 15–16, 09-13) and the general connector (Part 17, 09-26).
+Each problem is written as *symptom → diagnosis →
 fix → the concept behind it*, so you can re-derive the reasoning (e.g. for an interview), not
-just recall the outcome. CLAUDE.md is the terse resume-work reference; this file is for
+just recall the outcome. CLAUDE.md (a local, gitignored file) is the terse resume-work reference; this file is for
 *understanding*.
 
 ---
@@ -20,7 +24,8 @@ way to GDS with the open **LibreLane** RTL-to-GDS flow, for the Chipathon 2026 s
 1. **Model → INT8**: a PyTorch GAN generator (a 64→256→256→784 MLP) is quantized to INT8;
    Python scripts emit the weights and per-layer requantization constants.
 2. **RTL**: synthesizable Verilog for a 4×4 multiply-accumulate (MAC) engine + SRAM operand
-   buffers + a control FSM. Tapeout boundary = `dla_engine_top`.
+   buffers + a control FSM. Accelerator core = `dla_engine_top`; the submitted tapeout top is
+   `dla_engine_chip` (core + serial bridge, hardened together as one block — see step 4).
 3. **Physical**: LibreLane hardens that RTL onto real GF180 **SRAM macros** and 3.3 V standard
    cells → DRC/LVS/antenna/timing sign-off → GDS.
 4. **Integration**: the hardened core is wrapped with a serial host link and dropped into a
@@ -61,10 +66,14 @@ its own private 24-bit register. It shares the systolic array's *grid topology* 
   (all 4 rows and all 4 columns feed the grid every cycle) → one 256×8 macro per lane.
 - **C buffer = flip-flops** (this "longtin" variant). C holds one 24-bit result at a time for
   16 words; 256×8 macros are a clumsy fit for a 24-bit word, so C moved out of SRAM into ~408
-  registers. That removed the 9th SRAM macro and made the design **antenna-free**.
+  registers. That removed the 9th SRAM macro, leaving 8. Antenna-0 was a separate fight: the
+  roomy 8-macro floorplan still had 4 antenna nets; clustering the macros into a 4×2 block
+  (55 µm channels) and a density sweep to 50 took that 4→2→0 (run `longtin_a3b_d50`). The ACV
+  block later needed `GRT_ANTENNA_REPAIR_MARGIN: 75` to reach 0 again (§10.3).
 - The A and B buffers have **different address layouts** (A: `row*K+k`; B: `k*N+col`) because A
   holds N independent weight rows while B holds the shared input broadcast across N columns.
-  This asymmetry has bitten testbenches twice (see §5.4) — worth remembering.
+  This asymmetry has already bitten a testbench (`d3004n4_tb` first wrote B with A's layout —
+  see the comment in `tb/dla_engine_top_d3004n4_tb.sv`) — worth remembering.
 
 ### 2.4 Why a serial bridge exists (the pin-budget problem)
 `dla_engine_top`'s native interface is **~53 signal bits** (`wr_addr[9:0]`, `wr_data[7:0]`,
@@ -79,7 +88,7 @@ data bits, `START` pulses compute, `READ_C` streams 24 bits out on MISO.
 
 ---
 
-## Part 3 — The Chipathon submission model (essential context for this session)
+## Part 3 — The Chipathon submission model (essential context for the 2026-08-22/23 session)
 
 **What changed.** The chipathon moved from a single generic "workshop slot" padframe (that
 every team shared) to **per-project block assignments**: each project gets a specific block
@@ -87,7 +96,11 @@ config, and the **auditor generates that project's real padframe from its `info.
 hands back a DEF template + a reference padring.
 
 **We are project A56, block "ACV"** — a **1675 × 1110 µm** project region whose 11 user pins sit
-on the **west + north edges**:
+on the **west edge**, slots W12–W22 (the current template, used by `acv_ring4`/`acv_ring6`). The
+original 2026-08-21 template, shown first below, put DVSS on the north edge (N01); Part 10
+covers the change.
+
+*Original template (2026-08-21, superseded):*
 
 | Pad | Slot | Cell | Role |
 |---|---|---|---|
@@ -98,6 +111,21 @@ on the **west + north edges**:
 | busy, done, wb_done | W19–W21 | bi_24t | status outputs |
 | DVDD | W22 | dvdd | power |
 | DVSS | N01 | dvss | ground |
+
+*Current template (2026-08-23 onward; `acv_ring4`/`acv_ring6`, the submitted block):*
+
+| Pad | Slot | Cell | Role |
+|---|---|---|---|
+| clk | W12 | in_s (schmitt) | dedicated input |
+| rst_n | W13 | in_c (cmos) | dedicated input |
+| SCLK, MOSI, CS_N, MISO | W14–W17 | bi_24t | serial link |
+| busy, done, wb_done | W18–W20 | bi_24t | status outputs |
+| DVDD | W21 | dvdd | power |
+| DVSS | W22 | dvss | ground |
+
+The fixed quiet-ground pad is gone, so `clk` now takes the quadrant's first pad. Whether that
+pad must be ground is open with the organizers: the `info.yaml` template says "the first pin
+must be a ground connection", while the Week-37 (2026-09-11) slides strike that rule through.
 
 **How the audit works** (and what it caught): the auditor scans the submitted GDS for
 **top-level text labels** and matches them against the `info.yaml` pin list. A `*` means "pin in
@@ -115,7 +143,7 @@ pins are the 11 ACV pins.
 
 ---
 
-## Part 4 — What was built this session
+## Part 4 — What was built in the 2026-08-22/23 session
 
 1. **`rtl/dla_engine_chip.sv`** — a new chip-level top that instantiates the serial bridge +
    `dla_engine_top` and exposes **exactly the ACV padframe terminals** (62 signal ports + power).
@@ -159,8 +187,8 @@ Before the multi-hour run, three cheap checks caught issues early:
 ## Part 5 — Problems faced and how they were solved (the core of these notes)
 
 ### 5.1 (Background lesson) K=4 vs K=256 — verify what you actually tape out
-Every physical run before this lineage hardened the core at the RTL default `K=4`, but the GAN
-needs `K=256`; the *testbench* silently overrode K to 256, so simulations passed while the
+Every physical run up to the 2026-07-02 re-synthesis (through `as3v3_d61`) hardened the core at
+the then-RTL default `K=4`, but the GAN needs `K=256`; the *testbench* silently overrode K to 256, so simulations passed while the
 *hardened* chip would have been wrong. Caught by comparing the netlist's `wr_addr` bit-width
 against what the GAN driver assumed.
 > **Insight:** a green testbench proves the *math*, not the *silicon*, unless the test drives the
@@ -247,7 +275,7 @@ macro pins VDD/VSS).
 positions** (where the padring delivers power) but does **not** via-stack them down into the
 block's internal PDN (Metal1 rails / Metal4 straps). They are correct *for the padring* but
 electrically islanded *inside our block*. Deeper cause: the flow runs `GeneratePDN` (step 21)
-**before** `ApplyDEFTemplate` (step 28), so the PDN never sees the final power-pin locations.
+**before** `ApplyDEFTemplate` (step 27), so the PDN never sees the final power-pin locations.
 
 *The genuine tradeoff:*
 - `copy_def_power=true` → pins at the right location, but disconnected from our grid.
@@ -263,10 +291,12 @@ the organiser owns chip-level power. So set `RUN_IRDROP_REPORT: false` to get pa
 *Outcome (confirmed):* Magic **DRC is clean** and **all 62 signal pins pass LVS**, but LVS
 returns **2 errors — DVDD and DVSS**: the layout splits each into a main net plus five isolated
 `*_uq` pieces (the six template pin rects), proving the power pins are genuinely disconnected
-from the internal grid (and each other). So the connectivity fix *is* required: tie the template
-power pins into the PDN — cleanest route is to run `ApplyDEFTemplate` **before** `GeneratePDN`
-and add a `Metal1↔Metal2` connect so `pdngen` stamps vias where the Metal2 pins overlap the
-Metal1 power rails.
+from the internal grid (and each other). So the connectivity fix *is* required. (The first idea —
+run `ApplyDEFTemplate` before `GeneratePDN` and add a `Metal1↔Metal2` connect — would not work on
+its own: the template's Metal2 power pins sit at x 0–1 µm in the die margin, while the std-cell
+rows and their Metal1 rails start at the core edge, 40 µm in, so they never overlap.) The adopted
+fix is a post-route weld of each pin to its own-net core ring through the empty margin — Part 9
+(`connect_power_v3.py`), Part 10 (`connect_power_v4.py`), Part 17 (the general `connect_power.py`).
 
 > **Insights:** (1) know which checks are **manufacturability gates** (DRC, LVS) vs
 > **analyses** (IR-drop) — and when a report is meaningful for a *block* vs a *full chip*.
@@ -274,10 +304,15 @@ Metal1 power rails.
 > often faster than fighting the symptom.
 
 ### 5.8 (Recurring project lesson) antenna closure is empirical
-Antenna violations (a fab/yield concern: too much metal area per gate during etch) are closed
-here by a **placement-density sweep**, not a formula — small density nudges "re-roll" which nets
-route long, and a found zero **reproduces** (byte-identical DEF). Big floorplan moves
-(clustering, large density jumps) consistently make antennas *worse*. On gf180 in this open flow
+Antenna violations (a fab/yield concern: too much metal area per gate during etch) were closed
+in the earlier core-only lineages by a **placement-density sweep**, not a formula — small density
+nudges "re-roll" which nets route long, and a found zero **reproduces** (byte-identical DEF). On
+the ACV block (fixed auditor pin positions) the working lever was instead
+`GRT_ANTENNA_REPAIR_MARGIN` 25→50→75 (5→3→0 nets) at unchanged density 50 — see §10.3. In the
+original eleven-macro grid study, large floorplan moves (clustering, row swaps, big density jumps)
+made antennas worse; in the eight-macro longtin layout that ACV inherits, however, clustering the
+macros (55 µm channels) was what fixed the long SRAM→PE broadcast nets (4→2), and a density
+re-roll cleared the rest. Which lever works depends on *why* the nets are long. On gf180 in this open flow
 antenna is **non-gating** (Magic DRC is authoritative), but it's chased to literal 0 as a
 quality bar.
 
@@ -291,15 +326,17 @@ quality bar.
 | **LVS** | Layout vs Schematic — does the extracted layout netlist match the source netlist (devices + connectivity)? The connectivity gate. |
 | **XOR** | Geometric diff between two GDS streamers (Magic vs KLayout) — catches tool disagreements. |
 | **Antenna** | Metal-area-to-gate ratio per net; plasma-etch damage risk. Fixed with diodes / layer hops / density. |
-| **STA** | Static Timing Analysis. **Setup** = data arrives before the clock edge (fast-enough); **hold** = data stays stable after it (not too fast). Signed off across **9 PVT corners** (ss/tt/ff × voltage/temp). Hold is the thin margin here. |
-| **PDN** | Power Delivery Network — rails (Metal1, follow std-cell rows), straps (Metal4), optional ring; macro pins tap in (gf180 SRAM tops out at Metal3 → needs a Metal3→Metal4 connect). |
+| **STA** | Static Timing Analysis. **Setup** = data arrives before the clock edge (fast-enough); **hold** = data stays stable after it (not too fast). Signed off across **9 corners** = 3 PVT corners (tt_025C_3v30 / ss_125C_3v00 / ff_n40C_3v60) × 3 interconnect-RC extraction corners (nom/min/max). Hold is the thin margin here. |
+| **PDN** | Power Delivery Network — rails (Metal1, follow std-cell rows), straps (Metal4 vertical, plus Metal5 horizontal when `PDN_MULTILAYER`), and a core ring (on in the ACV block: the Metal4/Metal5 DVDD/DVSS ring the power connector welds to); macro pins tap in (gf180 SRAM tops out at Metal3 → needs a Metal3→Metal4 connect). |
 | **Macro** | A pre-hardened black-box block (here the 256×8 SRAMs) placed by hand and treated as fixed IP. |
 | **`FP_DEF_TEMPLATE`** | A DEF whose die area + pin locations are copied as the floorplan template, so the block's pins land exactly where the padring expects. |
 
-**Voltage/library nuance:** GF180 open PDK ships 5 V standard cells; a third-party **3.3 V "AS"
-library** lets the whole chip be **single-supply 3.3 V** (the OCD SRAM is a 3.3 V IP), avoiding
-level shifters. The 3.3 V I/O pads are foundry-characterized at 3.3 V, so a 3.3 V host drives
-them directly.
+**Voltage/library nuance:** GF180's foundry standard cells (`gf180mcu_fd_sc_mcu7t5v0`/`9t5v0`) are
+5 V-device cells that are *also* characterized at 3.3 V (tt 3.30 / ss 3.00 / ff 3.60 V liberty).
+This project uses the third-party native-3.3 V **"AS" library** instead — a choice, not a
+necessity — so the logic and the 3.3 V OCD SRAM share a **single 3.3 V supply** with no level
+shifters. The foundry `gf180mcu_fd_io` pads are 5 V cells characterized at 3.3 V too, so a 3.3 V
+host drives them directly.
 
 ---
 
@@ -314,6 +351,11 @@ The project verifies in a **ladder**, each rung closing a different gap:
 4. **Gate-level sim (GLS)** — the *routed netlist* (not the RTL) runs the same vectors, closing
    the "does what I taped out match the golden?" gap.
 5. **UVM** — a pyuvm/cocotb constrained-random environment.
+6. **Formal + SVA, X-propagation, functional coverage** (2026-09-13, Part 15) — SymbiYosys proofs
+   of the controller and serial bridge (`formal/`), `tb/dla_xprop_tb.sv`, and coverage bins in
+   `tb/uvm/dla_uvm.py`; these *prove* properties / *measure* test quality rather than sample
+   examples. (Rung 4 was later extended to the full 784-px image through the serial bridge on the
+   taped-out `dla_engine_chip` netlist — §12.4.)
 
 > **Principle:** each level answers a distinct question — *math right?* (unit) → *pipeline
 > right?* (image) → *host protocol right?* (pads) → *silicon-as-routed right?* (GLS). Being able
@@ -334,7 +376,10 @@ The project verifies in a **ladder**, each rung closing a different gap:
   bug was solved by reading `relocate_pins`).
 - **Know your gates vs analyses:** DRC/LVS gate manufacturability; IR-drop is an analysis that a
   *block* (not the top chip) can defer to chip integration.
-- **Antenna closure is empirical and reproducible**; big floorplan changes make it worse.
+- **Antenna closure is empirical and reproducible**, and the lever depends on why the net is
+  long: density re-rolls (eleven-macro grid), macro clustering + density 50 (longtin, 4→0), and
+  the pre-route diode margin `GRT_ANTENNA_REPAIR_MARGIN` 25→75 for fixed padframe pin positions
+  (ACV, 5→3→0).
 - **Single-supply 3.3 V** via a third-party AS cell library — a deliberate operating-point
   decision, not an accident.
 - **Determinism matters:** re-running a promoted config reproduces a **byte-identical DEF** —
@@ -342,16 +387,17 @@ The project verifies in a **ladder**, each rung closing a different gap:
 
 ---
 
-*Status:* `dla_engine_chip` is RTL-verified bit-exact; the ACV harden (run `acv_v1`) is
+*Status at the time (2026-08-23, run `acv_v1`, since deleted — for the current state see
+Parts 10, 14 and 17):* `dla_engine_chip` was RTL-verified bit-exact; the ACV harden was
 **Magic-DRC-clean, detailed-routing-clean (0 violations), and signal-LVS-clean** (all 62 signal
-pins match). The **sole open item** is DVDD/DVSS power-pin connectivity (§5.7). Attempted fix
-by stamping vias onto the routed ODB: **power-grid connectivity was achieved** (`check_power_grid`
-→ all DVDD/DVSS shapes connected), but the follow-up LVS then showed a **DVDD↔DVSS short** —
-the template power pins sit in the die margin, so tying them in forces Metal2 across the
-congested core edge where it overlaps opposite-net strap via-stack pads. Lessons banked below
-(§5.7). Because the pins are placed in the die margin exactly at the block/padring boundary,
-this connection is very likely a **chip-integration** responsibility; pending confirmation with
-the organiser vs. a heavier pdngen-reorder fix. Superseded status note below.
+pins match). The one open item then was DVDD/DVSS power-pin connectivity (§5.7, above). Attempted
+fix by stamping vias onto the routed ODB: **power-grid connectivity was achieved**
+(`check_power_grid` → all DVDD/DVSS shapes connected), but the follow-up LVS then showed a
+**DVDD↔DVSS short** — the template power pins sit in the die margin, so tying them in forced
+Metal2 across the congested core edge where it overlapped opposite-net strap via-stack pads. We
+first assumed the connection was a **chip-integration** responsibility; the organisers then ruled
+Metal5-only power not acceptable, so the block welds it itself with a post-route connector
+through the *empty* margin (Part 9) — resolved, LVS "Circuits match uniquely".
 
 **Extra lessons from the fix attempt (2026-08-23):**
 - Two OpenROADs in the container: `/foss/tools/openroad` (DB schema 0.129) vs
@@ -386,7 +432,7 @@ margin** (this block: 6 DVDD rects on the WEST edge at x≈0–1 µm, 6 DVSS rec
 y≈1109–1110 µm — read straight out of `A56_ACV.def`). LibreLane's PDN, however, brings power out on
 a **Metal4/Metal5 core ring ~33 µm inland**. `FP_TEMPLATE_COPY_POWER_PINS` places the pins at the
 template coordinates but never via-stacks them down to the ring, so they are electrically islanded.
-Deeper still: the flow runs **GeneratePDN (step 21) before ApplyDEFTemplate (step 28)**, so pdngen
+Deeper still: the flow runs **GeneratePDN (step 21) before ApplyDEFTemplate (step 27)**, so pdngen
 never even sees where the power pins will land.
 
 *Concept — block vs chip, and why "Metal5 is fine" is wrong.* The chipathon organizers were explicit
@@ -472,8 +518,9 @@ pad is < 0.3 µm from the opposite net). Only when all four are green do you spe
 - **Block-level IR-drop is deferrable, DRC/LVS are not.** `RUN_IRDROP_REPORT: false` is legitimate
   for a block the organizer integrates; LVS "match uniquely" is the real connectivity arbiter.
 
-### 9.7 Final sign-off (the taped-out block)
-`dla_engine_chip`, A56/ACV block, GF180MCU, 3.3 V single-supply, LibreLane:
+### 9.7 Sign-off of the first connected close (run `acv_ring`, commit `e1fe9cf`; superseded)
+`dla_engine_chip`, A56/ACV block, GF180MCU, 3.3 V single-supply, LibreLane — as closed on the
+original north-DVSS template:
 
 | Metric | Value |
 |---|---|
@@ -488,16 +535,27 @@ pad is < 0.3 µm from the opposite net). Only when all four are green do you spe
 | Total power (tt, 40 ns) | **≈147 mW** |
 | Max-cap / max-slew flags | template blanket-SDC waivers (pad nets etc.), no liberty rating violated |
 
+> **Superseded.** The submitted block is `acv_ring6` (Parts 10 and 14): Magic DRC 0, LVS "Circuits
+> match uniquely", XOR 0, antenna **0**, setup **+14.98** / hold +0.117 ns (SPEF, 9 corners @ 40 ns),
+> ≈125 mW, IR DVDD 54.8 / DVSS 70.6 mV, and the KLayout foundry deck 0 (run 2026-09-26, Part 17 /
+> `signoff/A56/klayout_drc/`).
+
 Reproducible build: `librelane/build_acv_connected.sh` (harden `--to Odb.CellFrequencyTables` →
-`connect_power_v3.py` on the pristine ODB → resume `--from Magic.StreamOut`). Renders in
+the power connector on the pristine ODB → resume `--from Magic.StreamOut`). At the time the
+connector was `connect_power_v3.py`; the script now calls the general `connect_power.py` (Part 17),
+and `connect_power_v4.py` welded the signed-off `acv_ring4`/`acv_ring6` GDS. Renders in
 `librelane/acv_render/` (full chip + DVDD/DVSS connector zooms).
 
 ### 9.8 Under the hood — what the script reads, writes, and draws on
 The connector **touches no source file** — no RTL, no config, no GDS. It works purely on the routed
 **OpenROAD database (ODB)**, the binary snapshot LibreLane hands between flow steps:
-- **Reads** (arg 1): the *pristine pre-streamout* ODB
-  `runs/acv_ring/54-odb-cellfrequencytables/dla_engine_chip.odb` (stashed as `_patched/_clean_base.odb`).
-- **Writes** (args 2–3): a **new** `_patched/dla_engine_chip.{odb,def}` — the input is never edited in
+- **Reads** (arg 1): the *pristine pre-streamout* ODB — at the time
+  `runs/acv_ring/54-odb-cellfrequencytables/dla_engine_chip.odb` (that run dir has since been
+  stripped; a local copy survives as `librelane/_patched/_clean_base.odb`, not in git). The current
+  build takes `runs/<tag>/*-odb-cellfrequencytables/dla_engine_chip.odb`.
+- **Writes** (args 2–3): a **new** ODB + DEF (the original v3 run used
+  `_patched/dla_engine_chip.{odb,def}`; `build_acv_connected.sh` now writes
+  `runs/<tag>/_connected.{odb,def}`) — the input is never edited in
   place. The **GDS is produced later**, by the flow's streamout step reading this patched ODB (I then
   copy that GDS to `gds/dla_engine_chip.gds` for the submission). So the only *repo* files the whole
   fix changes are the submission artifacts (`gds/`, `verilog/`, `lvs_config.json`, `info.yaml`), not
@@ -520,18 +578,25 @@ The connector **touches no source file** — no RTL, no config, no GDS. It works
 Because the shapes go straight onto the DVDD/DVSS nets, extraction sees them connected with no
 connect-by-label needed.
 > **To build one yourself:** first run a *read-only* `odb` dump of the ring (layers, positions, the
-> concentric order — this project's `_pdn_introspect.py`); pick a clean landing x/y per pin; stamp
-> reach+stack with the two `dbSBox.create` calls; verify locally (opposite-net same-layer overlap
-> scan + `check_power_grid`) before spending a full DRC/LVS pass. The finished recipe is
-> `connect_power_v3.py` driven by `build_acv_connected.sh`.
+> concentric order — this project's `librelane/_introspect2.py`); pick a clean landing x/y per pin;
+> stamp reach+stack with the two `dbSBox.create` calls; verify locally (opposite-net same-layer
+> overlap scan + `check_power_grid`) before spending a full DRC/LVS pass. The finished recipe is now
+> `connect_power.py` (any edge; Part 17) driven by `build_acv_connected.sh`; `connect_power_v3.py`
+> was the original north-DVSS version.
 
 ## Part 10 — The padframe changed under us (2026-08-25): re-harden + a symmetric connector
 
-Mid dry-run, the auditor re-issued the ACV floorplan template (`layout_announcement/A56.def_new`).
+Mid dry-run, the auditor re-issued the ACV floorplan template (then `layout_announcement/A56.def_new`;
+since folded into `layout_announcement/A56.def/A56/project_defs/ACV/A56_ACV.def` =
+`librelane/A56_ACV.def`, which also carries the 2026-09-01 NE-corner keep-out).
 Same die (1675×1110), but the power moved: **DVSS relocated from the NORTH edge to the WEST edge**,
 paired next to DVDD (now W21/W22), the auto-inserted "quiet-ground" pads were removed, and **every
-signal pin shifted down one slot** (clk W13→W12 … wb_done W21→W20). Nothing electrical changed — same
-RTL, same synthesis, same 8 macros — so this was a pure *physical* re-close, but a fresh sign-off.
+signal pin shifted down one slot** (clk W13→W12 … wb_done W21→W20). The core design did not change —
+same RTL, same synthesis, same 8 macros — so this was a pure *physical* re-close, but a fresh
+sign-off. One pad-level caveat we missed at the time: `clk` now sits on **W12, the quadrant's first
+pad**, where the fixed quiet ground used to be. The `info.yaml` template says the first pin must be
+ground, while the Week-37 (2026-09-11) slides strike that rule through — an open question with the
+organizers (the DEFs are deliberately unchanged).
 
 ### 10.1 What a template swap actually invalidates
 The signed-off `e1fe9cf` GDS was hardened against the OLD template, so its pins **and its whole power
@@ -548,7 +613,7 @@ Both power pins on the west edge made the geometry *simpler*: each pin runs a Me
 own west M4 ring (DVSS outer @x30, DVDD inner @x33; DVDD passes UNDER the DVSS ring — M2-under-M4, no
 short). This was also the chance to fix v3's flagged current weakness (wide DVDD plates but thin DVSS
 strips, both only 2-cut vias): v4 gives **both** nets full-height Metal2 plates + a vertical **column**
-of via2_3+via3_4 stacks per finger — **90 stacks total (~4× v3)**, each landing in a clean y-gap
+of via2_3+via3_4 stacks per finger — **90 stacks total (vs v3's 12, one per finger)**, each landing in a clean y-gap
 between the existing M5-strap→ring vias (the same "don't straddle a subcell via" rule as §9.4).
 Sign-off run `acv_ring4`: Magic DRC 0, Netgen LVS "Circuits match uniquely", XOR 0.
 
@@ -597,7 +662,7 @@ name is identical to SystemVerilog UVM, so the concepts transfer both ways.
 | UVM role | base class | ours | what it does here |
 |---|---|---|---|
 | transaction | `uvm_sequence_item` | **DlaOp** / **DlaResult** | one matmul job (A 4×256 weights, B 256×4 inputs) / the 16 observed C values |
-| sequence | `uvm_sequence` | **DlaSequence.body()** | emits 1 *directed* op (A=B=1 ⇒ every C=256) + 3 *constrained-random* ops |
+| sequence | `uvm_sequence` | **DlaSequence.body()** | emits 7 *directed* corner ops (A=B=1 ⇒ every C=256, plus a mid-magnitude op, all-zero, and the four INT8 −128/+127 sign mixes) + 16 *constrained-random* ops (23 in all; see Part 15.3) |
 | sequencer | `uvm_sequencer` | **DlaSequencer** | arbitrates/routes items from sequence → driver |
 | driver | `uvm_driver` | **DlaDriver.drive_op()** | the ONLY pin-wiggler: stream A/B into the buffers, pulse `start`, wait `wb_done`, read the 16 C. Also broadcasts the *applied* (A,B) on an analysis port |
 | monitor | `uvm_monitor` | **DlaMonitor** | passive: watches the read-back bus, reconstructs the 16 C, broadcasts them — never drives |
@@ -625,13 +690,13 @@ is reusable.
 **Why bother (vs a directed testbench).** (1) *Separation*: stimulus (sequences), pin protocol
 (driver), and checking (scoreboard) are decoupled — a new test is a new *sequence*, not a new bench.
 (2) *Constrained-random*: sequences emit randomized-but-legal transactions, covering cases you'd never
-hand-write (here, 3 random matmuls beside the 1 directed one). (3) *Self-checking*: the scoreboard's
+hand-write (here, 16 random matmuls beside 7 directed corner ops). (3) *Self-checking*: the scoreboard's
 golden model flags any mismatch automatically. The cost is more up-front structure — so in this project
 the **directed** tests (`d3004n4`, `chip_core_dla_tb`, …) stay the workhorses for specific vectors, and
 UVM adds a randomized, black-box, transaction-level check on top.
 
 **Running it + pyuvm/cocotb gotchas (this project).** `cd tb/uvm && make` (cocotb + Icarus;
-`TOPLEVEL=dla_engine_top`, `MODULE=dla_uvm`) → "ALL 4 TRANSACTIONS PASSED". cocotb-2.0 specifics that
+`TOPLEVEL=dla_engine_top`, `MODULE=dla_uvm`) → "ALL 23 TRANSACTIONS PASSED" plus "FUNCTIONAL COVERAGE: 25/25 bins = 100.0%" (see 15.3). cocotb-2.0 specifics that
 bit us: the DUT handle is `cocotb.top`; `Timer` takes `unit=` (not `units=`); and read-back values need
 explicit signed handling (`.to_signed()` / manual 24-bit wrap) since the bus is unsigned. **Scope note:**
 this env verifies the **core** `dla_engine_top`, which sits unchanged inside the ACV submission
@@ -642,7 +707,8 @@ this env verifies the **core** `dla_engine_top`, which sits unchanged inside the
 
 RTL sign-off proves the *design* is right; **GLS on the hardened netlist proves what actually got taped
 out is right** — i.e. that synthesis + P&R (buffering, CTS, ~11k antenna diodes) didn't change the
-function. We ran two GLS on the post-P&R netlists.
+function. We ran three GLS on the post-P&R netlists (12.1 and 12.3 on 2026-08-25, the combined
+12.4 on 2026-08-29).
 
 ### 12.1 Chip-level GLS — the serial bridge on the hardened `dla_engine_chip.nl.v`
 `tb/dla_engine_chip_tb.sv` drives the pad terminals exactly like an external host and replays the
@@ -681,8 +747,9 @@ raw-vs-biased subtlety that makes the value on the wire different from the golde
 
 ### 12.3 Full-GAN GLS — the whole image on the hardened core
 `g300_pipeline_tb` with `-DGLS` runs the complete 64→256→256→784 generator (all tiling + requant +
-Q20-tanh) through the hardened **core** netlist `runs/longtin_a3b_d50/final/nl/dla_engine_top.nl.v` (the
-identical core embedded in `dla_engine_chip`): **`PASS: output matches expected`, 784/784 pixels
+Q20-tanh) through the hardened **core** netlist `librelane/runs/longtin_a3b_d50/final/nl/dla_engine_top.nl.v`
+(the same `dla_engine_top` RTL that `dla_engine_chip` re-synthesizes flat — a sibling gate netlist,
+not the identical gates; 12.4 closes that gap on the chip netlist itself): **`PASS: output matches expected`, 784/784 pixels
 bit-exact**, rendering a recognisable digit.
 
 ![Full GAN on the hardened core — digit "0"](learning_notes_figs/full_gan_gls_digit0.png)
@@ -712,8 +779,8 @@ shifting out MSB-first on MISO (the zoom shows a negative result's 0xFF sign-ext
 full-run VCD would be unrenderable, so this is a representative slice of the identical protocol.*
 
 **Runtime note:** the gate-level full run took **~6 h wall** (not the ~40 min–1.5 h an earlier note
-guessed): the serial framing is ~25–30× slower/clock than RTL because the ~90k-gate netlist is
-evaluated across all ~43M mostly-idle serial-shift clocks (~1.2 min/tile × 324 tiles). RTL ~13 min.
+guessed): the serial framing is ~25–30× slower/clock than RTL because the ~84k-instance netlist (~14k logic cells + ~11k antenna diodes; the rest are
+fill/tap cells) is evaluated across all ~43M mostly-idle serial-shift clocks (~1.2 min/tile × 324 tiles). RTL ~13 min.
 This is the true cost of a purely serial-fed accelerator, and is exactly what the experimental
 branch's burst commands were designed to cut.
 
@@ -770,23 +837,24 @@ needed." Reading what the code actually does beats pattern-matching someone else
 ### 13.2 Why did generating one 28×28 image take six hours?
 
 We simulated the whole taped-out chip producing one handwritten "0" (784 pixels), and it took **~6
-hours** of computer time — for a chip that would do the same job in a *fraction of a second* in real
-silicon. Two ideas explain the gap, and both are general.
+hours** of computer time — for a chip that would do the same job in under two seconds in real
+silicon (~43M clocks at the signed-off 25 MHz). Two ideas explain the gap, and both are general.
 
 **First: the chip talks through a keyhole.** To fit inside the shared pad frame, the accelerator is
-reached over just **four wires** (a serial link). To load the neural network's ~330,000 weight
-bytes, the host has to *shift them in one bit at a time* — about 20 clock ticks per byte, plus
-framing. That's tens of millions of clock ticks spent doing nothing but shuffling bits through a
+reached over just **four wires** (a serial link). To load the network's ~283,000 INT8 weights
+(≈332,000 byte writes once layer 0's 64-wide rows are zero-padded to K=256), the host shifts each
+byte in *one bit at a time* as a 20-bit frame (2-bit command + 10-bit address + 8 data bits) —
+~20 serial-clock pulses, or ~130 chip-clock ticks, per byte. That's tens of millions of clock ticks spent doing nothing but shuffling bits through a
 narrow opening. A narrow interface is a genuine bottleneck; it's exactly why an experimental version
 of this design added **"burst" commands** to send many bytes per handshake.
 
 **Second: a digital simulator's cost is counted in *clock ticks*, not in useful work.** A logic
 simulator advances the design one tiny time-step at a time and re-evaluates whatever changed. Crucially,
-**every clock tick still steps the entire ~90,000-gate netlist forward — even while the big multiply
+**every clock tick still steps the entire ~84,000-instance netlist forward — even while the big multiply
 array is idle**, just waiting for the next serial bit to arrive. So the six hours isn't the *math*
 (the actual multiply-accumulates are a rounding error); it's the **~43 million mostly-idle clock
 cycles** of feeding the chip through that four-wire keyhole, each cycle costing a full sweep of the
-gate-level model. (Tellingly, the run reports only ~0.43 *milliseconds* of simulated "chip time" —
+gate-level model. (Tellingly, the run reports only ~0.43 *seconds* of simulated "chip time" at the testbench's 100 MHz clock —
 but each nanosecond of chip time is thousands of simulator operations.)
 
 **Two takeaways:** (1) simulation *wall-clock* scales with the number of clock cycles you make the
@@ -830,7 +898,8 @@ built-in `Odb.RemoveRoutingObstructions` deletes it again before the layout is w
 `--to <Step>` runs from the start up to that step and stops; `--from <Step>` picks up from that step
 (reusing the saved state) and continues. **Between them you can run your own script** on the saved
 database, then resume feeding the modified files back in. That is exactly how the power connector is
-welded: run `--to Odb.CellFrequencyTables`, then a hand-written script (`connect_power_v4.py`) opens
+welded: run `--to Odb.CellFrequencyTables`, then a hand-written script (`connect_power.py` today;
+`connect_power_v4.py` produced the signed-off `acv_ring4`/`acv_ring6` GDS — see Part 17) opens
 the saved `.odb`, stamps the extra metal, saves it, and we resume `--from Magic.StreamOut` pointed at
 the patched file. Nothing inside LibreLane changed — we opened the line between two stations, did a
 custom operation, and closed it again. You point a resumed step at specific files with
@@ -844,9 +913,10 @@ only if you'll run it often. For a one-off, the splice in #3 is far simpler.
 - **`-e` feeds a *file view*, not a config knob.** `-e odb=…` works; `-e RUN_SPEF_EXTRACTION=true`
   errors with "Invalid design format ID." Config values live in the config file; `-e` is only for
   odb/def/nl/… Cost me one failed launch.
-- **A "keep-out" left in the final layout can become real metal.** A blockage rectangle in a DEF is
-  read by the layout tool (Magic) as a *sheet of metal* unless told otherwise (`MAGIC_DEF_NO_BLOCKAGES`).
-  That is the whole reason the router keep-out must be *removed before stream-out* — hence the paired
+- **A "keep-out" left in the final layout can become real metal.** A blockage rectangle in a DEF
+  would be read by the layout tool (Magic) as a *sheet of metal* if `MAGIC_DEF_NO_BLOCKAGES` were
+  false (LibreLane's default is true, i.e. ignore). Removing the keep-out before stream-out keeps it
+  out of every downstream view (DEF/ODB/GDS) whatever that flag is set to — hence the paired
   add/remove-obstruction steps. (It's also why the auditor's blockage can't just be left in the
   template: OpenROAD's DEF reader even rejects its `+ RECT` spelling — standard DEF is `RECT`.)
 - **When you splice, feed the pristine pre-write database, not `final/`** — the resume overwrites
@@ -911,7 +981,7 @@ it *works*. So `constraints/validate_sdc.sh` re-runs STA (standalone OpenSTA) on
 netlists** using my hand-written file, and reports the result. Both designs come back with a real
 40 ns clock, all timing **MET** (setup ≈ +26.6 ns, hold ≈ +0.24–0.34 ns), and zero unconstrained
 endpoints. One honest caveat baked into the script: this check has *no wire parasitics* loaded, so
-the setup number is rosier than the true sign-off (+15.7 ns with parasitics). That's fine — the goal
+the setup number is rosier than the true sign-off (+15.74 ns core / +14.98 ns chip with parasitics). That's fine — the goal
 is to prove the *constraints* are valid and complete, not to re-do sign-off. (Tooling footnote: the
 full OpenROAD app refused this because it wanted a physical tech file for `read_verilog`; the
 lighter standalone `sta` does pure timing with just the libraries, which is exactly what this needs.)
@@ -1014,10 +1084,14 @@ outside it now looks like any other memory-mapped IP block.
 peripheral can say "hold on, not ready yet." Our result memory has a **one-cycle registered read**:
 you ask this cycle, the data appears next cycle. So a naive single-cycle APB read would sample the
 *old* value. The wrapper handles it correctly by de-asserting `PREADY` for exactly one cycle on a
-result read — inserting one "wait state" — and the testbench confirms all 16 reads did exactly that.
+result read — inserting one "wait state" — and the testbench checks that C reads were wait-stated
+(it counts PREADY-low C-read cycles, requires the count > 0, and prints it in the PASS line).
 This is a small thing that shows you understand both the bus protocol *and* your own IP's timing,
 and that the two have to be reconciled. (It's the same class of "the C buffer answers late" issue
-the serial bridge hit in its own way — see Part 5's read-turnaround notes.)
+the serial bridge hit in its own way: its C read needed a 3-phase `S_READ_SET → S_READ_WAIT →
+S_READ_GET` sequence, because the new read address only reaches the C buffer's registered read
+one cycle later — sampling immediately returned the *previous* read's value; see
+`rtl/dla_serial_bridge.v`.)
 
 **How it was checked.** A self-checking testbench (`tb/dla_apb_tb.sv`) drives a full matrix-multiply
 entirely over APB and compares all 16 results to a golden computed in the testbench — plus it checks
@@ -1036,8 +1110,8 @@ of silently inventing a plausible-looking wrong answer.
 **What I built and why.** The chip's bring-up plan already says "zero-fill both input memories before
 the first compute, or the accelerator sums garbage." That was written as an *argument*. `tb/
 dla_xprop_tb.sv` turns it into a *demonstration* in two phases: **(1)** reset, then compute
-**without** filling the input memories — and the test asserts that all 16 results come back **X**
-(16/16 do); **(2)** fill the memories, compute again — and every result is the exact number. So it
+**without** filling the input memories — and the test asserts that the results come back **X**
+(it fails if none does; in the run, 16/16 do); **(2)** fill the memories, compute again — and every result is the exact number. So it
 proves both that the hazard is real *and* that the documented fix cures it.
 
 **The nuance — X is a double-edged sword, which is why a dedicated test earns its keep.** In
@@ -1045,8 +1119,10 @@ simulation X propagates and exposes the bug. But real silicon has no "X" — tho
 up as *actual* 0s and 1s, just unpredictable ones, so hardware would compute a confident wrong
 answer with no warning at all. And the reverse trap exists too: sometimes a simulator is *too*
 pessimistic and shows X where real hardware would resolve to a clean value (this project already hit
-one such artifact — a vendor memory model that stayed X until it saw a specific enable wiggle; see
-Part 7 / the GLS notes). So "reason about X deliberately" is a real methodology, not a checkbox —
+one such artifact — the vendor SRAM simulation model only becomes "operational" after it sees a
+1→0 transition on its chip-enable `CEN`, but the design ties `CEN` permanently low, so under that
+model the memory never reads or writes. That is a sim-model artifact, not silicon behaviour, which
+is why GLS here uses the behavioural wrapper in `rtl/gf180_sram_1rw_256x8.v` instead). So "reason about X deliberately" is a real methodology, not a checkbox —
 this test makes that reasoning runnable and repeatable.
 
 ### 15.6 What I deliberately did *not* build, and why (the honest part)
