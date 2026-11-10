@@ -14,6 +14,9 @@ source /etc/profile >/dev/null 2>&1
 export PDK_ROOT=/foss/pdks PDK=gf180mcuD PDKPATH=/foss/pdks/gf180mcuD
 export LVDS_RX_ROOT="${LVDS_RX_ROOT:-$HERE}"
 export MPLBACKEND=Agg QT_QPA_PLATFORM=offscreen XDG_RUNTIME_DIR=/tmp/runtime-default
+# ngspice is built with OpenMP: without these one run grabs every core and parallel runs thrash
+# (measured 2026-11-10: 7.3 s at 639 % CPU vs 4.0 s on one core for the same transient).
+export OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 OMP_WAIT_POLICY=PASSIVE
 mkdir -p "$XDG_RUNTIME_DIR"
 cd "$LVDS_RX_ROOT" || exit 1
 exec "$@"
