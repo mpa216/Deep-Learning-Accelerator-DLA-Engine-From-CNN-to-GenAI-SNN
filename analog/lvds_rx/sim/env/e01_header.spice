@@ -1,0 +1,29 @@
+* e01_header.spice -- deterministic GF180 deck header test (handoff 9.2)
+* Operating point of one nfet_03v3 and one pfet_03v3, all peripheral libs loaded.
+* Run: ngspice -b sim/env/e01_header.spice
+.param sw_stat_global=0 sw_stat_mismatch=0 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice moscap_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_typical
+.temp 27
+
+vdd vdd 0 3.3
+vgn gn 0 0.9
+vdn dn 0 1.65
+vgp gp 0 2.4
+vdp dp 0 1.65
+Xn dn gn 0 0 nfet_03v3 w=10u l=0.5u nf=1 m=1
+Xp dp gp vdd vdd pfet_03v3 w=10u l=0.5u nf=1 m=1
+Rr a 0 1k
+Xr r1 r2 0 ppolyf_u r_width=2u r_length=10u
+vr r1 0 1.0
+Rl r2 0 1e-3
+
+.control
+op
+print abs(i(vdn)) abs(i(vdp))
+print @m.xn.m0[vth] @m.xp.m0[vth]
+quit
+.endc
+.end

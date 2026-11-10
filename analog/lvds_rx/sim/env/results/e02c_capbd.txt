@@ -1,0 +1,18 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * e02c_capbd.spice -- op-point junction capacitance names in ngspice bsim4: use capbd / capbs (not cbd/cdd).
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+@m.x1.m0[capbd] = 4.126745e-15
+@m.x2.m0[capbd] = 1.069924e-14
+@m.x3.m0[capbd] = 6.763157e-15
+@m.x1.m0[capbs] = 4.434086e-15
+@m.x2.m0[capbs] = 1.522979e-14
+@m.x3.m0[capbs] = 9.372565e-15
+ngspice-46 done

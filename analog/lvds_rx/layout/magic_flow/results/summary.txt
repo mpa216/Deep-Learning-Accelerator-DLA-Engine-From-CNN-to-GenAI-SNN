@@ -1,0 +1,54 @@
+== build lf_toy (place gencell devices, flatten, wire)
+RESULT build_seconds=1  gds_bytes=38830
+== (a) Magic DRC: .mag in session, and the GDS read back
+RESULT magic_drc_mag: MAGIC_DRC_TOTAL 0 | magic_drc_gds: MAGIC_DRC_TOTAL 0 | seconds=2
+== (b) KLayout foundry deck (main + antenna) on the 0.001 um DBU GDS
+GDS_DBU 0.001 OK top=['lf_toy'] file=/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lf_toy.gds
+KLAYOUT_DRC_MAIN 0   [1 lyrdb file(s)]
+KLAYOUT_DRC_ANTENNA 0   [1 lyrdb file(s)]
+RESULT klayout_drc seconds=10
+== (c) LVS: Magic extraction + Netgen vs toy.spice
+EXTRACT_DONE /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lvs_lf_toy/lf_toy.lay.spice
+      4 Subcircuit pins:
+      1 Number of nets: 8                          |Number of nets: 8                          
+      1 Number of devices: 8                       |Number of devices: 8                       
+      1 Netlists match uniquely.
+      1 Final result: Circuits match uniquely.
+LVS_RESULT: Circuits match uniquely (no property errors)
+RESULT lvs seconds=1
+== (c') negative control: schematic with M1 w=7u instead of 8u must NOT be clean
+LVS_RESULT: NOT CLEAN (see /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lvs_lf_toy.out): Netlists match uniquely with property errors. The following cells had property errors: 
+== (d) parasitic extraction and simulation
+EXTRACT_DONE /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lf_toy.pex_c.spice
+PEX_NETLIST /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lf_toy.pex_c.spice  devices: 15  caps: 25  res: 0
+EXTRACT_DONE /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lf_toy.pex_rc.spice
+PEX_NETLIST /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lf_toy.pex_rc.spice  devices: 15  caps: 86  res: 130
+netlist                        Vout[V]   Idd[uA]  gain[dB]  UGF[MHz]  f3dB[kHz]
+toy                             1.6518    213.67     40.86   280.066    2984.07
+lf_toy.lay                      1.6518    213.67     40.86   270.439    2942.97
+lf_toy.pex_c                    1.6518    213.67     40.86   260.871    2890.03
+lf_toy.pex_rc                   1.6518    213.12     40.86   260.152    2866.32
+SIM_DELTA lf_toy.lay vs toy: dVout=+0.00 mV  dIdd=+0.00 %  dGain=-0.00 dB  dUGF=-3.44 %  df3dB=-1.38 %
+SIM_DELTA lf_toy.pex_c vs toy: dVout=+0.00 mV  dIdd=+0.00 %  dGain=-0.00 dB  dUGF=-6.85 %  df3dB=-3.15 %
+SIM_DELTA lf_toy.pex_rc vs toy: dVout=+0.00 mV  dIdd=-0.26 %  dGain=+0.00 dB  dUGF=-7.11 %  df3dB=-3.95 %
+RESULT pex+sim seconds=2
+== (e) picture
+wrote /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/layout/magic_flow/work/lf_toy.png layer props: /foss/pdks/gf180mcuD/libs.tech/klayout/tech/gf180mcu.lyp
+== library self-test cell (taps, vias, wires, pin, ABAB row)
+DRCCOUNT 0
+No errors found.
+MAGIC_DRC_TOTAL 0
+KLAYOUT_DRC_MAIN 0   [1 lyrdb file(s)]
+KLAYOUT_DRC_ANTENNA 0   [1 lyrdb file(s)]
+== lone gencell nfet (the '8 DRC errors' observation)
+LONE gencell-instance in-session DRC total = 16
+LONE   gencell-instance rule: Metal1 minimum area < 0.1444um^2 (M1.3)  (8 boxes)
+LONE flattened in-session DRC total = 8
+LONE   flattened rule: Metal1 minimum area < 0.1444um^2 (M1.3)  (8 boxes)
+--- same GDS, read back into Magic:
+MAGIC_DRC_TOTAL 8
+--- same GDS, foundry KLayout deck:
+  MAIN rule M1.3: 8
+KLAYOUT_DRC_MAIN 8   [1 lyrdb file(s)]
+KLAYOUT_DRC_ANTENNA 0   [1 lyrdb file(s)]
+RESULT total_wall_seconds=40

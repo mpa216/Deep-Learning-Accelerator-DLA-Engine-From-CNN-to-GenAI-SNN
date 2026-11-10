@@ -1,0 +1,21 @@
+== A: netlist, local copy, PDK rcfile
+rc=0
+total 12
+drwxr-xr-x 2 1000 1000 4096 Nov 10 17:03 .
+drwxr-xr-x 4 1000 1000 4096 Nov 10 17:03 ..
+-rw-r--r-- 1 1000 1000 1856 Nov 10 17:03 kit_techsweep.spice
+== diff TRY1 (no rc) vs TRY3 (pdk rc) netlists
+identical
+== B: --svg with -x (no display)
+rc=0
+total 12
+drwxr-xr-x 2 1000 1000 4096 Nov 10 17:03 .
+drwxr-xr-x 4 1000 1000 4096 Nov 10 17:03 ..
+-rw-r--r-- 1 1000 1000 3096 Nov 10 17:03 b.svg
+== C: --png with -x (no display)
+rc=0
+total 12
+drwxr-xr-x 2 1000 1000 4096 Nov 10 17:03 .
+drwxr-xr-x 4 1000 1000 4096 Nov 10 17:03 ..
+-rw-r--r-- 1 1000 1000 3096 Nov 10 17:03 b.svg
+== D: --png under xvfb-run

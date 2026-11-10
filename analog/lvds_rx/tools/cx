@@ -1,0 +1,19 @@
+#!/bin/bash
+# cx -- run a command inside the apic_headless container with the full EDA
+# environment (PATH, PYTHONPATH, PDK, KLAYOUT_PATH ...), starting in analog/lvds_rx.
+#
+# From the HOST (worktree root or anywhere):
+#   docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx <command> [args...]
+# e.g.
+#   docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx ngspice -b sim/tb1_op.spice
+#   docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx python3 sizing/lvds_rx_sizing.py
+#
+# LVDS_RX_ROOT may override the working directory (default: the directory above tools/).
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source /etc/profile >/dev/null 2>&1
+export PDK_ROOT=/foss/pdks PDK=gf180mcuD PDKPATH=/foss/pdks/gf180mcuD
+export LVDS_RX_ROOT="${LVDS_RX_ROOT:-$HERE}"
+export MPLBACKEND=Agg QT_QPA_PLATFORM=offscreen XDG_RUNTIME_DIR=/tmp/runtime-default
+mkdir -p "$XDG_RUNTIME_DIR"
+cd "$LVDS_RX_ROOT" || exit 1
+exec "$@"

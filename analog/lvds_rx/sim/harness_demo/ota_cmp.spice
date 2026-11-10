@@ -1,0 +1,37 @@
+* Demo DUT: 5-transistor OTA + inverter used as a comparator (real GF180 3.3 V devices).
+* Template for the harness.  Variables: header seed_line vdd temp (harness) and vic (grid).
+{header}
+{seed_line}
+vdd vdd 0 {vdd}
+vcm inn 0 {vic}
+* differential input: DC value is swept by .dc, the pulse is used by .tran
+vid inp inn dc 0 pulse(-0.1 0.1 5n 0.5n 0.5n 10n 20n)
+* bias: 20 uA into a diode-connected nfet, tail mirror x2
+ib vdd nb 20u
+Xmb nb nb 0 0 nfet_03v3 w=4u l=1u
+Xmt tail nb 0 0 nfet_03v3 w=8u l=1u
+* input pair and PMOS mirror load
+Xn1 d1 inp tail 0 nfet_03v3 w=8u l=0.5u
+Xn2 o  inn tail 0 nfet_03v3 w=8u l=0.5u
+Xp1 d1 d1 vdd vdd pfet_03v3 w=8u l=1u
+Xp2 o  d1 vdd vdd pfet_03v3 w=8u l=1u
+* inverter output stage and load
+Xip out o vdd vdd pfet_03v3 w=4u l=0.5u
+Xin out o 0 0 nfet_03v3 w=2u l=0.5u
+cl out 0 20f
+bvid vidn 0 V=v(inp)-v(inn)
+
+* Two analyses in one deck: use a .control block (deck-level .dc + .tran with .meas loses results,
+* see README).  `meas` results are parsed from the log; `echo RESULT name value` adds a custom number.
+.control
+dc vid -0.3 0.3 0.5m
+meas dc vtrip when v(out)='{vdd}/2' fall=1
+meas dc idd_raw find i(vdd) at=0
+let idd = -idd_raw
+echo RESULT idd $&idd
+tran 20p 60n
+* the OTA + inverter is inverting: vid rising -> out falling
+meas tran tplh trig v(vidn) val=0 fall=2 targ v(out) val='{vdd}/2' rise=2
+meas tran tphl trig v(vidn) val=0 rise=2 targ v(out) val='{vdd}/2' fall=2
+.endc
+.end

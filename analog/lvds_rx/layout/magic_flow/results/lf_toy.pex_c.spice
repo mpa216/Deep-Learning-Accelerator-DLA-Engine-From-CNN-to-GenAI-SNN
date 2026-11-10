@@ -1,0 +1,45 @@
+* NGSPICE file created from lf_toy.ext - technology: gf180mcuD
+
+.subckt lf_toy OUT VDD VSS INP INN
+X0 a_n644_3748# INP a_n644_n400# VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.5u
+X1 VSS a_n556_n492# a_n644_n400# VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
+X2 a_n644_3748# a_n644_3748# VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
+X3 a_n644_n400# INN OUT VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.5u
+X4 a_n644_n400# a_n556_n492# VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
+X5 a_n644_3748# VSS VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.5u
+X6 OUT INN a_n644_n400# VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.5u
+X7 VDD a_n644_3748# OUT VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
+X8 OUT a_n644_3748# VDD VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
+X9 VDD a_n556_n492# VSS ppolyf_u_1k r_width=1u r_length=19.5u
+X10 VSS VSS a_n644_3748# VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.5u
+X11 a_n556_n492# a_n556_n492# VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
+X12 VSS a_n556_n492# a_n556_n492# VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
+X13 VDD a_n644_3748# a_n644_3748# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
+X14 a_n644_n400# INP a_n644_3748# VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.5u
+C0 VDD OUT 0.68093f
+C1 a_n644_n400# INP 0.19979f
+C2 a_n556_n492# INN 0.21288f
+C3 a_n644_n400# INN 0.52945f
+C4 VDD a_n644_3748# 3.90175f
+C5 INP INN 0.12808f
+C6 a_n644_n400# OUT 0.57957f
+C7 OUT INP 1.05721f
+C8 a_n556_n492# a_n644_3748# 0.00567f
+C9 OUT INN 0.14913f
+C10 a_n644_n400# a_n644_3748# 0.59659f
+C11 INP a_n644_3748# 0.62219f
+C12 a_n644_3748# INN 0.06268f
+C13 OUT a_n644_3748# 0.57808f
+C14 VDD INP 0.23499f
+C15 a_n556_n492# a_n644_n400# 0.30132f
+C16 VDD INN 0.00155f
+C17 a_n556_n492# INP 0.00164f
+C18 INN VSS 1.40953f
+C19 INP VSS 0.9785f
+C20 OUT VSS 0.35894f
+C21 VDD VSS 10.903f
+C22 a_n556_n492# VSS 3.89385f
+C23 a_n644_n400# VSS 2.64896f
+C24 a_n644_3748# VSS 1.70102f
+.ends
+

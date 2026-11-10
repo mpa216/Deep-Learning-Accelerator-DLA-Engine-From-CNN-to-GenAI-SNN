@@ -1,0 +1,37 @@
+
+Magic 8.3 revision 636 - Compiled on Thu Apr 16 09:13:57 PM CEST 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology gf180mcuD ...
+10 Magic internal units = 1 Lambda
+Input style import: scaleFactor=10, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    obsactive mvobsactive filldiff fillpoly m1hole obsm1 fillm1 obsv1 m2hole obsm2 fillm2 obsv2 m3hole obsm3 fillm3 m4hole obsm4 fillm4 m5hole obsm5 fillm5 glass fillblock lvstext obscomment 
+Scaled tech values by 10 / 1 to match internal grid scaling
+Loading gf180mcuD Device Generator Menu ...
+Loading "../../../sim/env/e08b_gencell_drc.tcl" from command line.
+Root cell box:
+           width x height  (   llx,  lly  ), (   urx,  ury  )
+
+microns:   0.000 x 0.000   ( 0.000,  0.000), ( 0.000,  0.000)
+lambda:     0.00 x 0.00    (  0.00,  0.00 ), (  0.00,  0.00 )
+internal:      0 x 0       (     0,  0    ), (     0,  0    )
+Loading DRC CIF style.
+GEN {guard 1} rc=0  DRC count: {gc_top 8} {nfet_03v3_GLQPAZ 8}
+GEN {guard 1} DRC why: {Metal1 minimum area < 0.1444um^2 (M1.3)} {{192 983 203 1029} {396 983 407 1029} {600 983 611 1029} {804 983 815 1029} {192 71 203 117} {396 71 407 117} {600 71 611 117} {804 71 815 117}}
+You selected one or more subcells that aren't children
+    of the edit cell.  Only those in the edit cell were
+    deleted.
+(cells now: )
+GEN {guard 0} rc=1  DRC count: {gc_top 8} {nfet_03v3_GLQPAZ 8}
+GEN {guard 0} DRC why: {Metal1 minimum area < 0.1444um^2 (M1.3)} {{192 983 203 1029} {396 983 407 1029} {600 983 611 1029} {804 983 815 1029} {192 71 203 117} {396 71 407 117} {600 71 611 117} {804 71 815 117}}
+You selected one or more subcells that aren't children
+    of the edit cell.  Only those in the edit cell were
+    deleted.
+(cells now: )

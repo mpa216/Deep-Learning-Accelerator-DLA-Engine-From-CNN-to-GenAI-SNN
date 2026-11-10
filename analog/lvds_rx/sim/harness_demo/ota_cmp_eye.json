@@ -1,0 +1,16 @@
+{
+  "name": "ota_cmp_eye",
+  "description": "Demo: PRBS7 eye of the OTA + inverter comparator at 100 Mb/s (UI 10 ns, 1 ns edges), VOD 100 mV and 350 mV, worst5 corners. Limits are the handoff TB5 targets (h-open >= 0.6 UI, DCD <= 5 % UI) applied to a demo circuit that was not designed for them.",
+  "deck": "ota_cmp_eye.spice",
+  "corners": "worst5",
+  "grid": {"vod": [0.1, 0.35]},
+  "vars": {"ui": 1e-8, "tr": 1e-9, "vic": 1.65},
+  "prep": "demo_hooks.py:prep_stim",
+  "post": "demo_hooks.py:post_eye",
+  "limits": {
+    "h_open_ui": {"min": 0.6, "unit": "UI"},
+    "dcd_ui": {"max": 0.05, "scale": 100, "unit": "% UI"}
+  },
+  "timeout": 300,
+  "jobs": 6
+}

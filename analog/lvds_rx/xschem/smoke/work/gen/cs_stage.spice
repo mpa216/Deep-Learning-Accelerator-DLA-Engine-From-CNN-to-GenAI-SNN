@@ -1,0 +1,24 @@
+** sch_path: /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/xschem/smoke/work/gen/cs_stage.sch
+**.subckt cs_stage out
+*.opin out
+XM1 out net1 0 0 nfet_03v3 L=0.5u W=10u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0
+R1 vdd out 10k
+Vin net1 0 0.9
+Vdd vdd 0 3.3
+**** begin user architecture code
+
+
+.param sw_stat_global=0 sw_stat_mismatch=0 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.temp 27
+.control
+op
+print v(out) i(Vdd)
+.endc
+
+
+**** end user architecture code
+**.ends
+.end

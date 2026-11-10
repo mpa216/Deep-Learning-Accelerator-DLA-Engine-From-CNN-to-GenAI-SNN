@@ -1,0 +1,14 @@
+# bulky / regenerable artefacts -- never commit (GitHub rejects >100 MB; blobs stay in history)
+.scratch/
+luts/*.mat
+lut_regen/decks/*.txt
+lut_regen/work/
+*.raw
+*.log
+*.ext
+*.lyrdb
+__pycache__/
+sim/**/work/
+sim/**/*.raw
+layout/**/work/
+validate/work/

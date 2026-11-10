@@ -1,0 +1,45 @@
+--- ALL six params: rc=0
+     abs(i(vdn)) = 7.350630e-05
+     abs(i(vdp)) = 7.800952e-06
+     @m.xn.m0[vth] = 7.121645e-01
+     @m.xp.m0[vth] = 7.876393e-01
+--- NO .param line at all: rc=1
+    ERR: Error in netlist line no. 24, new internal line no. 399:
+    ERR: Undefined parameter [fnoicor]
+    ERR: Error in netlist line no. 24, new internal line no. 399:
+    ERR: Error in netlist line no. 24, new internal line no. 399:
+--- missing sw_stat_global: rc=1
+    ERR: Error in netlist line no. 909, new internal line no. 19:
+    ERR: Undefined parameter [sw_stat_global]
+    ERR: Error in netlist line no. 909, new internal line no. 19:
+    ERR: Formula() error.
+--- missing sw_stat_mismatch: rc=1
+    ERR: Error in netlist line no. 296, new internal line no. 1573:
+    ERR: Undefined parameter [sw_stat_mismatch]
+    ERR: Error in netlist line no. 296, new internal line no. 1573:
+    ERR: Cannot compute substitute
+--- missing mc_skew: rc=0
+     abs(i(vdn)) = 7.350630e-05
+     abs(i(vdp)) = 7.800952e-06
+     @m.xn.m0[vth] = 7.121645e-01
+     @m.xp.m0[vth] = 7.876393e-01
+--- missing res_mc_skew: rc=1
+    ERR: Error in netlist line no. 909, new internal line no. 19:
+    ERR: Undefined parameter [res_mc_skew]
+    ERR: Error in netlist line no. 909, new internal line no. 19:
+    ERR: Error in netlist line no. 909, new internal line no. 19:
+--- missing cap_mc_skew: rc=0
+     abs(i(vdn)) = 7.350630e-05
+     abs(i(vdp)) = 7.800952e-06
+     @m.xn.m0[vth] = 7.121645e-01
+     @m.xp.m0[vth] = 7.876393e-01
+--- missing fnoicor: rc=1
+    ERR: Error in netlist line no. 29, new internal line no. 399:
+    ERR: Undefined parameter [fnoicor]
+    ERR: Error in netlist line no. 29, new internal line no. 399:
+    ERR: Error in netlist line no. 29, new internal line no. 399:
+--- only the two sw_stat_*: rc=1
+    ERR: Error in netlist line no. 26, new internal line no. 399:
+    ERR: Undefined parameter [fnoicor]
+    ERR: Error in netlist line no. 26, new internal line no. 399:
+    ERR: Error in netlist line no. 26, new internal line no. 399:

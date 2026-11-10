@@ -1,0 +1,152 @@
+{
+ "overall": "The architecture class is right and buildable. A hybrid N/P input stage with a folded PMOS path and resistor loads is the standard way to cover 0.05-2.35 V at 3.0-3.3 V. I found no simpler topology that meets the full range without hidden costs. The plan's real weakness is the spec, not the circuit. The mandatory 6-sigma failsafe shift of about 50 mV makes the offset budget, area, delay, DCD and verification effort much harder, and the handoff's budget leaves out PVT variation of the shift and hysteresis, stage-2 offset, and edge-rate effects. I measured these in the container (details in log/review_circuit.md). Four numbers carry the review:\n- The pair-offset budget is 4.9 mV only if the shift and hysteresis do not move with PVT. Corner-aware it is 1.7-2.2 mV, which means 5-8x more pair area (about 15-25 um\u00b2 effective W*L).\n- With no failsafe shift it is 12.6 mV and the area is trivial.\n- At SS/3.0 V the N/P overlap is only 0.33 V wide.\n- DCD at 100 mV VID with a 50 mV shift is 10 % UI at a 2 ns edge, against a 5 % spec.\nMy recommendation is to demote failsafe to a stretch variant (default V_fs = 0, a knob in the script), keep the baseline topology but run a feasibility spike on the input stage before sizing, decouple the bias core from the signal path, and fix the pass criteria listed below. Then the autonomous plan is low-risk.",
+ "findings": [
+  {
+   "section": "4.4 / 7.7 / 8.1 (failsafe, offset budget)",
+   "severity": "blocker",
+   "problem": "The two-sided failsafe window is evaluated with nominal V_fs and V_H, but both move with PVT and VIC. I measured a 1.8:1 W-ratio shift at -24/+42 % (NMOS: 45.7 / 60.5 / 86.0 mV at ff-40C / TT / ss125C) and -28/+44 % for PMOS (82 / 114 / 164 mV). V_H varies 2x with VIC (A1 doubles in the overlap) and about 1.3x with corners, and the >10 mV floor forces V_Hmax to about 33 mV. Corner-aware, the 6-sigma requirement is sigma_total <= 1.7-2.2 mV, not 4 mV. That needs pair WLeff of 15-25 um\u00b2 (W = 44-72 um at L=0.5, or 18-30 um at L=1) instead of 4.6 um\u00b2. The 4 mV figure is only correct as a 3-sigma-with-PVT number.",
+   "improvement": "Replace G2's 'failsafe HIGH, 6 sigma' with a staged requirement. Baseline v0 has V_fs = 0 (symmetric, centred window, sigma allowance about 12.6 mV at 6 sigma, so no area pressure). Failsafe is a separate variant v1 controlled by one script knob: nominal V_fs about 42-46 mV, asymmetric guarantee (3 sigma on the failsafe side, 4.5 sigma on the +-100 mV sensitivity side), V_H nominal 12-15 mV with a floor of 6 mV, and sigma_total <= 3 mV. Make the sizing script compute V_fs(corner), V_H(VIC, corner) and assert both inequalities with those spreads, not nominal values. Do not hard-wire a W ratio: the shift depends strongly on inversion level (same ratio gives 60 mV NMOS, 114 mV PMOS) and is PTAT, so derive it per pair from vgs_at_gmid and check every corner.",
+   "evidence": "fs_shift.py and window_budget.py output (scratch dir). Table in log/review_circuit.md item 3 and 4. Sensitivity inequality V_fs,max + V_Hmax/2 + sys + 6 sigma + m <= 100 gives max sigma 1.70 mV with the measured spread and VHmax 33; with V_fs = 0 it gives 12.6 mV."
+  },
+  {
+   "section": "4.4 (DCD, pulse skew, eye) vs 7.7 / 9.1 TB4-TB5",
+   "severity": "major",
+   "problem": "The spec is internally contradictory. A -50 mV failsafe shift turns into duty-cycle distortion DCD = V_fs*tr/A. At VID = +-100 mV that is 5 % UI at tr = 1 ns, 10 % at 2 ns, 15 % at 3 ns. The spec asks for DCD <= 5 % UI and pulse skew <= 0.5 ns while TIA-644 allows 0.5-3 ns generator edges at VID = 100 mV. TB4/TB5 do not state the input edge time or the VID at which DCD is judged. Propagation delay at the +-100 mV worst-case trip is also unbounded (the 6-sigma budget deliberately leaves about 5 mV of margin, so the comparator sits at its threshold).",
+   "improvement": "State DCD and skew at a named condition: DCD <= 5 % UI at VID = 350 mV, tr <= 1 ns (pure circuit skew), and DCD <= 15 % UI at VID = 100 mV, tr = 2 ns (includes the shift). TB4 uses tr = 0.3-0.5 ns so it measures the circuit and not the stimulus. Add one delay check at VID = 100 mV with the trip point shifted by 3 sigma (a deliberate +-10 mV input offset source) and require tPD <= 8 ns, or drop the failsafe shift as in finding 1, which removes the issue.",
+   "evidence": "window_budget.py DCD table: 100 mV: 2.5 / 5 / 10 / 15 % at tr 0.5 / 1 / 2 / 3 ns; 350 mV: 0.7 / 1.4 / 2.9 / 4.3 %."
+  },
+  {
+   "section": "8.1-8.3 (offset budget)",
+   "severity": "major",
+   "problem": "The budget allocates 70 % of sigma to stage 1 only. The input-referred contribution of stage 2 is sigma_2/A1 and stage 3 /(A1*A2). With A1 = 3-5 and a modest comparator (sigma_2 about 6-8 mV) that is 1.5-2.5 mV, which equals the whole corner-aware allowance. At the CM extremes only one pair is active, gm and A1 halve, and the stage-2 term doubles. Random spread of the hysteresis itself (alpha mismatch in the cross-coupled pair) is also not budgeted. The handoff itself notes each pair must meet sigma alone at the extremes, but the formulas do not carry A1(VIC).",
+   "improvement": "Budget sigma_total^2 = sigma_stage1^2 + (sigma_stage2/A1_min)^2 + (sigma_VH/2)^2 + (sigma_3/(A1*A2))^2 with A1_min taken at the single-pair VIC extremes and the low-gm corner. Add the term to the script assert. Size stage 2's input pair and loads to sigma_2 <= 0.5*A1_min*sigma_target (so stage 2 needs about 6 um\u00b2 effective area, not minimum size). Add a stage-1 gain target of at least 4 at the single-pair extremes, or use the optional extra gain stage of 7.4 by default.",
+   "evidence": "Arithmetic from handoff 7.5/8.2; A1 doubling in overlap is stated in handoff 5.2 'What to watch'."
+  },
+  {
+   "section": "5.2 / 7.3 step 7 / 7b (CM range, dump devices)",
+   "severity": "major",
+   "problem": "The N/P overlap at the worst corner is much narrower than the TT numbers used for planning. Measured with the real models (tail current at 90 % of plateau): NMOS pair valid from 1.15 V (TT) / 1.30 V (ss, 125C); PMOS pair valid up to 1.775 V (TT, 3.0 V) / 1.60-1.65 V (ss, 3.0 V). The overlap is 0.33 V at ss/3.0 V against 0.63 V at TT 3.0 V. The dump-gate reference of 'about 1.4-1.6 V' would be outside the window at SS (the N pair needs VIC above 1.275 V and the P pair below 1.6 V, and the switching region spans about +-0.1 V). The plan also treats the dump-device CM fix as 'UNVERIFIED' but schedules it inside the full sizing flow.",
+   "improvement": "Make the reference a VDD ratio: Vref = 0.48*VDD from a resistor divider (centre of the window at TT 3.3, ss 3.0 and ff 3.6 within 30 mV), EN-gated. Add a one-day spike before the sizing script: stage 1 only, ideal bias sources and ideal current-source tails, VIC sweep 0.05-2.35 V at TT, ss/3.0/125C, ss/3.0/-40C, fs, sf, ff/3.6/-40C, measuring output CM, differential gain and the overlap. Pass: output CM within +-0.15 V over VIC at every corner and gain variation under 2.2x. If the spike fails, fall back immediately to Option B or the simplification in 'simplifications' rather than iterating the dump devices. Put the PMOS-only Option A milestone behind the same criteria: it tops out at 1.60 V at ss, which is marginal even for a standard LVDS high pin (VOS 1.375 + VOD/2 0.227 = 1.60 V).",
+   "evidence": "cm_window.py output table (log/review_circuit.md item 2). TT 3.0 V overlap 1.150-1.775 matches handoff 7.3 step 7; ss 3.0 V gives 1.275-1.600."
+  },
+  {
+   "section": "9.1 TB3 / 9.3 (trip-point measurement and Monte Carlo)",
+   "severity": "major",
+   "problem": "A 1 us, +-150 mV triangle sweeps 0.6 mV/ns. With tPD about 4 ns each trip point is read 2.4 mV late and V_H reads 4.8 mV too wide (20 % of a 25 mV target), a systematic error as large as the sigma budget. Running 200 transient samples x 3 VIC x 2 corners (about 1200 tran runs, plus every re-sizing iteration) is also expensive on a machine shared with other agents.",
+   "improvement": "Measure trip points with DC sweeps: one up-sweep started at -150 mV (output unambiguously LOW) and one down-sweep started at +150 mV, each a monotone .dc with continuation, so there is no delay error and each run takes well under a second. Keep one transient triangle only as a cross-check at TT and correct by 2*slope*tPD. If .dc fails to converge at the regenerative fold, fall back to a 20 us triangle plus the delay correction. Use the DC method inside the Monte Carlo loop, and keep tran MC only for tPD/DCD at TT and the worst corner with N = 100.",
+   "evidence": "window_budget.py last block: slope 0.6 mV/ns, tPD 2/4/5 ns gives 2.4/4.8/6.0 mV apparent V_H growth."
+  },
+  {
+   "section": "9.2 / 9.3 (Monte Carlo mechanics, netlist rules)",
+   "severity": "major",
+   "problem": "Monte Carlo is correct only if matched devices are written as total w with nf. I verified the mechanism (setseed plus reset plus op in a dowhile loop re-draws mismatch and a re-run with the same seed is identical) and the Pelgrom model (sigma 3.41 mV measured vs 3.34 mV predicted for W=13 L=0.5; nf=4 W=13 total gives 3.31 mV). But a pair written as W=3.25 with m=4 gave 6.79 mV, 2x too pessimistic, because the m copies share one random draw. A netlist generator that uses m for 'unit cells' would silently mis-size the whole design, and layout/LVS later has to reconcile it.",
+   "improvement": "Add a netlist-lint script rule: every device in a matched group is generated with nf (total w) and no m; fail the build otherwise. Record the verified numbers above as the resolution of UNVERIFIED items 1, 7 and 8 and add a regression deck (mc_pair.spice style) that re-checks sigma against Pelgrom after any PDK or ngspice change. State that no resistor mismatch exists in the model (no agauss on ppolyf_u_1k), so RL pair mismatch is budgeted by hand (about 0.4 mV input-referred at 0.5 % dR/R).",
+   "evidence": "mc_pair2.log: RESULT lines a/b/c/d; identical on re-run (mc_pair2_rerun.log). Model source sm141064.ngspice lines 742-770 (one agauss per instance, area from w, par, not m)."
+  },
+  {
+   "section": "9.1 (testbench completeness)",
+   "severity": "major",
+   "problem": "Missing tests that an automated flow will otherwise discover only post-layout: (1) bias-loop stability (the constant-gm loop is a positive-feedback loop with a stable zero state; TB8 only checks start-up); (2) start-up across ramp rates (1 us, 100 us) with EN already high, EN rising during a ramp, and with all three lanes sharing the bias; (3) EN glitches: runt pulses on the output during EN rise/fall and during power-up with idle inputs; (4) supply sensitivity of the trip point and hysteresis (VDD 3.0-3.6); (5) input leakage at 125 C and 3.6 V at VIN = 0.05 and 2.4 V (TB9 only lists 20 uA); (6) Monte Carlo for tPD and DCD, not only threshold; (7) stage-1 output CM versus VIC (needed to validate the dump devices); (8) an explicit 200 Mb/s check, because 'design margin to 200 Mb/s' is in the spec but TB5 only runs 1.5x (150 Mb/s) and TB2 is anchored to DR = 100.",
+   "improvement": "Add TB11 (loop gain by breaking the mirror and AC-injecting; require phase margin > 45 deg or show the loop gain stays below 1 at all frequencies at every corner), TB8 extended with the cases above, TB1/TB2 with stage-1 output CM versus VIC plotted per corner, a leakage sweep in TB9, and a 200 Mb/s eye at TT and ss (pass >= 0.5 UI at VID = 350 mV). Pass criterion for EN: output monotonic (no pulse narrower than 2 ns) and defined LOW whenever EN = 0 or VDD < 2.0 V.",
+   "evidence": "Handoff 9.1 table rows TB1-TB10; item 8 comes from handoff 4.4 'Design margin to 200 Mb/s' versus TB5 'and 1.5x the rate'."
+  },
+  {
+   "section": "7.1 (bias core) / 5.2",
+   "severity": "major",
+   "problem": "The plan couples every analog block to a PMOS-referenced constant-gm core plus a second N-referenced core, cascoded mirrors, a start-up circuit and a replica loop. Together with dump reference, VB2, VB1 and tails that is at least six distinct bias nodes and several matched groups, and the most failure-prone block (start-up and loop stability) gates all the signal-path verification. For a digital-output comparator at 100 Mb/s, gm constancy matters little; what matters is tPD, V_H and DCD spread.",
+   "improvement": "Decouple. Phase 1 builds and verifies the signal path (stages 1-3) with a simple always-starting bias: resistor-from-VDD into a diode-connected mirror (I = (VDD-VGS)/R, about +-13 % over supply plus the process/temperature spread) and a VDD-ratio divider for the dump reference. Phase 2 swaps in the constant-gm core and start-up only if corner results show a need (current spread above the measured limit, tPD variation above 1 ns). Use a single P-referenced core in Phase 2 and verify the NMOS-side gain spread over fs/sf instead of building a second core, unless the corner table shows it is needed. Script one interface (VBN, VBP, VB2, Vref, EN) so the swap needs no signal-path edit.",
+   "evidence": "Handoff 7.1 limitation paragraph (PMOS core stabilises only PMOS gm), 7.1 step 5 (start-up mandatory), and 7.2; constant-gm gives ID -22 %/+33 % (handoff Table 5.15 citation), only modestly better than the +-13 % plus Vt spread of a resistor-diode bias."
+  },
+  {
+   "section": "4.4 (hysteresis, power-down), 7.5",
+   "severity": "minor",
+   "problem": "Hysteresis nominal 20-30 mV costs window margin on both sides (V_Hmax/2 of 16 mV at VHmax 33), yet input noise is about 0.2-0.4 mV rms (handoff 7.10) and a >10 mV floor already prevents chatter. IDD <= 1 uA is stated without a temperature; my leakage check shows silicon leakage is not an issue (5.6 nA per 100 um of NMOS at ff/125 C), so the spec is fine if resistive paths are cut by EN.",
+   "improvement": "Set hysteresis to 12-15 mV nominal at the single-pair extremes, floor 6 mV at the worst VIC/corner, VHmax about 20 mV. State IDD <= 1 uA at 27 C and <= 5 uA at 125 C. EN must also open the failsafe bias resistors, the VDD-ratio divider for Vref, and the start-up path, and the TB8 pass criterion should quote the temperature.",
+   "evidence": "window_budget.py rows with VHmax 20 vs 33 (sigma allowance 2.8 vs 1.7 mV). fs_shift.py leakage table."
+  },
+  {
+   "section": "0.3 rule 3, 7 (script as single source of truth, automation traps)",
+   "severity": "major",
+   "problem": "Traps for an automated designer: (a) 'never tune W in SPICE' plus an iteration loop with no cap can run forever when two specs conflict; (b) pygmid LUT extrapolation is guarded, but the VSB range is only 0-0.4 V and the NMOS pair at VIC = 2.35 V needs VSB about 1.4 V from a not-yet-regenerated LUT (a silent-wrong-answer risk if the regenerated *_vsb2 table is not validated); (c) every UNVERIFIED item is a hypothesis the plan lets the flow build on; (d) 'a pass' is judged by the same flow that produced the design.",
+   "improvement": "Guard rails: (1) hard iteration cap of 5 per block with an exit report listing which spec failed and which design variable moved; two consecutive failures of the same spec escalate to a stage-count or spec change recorded in the log, never to a hand-edit. (2) Cross-check every LUT-derived bias point against an ngspice .op or DC sweep at the real VSB and fail if VGS differs by more than 30 mV or ID by more than 10 %; log the error table. This also validates the *_vsb2 LUT. (3) A spec/corner table in code with pass/fail assertions and a summary written by a separate script from the raw .meas output (so the audit agent re-runs the same files). (4) Keep the failsafe, on-die termination, constant-gm core and NMOS-pair addition behind build flags with the simple variant as the default, so an unfinished feature never blocks the macro.",
+   "evidence": "Handoff 0.3 rule 3, 6.4 (VSB grid {0,0.2,0.4} V), 7 'load-bearing rules', 16 UNVERIFIED list."
+  },
+  {
+   "section": "4.4 power, area, delay (consistency check)",
+   "severity": "minor",
+   "problem": "These pass my consistency check, but note the assumptions. Power: stage 1 about 300-400 uA (PMOS tail 110 uA, NMOS tail 90 uA, RL branches 2x90 uA), stages 2-3 about 300 uA, bias about 100-200 uA, so about 0.8-1.0 mA per lane at TT and about +33 % at ss/125 C, which sits at the 1.5 mA limit if the failsafe-sized (3-5x larger) pairs are chosen. Bandwidth: 150-180 MHz per stage at TT against 0.5-0.75*DR = 50-75 MHz is generous and consistent with 200 Mb/s margin. tPD <= 5 ns with 1 ns variation over VID/VIC is plausible (preamp about 1 ns + comparator about 1 ns + chain about 0.7 ns) but the 'PVT within one die' wording is ambiguous.",
+   "improvement": "Add a current tally per block to the sizing report and assert I_lane at ss/125 C/3.6 V <= 1.5 mA. Rewrite the delay variation spec as three explicit items: variation over VID at fixed VIC, over VIC at fixed VID, and lane-to-lane mismatch contribution (Monte Carlo, 3 sigma).",
+   "evidence": "Arithmetic from handoff 5.2, 7.3, 8.4 values; no simulation."
+  }
+ ],
+ "gate_decisions": [
+  {
+   "gate": "G0 (environment)",
+   "verdict": "agree",
+   "decision": "Resolve by automated checks, book folder at /foss/designs/Analog.",
+   "rationale": "I confirmed ngspice-46, the PDK models and the mismatch section are present and usable; the checks should additionally include the Monte Carlo regression deck (setseed/reset reproducibility and Pelgrom sigma) so UNVERIFIED items 1, 7 and 8 are closed by observation."
+  },
+  {
+   "gate": "G1 (ambition)",
+   "verdict": "agree",
+   "decision": "Macro only (P0-P6), no chip integration, no padframe or info.yaml change.",
+   "rationale": "Correct and low risk. Add one qualifier: the macro's own spec must not assume a specific host, so state the CM range and failsafe as separate tested variants rather than one monolithic guarantee."
+  },
+  {
+   "gate": "G2 (spec)",
+   "verdict": "change",
+   "decision": "Keep 100 Mb/s with margin to 200 Mb/s (add an explicit 200 Mb/s eye check), full 0.05-2.35 V range as the target, off-chip termination, 3 lanes, EN power-down. Change failsafe: baseline v0 has V_fs = 0 and defined no-oscillation behaviour only; failsafe HIGH is variant v1 with a 3-sigma guarantee on the failsafe side and 4.5 sigma on the +-100 mV side. Hysteresis 12-15 mV nominal, floor 6 mV, instead of 20-30 mV. Define DCD at VID = 350 mV, tr <= 1 ns.",
+   "rationale": "A mandatory 6-sigma failsafe forces sigma_total <= about 2 mV once V_fs and V_H spread over PVT (measured -24/+42 % shift spread), 5-8x the pair area, 10 % UI DCD at 100 mV, and the sweeps all become tight. With V_fs = 0 the allowance is 12.6 mV. The link protocol is CS_N-framed and a floating clock lane is held by hysteresis, so failsafe-HIGH is not functionally needed here."
+  },
+  {
+   "gate": "G3 (architecture)",
+   "verdict": "agree",
+   "decision": "Baseline of handoff 5.2 (hybrid complementary input, resistor loads, hysteresis comparator, converter plus inverter chain), PMOS-only first, NMOS pair second, but gated by a stage-1-only feasibility spike with ideal bias, and with the bias decoupled from the signal path (simple resistor-diode bias first, constant-gm core as an upgrade).",
+   "rationale": "I found no simpler topology covering the full range: two independent comparators combined digitally give an undefined output in the single-pair regions, source-follower level shifting fails at 0.05 V, and the PMOS-only option tops out at 1.60 V at ss/3.0 V. The risk is concentrated in the dump-device CM fix and the bias core, so test those first with explicit fallback criteria (Option B)."
+  },
+  {
+   "gate": "G4/G5 (layout and sign-off gates)",
+   "verdict": "agree",
+   "decision": "Replace by written pass criteria checked by scripts plus an independent audit that re-runs everything.",
+   "rationale": "Reasonable if the audit uses the same raw .meas files and a separate summary script, and if the criteria include the corrected items above (corner-aware window, delay at shifted trip, EN glitch, loop stability). Without those the criteria would pass a design that fails in silicon."
+  },
+  {
+   "gate": "G6 (info.yaml / padframe)",
+   "verdict": "agree",
+   "decision": "Remains a hard human gate, out of scope.",
+   "rationale": "Touching the signed-off A56 submission is irreversible and needs the organizers' answers."
+  },
+  {
+   "gate": "Layout (scripted, including matched pairs)",
+   "verdict": "agree",
+   "decision": "Fully scripted Magic/KLayout layout, images reviewed afterwards.",
+   "rationale": "Feasible for a simple v0 (symmetric pairs, no W-ratio). The deliberate failsafe imbalance and the m-vs-nf netlist rule (matched devices must be nf-based) both feed into the generator, so state them as layout inputs."
+  },
+  {
+   "gate": "Secondary ESD (own poly R plus diodes, flagged unqualified)",
+   "verdict": "agree",
+   "decision": "Own series poly R plus diodes, clearly flagged unqualified.",
+   "rationale": "Fine for a learning macro. ESD capability cannot be shown in simulation; only capacitance and leakage can, so the TB0/TB9 pass criteria must say that."
+  },
+  {
+   "gate": "Schematics (SPICE is the source of truth)",
+   "verdict": "agree",
+   "decision": "SPICE netlists generated from the sizing script, xschem views generated for the owner.",
+   "rationale": "Keeps one source of truth; add the netlist lint (nf not m for matched groups) at generation time."
+  }
+ ],
+ "human_only": [
+  "Choosing the host/driver type if the owner wants to guarantee the full 0.05-2.35 V range or failsafe on a real board: needs the owner's knowledge of the real LVDS source (FPGA bank, MCU or a dedicated driver) and its VOS/ground-shift. Least effort: one sentence from the owner naming the driver part; otherwise stay with v0 and document the tested range.",
+  "Physical bring-up values that need the owner or organizers: package bond-wire and pad capacitance (handoff 9.1 marks these UNVERIFIED), the organizers' secondary-ESD cell, and any pin or analog-pad allocation in ACV. Least effort: use the documented stand-in values and flag them; no action needed from the owner until integration.",
+  "Final decision to integrate, change info.yaml or the padframe, or push anything (G6): hard human gate by design."
+ ],
+ "simplifications": [
+  "Make V_fs = 0 the default build (symmetric pairs, centred window, sigma allowance 12.6 mV at 6 sigma instead of about 2 mV); failsafe becomes a single script knob and a separate variant.",
+  "Build the signal path first with a resistor-diode bias (always starts, no loop) and a VDD-ratio divider for the dump reference; defer the constant-gm core and start-up circuit to a second phase that is entered only if corner results demand it.",
+  "Run a stage-1-only spike with ideal bias before writing the sizing script, with the numeric pass criteria in finding 4 and Option B as the pre-agreed fallback.",
+  "Use DC sweeps (up from -150 mV, down from +150 mV) for trip points and Monte Carlo, keeping tran only for tPD/DCD and eyes; cut the Monte Carlo grid to TT plus the worst corner at three VIC values.",
+  "Generate every matched device with total w and nf (no m) and enforce it with a netlist lint; verified: m inflates mismatch 2x.",
+  "Treat the PMOS-only Option A as a flow-shakedown milestone with a stated usable range (about 0 to 1.6 V at ss/3.0 V), not as a deliverable.",
+  "Keep on-die termination, trim bits and the 100 kOhm open-input failsafe bias out of v0 (already default off-chip); add them only after v0 passes."
+ ]
+}

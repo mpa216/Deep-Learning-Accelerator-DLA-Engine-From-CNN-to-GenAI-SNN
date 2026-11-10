@@ -1,0 +1,19 @@
+* e02c_capbd.spice -- op-point junction capacitance names in ngspice BSIM4: use capbd / capbs (NOT cbd/cdd).
+* X1: ad=as=0 (wrapper default).  X2: ad=as=10p, pd=ps=7u.  X3: kit-style formula for W=10u nf=1 (0.18u diffusion).
+.param sw_stat_global=0 sw_stat_mismatch=0 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.temp 27
+vg g 0 0.9
+vd1 d1 0 1.65
+vd2 d2 0 1.65
+vd3 d3 0 1.65
+X1 d1 g 0 0 nfet_03v3 w=10u l=0.5u
+X2 d2 g 0 0 nfet_03v3 w=10u l=0.5u ad=10p as=10p pd=7u ps=7u
+X3 d3 g 0 0 nfet_03v3 w=10u l=0.5u ad=1.8p as=1.8p pd=20.36u ps=20.36u
+.control
+op
+print @m.x1.m0[capbd] @m.x2.m0[capbd] @m.x3.m0[capbd]
+print @m.x1.m0[capbs] @m.x2.m0[capbs] @m.x3.m0[capbs]
+quit
+.endc
+.end

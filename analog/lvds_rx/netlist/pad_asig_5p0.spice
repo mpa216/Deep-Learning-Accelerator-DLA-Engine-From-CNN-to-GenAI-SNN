@@ -1,0 +1,57 @@
+* ============================================================================
+* pad_asig_5p0.spice  --  ngspice model of the GF180MCU analog pad
+*                         gf180mcu_fd_io__asig_5p0   (pad cell "asig_5p0")
+* ----------------------------------------------------------------------------
+* Source:  /foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/cdl/gf180mcu_fd_io.cdl
+*          (the PDK also ships spice/gf180mcu_fd_io.spice, which already uses
+*           ngspice syntax; this file is the same netlist, with the PDK
+*           device names spelled out and the mapping documented below).
+*
+* WHAT IS INSIDE THE PAD  (it is a pure pass-through with primary ESD only:
+*   no buffer, no series resistor, no level shifter; pin ASIG5V is simply the
+*   metal of the bond pad with three protection devices hanging on it)
+*
+*      D2  : N+/Psub diode, anode DVSS, cathode ASIG5V   -> clamps pad < -0.6 V
+*      D3  : P+/Nwell diode, anode ASIG5V, cathode DVDD  -> clamps pad > DVDD+0.6 V
+*      D0  : N+/Psub diode, anode DVSS, cathode DVDD     -> reverse-biased rail diode
+*                                                           (helps the power clamp)
+*      X1  : 36 x (15 um x 15 um) NMOS-inversion capacitor DVDD-DVSS
+*            (a supply decoupling cap, ~17 pF when DVDD = 3.3 V)
+*      VDD, VSS pins: present in the cell's pin list but NOT connected to any
+*            device in the cell.  They belong to the pad-ring supply rails
+*            (core-side VDD/VSS); here they are left floating on purpose.
+*
+* CDL -> ngspice conversion done here (checked line by line against
+* spice/gf180mcu_fd_io.spice, which is identical apart from the names):
+*   CDL  D0 DVSS DVDD diode_nd2ps_06v0 m=4.0 AREA=40e-12  PJ=82e-6
+*   ->   d0 dvss dvdd diode_nd2ps_06v0 m=4.0 area=40e-12  pj=82e-6
+*        model: ".model diode_nd2ps_06v0 d level=3" in sm141064.ngspice, section
+*        "dio" (loaded by `.lib ... diode_typical|diode_ss|diode_ff`).
+*   CDL  C1 DVDD DVSS $[cap_nmos_06v0] m=36.0 l=15e-6 w=15e-6
+*        ("$[model]" is CDL-only syntax for "this C is the model cap_nmos_06v0")
+*   ->   x1 dvdd dvss cap_nmos_06v0 m=36.0 c_length=15e-6 c_width=15e-6
+*        model: ".subckt cap_nmos_06v0 1 2 c_length c_width" in sm141064.ngspice,
+*        section "moscap" (loaded by `.lib ... moscap_typical|moscap_ss|moscap_ff`).
+*   CDL  D2 DVSS ASIG5V diode_nd2ps_06v0 m=4.0 AREA=150e-12 PJ=106e-6
+*   ->   d2 dvss asig5v diode_nd2ps_06v0 m=4.0 area=150e-12 pj=106e-6
+*   CDL  D3 ASIG5V DVDD diode_pd2nw_06v0 m=4.0 AREA=150e-12 PJ=106e-6
+*   ->   d3 asig5v dvdd diode_pd2nw_06v0 m=4.0 area=150e-12 pj=106e-6
+*        model: ".model diode_pd2nw_06v0 d level=3" (same "dio" section).
+*   (area is in m^2 and pj in m: 150 um^2 / 106 um perimeter per finger, x4.)
+*
+* NOTE: the foundry pad uses the 6.0 V diode models even though it is run at
+* 3.3 V here; that is what the layout contains, so that is what is modelled.
+*
+* REQUIRED in the including deck (names of the .lib sections, see tb0 decks):
+*   .lib .../sm141064.ngspice diode_typical   (or diode_ss / diode_ff)
+*   .lib .../sm141064.ngspice moscap_typical  (or moscap_ss / moscap_ff)
+*
+* USAGE:   xpad  pin  dvdd  dvss  vdd  vss  gf180mcu_fd_io__asig_5p0
+*          (pin order = CDL order: ASIG5V DVDD DVSS VDD VSS)
+* ============================================================================
+.subckt gf180mcu_fd_io__asig_5p0 asig5v dvdd dvss vdd vss
+d0 dvss dvdd  diode_nd2ps_06v0 m=4.0 area=40e-12  pj=82e-6
+x1 dvdd dvss  cap_nmos_06v0    m=36.0 c_length=15e-6 c_width=15e-6
+d2 dvss asig5v diode_nd2ps_06v0 m=4.0 area=150e-12 pj=106e-6
+d3 asig5v dvdd diode_pd2nw_06v0 m=4.0 area=150e-12 pj=106e-6
+.ends gf180mcu_fd_io__asig_5p0

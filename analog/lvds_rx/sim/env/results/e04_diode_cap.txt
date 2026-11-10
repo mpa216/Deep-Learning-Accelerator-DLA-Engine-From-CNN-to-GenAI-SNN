@@ -1,0 +1,54 @@
+=== DIODES (reverse biased: anode 0 V, cathode at Vr). area in m^2, pj in m
+two geometries A1=100um2,P1=40um ; A2=400um2,P2=80um -> cap/area [fF/um2] and cap/perimeter [fF/um]
+  diode_nd2ps_03v3   Vr=0.00V  C(100um2,40um)= 103.06 fF   area coeff= 0.968 fF/um2  perim coeff= 0.157 fF/um
+  diode_nd2ps_03v3   Vr=1.65V  C(100um2,40um)=  71.28 fF   area coeff= 0.657 fF/um2  perim coeff= 0.140 fF/um
+  diode_nd2ps_03v3   Vr=3.30V  C(100um2,40um)=  60.71 fF   area coeff= 0.554 fF/um2  perim coeff= 0.133 fF/um
+  diode_pd2nw_03v3   Vr=0.00V  C(100um2,40um)= 100.38 fF   area coeff= 0.943 fF/um2  perim coeff= 0.151 fF/um
+  diode_pd2nw_03v3   Vr=1.65V  C(100um2,40um)=  69.66 fF   area coeff= 0.640 fF/um2  perim coeff= 0.143 fF/um
+  diode_pd2nw_03v3   Vr=3.30V  C(100um2,40um)=  59.48 fF   area coeff= 0.539 fF/um2  perim coeff= 0.139 fF/um
+  diode_nw2ps_03v3   Vr=0.00V  C(100um2,40um)=  38.16 fF   area coeff= 0.149 fF/um2  perim coeff= 0.581 fF/um
+  diode_nw2ps_03v3   Vr=1.65V  C(100um2,40um)=  26.44 fF   area coeff= 0.094 fF/um2  perim coeff= 0.426 fF/um
+  diode_nw2ps_03v3   Vr=3.30V  C(100um2,40um)=  22.81 fF   area coeff= 0.078 fF/um2  perim coeff= 0.375 fF/um
+
+Leakage (A=100um2, P=40um) at Vr=3.3 V, and forward voltage at 100 uA forward:
+  diode_nd2ps_03v3   typical  T= 27C  Ileak(3.3V) =     489.0432 pA
+  diode_nd2ps_03v3   typical  T=125C  Ileak(3.3V) =      41.2343 pA
+  diode_nd2ps_03v3   ss       T= 27C  Ileak(3.3V) =     489.0432 pA
+  diode_nd2ps_03v3   ss       T=125C  Ileak(3.3V) =      40.2800 pA
+  diode_nd2ps_03v3   ff       T= 27C  Ileak(3.3V) =     489.0432 pA
+  diode_nd2ps_03v3   ff       T=125C  Ileak(3.3V) =      42.1887 pA
+  diode_nd2ps_03v3   Vf @100uA, 27C = 0.7621 V
+  diode_pd2nw_03v3   typical  T= 27C  Ileak(3.3V) =       3.3690 pA
+  diode_pd2nw_03v3   typical  T=125C  Ileak(3.3V) =       8.8609 pA
+  diode_pd2nw_03v3   ss       T= 27C  Ileak(3.3V) =       3.3690 pA
+  diode_pd2nw_03v3   ss       T=125C  Ileak(3.3V) =       8.0323 pA
+  diode_pd2nw_03v3   ff       T= 27C  Ileak(3.3V) =       3.3691 pA
+  diode_pd2nw_03v3   ff       T=125C  Ileak(3.3V) =       9.6895 pA
+  diode_pd2nw_03v3   Vf @100uA, 27C = 0.7553 V
+
+=== MOS CAPS (cap_nmos_03v3 etc.): C vs V(1,2), W=L=10um (area 100 um2), AC 1 MHz
+  cap_nmos_03v3    C/area [fF/um2] at V(1,2) = -3.3,-1.65,-0.5,0,0.5,1.0,1.65,3.3 :  0.023  0.023  0.023  0.025  0.674  3.945  3.983  3.983
+  cap_pmos_03v3    C/area [fF/um2] at V(1,2) = -3.3,-1.65,-0.5,0,0.5,1.0,1.65,3.3 :  3.958  3.958  0.140  0.038  0.038  0.038  0.038  0.038
+  cap_nmos_03v3_b  C/area [fF/um2] at V(1,2) = -3.3,-1.65,-0.5,0,0.5,1.0,1.65,3.3 :  0.925  0.987  2.160  3.237  3.786  3.943  3.984  3.991
+  cap_pmos_03v3_b  C/area [fF/um2] at V(1,2) = -3.3,-1.65,-0.5,0,0.5,1.0,1.65,3.3 :  3.975  3.972  3.824  3.315  2.156  1.251  0.941  0.895
+  corner dependence of cap_nmos_03v3 at V=3.3 and 1.0 V: 
+    moscap_typical : 3.945 fF/um2 @1.0V   3.983 fF/um2 @3.3V
+    moscap_ss      : 4.339 fF/um2 @1.0V   4.381 fF/um2 @3.3V
+    moscap_ff      : 3.550 fF/um2 @1.0V   3.585 fF/um2 @3.3V
+
+=== MIM caps (sm141064_mim.ngspice via mimcap_*): W=L=10um, AC 1 MHz, V=1.65
+  cap_mim_1f0_m3m4_noshield   mimcap_typical :  1.119 fF/um2   
+  cap_mim_1f0_m3m4_noshield   mimcap_ss      :  1.231 fF/um2   
+  cap_mim_1f0_m3m4_noshield   mimcap_ff      :  1.007 fF/um2   
+  cap_mim_1f5_m3m4_noshield   mimcap_typical :  1.622 fF/um2   
+  cap_mim_1f5_m3m4_noshield   mimcap_ss      :  1.873 fF/um2   
+  cap_mim_1f5_m3m4_noshield   mimcap_ff      :  1.370 fF/um2   
+  cap_mim_2f0_m3m4_noshield   mimcap_typical :  2.085 fF/um2   
+  cap_mim_2f0_m3m4_noshield   mimcap_ss      :  2.294 fF/um2   
+  cap_mim_2f0_m3m4_noshield   mimcap_ff      :  1.877 fF/um2   
+  cap_mim_2f0_m4m5_noshield   mimcap_typical :  2.085 fF/um2   
+  cap_mim_2f0_m4m5_noshield   mimcap_ss      :  2.294 fF/um2   
+  cap_mim_2f0_m4m5_noshield   mimcap_ff      :  1.877 fF/um2   
+  cap_mim_2f0_m5m6_noshield   mimcap_typical :  2.085 fF/um2   
+  cap_mim_2f0_m5m6_noshield   mimcap_ss      :  2.294 fF/um2   
+  cap_mim_2f0_m5m6_noshield   mimcap_ff      :  1.877 fF/um2   

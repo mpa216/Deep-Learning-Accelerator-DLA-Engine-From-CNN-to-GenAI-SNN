@@ -1,0 +1,20 @@
+Corner mechanics at 27 C, VDD = 3.3 V.   (fixed |VGS| = 1.0 V; NMOS/PMOS W/L = 10u/0.5u)
+corner  ID_n[uA]  ID_p[uA]  R_ppolyf_u[ohm]  Cnmos_b[fF/um2]  Cmim2f[fF/um2]
+tt       143.194    20.861          1856.86            3.984           2.085   
+ss        62.508     5.531          2215.95            4.383           2.294   
+ff       265.786    50.604          1497.76            3.586           1.877   
+fs       225.554     8.470          1856.86            3.984           2.085   
+sf        81.293    40.614          1856.86            3.984           2.085   
+
+Temperature direction at corner tt, VDD 3.3:  T=-40 / 27 / 125
+  T= -40C  ID_n= 123.966 uA  ID_n(VGS=2V)=1706.736 uA  ID_p=  12.847 uA  R= 1879.27
+  T=  27C  ID_n= 143.194 uA  ID_n(VGS=2V)=1474.574 uA  ID_p=  20.861 uA  R= 1856.86
+  T= 125C  ID_n= 164.103 uA  ID_n(VGS=2V)=1234.432 uA  ID_p=  32.737 uA  R= 1845.22
+
+Speed-extreme combinations used for sign-off:
+  slow: ss 125C 3.0V:  ID_n=  87.309 uA  ID_n(VGS=2V)= 976.916 uA  ID_p=  13.475 uA  R= 2203.66  Cmim=2.296
+  typ : tt  27C 3.3V:  ID_n= 143.194 uA  ID_n(VGS=2V)=1474.574 uA  ID_p=  20.861 uA  R= 1856.86  Cmim=2.085
+  fast: ff -40C 3.6V:  ID_n= 263.198 uA  ID_n(VGS=2V)=2112.237 uA  ID_p=  41.389 uA  R= 1516.95  Cmim=1.875
+
+Envelope check: 5 corners... tt/ss/ff x VDD 3.0/3.3/3.6 x T -40/27/125 -> any model warnings or errors?
+  27 runs, 0 with warnings/errors

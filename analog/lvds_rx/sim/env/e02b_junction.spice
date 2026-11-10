@@ -1,0 +1,27 @@
+* e02b_junction.spice -- do ad/as/pd/ps change the drain capacitance of nfet_03v3?
+* AC-measure the capacitance seen looking into the drain (gate, source, bulk grounded for AC).
+* X1 = wrapper subckt; X2 = wrapper with ad/as/pd/ps; X3 = wrapper with nf=4 (4 fingers) and ad etc.
+* M4 = the BSIM4 bin model instantiated directly (bypassing the wrapper), same ad/as.
+.param sw_stat_global=0 sw_stat_mismatch=0 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.temp 27
+vg g 0 0.9
+vd1 d1 0 dc 1.65 ac 1
+vd2 d2 0 dc 1.65 ac 1
+vd3 d3 0 dc 1.65 ac 1
+vd4 d4 0 dc 1.65 ac 1
+vd5 d5 0 dc 1.65 ac 1
+X1 d1 g 0 0 nfet_03v3 w=10u l=0.5u
+X2 d2 g 0 0 nfet_03v3 w=10u l=0.5u ad=10p as=10p pd=7u ps=7u
+X3 d3 g 0 0 nfet_03v3 w=10u l=0.5u nf=4 ad=10p as=10p pd=7u ps=7u
+M4 d4 g 0 0 nfet_03v3 w=10u l=0.5u ad=10p as=10p pd=7u ps=7u
+M5 d5 g 0 0 nfet_03v3 w=10u l=0.5u
+.control
+ac lin 1 1meg 1meg
+let w_ = 2*pi*1e6
+print imag(i(vd1))/w_*1e15 imag(i(vd2))/w_*1e15 imag(i(vd3))/w_*1e15 imag(i(vd4))/w_*1e15 imag(i(vd5))/w_*1e15
+* the sign convention: current into the source vd = -(current into drain); take abs
+print abs(imag(i(vd1)))/w_*1e15 abs(imag(i(vd2)))/w_*1e15 abs(imag(i(vd3)))/w_*1e15 abs(imag(i(vd4)))/w_*1e15 abs(imag(i(vd5)))/w_*1e15
+quit
+.endc
+.end

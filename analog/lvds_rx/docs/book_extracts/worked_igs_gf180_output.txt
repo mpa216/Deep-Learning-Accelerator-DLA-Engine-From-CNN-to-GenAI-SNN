@@ -1,0 +1,17 @@
+LUT at gm/ID=12, L=0.5 um, VDS=1 V:  ID/W=2.7024 uA/um  Cdd/W=0.913 fF/um  fT=3.30 GHz  gm/gds=153.4  VGS=0.8016 V
+
+self-loading iteration (book Sec. 3.1.7):
+  iter 1: gm=0.3142 mS  ID=26.180 uA  W=9.688 um  Cdd=8.84 fF
+  iter 2: gm=0.3197 mS  ID=26.643 uA  W=9.859 um  Cdd=9.00 fF
+  iter 3: gm=0.3198 mS  ID=26.651 uA  W=9.862 um  Cdd=9.00 fF
+  iter 4: gm=0.3198 mS  ID=26.651 uA  W=9.862 um  Cdd=9.00 fF
+  iter 5: gm=0.3198 mS  ID=26.651 uA  W=9.862 um  Cdd=9.00 fF
+  iter 6: gm=0.3198 mS  ID=26.651 uA  W=9.862 um  Cdd=9.00 fF
+final: ID = 26.651 uA, W = 9.862 um (nf=5, finger 1.97 um), fan-out FO = CL/Cgg = 32 (>10 OK), predicted |Av0| = 153.4
+
+ngspice result vs prediction:
+  ID      sim 26.651 uA   target 26.651 uA   (+0.00 %)
+  gm/ID   sim 12.011 1/V  target 12.000      (+0.10 %)
+  gm/gds  sim 146.7       LUT    153.4        (-4.3 %)   [AC: |Av0| = 43.33 dB = 146.6]
+  VGS     sim 0.8011 V    LUT lookupVGS 0.8016 V  (VDS sim 1.0000 V)
+  fu      sim 100.45 MHz  target 100.0 MHz   (+0.45 %)

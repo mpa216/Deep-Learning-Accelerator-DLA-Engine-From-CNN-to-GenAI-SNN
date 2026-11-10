@@ -1,0 +1,21 @@
+* Pelgrom check: input offset of an NMOS pair with ideal (resistor) loads.
+* Template for the harness; {w} {l} come from the grid, {header} {seed_line} {vdd} from the harness.
+{header}
+{seed_line}
+vdd vdd 0 {vdd}
+vcm cm 0 1.5
+v1 in1 cm 0
+v2 in2 cm 0
+it tail 0 20u
+Xn1 d1 in1 tail 0 nfet_03v3 w={w} l={l}
+Xn2 d2 in2 tail 0 nfet_03v3 w={w} l={l}
+r1 vdd d1 20k
+r2 vdd d2 20k
+b1 od 0 V=v(d1)-v(d2)
+rt tail 0 1e9
+.dc v1 -0.1 0.1 0.2m
+.meas dc vos when v(od)=0
+.meas dc odm find v(od) at=-0.005
+.meas dc odp find v(od) at=0.005
+.meas dc gain param='(odp-odm)/0.01'
+.end

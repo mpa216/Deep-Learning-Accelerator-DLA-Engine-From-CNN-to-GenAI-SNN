@@ -1,0 +1,225 @@
+=== validation of regenerated LUTs, Tue Nov 10 06:09:49 PM CET 2026 ===
+
+##### A. regenerated vs kit, nfet_03v3
+new : luts/nfet_03v3.mat
+      corner=NOM TEMP=300.15 K  L=12 VGS=133 VDS=133 VSB=[np.float64(-0.0), np.float64(0.2), np.float64(0.4), np.float64(0.6), np.float64(0.8), np.float64(1.0), np.float64(1.2), np.float64(1.4), np.float64(1.6), np.float64(1.8), np.float64(2.0)]
+kit : /foss/designs/Analog/starter_files_open_source_tools/gf180mcuD/simulation/nfet_03v3.mat
+      corner=NOM TEMP=300.0 K  L=12 VGS=133 VDS=133 VSB=[np.float64(-0.0), np.float64(0.2), np.float64(0.4)]
+shared grid: L [np.float64(0.28), np.float64(0.29), np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6), np.float64(0.7), np.float64(0.8), np.float64(0.9), np.float64(1.0), np.float64(2.0), np.float64(3.0)] 
+  VGS/VDS 0..3.300 (133 pts), VSB kit points found in new table at indices [0, 1, 2]
+
+field  |   ID_kit>1nA max / rms |   ID_kit>1uA max / rms | |kit|>1e-6*max max / rms
+ID     | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+GM     | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+GDS    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+CGG    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+CDD    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+VT     | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+CGD    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+STH    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+
+worst ID point (ID_kit>1nA): L=0.28 VGS=0.0 VDS=0.0 VSB=-0.0: new=0.00000e+00 kit=0.00000e+00 rel=0.000e+00
+  VSB=-0.0: ID rel diff (ID>1uA)  max 0.000e+00  rms 0.000e+00
+  VSB=0.2: ID rel diff (ID>1uA)  max 0.000e+00  rms 0.000e+00
+  VSB=0.4: ID rel diff (ID>1uA)  max 0.000e+00  rms 0.000e+00
+
+##### A. regenerated vs kit, pfet_03v3
+new : luts/pfet_03v3.mat
+      corner=NOM TEMP=300.15 K  L=12 VGS=133 VDS=133 VSB=[np.float64(-0.0), np.float64(0.2), np.float64(0.4), np.float64(0.6), np.float64(0.8), np.float64(1.0), np.float64(1.2), np.float64(1.4), np.float64(1.6), np.float64(1.8), np.float64(2.0)]
+kit : /foss/designs/Analog/starter_files_open_source_tools/gf180mcuD/simulation/pfet_03v3.mat
+      corner=NOM TEMP=300.0 K  L=12 VGS=133 VDS=133 VSB=[np.float64(-0.0), np.float64(0.2), np.float64(0.4)]
+shared grid: L [np.float64(0.28), np.float64(0.29), np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6), np.float64(0.7), np.float64(0.8), np.float64(0.9), np.float64(1.0), np.float64(2.0), np.float64(3.0)] 
+  VGS/VDS 0..3.300 (133 pts), VSB kit points found in new table at indices [0, 1, 2]
+
+field  |   ID_kit>1nA max / rms |   ID_kit>1uA max / rms | |kit|>1e-6*max max / rms
+ID     | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+GM     | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+GDS    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+CGG    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+CDD    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+VT     | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+CGD    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+STH    | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00 | 0.000e+00 / 0.000e+00
+
+worst ID point (ID_kit>1nA): L=0.28 VGS=0.0 VDS=0.0 VSB=-0.0: new=9.22900e-57 kit=9.22900e-57 rel=0.000e+00
+  VSB=-0.0: ID rel diff (ID>1uA)  max 0.000e+00  rms 0.000e+00
+  VSB=0.2: ID rel diff (ID>1uA)  max 0.000e+00  rms 0.000e+00
+  VSB=0.4: ID rel diff (ID>1uA)  max 0.000e+00  rms 0.000e+00
+
+##### B. spot check vs direct ngspice, nfet_03v3 (typical 27C), on-grid nodes, VSB up to 2.0 V
+mode=grid  nfet_03v3  LUT=nfet_03v3.mat  corner=typical T=27C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.290  2.7000  1.7000 0.2000 |   ID 1.729e-03 1.729e-03  0.03 |   GM 9.890e-04 9.890e-04  0.00 |  GDS 9.588e-05 9.588e-05  0.00 |  CGG 6.525e-15 6.524e-15  0.01
+ 0.800  2.4500  0.1750 1.2000 |   ID 1.585e-04 1.585e-04  0.01 |   GM 8.317e-05 8.317e-05  0.00 |  GDS 8.216e-04 8.216e-04  0.00 |  CGG 1.768e-14 1.768e-14  0.02
+ 0.600  1.5000  3.0750 0.2000 |   ID 2.733e-04 2.733e-04  0.02 |   GM 5.973e-04 5.973e-04  0.01 |  GDS 3.611e-06 3.611e-06  0.01 |  CGG 1.061e-14 1.061e-14  0.00
+ 0.700  1.9250  0.5000 0.0000 |   ID 3.897e-04 3.897e-04  0.01 |   GM 3.182e-04 3.182e-04  0.00 |  GDS 4.959e-04 4.959e-04  0.00 |  CGG 1.501e-14 1.501e-14  0.01
+ 1.000  3.2500  2.1000 2.0000 |   ID 8.434e-04 8.434e-04  0.00 |   GM 5.766e-04 5.766e-04  0.01 |  GDS 1.375e-05 1.375e-05  0.03 |  CGG 1.623e-14 1.623e-14  0.02
+ 2.000  0.7250  1.7250 0.8000 |   ID 4.250e-09 4.250e-09  0.01 |   GM 1.195e-07 1.195e-07  0.01 |  GDS 2.029e-10 2.029e-10  0.02 |  CGG 1.179e-14 1.180e-14  0.03
+WORST relative difference = 0.034 %   -> PASS (tol 2 %)
+
+##### B2. same, VGS/VDS off-grid (interpolation exercised)
+mode=offgrid  nfet_03v3  LUT=nfet_03v3.mat  corner=typical T=27C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.800  2.4148  0.8112 0.4000 |   ID 5.923e-04 5.922e-04  0.01 |   GM 3.831e-04 3.831e-04  0.01 |  GDS 3.832e-04 3.832e-04  0.00 |  CGG 1.620e-14 1.620e-14  0.01
+ 0.300  1.4598  0.9225 0.2000 |   ID 4.609e-04 4.609e-04  0.00 |   GM 8.531e-04 8.530e-04  0.01 |  GDS 5.531e-05 5.534e-05  0.06 |  CGG 6.638e-15 6.638e-15  0.00
+ 0.600  1.3127  1.4256 0.2000 |   ID 1.640e-04 1.641e-04  0.03 |   GM 5.011e-04 5.010e-04  0.02 |  GDS 3.964e-06 3.965e-06  0.03 |  CGG 1.078e-14 1.078e-14  0.00
+ 0.400  1.6490  2.8043 0.8000 |   ID 4.030e-04 4.030e-04  0.01 |   GM 7.845e-04 7.845e-04  0.00 |  GDS 1.171e-05 1.172e-05  0.01 |  CGG 7.653e-15 7.653e-15  0.00
+ 0.300  1.2006  2.1104 0.4000 |   ID 2.537e-04 2.537e-04  0.01 |   GM 7.736e-04 7.736e-04  0.00 |  GDS 2.548e-05 2.548e-05  0.00 |  CGG 6.252e-15 6.251e-15  0.00
+ 0.900  2.3765  2.6767 2.0000 |   ID 3.992e-04 3.992e-04  0.00 |   GM 5.443e-04 5.443e-04  0.00 |  GDS 2.592e-06 2.591e-06  0.01 |  CGG 1.458e-14 1.458e-14  0.02
+WORST relative difference = 0.060 %   -> PASS (tol 2 %)
+
+##### B2w. weak inversion off-grid (ID<1uA allowed; interpolating an exponential on a 25 mV grid: few % EXPECTED, informative)
+mode=offgrid  nfet_03v3  LUT=nfet_03v3.mat  corner=typical T=27C   tol=1000%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.290  1.4775  2.1974 1.8000 |   ID 3.643e-04 3.642e-04  0.00 |   GM 8.555e-04 8.555e-04  0.00 |  GDS 4.129e-05 4.129e-05  0.01 |  CGG 6.110e-15 6.110e-15  0.00
+ 0.500  1.9261  1.7806 1.8000 |   ID 3.457e-04 3.457e-04  0.00 |   GM 6.918e-04 6.918e-04  0.00 |  GDS 8.417e-06 8.418e-06  0.01 |  CGG 9.134e-15 9.134e-15  0.00
+ 0.280  2.0461  1.5614 1.6000 |   ID 9.169e-04 9.169e-04  0.00 |   GM 9.812e-04 9.812e-04  0.00 |  GDS 7.506e-05 7.507e-05  0.01 |  CGG 6.311e-15 6.310e-15  0.01
+ 1.000  2.0941  0.4716 1.2000 |   ID 2.255e-04 2.255e-04  0.02 |   GM 2.303e-04 2.303e-04  0.01 |  GDS 3.104e-04 3.104e-04  0.00 |  CGG 2.025e-14 2.024e-14  0.02
+ 0.280  2.0777  1.3766 1.4000 |   ID 9.513e-04 9.514e-04  0.00 |   GM 9.737e-04 9.737e-04  0.00 |  GDS 8.449e-05 8.450e-05  0.01 |  CGG 6.325e-15 6.325e-15  0.00
+ 2.000  1.2660  2.0555 1.0000 |   ID 1.452e-05 1.454e-05  0.15 |   GM 9.417e-05 9.415e-05  0.02 |  GDS 1.436e-07 1.436e-07  0.05 |  CGG 2.986e-14 2.986e-14  0.01
+WORST relative difference = 0.153 %   -> PASS (tol 1000 %)
+
+##### B3. fact 9: L midway between grid nodes (informative; large errors EXPECTED)
+mode=lmid  nfet_03v3  LUT=nfet_03v3.mat  corner=typical T=27C   tol=500%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 1.500  2.1976  1.0059 1.8000 |   ID 1.988e-04 2.198e-04 10.56 |   GM 3.273e-04 3.532e-04  7.93 |  GDS 1.159e-05 1.416e-05 22.23 |  CGG 2.367e-14 2.373e-14  0.23
+ 0.295  2.4143  1.9572 0.0000 |   ID 1.493e-03 1.493e-03  0.00 |   GM 1.006e-03 1.006e-03  0.03 |  GDS 6.319e-05 6.328e-05  0.15 |  CGG 6.594e-15 6.594e-15  0.00
+ 0.285  2.4757  1.0730 1.8000 |   ID 1.234e-03 1.234e-03  0.01 |   GM 9.003e-04 9.002e-04  0.01 |  GDS 2.292e-04 2.295e-04  0.14 |  CGG 6.600e-15 6.600e-15  0.00
+ 0.650  1.0319  1.4834 1.6000 |   ID 2.817e-07 3.009e-07  6.81 |   GM 6.890e-06 7.274e-06  5.57 |  GDS 2.122e-08 2.345e-08 10.51 |  CGG 5.068e-15 5.078e-15  0.19
+ 0.950  1.7284  0.6160 1.4000 |   ID 1.351e-04 1.354e-04  0.24 |   GM 3.501e-04 3.504e-04  0.09 |  GDS 2.608e-05 2.656e-05  1.86 |  CGG 1.580e-14 1.580e-14  0.00
+ 2.500  1.6966  0.9704 1.6000 |   ID 4.118e-05 4.297e-05  4.33 |   GM 1.368e-04 1.424e-04  4.08 |  GDS 4.520e-07 4.981e-07 10.21 |  CGG 3.789e-14 3.789e-14  0.01
+WORST relative difference = 22.234 %   -> PASS (tol 500 %)
+
+##### B. spot check vs direct ngspice, pfet_03v3 (typical 27C), on-grid nodes, VSB up to 2.0 V
+mode=grid  pfet_03v3  LUT=pfet_03v3.mat  corner=typical T=27C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.290  2.7000  1.7000 0.2000 |   ID 7.242e-04 7.242e-04  0.01 |   GM 5.124e-04 5.124e-04  0.01 |  GDS 7.982e-05 7.982e-05  0.00 |  CGG 6.602e-15 6.602e-15  0.00
+ 0.800  2.4500  0.1750 1.2000 |   ID 3.694e-05 3.694e-05  0.00 |   GM 2.738e-05 2.738e-05  0.02 |  GDS 1.919e-04 1.919e-04  0.00 |  CGG 1.799e-14 1.799e-14  0.02
+ 0.600  1.5000  3.0750 0.2000 |   ID 5.635e-05 5.635e-05  0.01 |   GM 1.611e-04 1.611e-04  0.02 |  GDS 8.158e-07 8.158e-07  0.00 |  CGG 1.135e-14 1.135e-14  0.00
+ 0.700  1.9250  0.5000 0.0000 |   ID 9.966e-05 9.966e-05  0.00 |   GM 1.040e-04 1.040e-04  0.03 |  GDS 1.233e-04 1.233e-04  0.02 |  CGG 1.521e-14 1.521e-14  0.01
+ 1.000  3.2500  2.1000 2.0000 |   ID 1.970e-04 1.970e-04  0.00 |   GM 1.842e-04 1.842e-04  0.00 |  GDS 4.300e-06 4.300e-06  0.01 |  CGG 1.720e-14 1.720e-14  0.01
+ 2.000  0.7250  1.7250 0.8000 |   ID 6.631e-12 6.631e-12  0.00 |   GM 1.950e-10 1.950e-10  0.02 |  GDS 1.069e-13 1.069e-13  0.04 |  CGG 1.402e-14 1.401e-14  0.01
+WORST relative difference = 0.041 %   -> PASS (tol 2 %)
+
+##### B2. same, VGS/VDS off-grid (interpolation exercised)
+mode=offgrid  pfet_03v3  LUT=pfet_03v3.mat  corner=typical T=27C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.800  2.4148  0.8112 0.4000 |   ID 1.509e-04 1.509e-04  0.01 |   GM 1.317e-04 1.316e-04  0.02 |  GDS 9.223e-05 9.224e-05  0.00 |  CGG 1.622e-14 1.622e-14  0.00
+ 0.300  1.4598  0.9225 0.2000 |   ID 1.262e-04 1.263e-04  0.04 |   GM 3.191e-04 3.191e-04  0.01 |  GDS 1.704e-05 1.705e-05  0.08 |  CGG 6.713e-15 6.713e-15  0.00
+ 0.600  1.3127  1.4256 0.2000 |   ID 2.881e-05 2.882e-05  0.06 |   GM 1.183e-04 1.182e-04  0.01 |  GDS 8.118e-07 8.125e-07  0.08 |  CGG 1.137e-14 1.137e-14  0.00
+ 0.400  1.6490  2.8043 0.8000 |   ID 8.707e-05 8.707e-05  0.00 |   GM 2.472e-04 2.472e-04  0.01 |  GDS 3.023e-06 3.023e-06  0.00 |  CGG 8.019e-15 8.019e-15  0.01
+ 0.300  1.2006  2.1104 0.4000 |   ID 4.673e-05 4.673e-05  0.00 |   GM 2.296e-04 2.295e-04  0.02 |  GDS 4.716e-06 4.716e-06  0.00 |  CGG 6.479e-15 6.479e-15  0.00
+ 0.900  2.3765  2.6767 2.0000 |   ID 7.044e-05 7.044e-05  0.00 |   GM 1.355e-04 1.355e-04  0.02 |  GDS 7.559e-07 7.559e-07  0.00 |  CGG 1.552e-14 1.551e-14  0.02
+WORST relative difference = 0.085 %   -> PASS (tol 2 %)
+
+##### B2w. weak inversion off-grid (ID<1uA allowed; interpolating an exponential on a 25 mV grid: few % EXPECTED, informative)
+mode=offgrid  pfet_03v3  LUT=pfet_03v3.mat  corner=typical T=27C   tol=1000%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.290  1.4775  2.1974 1.8000 |   ID 5.280e-05 5.281e-05  0.02 |   GM 2.442e-04 2.442e-04  0.01 |  GDS 7.904e-06 7.904e-06  0.00 |  CGG 6.225e-15 6.225e-15  0.00
+ 0.500  1.9261  1.7806 1.8000 |   ID 6.059e-05 6.060e-05  0.01 |   GM 1.852e-04 1.852e-04  0.00 |  GDS 2.019e-06 2.019e-06  0.01 |  CGG 9.415e-15 9.415e-15  0.00
+ 0.280  2.0461  1.5614 1.6000 |   ID 2.693e-04 2.693e-04  0.00 |   GM 4.340e-04 4.340e-04  0.00 |  GDS 3.051e-05 3.051e-05  0.01 |  CGG 6.303e-15 6.303e-15  0.01
+ 1.000  2.0941  0.4716 1.2000 |   ID 4.417e-05 4.416e-05  0.02 |   GM 6.707e-05 6.707e-05  0.00 |  GDS 5.171e-05 5.171e-05  0.00 |  CGG 2.025e-14 2.025e-14  0.01
+ 0.280  2.0777  1.3766 1.4000 |   ID 2.912e-04 2.912e-04  0.02 |   GM 4.358e-04 4.357e-04  0.01 |  GDS 3.626e-05 3.627e-05  0.01 |  CGG 6.323e-15 6.324e-15  0.01
+ 2.000  1.2660  2.0555 1.0000 |   ID 5.749e-07 5.797e-07  0.83 |   GM 7.557e-06 7.568e-06  0.15 |  GDS 4.573e-09 4.598e-09  0.53 |  CGG 2.984e-14 2.982e-14  0.05
+WORST relative difference = 0.829 %   -> PASS (tol 1000 %)
+
+##### B3. fact 9: L midway between grid nodes (informative; large errors EXPECTED)
+mode=lmid  pfet_03v3  LUT=pfet_03v3.mat  corner=typical T=27C   tol=500%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 1.500  2.1976  1.0059 1.8000 |   ID 2.887e-05 3.354e-05 16.20 |   GM 6.644e-05 7.618e-05 14.67 |  GDS 7.101e-07 1.047e-06 47.42 |  CGG 2.486e-14 2.484e-14  0.12
+ 0.295  2.4143  1.9572 0.0000 |   ID 6.152e-04 6.155e-04  0.04 |   GM 5.232e-04 5.232e-04  0.01 |  GDS 4.439e-05 4.447e-05  0.16 |  CGG 6.703e-15 6.703e-15  0.00
+ 0.285  2.4757  1.0730 1.8000 |   ID 4.045e-04 4.048e-04  0.08 |   GM 3.999e-04 3.999e-04  0.00 |  GDS 1.216e-04 1.219e-04  0.23 |  CGG 6.486e-15 6.486e-15  0.01
+ 0.650  1.0319  1.4834 1.6000 |   ID 2.366e-10 2.680e-10 13.27 |   GM 7.126e-09 8.049e-09 12.95 |  GDS 1.195e-11 1.459e-11 22.11 |  CGG 5.696e-15 5.707e-15  0.20
+ 0.950  1.7284  0.6160 1.4000 |   ID 1.646e-05 1.654e-05  0.45 |   GM 6.750e-05 6.774e-05  0.36 |  GDS 8.955e-07 9.111e-07  1.73 |  CGG 1.650e-14 1.651e-14  0.01
+ 2.500  1.6966  0.9704 1.6000 |   ID 3.486e-06 3.674e-06  5.40 |   GM 1.864e-05 1.959e-05  5.07 |  GDS 3.232e-08 3.708e-08 14.71 |  CGG 3.916e-14 3.915e-14  0.03
+WORST relative difference = 47.423 %   -> PASS (tol 500 %)
+
+##### C. corner LUT spot check nfet_03v3 ss 125C
+mode=grid  nfet_03v3  LUT=nfet_03v3_ss_125C.mat  corner=ss T=125C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.400  1.4500  2.0500 0.6000 |   ID 1.724e-04 1.724e-04  0.01 |   GM 4.643e-04 4.643e-04  0.01 |  GDS 6.566e-06 6.566e-06  0.01 |  CGG 7.849e-15 7.849e-15  0.00
+ 0.500  1.3250  0.3750 0.6000 |   ID 7.123e-05 7.123e-05  0.00 |   GM 2.538e-04 2.538e-04  0.02 |  GDS 5.453e-05 5.453e-05  0.01 |  CGG 9.497e-15 9.497e-15  0.00
+ 0.400  2.1750  3.2500 0.6000 |   ID 5.994e-04 5.994e-04  0.01 |   GM 6.498e-04 6.498e-04  0.00 |  GDS 1.135e-05 1.135e-05  0.01 |  CGG 7.906e-15 7.906e-15  0.00
+ 0.300  3.1500  0.4500 0.4000 |   ID 7.383e-04 7.383e-04  0.00 |   GM 2.057e-04 2.057e-04  0.01 |  GDS 1.295e-03 1.295e-03  0.02 |  CGG 8.186e-15 8.187e-15  0.01
+ 0.700  3.0500  2.2750 0.8000 |   ID 7.765e-04 7.765e-04  0.00 |   GM 5.316e-04 5.316e-04  0.00 |  GDS 1.234e-05 1.234e-05  0.01 |  CGG 1.234e-14 1.234e-14  0.01
+ 2.000  2.5750  2.2500 0.0000 |   ID 2.846e-04 2.846e-04  0.01 |   GM 2.575e-04 2.575e-04  0.01 |  GDS 2.100e-06 2.100e-06  0.01 |  CGG 3.181e-14 3.182e-14  0.01
+WORST relative difference = 0.025 %   -> PASS (tol 2 %)
+
+##### C. corner LUT spot check nfet_03v3 ff -40C
+mode=grid  nfet_03v3  LUT=nfet_03v3_ff_n40C.mat  corner=ff T=-40C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.400  1.4500  2.0500 0.6000 |   ID 4.459e-04 4.459e-04  0.00 |   GM 9.983e-04 9.983e-04  0.00 |  GDS 1.601e-05 1.601e-05  0.02 |  CGG 7.551e-15 7.551e-15  0.00
+ 0.500  1.3250  0.3750 0.6000 |   ID 2.116e-04 2.116e-04  0.00 |   GM 6.146e-04 6.146e-04  0.00 |  GDS 1.669e-04 1.669e-04  0.01 |  CGG 9.553e-15 9.553e-15  0.00
+ 0.400  2.1750  3.2500 0.6000 |   ID 1.263e-03 1.263e-03  0.03 |   GM 1.143e-03 1.143e-03  0.03 |  GDS 2.346e-05 2.346e-05  0.02 |  CGG 7.538e-15 7.538e-15  0.00
+ 0.300  3.1500  0.4500 0.4000 |   ID 1.392e-03 1.392e-03  0.01 |   GM 2.547e-04 2.547e-04  0.00 |  GDS 2.429e-03 2.429e-03  0.01 |  CGG 7.538e-15 7.537e-15  0.01
+ 0.700  3.0500  2.2750 0.8000 |   ID 1.595e-03 1.595e-03  0.02 |   GM 8.977e-04 8.977e-04  0.00 |  GDS 2.081e-05 2.081e-05  0.02 |  CGG 1.231e-14 1.231e-14  0.03
+ 2.000  2.5750  2.2500 0.0000 |   ID 6.925e-04 6.925e-04  0.00 |   GM 5.432e-04 5.432e-04  0.00 |  GDS 4.596e-06 4.596e-06  0.01 |  CGG 3.371e-14 3.371e-14  0.01
+WORST relative difference = 0.032 %   -> PASS (tol 2 %)
+
+##### C. corner LUT spot check pfet_03v3 ss 125C
+mode=grid  pfet_03v3  LUT=pfet_03v3_ss_125C.mat  corner=ss T=125C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.400  1.4500  2.0500 0.6000 |   ID 3.375e-05 3.375e-05  0.01 |   GM 1.337e-04 1.337e-04  0.03 |  GDS 1.486e-06 1.486e-06  0.01 |  CGG 7.969e-15 7.969e-15  0.00
+ 0.500  1.3250  0.3750 0.6000 |   ID 1.098e-05 1.098e-05  0.03 |   GM 6.489e-05 6.489e-05  0.00 |  GDS 2.291e-06 2.291e-06  0.02 |  CGG 9.549e-15 9.549e-15  0.00
+ 0.400  2.1750  3.2500 0.6000 |   ID 1.875e-04 1.875e-04  0.01 |   GM 2.689e-04 2.689e-04  0.00 |  GDS 4.758e-06 4.758e-06  0.01 |  CGG 8.093e-15 8.092e-15  0.01
+ 0.300  3.1500  0.4500 0.4000 |   ID 2.749e-04 2.749e-04  0.01 |   GM 9.444e-05 9.444e-05  0.00 |  GDS 5.202e-04 5.202e-04  0.01 |  CGG 8.028e-15 8.028e-15  0.00
+ 0.700  3.0500  2.2750 0.8000 |   ID 2.327e-04 2.327e-04  0.01 |   GM 2.061e-04 2.061e-04  0.00 |  GDS 5.771e-06 5.771e-06  0.01 |  CGG 1.272e-14 1.272e-14  0.02
+ 2.000  2.5750  2.2500 0.0000 |   ID 6.630e-05 6.630e-05  0.00 |   GM 6.936e-05 6.936e-05  0.01 |  GDS 4.979e-07 4.979e-07  0.01 |  CGG 3.341e-14 3.342e-14  0.01
+WORST relative difference = 0.032 %   -> PASS (tol 2 %)
+
+##### C. corner LUT spot check pfet_03v3 ff -40C
+mode=grid  pfet_03v3  LUT=pfet_03v3_ff_n40C.mat  corner=ff T=-40C   tol=2%
+     L     VGS     VDS    VSB |   ID spice      lut     rel% |   GM spice      lut     rel% |  GDS spice      lut     rel% |  CGG spice      lut     rel%
+ 0.400  1.4500  2.0500 0.6000 |   ID 9.232e-05 9.232e-05  0.00 |   GM 3.028e-04 3.028e-04  0.01 |  GDS 4.030e-06 4.030e-06  0.01 |  CGG 8.117e-15 8.118e-15  0.01
+ 0.500  1.3250  0.3750 0.6000 |   ID 3.482e-05 3.482e-05  0.01 |   GM 1.587e-04 1.587e-04  0.02 |  GDS 1.395e-05 1.395e-05  0.03 |  CGG 1.017e-14 1.017e-14  0.00
+ 0.400  2.1750  3.2500 0.6000 |   ID 4.026e-04 4.026e-04  0.01 |   GM 5.030e-04 5.030e-04  0.00 |  GDS 1.025e-05 1.025e-05  0.04 |  CGG 8.165e-15 8.165e-15  0.00
+ 0.300  3.1500  0.4500 0.4000 |   ID 5.019e-04 5.019e-04  0.00 |   GM 1.333e-04 1.333e-04  0.03 |  GDS 9.444e-04 9.444e-04  0.00 |  CGG 7.903e-15 7.903e-15  0.00
+ 0.700  3.0500  2.2750 0.8000 |   ID 4.685e-04 4.685e-04  0.00 |   GM 3.561e-04 3.561e-04  0.01 |  GDS 1.332e-05 1.332e-05  0.00 |  CGG 1.320e-14 1.320e-14  0.02
+ 2.000  2.5750  2.2500 0.0000 |   ID 1.398e-04 1.398e-04  0.02 |   GM 1.316e-04 1.316e-04  0.03 |  GDS 1.195e-06 1.195e-06  0.04 |  CGG 3.607e-14 3.607e-14  0.00
+WORST relative difference = 0.042 %   -> PASS (tol 2 %)
+
+##### D. facts check on regenerated tables
+--- nfet_03v3  (luts/nfet_03v3.mat)
+fact 1: loadmat keys=['nfet_03v3']; struct fields=['INFO', 'CORNER', 'TEMP', 'VGS', 'VDS', 'VSB', 'L', 'W', 'NFING', 'ID', 'VT', 'GM', 'GMB', 'GDS', 'CGG', 'CGB', 'CGD', 'CGS', 'CDD', 'CSS', 'STH', 'SFL']
+        no leakage/VDSAT field: True
+        ID shape (12, 133, 133, 11) (= [L, VGS, VDS, VSB])
+fact 2: CORNER=NOM TEMP=300.15 K W=5.0 NFING=1
+        L=[np.float64(0.28), np.float64(0.29), np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6), np.float64(0.7), np.float64(0.8), np.float64(0.9), np.float64(1.0), np.float64(2.0), np.float64(3.0)]
+        VGS 0.000..3.300 step 25.0 mV (133 pts); VDS 0.000..3.300 (133 pts); VSB=[np.float64(0.0), np.float64(0.2), np.float64(0.4), np.float64(0.6), np.float64(0.8), np.float64(1.0), np.float64(1.2), np.float64(1.4), np.float64(1.6), np.float64(1.8), np.float64(2.0)]
+--- pfet_03v3  (luts/pfet_03v3.mat)
+fact 1: loadmat keys=['pfet_03v3']; struct fields=['INFO', 'CORNER', 'TEMP', 'VGS', 'VDS', 'VSB', 'L', 'W', 'NFING', 'ID', 'VT', 'GM', 'GMB', 'GDS', 'CGG', 'CGB', 'CGD', 'CGS', 'CDD', 'CSS', 'STH', 'SFL']
+        no leakage/VDSAT field: True
+        ID shape (12, 133, 133, 11) (= [L, VGS, VDS, VSB])
+fact 2: CORNER=NOM TEMP=300.15 K W=5.0 NFING=1
+        L=[np.float64(0.28), np.float64(0.29), np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6), np.float64(0.7), np.float64(0.8), np.float64(0.9), np.float64(1.0), np.float64(2.0), np.float64(3.0)]
+        VGS 0.000..3.300 step 25.0 mV (133 pts); VDS 0.000..3.300 (133 pts); VSB=[np.float64(0.0), np.float64(0.2), np.float64(0.4), np.float64(0.6), np.float64(0.8), np.float64(1.0), np.float64(1.2), np.float64(1.4), np.float64(1.6), np.float64(1.8), np.float64(2.0)]
+fact 4: PMOS stored as magnitudes: min(ID)=0.000e+00 (>=0 expected), min(VT)=0.703 (>0), VGS min 0.0 (>=0)
+--- nfet_05v0: luts/nfet_05v0.mat not present, skipped
+--- pfet_05v0: luts/pfet_05v0.mat not present, skipped
+fact 8: GM_ID as X -> scalar 20720944209.06016 (strong-inversion branch);
+        X=GM_GDS (non-monotonic in VGS) -> [5.0006108] ; captured prints: ''
+        X=GM_CGG=2*pi*3GHz -> ID_W [2.25001731e-06]
+file-name test: Lookup(totally_different_name.mat) works, VSB = [np.float64(0.0), np.float64(0.2), np.float64(0.4), np.float64(0.6), np.float64(0.8), np.float64(1.0), np.float64(1.2), np.float64(1.4), np.float64(1.6), np.float64(1.8), np.float64(2.0)]
+
+##### E. sizing self-test on regenerated tables (GF180_LUT_DIR=luts)
+LUT files: /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/luts/nfet_03v3.mat | /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/luts/pfet_03v3.mat
+nfet VSB grid: [np.float64(-0.0), np.float64(0.2), np.float64(0.4), np.float64(0.6), np.float64(0.8), np.float64(1.0), np.float64(1.2), np.float64(1.4), np.float64(1.6), np.float64(1.8), np.float64(2.0)]  L grid: [np.float64(0.28), np.float64(0.29), np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6), np.float64(0.7), np.float64(0.8), np.float64(0.9), np.float64(1.0), np.float64(2.0), np.float64(3.0)]
+6.3 nfet_03v3: ID=83.33 W=30.84 nf=7 VGS=0.8016 fT=3.298 gm_gds=153.4 Cgg=48.27 Cgd=5.218 Cdd=28.15
+6.3 pfet_03v3: ID=83.33 W=107.9 nf=22 VGS=0.9007 fT=0.7809 gm_gds=219.9 Cgg=203.8 Cgd=16.73 Cdd=89.55
+guard OK (VSB too large): VSB=2.4 outside LUT 0..2.0 V (pygmid would silently extrapolate)
+guard OK (gm/ID too large): gm/ID=29 >= max 27.9 at L=0.5,VDS=1.0,VSB=0.0
+guard OK (L=1.5 -> warning "not on grid")
+6.6 worst deviations per quantity (fT/gg/id relative, vg absolute V):
+   fT: 0.1134  at 6.6 pfet_03v3 L=1.0 gm/ID=20 fT (got 0.0334, table 0.03)
+   gg: 0.01434  at 6.6 nfet_03v3 L=0.28 gm/ID=10 gg (got 28.4, table 28)
+   id: 0.09641  at 6.6 pfet_03v3 L=1.0 gm/ID=20 id (got 0.03289, table 0.03)
+   vg: 0.0004902  at 6.6 nfet_03v3 L=2.0 gm/ID=15 vg (got 0.7195, table 0.72)
+6.6 N/P fT ratio at gm/ID=12: [2.97, 3.72, 4.22, 5.22] (table: 3.0 3.7 4.2 5.2)
+numpy slice : VGS=0.80165 ID/W=2.7102 uA/um fT=3.2991 GHz gm/gds=153.31
+pygmid      : VGS=0.80158 ID/W=2.7024 uA/um fT=3.2978 GHz gm/gds=153.36
+--- facts that bite (6.1), live probes ---
+fact 5: GM_ID first -> size 1; GM_ID second -> size 133 (silently a VGS sweep)
+fact 6: ID/W default VDS=2.7203  VDS=1.65 -> 2.7203  VDS=1.0 -> 2.7024 uA/um
+fact 7: unguarded ID/W at VSB=2.4 V (outside table) = 1.2963 uA/um (extrapolated, never trust)
+
+296/296 checks passed

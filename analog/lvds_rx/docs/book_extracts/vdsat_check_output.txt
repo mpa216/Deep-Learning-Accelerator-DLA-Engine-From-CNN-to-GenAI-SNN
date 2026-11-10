@@ -1,0 +1,20 @@
+
+[nfet_03v3]  UT(300 K) = 25.85 mV
+  L=0.28: weak-inversion plateau gm/ID = 27.93 1/V  ->  n = 1/(UT*gmID_max) = 1.385 ; VDsat(WI) = 2nUT = 72 mV
+  L=0.50: weak-inversion plateau gm/ID = 27.89 1/V  ->  n = 1/(UT*gmID_max) = 1.387 ; VDsat(WI) = 2nUT = 72 mV
+  L=1.00: weak-inversion plateau gm/ID = 27.91 1/V  ->  n = 1/(UT*gmID_max) = 1.386 ; VDsat(WI) = 2nUT = 72 mV
+  L = 0.5 um: current at VDS = 2/(gm/ID) relative to current at VDS = 1.0 V (same VGS), and gm/gds there
+    gm/ID= 5  VGS=1.038  VGS-VT=+0.327  VDsat~0.400 V :  ID(VDsat)/ID(1V)=0.95   gm/gds(VDsat)=19 vs 100 at 1 V
+    gm/ID=10  VGS=0.844  VGS-VT=+0.134  VDsat~0.200 V :  ID(VDsat)/ID(1V)=0.89   gm/gds(VDsat)=13 vs 145 at 1 V
+    gm/ID=15  VGS=0.749  VGS-VT=+0.038  VDsat~0.133 V :  ID(VDsat)/ID(1V)=0.86   gm/gds(VDsat)=13 vs 159 at 1 V
+    gm/ID=20  VGS=0.667  VGS-VT=-0.044  VDsat~0.100 V :  ID(VDsat)/ID(1V)=0.83   gm/gds(VDsat)=14 vs 155 at 1 V
+
+[pfet_03v3]  UT(300 K) = 25.85 mV
+  L=0.28: weak-inversion plateau gm/ID = 26.92 1/V  ->  n = 1/(UT*gmID_max) = 1.437 ; VDsat(WI) = 2nUT = 74 mV
+  L=0.50: weak-inversion plateau gm/ID = 27.07 1/V  ->  n = 1/(UT*gmID_max) = 1.429 ; VDsat(WI) = 2nUT = 74 mV
+  L=1.00: weak-inversion plateau gm/ID = 27.10 1/V  ->  n = 1/(UT*gmID_max) = 1.427 ; VDsat(WI) = 2nUT = 74 mV
+  L = 0.5 um: current at VDS = 2/(gm/ID) relative to current at VDS = 1.0 V (same VGS), and gm/gds there
+    gm/ID= 5  VGS=1.141  VGS-VT=+0.354  VDsat~0.400 V :  ID(VDsat)/ID(1V)=0.95   gm/gds(VDsat)=23 vs 102 at 1 V
+    gm/ID=10  VGS=0.943  VGS-VT=+0.157  VDsat~0.200 V :  ID(VDsat)/ID(1V)=0.92   gm/gds(VDsat)=15 vs 192 at 1 V
+    gm/ID=15  VGS=0.849  VGS-VT=+0.062  VDsat~0.133 V :  ID(VDsat)/ID(1V)=0.90   gm/gds(VDsat)=15 vs 253 at 1 V
+    gm/ID=20  VGS=0.761  VGS-VT=-0.025  VDsat~0.100 V :  ID(VDsat)/ID(1V)=0.89   gm/gds(VDsat)=18 vs 285 at 1 V

@@ -1,0 +1,321 @@
+
+Magic 8.3 revision 636 - Compiled on Thu Apr 16 09:13:57 PM CEST 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology gf180mcuD ...
+10 Magic internal units = 1 Lambda
+Input style import: scaleFactor=10, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    obsactive mvobsactive filldiff fillpoly m1hole obsm1 fillm1 obsv1 m2hole obsm2 fillm2 obsv2 m3hole obsm3 fillm3 m4hole obsm4 fillm4 m5hole obsm5 fillm5 glass fillblock lvstext obscomment 
+Scaled tech values by 10 / 1 to match internal grid scaling
+Loading gf180mcuD Device Generator Menu ...
+Loading "../../../sim/env/e10_gencell_syntax.tcl" from command line.
+Root cell box:
+           width x height  (   llx,  lly  ), (   urx,  ury  )
+
+microns:   0.000 x 0.000   ( 0.000,  0.000), ( 0.000,  0.000)
+lambda:     0.00 x 0.00    (  0.00,  0.00 ), (  0.00,  0.00 )
+internal:      0 x 0       (     0,  0    ), (     0,  0    )
+GENCELL {gf180mcu::nfet_03v3 M1 w 4.0 l 0.5 nf 4 guard 1 full_metal 1} -> rc=0  0
+GENCELL {gf180mcu::pfet_03v3 M5 w 5.0 l 0.28 nf 6 guard 1} -> rc=0  0
+GENCELL {gf180mcu::ppolyf_u_1k R1 w 2.0 l 10.0} -> rc=0  0
+GENCELL {gf180mcu::ppolyf_u R2 w 2.0 l 10.0} -> rc=0  0
+GENCELL {gf180mcu::npolyf_u R3 w 2.0 l 10.0} -> rc=0  0
+Unrecognized layer: var
+Layer names are:
+    deepnwell or dnw or dnwell
+    isosub or isosubstrate
+    nw or nwell
+    pw or pwell
+    obswell
+    rnw or rnwell
+    npn or pbase
+    nbase or pnp
+    nfet or nmos or ntransistor
+    pfet or pmos or ptransistor
+    nnfet or nnmos or nntransistor
+    mvnfet or mvnmos or mvntransistor
+    mvpfet or mvpmos or mvptransistor
+    hvnfet or hvnmos or hvntransistor
+    hvpfet or hvpmos or hvptransistor
+    mvnnfet or mvnnmos or mvnntransistor
+    ndif or ndiff or ndiffusion
+    pdif or pdiff or pdiffusion
+    mvndif or mvndiff or mvndiffusion
+    mvpdif or mvpdiff or mvpdiffusion
+    ndc or ndcontact or ndiffc
+    pdc or pdcontact or pdiffc
+    mvndc or mvndcontact or mvndiffc
+    mvpdc or mvpdcontact or mvpdiffc
+    ppd or ppdiff or psd or psubdiff or psubstratepdiff
+    nnd or nndiff or nsd or nsubdiff or nsubstratendiff
+    mvppd or mvppdiff or mvpsd or mvpsubdiff or mvpsubstratepdiff
+    mvnnd or mvnndiff or mvnsd or mvnsubdiff or mvnsubstratendiff
+    psc or psubdiffcont or psubstratepcontact
+    nsc or nsubdiffcont or nsubstratencontact
+    mvpsc or mvpsubdiffcont or mvpsubstratepcontact
+    mvnsc or mvnsubdiffcont or mvnsubstratencontact
+    ldndif or ldndiff or ldndiffusion
+    ldpdif or ldpdiff or ldpdiffusion
+    ldndc or ldndcontact or ldndiffc
+    ldpdc or ldpdcontact or ldpdiffc
+    obsactive
+    mvobsactive
+    srammvnfet
+    srammvpfet
+    srammvndiff
+    srammvpdiff
+    srammvndc
+    srammvpdc
+    sramnfet
+    srampfet
+    sramndiff
+    srampdiff
+    sramndc
+    srampdc
+    nvar or nvaract or nvaractor
+    pvar or pvaract or pvaractor
+    mvnvar or mvnvaract or mvnvaractor
+    mvpvar or mvpvaract or mvpvaractor
+    ncap or nmoscap
+    pcap or pmoscap
+    mvncap or mvnmoscap
+    mvpcap or mvpmoscap
+    p or poly or polysilicon
+    pc or pcontact or polyc or polycontact or polycut
+    npolyres or npres or rnp
+    ppolyres or ppres or rpp
+    npolysilicide or nspres or nsresistor or rnps
+    ppolysilicide or pspres or psresistor or rpps
+    efuse
+    hires or nhighres or nhires
+    mvhires or mvnhighres or mvnhires
+    ndiffres or rdn or rnd or rndiff
+    pdiffres or rdp or rpd or rpdiff
+    ndiffsilicide or rdns or rndiffs or rnds
+    pdiffsilicide or rdps or rpdiffs or rpds
+    mvndiffres or mvrdn or mvrnd or mvrndiff
+    mvpdiffres or mvrdp or mvrpd or mvrpdiff
+    mvndiffsilicide or mvrdns or mvrndiffs or mvrnds
+    mvpdiffsilicide or mvrdps or mvrpdiffs or mvrpds
+    schottky or skdi
+    schottkyc or skdic
+    pdi or pdiode
+    ndi or ndiode
+    nndi or nndiode
+    pdic or pdiodec
+    ndic or ndiodec
+    nndic or nndiodec
+    mvpdi or mvpdiode
+    mvndi or mvndiode
+    mvnndi or mvnndiode
+    mvpdic or mvpdiodec
+    mvndic or mvndiodec
+    mvnndic or mvnndiodec
+    filldiff
+    fillpoly
+    m1 or met1 or metal1
+    rm1 or rmet1 or rmetal1
+    m1hole
+    m2c or m2contact or m2cut or v or v1 or via or via1
+    obsm1
+    fillm1
+    obsv1
+    padl
+    m2 or met2 or metal2
+    rm2 or rmet2 or rmetal2
+    m2hole
+    m3c or m3contact or m3cut or v2 or via2
+    obsm2
+    fillm2
+    obsv2
+    capm or mim or mimcap
+    capmc or mimcapc or mimcapcontact or mimcc
+    m3 or met3 or metal3
+    rm3 or rmet3 or rmetal3
+    m3hole
+    obsm3
+    fillm3
+    v3 or via3
+    m4 or met4 or metal4
+    rm4 or rmet4 or rmetal4
+    m4hole
+    obsm4
+    fillm4
+    v4 or via4
+    m5 or met5 or metal5
+    rm5 or rmet5 or rmetal5
+    m5hole
+    obsm5
+    fillm5
+    glass
+    fillblock
+    lvstext
+    comment
+    obscomment
+    mag or magnet
+    f or fence
+    r or rotate
+    $
+    *
+    errors
+    labels
+    subcell
+    connect
+Unrecognized layer: var
+Layer names are:
+    deepnwell or dnw or dnwell
+    isosub or isosubstrate
+    nw or nwell
+    pw or pwell
+    obswell
+    rnw or rnwell
+    npn or pbase
+    nbase or pnp
+    nfet or nmos or ntransistor
+    pfet or pmos or ptransistor
+    nnfet or nnmos or nntransistor
+    mvnfet or mvnmos or mvntransistor
+    mvpfet or mvpmos or mvptransistor
+    hvnfet or hvnmos or hvntransistor
+    hvpfet or hvpmos or hvptransistor
+    mvnnfet or mvnnmos or mvnntransistor
+    ndif or ndiff or ndiffusion
+    pdif or pdiff or pdiffusion
+    mvndif or mvndiff or mvndiffusion
+    mvpdif or mvpdiff or mvpdiffusion
+    ndc or ndcontact or ndiffc
+    pdc or pdcontact or pdiffc
+    mvndc or mvndcontact or mvndiffc
+    mvpdc or mvpdcontact or mvpdiffc
+    ppd or ppdiff or psd or psubdiff or psubstratepdiff
+    nnd or nndiff or nsd or nsubdiff or nsubstratendiff
+    mvppd or mvppdiff or mvpsd or mvpsubdiff or mvpsubstratepdiff
+    mvnnd or mvnndiff or mvnsd or mvnsubdiff or mvnsubstratendiff
+    psc or psubdiffcont or psubstratepcontact
+    nsc or nsubdiffcont or nsubstratencontact
+    mvpsc or mvpsubdiffcont or mvpsubstratepcontact
+    mvnsc or mvnsubdiffcont or mvnsubstratencontact
+    ldndif or ldndiff or ldndiffusion
+    ldpdif or ldpdiff or ldpdiffusion
+    ldndc or ldndcontact or ldndiffc
+    ldpdc or ldpdcontact or ldpdiffc
+    obsactive
+    mvobsactive
+    srammvnfet
+    srammvpfet
+    srammvndiff
+    srammvpdiff
+    srammvndc
+    srammvpdc
+    sramnfet
+    srampfet
+    sramndiff
+    srampdiff
+    sramndc
+    srampdc
+    nvar or nvaract or nvaractor
+    pvar or pvaract or pvaractor
+    mvnvar or mvnvaract or mvnvaractor
+    mvpvar or mvpvaract or mvpvaractor
+    ncap or nmoscap
+    pcap or pmoscap
+    mvncap or mvnmoscap
+    mvpcap or mvpmoscap
+    p or poly or polysilicon
+    pc or pcontact or polyc or polycontact or polycut
+    npolyres or npres or rnp
+    ppolyres or ppres or rpp
+    npolysilicide or nspres or nsresistor or rnps
+    ppolysilicide or pspres or psresistor or rpps
+    efuse
+    hires or nhighres or nhires
+    mvhires or mvnhighres or mvnhires
+    ndiffres or rdn or rnd or rndiff
+    pdiffres or rdp or rpd or rpdiff
+    ndiffsilicide or rdns or rndiffs or rnds
+    pdiffsilicide or rdps or rpdiffs or rpds
+    mvndiffres or mvrdn or mvrnd or mvrndiff
+    mvpdiffres or mvrdp or mvrpd or mvrpdiff
+    mvndiffsilicide or mvrdns or mvrndiffs or mvrnds
+    mvpdiffsilicide or mvrdps or mvrpdiffs or mvrpds
+    schottky or skdi
+    schottkyc or skdic
+    pdi or pdiode
+    ndi or ndiode
+    nndi or nndiode
+    pdic or pdiodec
+    ndic or ndiodec
+    nndic or nndiodec
+    mvpdi or mvpdiode
+    mvndi or mvndiode
+    mvnndi or mvnndiode
+    mvpdic or mvpdiodec
+    mvndic or mvndiodec
+    mvnndic or mvnndiodec
+    filldiff
+    fillpoly
+    m1 or met1 or metal1
+    rm1 or rmet1 or rmetal1
+    m1hole
+    m2c or m2contact or m2cut or v or v1 or via or via1
+    obsm1
+    fillm1
+    obsv1
+    padl
+    m2 or met2 or metal2
+    rm2 or rmet2 or rmetal2
+    m2hole
+    m3c or m3contact or m3cut or v2 or via2
+    obsm2
+    fillm2
+    obsv2
+    capm or mim or mimcap
+    capmc or mimcapc or mimcapcontact or mimcc
+    m3 or met3 or metal3
+    rm3 or rmet3 or rmetal3
+    m3hole
+    obsm3
+    fillm3
+    v3 or via3
+    m4 or met4 or metal4
+    rm4 or rmet4 or rmetal4
+    m4hole
+    obsm4
+    fillm4
+    v4 or via4
+    m5 or met5 or metal5
+    rm5 or rmet5 or rmetal5
+    m5hole
+    obsm5
+    fillm5
+    glass
+    fillblock
+    lvstext
+    comment
+    obscomment
+    mag or magnet
+    f or fence
+    r or rotate
+    $
+    *
+    errors
+    labels
+    subcell
+    connect
+GENCELL {gf180mcu::nmoscap_3p3 C1 w 10.0 l 10.0} -> rc=0  0
+GENCELL {gf180mcu::cap_mim_2p0fF C2 w 10.0 l 10.0} -> rc=0  0
+GENCELL {gf180mcu::diode_nd2ps_03v3 D1 w 2.0 l 2.0} -> rc=0  0
+GENCELL {gf180mcu::diode_pd2nw_03v3 D2 w 2.0 l 2.0} -> rc=0  0
+GENCELL {gf180mcu::nfet_03v3 M9 w 4.0 l 0.5 nf 4 deepnwell 1} -> rc=0  0
+GENCELL {gf180mcu::nfet_03v3 M10 w 4.0 l 0.5 nf 4 dnwell 1} -> rc=0  0
+DEFAULTS nfet_03v3: w 0.220 l 0.280 m 1 nf 1 diffcov 100 polycov 100  guard 1 glc 1 grc 1 gtc 0 gbc 0 tbcov 100 rlcov 100  topc 1 botc 1 poverlap 0 doverlap 1 lmin 0.28 wmin 0.22  class mosfet full_metal 1  compatible {nfet_03v3 nfet_05v0 nfet_06v0 nfet_06v0_nvt}
+DEFAULTS ppolyf_u: w 0.80 l 1.00 m 1 nx 1 wmin 0.80 lmin 1.00 class resistor  rho 315 val 394 dummy 0 dw 0.07 term 0.0  sterm 0.0 caplen 0.4 snake 0  glc 1 grc 1 gtc 0 gbc 0 roverlap 0 endcov 100  full_metal 1
+DEFAULTS nmoscap_3p3: w 1.0 l 1.0 m 1 nf 1 diffcov 100 polycov 100  guard 1 glc 1 grc 1 gtc 0 gbc 0 tbcov 100 rlcov 100  topc 1 botc 1 poverlap 0 doverlap 1 lmin 0.28 wmin 0.22  class mosfet full_metal 1 compatible {nmoscap_3p3 nmoscap_6p0}
+DEFAULTS diode_nd2ps_03v3: w 0.45 l 0.45 area 0.2025 peri 1.8  nx 1 ny 1 dummy 0 lmin 0.45 wmin 0.45 class diode  elc 1 erc 1 etc 1 ebc 1 doverlap 0 full_metal 1  compatible {diode_nd2ps_03v3 diode_nd2ps_06v0}

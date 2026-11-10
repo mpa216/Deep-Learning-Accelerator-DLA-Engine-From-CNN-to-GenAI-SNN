@@ -1,0 +1,53 @@
+W = 2u.  R measured at 0.1 V.  rsh_eff = slope*W [ohm/sq] ; Rend = intercept (both ends together)
+
+device          R(10u)    R(40u)  rsh_eff[ohm/sq]  Rends[ohm]   (typical, 27C)
+ppolyf_u       1856.86   7243.28           359.09       61.38
+npolyf_u       1628.75   6392.00           317.55       41.00
+ppolyf_u_1k    5150.97  20347.86          1013.13       85.34
+ppolyf_u_2k   10420.53  41010.92          2039.36      223.74
+ppolyf_u_3k   15613.96  61499.52          3059.04      318.78
+ppolyf_s         42.06    153.11             7.40        5.05
+npolyf_s         40.00    143.33             6.89        5.55
+nplus_u         304.14   1163.62            57.30       17.65
+pplus_u        1005.02   3866.35           190.76       51.25
+nplus_s          37.26    131.21             6.26        5.94
+pplus_s          39.77    140.44             6.71        6.21
+nwell          6765.64  26134.71          1291.27      309.28
+
+Corner spread of R(40u) relative to typical, at 27C, and rsh_eff by corner
+device         rsh tt   rsh ss   rsh ff  R_ss/R_tt  R_ff/R_tt  (R at L=40u)
+ppolyf_u        359.1    430.9    287.3      1.198      0.802
+npolyf_u        317.5    379.0    256.1      1.192      0.808
+ppolyf_u_1k    1013.1   1215.8    810.5      1.199      0.801
+ppolyf_u_2k    2039.4   2447.2   1631.5      1.200      0.800
+ppolyf_u_3k    3059.0   3823.8   2294.3      1.250      0.750
+ppolyf_s          7.4     15.2      1.0      2.020      0.165
+npolyf_s          6.9     15.2      1.0      2.159      0.180
+nplus_u          57.3     71.6     43.0      1.246      0.754
+pplus_u         190.8    232.0    149.5      1.213      0.787
+nplus_s           6.3     14.9      1.0      2.318      0.197
+pplus_s           6.7     14.4      1.0      2.092      0.181
+nwell          1291.3   1549.5   1033.0      1.198      0.802
+
+Temperature behaviour (res_typical, R at L=40u): R(-40)/R(27), R(125)/R(27), mean TC over -40..125 [ppm/K]
+device        R(-40)/R(27)  R(125)/R(27)  TC[ppm/K]
+ppolyf_u            1.0098        0.9970        -77
+npolyf_u            1.1030        0.8846      -1323
+ppolyf_u_1k         1.0764        0.9317       -877
+ppolyf_u_2k         1.1282        0.8732      -1546
+ppolyf_u_3k         1.1282        0.8733      -1545
+ppolyf_s            0.7898        1.3129       3171
+npolyf_s            0.7890        1.3122       3171
+nplus_u             0.9125        1.1388       1372
+pplus_u             0.9149        1.1405       1367
+nplus_s             0.7871        1.3158       3204
+pplus_s             0.7825        1.3250       3288
+nwell               0.8891        1.3195       2608
+
+Worst-case spread for the termination candidate ppolyf_u (R at L=40u): ratio to typical-27C over all corner x temp
+  ppolyf_u     min 0.799 at ('ff', 125)   max 1.210 at ('ss', -40)   max/min = 1.514
+  ppolyf_u_1k  min 0.746 at ('ff', 125)   max 1.290 at ('ss', -40)   max/min = 1.730
+  npolyf_u     min 0.715 at ('ff', 125)   max 1.315 at ('ss', -40)   max/min = 1.841
+
+ppolyf_u 110-ohm check at W=2u, L chosen from typical/27C slope & intercept
+  slope 179.547 ohm/um, intercept 61.38 ohm  ->  L for 110 ohm = 0.27 um

@@ -1,0 +1,21 @@
+* Demo eye bench: the same OTA + inverter comparator driven by a PRBS7 differential stimulus.
+* The stimulus include file (VP / VN PWL sources) is written per run by prep_stim() in demo_hooks.py.
+* Variables: header vdd vic (VOS) run_dir ui (s) vod (V) tr (s)
+{header}
+vdd vdd 0 {vdd}
+.include {run_dir}/stim.inc
+ib vdd nb 20u
+Xmb nb nb 0 0 nfet_03v3 w=4u l=1u
+Xmt tail nb 0 0 nfet_03v3 w=8u l=1u
+Xn1 d1 inp tail 0 nfet_03v3 w=8u l=0.5u
+Xn2 o  inn tail 0 nfet_03v3 w=8u l=0.5u
+Xp1 d1 d1 vdd vdd pfet_03v3 w=8u l=1u
+Xp2 o  d1 vdd vdd pfet_03v3 w=8u l=1u
+Xip out o vdd vdd pfet_03v3 w=4u l=0.5u
+Xin out o 0 0 nfet_03v3 w=2u l=0.5u
+cl out 0 20f
+.control
+tran 50p 1.4u
+wrdata eye.txt v(out) v(inp) v(inn)
+.endc
+.end

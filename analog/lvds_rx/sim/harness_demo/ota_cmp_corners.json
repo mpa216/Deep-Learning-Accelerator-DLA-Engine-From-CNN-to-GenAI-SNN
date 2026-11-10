@@ -1,0 +1,15 @@
+{
+  "name": "ota_cmp_corners",
+  "description": "Demo: 5T OTA + inverter comparator, worst5 corners x two common-mode voltages. Limits are demo values (propagation delay target of the handoff 9.1 TB4: 5 ns).",
+  "deck": "ota_cmp.spice",
+  "corners": "worst5",
+  "grid": {"vic": [0.9, 1.65]},
+  "limits": {
+    "vtrip": {"min": -0.05, "max": 0.05, "scale": 1000, "unit": "mV"},
+    "tplh":  {"max": 5e-9, "scale": 1e9, "unit": "ns"},
+    "tphl":  {"max": 5e-9, "scale": 1e9, "unit": "ns"},
+    "idd":   {"max": 200e-6, "scale": 1e6, "unit": "uA"}
+  },
+  "timeout": 120,
+  "jobs": 6
+}

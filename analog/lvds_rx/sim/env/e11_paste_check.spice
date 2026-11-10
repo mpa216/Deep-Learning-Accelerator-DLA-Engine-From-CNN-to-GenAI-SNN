@@ -1,0 +1,32 @@
+* e11_paste_check.spice -- proves that the "Ready-to-paste" block of docs/ENV_REPORT.md runs without error.
+.param sw_stat_global=0 sw_stat_mismatch=0 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice moscap_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice mimcap_typical
+.option wnflag=1
+.temp 27
+vdd vdd 0 3.3
+vgn gn 0 0.9
+vdn dn 0 1.65
+Xn  dn gn 0 0 nfet_03v3 w=10u l=0.5u nf=2 m=1 ad='int((nf+1)/2)*W/nf*0.18u' as='int((nf+2)/2)*W/nf*0.18u' pd='2*int((nf+1)/2)*(W/nf+0.18u)' ps='2*int((nf+2)/2)*(W/nf+0.18u)' nrd='0.18u/W' nrs='0.18u/W' sa=0 sb=0 sd=0
+vgp gp 0 2.4
+vdp dp 0 1.65
+Xp  dp gp vdd vdd pfet_03v3 w=20u l=0.5u nf=4 m=1
+vr  ra 0 0.1
+Xr  ra 0 0 ppolyf_u r_width=5u r_length=1.2u
+vc  tc 0 dc 1.65 ac 1
+Xc  tc 0 cap_nmos_03v3_b c_length=10u c_width=10u
+vm  tm 0 dc 1.65 ac 1
+Xm  tm 0 cap_mim_2f0_m3m4_noshield c_length=10u c_width=10u
+vd1 k 0 3.3
+D1  0 k diode_nd2ps_03v3 area=100e-12 pj=40e-6
+.control
+op
+print abs(i(vdn)) abs(i(vdp)) 0.1/abs(i(vr)) abs(i(vd1))
+ac lin 1 1meg 1meg
+print abs(imag(i(vc)))/(2*pi*1e6)*1e15/100 abs(imag(i(vm)))/(2*pi*1e6)*1e15/100
+quit
+.endc
+.end

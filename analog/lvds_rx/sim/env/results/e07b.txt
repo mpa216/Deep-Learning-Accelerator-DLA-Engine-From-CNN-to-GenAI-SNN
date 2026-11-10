@@ -1,0 +1,284 @@
+== magic tech lines 36-70
+  metal5,m5
+  block,b
+  comment,c
+end
+
+#-----------------------------------------------------
+# Tile types
+#-----------------------------------------------------
+
+types
+# Deep nwell
+  dwell deepnwell,dnwell,dnw
+  dwell isosubstrate,isosub
+
+# Wells outside deep nwell
+  well nwell,nw
+  well pwell,pw
+# Well obstruction layer
+ -well obswell
+# Well resistors
+  well rnw,rnwell
+  well pbase,npn
+  well nbase,pnp
+
+# Transistors
+  active nmos,ntransistor,nfet
+  active pmos,ptransistor,pfet
+  active nnmos,nntransistor,nnfet
+  active mvnmos,mvntransistor,mvnfet
+  active mvpmos,mvptransistor,mvpfet
+  active hvnmos,hvntransistor,hvnfet
+  active hvpmos,hvptransistor,hvpfet
+  active mvnnmos,mvnntransistor,mvnnfet
+# Diffusions
+  active ndiff,ndiffusion,ndif
+== tech DNWELL region 580-590, 810-820, 1340-1405
+
+# This section used for actual GDSII output 
+
+#-----------------------------------------------------
+# DNWELL
+#-----------------------------------------------------
+ layer DNWELL	dnwell
+	calma	12 0
+
+#-----------------------------------------------------
+# SUBCUT
+#-----------------------------------------------------------------------
+
+ scalefactor 50 nanometers
+ options calma-permissive-labels
+ gridlimit 5
+
+ # Check that all p-diff and n-ohmic have either nwell or dnwell
+ templayer missing_nwell *nsd,*mvnsd,*pdiff,*mvpdiff,*pdiode,pdiffres,mvpdiffres,pfet,hvpfet,mvpfet,srammvpfet,srampfet,mvnvaractor
+ and-not dnwell,nwell
+
+ # Check that all p-ohmic and n-diff have either pwell + dnwell
+ # or nothing.  Can check the pwell surround at the same time.
+
+ templayer pohmic_missing_pwell *psd
+ grow 120
+ and dnwell
+ and-not pwell,pbase
+
+ templayer mvpohmic_missing_pwell *mvpsd,mvpvaractor
+ grow 160
+ and dnwell
+ and-not pwell
+
+ templayer ndiff_missing_pwell *ndiff,*ndiode,ndiffres,nfet,*sramndiff,sramnfet
+ grow 430
+ and dnwell
+ and-not pwell
+
+ templayer mvndiff_missing_pwell *mvndiff,mvndiffres,hvnfet,mvnfet,*srammvndiff,srammvnfet
+ grow 600
+ and dnwell
+ and-not pwell
+
+ # Check for MV and LV devices in the same dnwell
+ templayer mv_dnwell
+ bloat-all alldiffmv,schottky dnwell
+
+ templayer bad_dnwell
+ bloat-all alldifflv dnwell
+ and mv_dnwell
+
+ # Check pwell in dnwell
+ templayer pwell_in_dnwell pwell
+ and dnwell
+ and-not mv_dnwell
+
+ templayer mvpwell_in_dnwell pwell
+ and mv_dnwell
+
+ # Check for MV and LV devices in the same nwell
+ templayer mv_nwell
+ bloat-all alldiffmv nwell
+
+ templayer bad_nwell
+ # All low-voltage diffusion except tap diffusion (nsd, psd)
+ bloat-all *ndif,*ndiode,*nndiode,ndiffres,nfet,nnfet,ncap,*pdif,*pdiode,pdiffres,pfet,pcap,schottky nwell
+ and mv_nwell
+
+ # Check for nwell resistor in deep nwell
+ templayer bad_rnw rnw
+ and dnwell
+
+ # Check for minimum PPLUS and NPLUS area.  NOTE:  These are simplified
+ # versions of the cifoutput rules.
+
+ templayer check_pplus
+== gencell proc list
+82:proc gf180mcu::addtechmenu {framename} {
+186:proc gf180mcu::importspice {} {
+199:proc gf180mcu::via1_draw {} {
+223:proc gf180mcu::via2_draw {} {
+247:proc gf180mcu::via3_draw {} {
+271:proc gf180mcu::via4_draw {} {
+296:proc gf180mcu::subcon_3p3_draw {} {
+317:proc gf180mcu::subcon_06v0_draw {} {
+338:proc gf180mcu::res_recalc {field parameters} {
+409:proc gf180mcu::diode_recalc {field parameters} {
+430:proc gf180mcu::diode_convert {parameters} {
+467:proc gf180mcu::diode_dialog {device parameters} {
+528:proc gf180mcu::compute_aptot {parameters} {
+547:proc gf180mcu::diode_check {parameters} {
+594:proc gf180mcu::diode_nd2ps_03v3_defaults {} {
+601:proc gf180mcu::diode_pd2nw_03v3_defaults {} {
+609:proc gf180mcu::diode_nd2ps_06v0_defaults {} {
+617:proc gf180mcu::diode_pd2nw_06v0_defaults {} {
+628:proc gf180mcu::diode_nd2ps_03v3_convert {parameters} {
+632:proc gf180mcu::diode_pd2nw_03v3_convert {parameters} {
+636:proc gf180mcu::diode_nd2ps_06v0_convert {parameters} {
+640:proc gf180mcu::diode_pd2nw_06v0_convert {parameters} {
+646:proc gf180mcu::diode_nd2ps_03v3_dialog {parameters} {
+650:proc gf180mcu::diode_pd2nw_03v3_dialog {parameters} {
+654:proc gf180mcu::diode_nd2ps_06v0_dialog {parameters} {
+658:proc gf180mcu::diode_pd2nw_06v0_dialog {parameters} {
+664:proc gf180mcu::diode_nd2ps_03v3_check {parameters} {
+668:proc gf180mcu::diode_pd2nw_03v3_check {parameters} {
+672:proc gf180mcu::diode_nd2ps_06v0_check {parameters} {
+676:proc gf180mcu::diode_pd2nw_06v0_check {parameters} {
+684:proc gf180mcu::diode_device {parameters} {
+764:proc gf180mcu::diode_draw {parameters} {
+854:proc gf180mcu::diode_nd2ps_03v3_draw {parameters} {
+879:proc gf180mcu::diode_pd2nw_03v3_draw {parameters} {
+908:proc gf180mcu::diode_nd2ps_06v0_draw {parameters} {
+935:proc gf180mcu::diode_pd2nw_06v0_draw {parameters} {
+970:proc gf180mcu::cap_mim_2p0fF_defaults {} {
+983:proc gf180mcu::cap_recalc {field parameters} {
+1022:proc gf180mcu::cap_convert {parameters} {
+1058:proc gf180mcu::cap_mim_2p0fF_convert {parameters} {
+1066:proc gf180mcu::cap_dialog {device parameters} {
+1093:proc gf180mcu::cap_mim_2p0fF_dialog {parameters} {
+1101:proc gf180mcu::compute_ctot {parameters} {
+1116:proc gf180mcu::cap_device {parameters} {
+1201:proc gf180mcu::sandwich_cap_device {parameters} {
+1409:proc gf180mcu::cap_draw {parameters} {
+1532:proc gf180mcu::cap_mim_2p0fF_draw {parameters} {
+1556:proc gf180mcu::cap_check {parameters} {
+1623:proc gf180mcu::cap_mim_2p0fF_check {parameters} {
+1660:proc gf180mcu::nwell_defaults {} {
+1672:proc gf180mcu::ppolyf_u_defaults {} {
+1680:proc gf180mcu::npolyf_u_defaults {} {
+1693:proc gf180mcu::ppolyf_s_defaults {} {
+1701:proc gf180mcu::npolyf_s_defaults {} {
+1714:proc gf180mcu::nplus_u_defaults {} {
+1727:proc gf180mcu::pplus_u_defaults {} {
+1740:proc gf180mcu::rm1_defaults {} {
+1751:proc gf180mcu::rm2_defaults {} {
+1762:proc gf180mcu::rm3_defaults {} {
+1768:proc gf180mcu::rm4_defaults {} {
+1773:proc gf180mcu::rm5_defaults {} {
+1785:proc gf180mcu::ppolyf_u_1k_defaults {} {
+1794:proc gf180mcu::ppolyf_u_1k_6p0_defaults {} {
+1807:proc gf180mcu::res_convert {parameters} {
+1841:proc gf180mcu::nwell_convert {parameters} {
+1845:proc gf180mcu::ppolyf_u_convert {parameters} {
+1849:proc gf180mcu::ppolyf_s_convert {parameters} {
+1853:proc gf180mcu::npolyf_s_convert {parameters} {
+1857:proc gf180mcu::npolyf_u_convert {parameters} {
+1861:proc gf180mcu::nplus_u_convert {parameters} {
+1865:proc gf180mcu::pplus_u_convert {parameters} {
+1869:proc gf180mcu::rm1_convert {parameters} {
+1873:proc gf180mcu::rm2_convert {parameters} {
+1877:proc gf180mcu::rm3_convert {parameters} {
+1881:proc gf180mcu::rm4_convert {parameters} {
+1884:proc gf180mcu::rm5_convert {parameters} {
+1888:proc gf180mcu::ppolyf_u_1k_convert {parameters} {
+1892:proc gf180mcu::ppolyf_u_1k_6p0_convert {parameters} {
+1900:proc gf180mcu::res_dialog {device parameters} {
+1960:proc gf180mcu::nwell_dialog {parameters} {
+== nfet_03v3 defaults + params
+3075:proc gf180mcu::nfet_03v3_defaults {} {
+3076-    return {w 0.220 l 0.280 m 1 nf 1 diffcov 100 polycov 100 \
+3077-		guard 1 glc 1 grc 1 gtc 0 gbc 0 tbcov 100 rlcov 100 \
+3078-		topc 1 botc 1 poverlap 0 doverlap 1 lmin 0.28 wmin 0.22 \
+3079-		class mosfet full_metal 1 \
+3080-		compatible {nfet_03v3 nfet_05v0 nfet_06v0 nfet_06v0_nvt}}
+3081-}
+3082-
+3083-proc gf180mcu::nfet_05v0_defaults {} {
+3084-    return {w 0.3 l 0.6 m 1 nf 1 diffcov 100 polycov 100 \
+3085-		guard 1 glc 1 grc 1 gtc 0 gbc 0 tbcov 100 rlcov 100 \
+3086-		topc 1 botc 1 poverlap 0 doverlap 1 lmin 0.7 wmin 0.3 \
+3087-		lmax 0.695 class mosfet full_metal 1 \
+3088-		compatible {nfet_03v3 nfet_05v0 nfet_06v0 nfet_06v0_nvt}}
+3089-}
+3090-
+3091-proc gf180mcu::nfet_06v0_defaults {} {
+3092-    return {w 0.3 l 0.7 m 1 nf 1 diffcov 100 polycov 100 \
+3093-		guard 1 glc 1 grc 1 gtc 0 gbc 0 tbcov 100 rlcov 100 \
+3094-		topc 1 botc 1 poverlap 0 doverlap 1 lmin 0.6 wmin 0.3 \
+3095-		class mosfet full_metal 1 \
+3096-		compatible {nfet_03v3 nfet_05v0 nfet_06v0 nfet_06v0_nvt}}
+3097-}
+3098-
+3099-proc gf180mcu::nfet_06v0_nvt_defaults {} {
+3100-    return {w 0.8 l 1.8 m 1 nf 1 diffcov 100 polycov 100 \
+== klayout fet.py params
+54:        self.param("deepnwell", self.TypeBoolean, "Deep NWELL", default=0)
+55:        self.param("pcmpgr", self.TypeBoolean, "Deep NWELL Guard Ring", default=0)
+56:        self.Type_handle = self.param("volt", self.TypeList, "Operating Voltage")
+60:        self.Type_handle = self.param("bulk", self.TypeList, "Bulk Type")
+65:        self.param("w_gate", self.TypeDouble, "Width", default=fet_3p3_w, unit="um")
+66:        self.param("l_gate", self.TypeDouble, "Length", default=fet_3p3_l, unit="um")
+67:        self.param("ld", self.TypeDouble, "Diffusion Length", default=fet_ld, unit="um")
+68:        self.param("nf", self.TypeInt, "Number of Fingers", default=1)
+69:        self.param(
+73:        self.Type_handle = self.param(
+80:        self.param(
+83:        self.param("sd_con_col", self.TypeInt, "Diffusion Contacts Columns", default=1)
+85:        self.param("interdig", self.TypeBoolean, "Interdigitation", default=0)
+86:        self.param(
+89:        self.param(
+93:        self.param("area", self.TypeDouble, "Area", readonly=True, unit="um^2")
+94:        self.param("perim", self.TypeDouble, "Perimeter", readonly=True, unit="um")
+96:        self.param("lbl", self.TypeBoolean, "Labels", default=0)
+98:        self.param(
+102:        self.param("g_lbl", self.TypeList, "Pattern of Gate Labels", default=[])
+104:        self.param("sub_lbl", self.TypeString, "Substrate Label", default="")
+211:        self.param("deepnwell", self.TypeBoolean, "Deep NWELL", default=0)
+212:        self.param("pcmpgr", self.TypeBoolean, "Deep NWELL Guard Ring", default=0)
+213:        self.Type_handle = self.param("volt", self.TypeList, "Operating Voltage")
+217:        self.Type_handle = self.param("bulk", self.TypeList, "Bulk Type")
+222:        self.param("w_gate", self.TypeDouble, "Width", default=fet_3p3_w, unit="um")
+223:        self.param("l_gate", self.TypeDouble, "Length", default=fet_3p3_l, unit="um")
+224:        self.param("ld", self.TypeDouble, "Diffusion Length", default=fet_ld, unit="um")
+225:        self.param("nf", self.TypeInt, "Number of Fingers", default=1)
+226:        self.param(
+230:        self.Type_handle = self.param(
+237:        self.param(
+240:        self.param("sd_con_col", self.TypeInt, "Diffusion Contacts Columns", default=1)
+242:        self.param("interdig", self.TypeBoolean, "Interdigitation", default=0)
+243:        self.param(
+246:        self.param(
+250:        self.param("area", self.TypeDouble, "Area", readonly=True, unit="um^2")
+251:        self.param("perim", self.TypeDouble, "Perimeter", readonly=True, unit="um")
+253:        self.param("lbl", self.TypeBoolean, "Labels", default=0)
+255:        self.param(
+== DRC DN rules
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:24:  # Rule DN.1: Min. DNWELL Width is 1.7µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:25:  logger.info('Executing rule DN.1')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:27:  dn1_l1.output('DN.1', 'DN.1 : Min. DNWELL Width : 1.7µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:35:      # Rule DN.2a: Min. DNWELL Space (Equi-potential), Merge if the space is less than is 2.5µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:36:      logger.info('Executing rule DN.2a')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:38:      dn2a_l1.output('DN.2a', 'DN.2a : Min. DNWELL Space (Equi-potential), Merge if the space is less than : 2.5µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:41:      # Rule DN.2b: Min. DNWELL Space (Different potential) is 5.42µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:42:      logger.info('Executing rule DN.2b')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:48:      # Rule DN.2b_: Min. DNWELL Space (Different potential) is 5.42µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:49:      logger.info('Executing rule DN.2b')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:53:    dn2b_l1.output('DN.2b', 'DN.2b : Min. DNWELL Space (Different potential) : 5.42µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:57:  # Rule DN.3: Each DNWELL shall be directly surrounded by PCOMP guard ring
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:59:  logger.info('Executing rule DN.3')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:63:  dn3_l.output('DN.3',
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell.drc:64:               'DN.3 : Each DNWELL shall be directly surrounded by PCOMP guard ring
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell_split.drc:27:    # Rule DN.2a: Min. DNWELL Space (Equi-potential), Merge if the space is less than is 2.5µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell_split.drc:28:    logger.info('Executing rule DN.2a')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell_split.drc:30:    dn2a_l1.output('DN.2a', 'DN.2a : Min. DNWELL Space (Equi-potential), Merge if the space is less than : 2.5µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell_split.drc:33:    # Rule DN.2b: Min. DNWELL Space (Different potential) is 5.42µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/dnwell_split.drc:34:    logger.info('Executing rule DN.2b')

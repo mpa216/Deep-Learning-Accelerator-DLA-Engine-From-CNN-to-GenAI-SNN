@@ -1,0 +1,11 @@
+libraries before manual registration (klayout -b does not run the PDK autorun macro): ['Basic']
+(22, 0)
+libraries after: ['Basic', 'DEFAULT', 'gf180mcu']
+pcells (first 40): []
+plain: params={'volt': '3.3V', 'bulk': 'None', 'w_gate': 2.0, 'l_gate': 0.5, 'nf': 2, 'deepnwell': False, 'pcmpgr': False}
+   bbox = 3.08 x 3.34 um ; layers(GDS/datatype:shapes) = {'33/0': 11, '34/0': 5, '30/0': 4, '32/0': 1, '22/0': 3}
+dnwell_noring: params={'volt': '3.3V', 'bulk': 'None', 'w_gate': 2.0, 'l_gate': 0.5, 'nf': 2, 'deepnwell': True, 'pcmpgr': False}
+   bbox = 9.00 x 9.26 um ; layers(GDS/datatype:shapes) = {'33/0': 11, '34/0': 5, '30/0': 4, '32/0': 1, '22/0': 3, '12/0': 1, '204/0': 1}
+dnwell_ring: params={'volt': '3.3V', 'bulk': 'None', 'w_gate': 2.0, 'l_gate': 0.5, 'nf': 2, 'deepnwell': True, 'pcmpgr': True}
+   bbox = 15.50 x 15.76 um ; layers(GDS/datatype:shapes) = {'33/0': 119, '34/0': 5, '30/0': 4, '32/0': 1, '22/0': 4, '12/0': 1, '204/0': 1, '31/0': 1}
+DNWELL is GDS layer 12/0 in gf180mcu.lyp.  present in plain: False  dnwell_noring: True  dnwell_ring: True

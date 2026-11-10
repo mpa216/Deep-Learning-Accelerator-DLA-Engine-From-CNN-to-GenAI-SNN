@@ -1,0 +1,142 @@
+== magic tech layers with dnwell/dnw
+gf180mcuD-BindKeys
+gf180mcuD-GDS.tech
+gf180mcuD.magicrc
+gf180mcuD.tcl
+gf180mcuD.tech
+46:# Deep nwell
+47:  dwell deepnwell,dnwell,dnw
+50:# Wells outside deep nwell
+350:  dnwell    cwell
+549:  nwell,*nsd,*mvnsd,nbase,dnwell nwell,*nsd,*mvnsd,nbase,dnwell
+584:# DNWELL
+586: layer DNWELL	dnwell
+676:	bloat-all pbase dnwell
+681:	bloat-all pbase dnwell
+724:	and-not dnwell
+728: templayer shortdntap dnwell
+766:	and-not dnwell
+772:	and dnwell
+776:	and dnwell
+815: # DUALGATE completely covers deep nwell
+817:	bloat-all alldiffmv dnwell
+1346: # Check that all p-diff and n-ohmic have either nwell or dnwell
+1348: and-not dnwell,nwell
+1350: # Check that all p-ohmic and n-diff have either pwell + dnwell
+1355: and dnwell
+1360: and dnwell
+1365: and dnwell
+1370: and dnwell
+1373: # Check for MV and LV devices in the same dnwell
+1374: templayer mv_dnwell
+1375: bloat-all alldiffmv,schottky dnwell
+1377: templayer bad_dnwell
+1378: bloat-all alldifflv dnwell
+1379: and mv_dnwell
+1381: # Check pwell in dnwell
+1382: templayer pwell_in_dnwell pwell
+1383: and dnwell
+1384: and-not mv_dnwell
+1386: templayer mvpwell_in_dnwell pwell
+1387: and mv_dnwell
+1398: # Check for nwell resistor in deep nwell
+1400: and dnwell
+1533: layer dnwell DNWELL
+1534: labels DNWELL
+1539: # Implicit nwell defined by DNWELL outside of PWELL
+== magic tcl device names (gencell)
+/foss/pdks/gf180mcuD/libs.tech/magic/gf180mcuD.tcl
+== klayout pcells with dnwell
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:39:    NMOS capacitor (Outside DNWELL) Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:48:        self.param("deepnwell", self.TypeBoolean, "Deep NWELL", default=0)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:103:            deepnwell=self.deepnwell,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:124:    3.3V PMOS capacitor (Outside DNWELL) Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:133:        self.param("deepnwell", self.TypeBoolean, "Deep NWELL", default=0)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:188:            deepnwell=self.deepnwell,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:271:            deepnwell=0,  # self.deepnwell,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/cap_mos.py:354:            deepnwell=0,  # self.deepnwell,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:57:    N+/LVPWELL diode (Outside DNWELL) Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:66:        self.param("deepnwell", self.TypeBoolean, "Deep NWELL", default=0)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:126:            deepnwell=self.deepnwell,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:147:    P+/Nwell diode (Outside DNWELL) Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:156:        self.param("deepnwell", self.TypeBoolean, "Deep NWELL", default=0)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:216:            deepnwell=self.deepnwell,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:323:    LVPWELL/DNWELL diode Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:413:    LVPWELL/DNWELL diode Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/diode.py:500:    N+/LVPWELL diode (Outside DNWELL) Generator for GF180MCU
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:161:    deepnwell: bool = 0,
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:169:     used to draw NMOS capacitor (Outside DNWELL) by specifying parameters
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:199:    dnwell_enc_pcmp = 1.1
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:213:        lvp_dis = 1 if "_b" in type else deepnwell
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:218:        nw_dis = 1 if ("_b" in type or (deepnwell == 0 and pcmpgr == 1)) else deepnwell
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:294:    if deepnwell == 1:
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:316:                    layer=layer["dnwell"],
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:327:                        c_inst.dxsize + (2 * dnwell_enc_pcmp),
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:328:                        c_inst.dysize + (2 * dnwell_enc_pcmp),
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:330:                    layer=layer["dnwell"],
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:334:            dn_rect.dxmin = c_inst.dxmin - dnwell_enc_pcmp
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:335:            dn_rect.dymin = c_inst.dymin - dnwell_enc_pcmp
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/pymacros/cells/draw_cap_mos.py:436:        if deepnwell == 0 and gr_imp == layer["nplus"]:
+== klayout layers
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/gf180mcu.lyp:254:  <source>DNWELL 12/0@1</source>
+== xschem symbol names with dn / deep
+symbols
+tests
+xschemrc
+nfet_03v3_dss.sym
+nfet_03v3.sym
+nfet_05v0.sym
+nfet_06v0_dss.sym
+nfet_06v0_nvt.sym
+nfet_06v0.sym
+nfet_10v0_asym.sym
+pfet_03v3_dss.sym
+pfet_03v3.sym
+pfet_05v0.sym
+pfet_06v0_dss.sym
+pfet_06v0.sym
+pfet_10v0_asym.sym
+== ngspice models: any dnwell-related device?
+27:*                     GT9755L wf#18 (PWELL/DNWELL and DNWELL/Psub diode, Vertical NPN)
+51:*      diode_pw2dw         Model for PWELL/DNWELL diode
+52:*      diode_dw2ps         Model for DNWELL/Psub diode
+== DRC deck rules for DNWELL
+filler_generation
+gf180mcu.drc
+README.md
+rule_decks
+run_drc.py
+slot_generation
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:33:  pcomp_dn3p3v = pcomp.and(dnwell_3p3v)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:34:  pcomp_dn56v = pcomp.and(dnwell_56v)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:38:  ntap_dn3p3v = ntap_dn.and(dnwell_3p3v)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:39:  ntap_dn56v = ntap_dn.and(dnwell_56v)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:44:  ncomp_out_nw_dn = ncomp.not(nwell).not(dnwell)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:45:  pcomp_out_nw_dn = pcomp.not(nwell).not(dnwell)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:96:  # Rule DF.3a_LV:  Min. COMP Space : 0.28µm. [P-substrate tap (PCOMP outside NWELL and DNWELL)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:101:                 'DF.3a_LV : Min. COMP Space is : 0.28µm. [P-substrate tap (PCOMP outside NWELL and DNWELL)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:105:  # Rule DF.3a_MV:  Min. COMP Space is : 0.36µm. [P-substrate tap (PCOMP outside NWELL and DNWELL)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:110:                 'DF.3a_MV :  Min. COMP Space is : 0.36µm. [P-substrate tap (PCOMP outside NWELL and DNWELL)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:138:  # Rule DF.4a_LV: Min. (LVPWELL Space to NCOMP well tap) inside DNWELL. is 0.12µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:141:  df4a_l1.output('DF.4a_LV', 'DF.4a_LV : Min. (LVPWELL Space to NCOMP well tap) inside DNWELL. : 0.12µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:144:  # Rule DF.4a_MV: Min. (LVPWELL Space to NCOMP well tap) inside DNWELL. is 0.16µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:147:  df4a_l1.output('DF.4a_MV', 'DF.4a_MV : Min. (LVPWELL Space to NCOMP well tap) inside DNWELL. : 0.16µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:150:  # Rule DF.4b_LV: Min. DNWELL overlap of NCOMP well tap. is 0.62µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:152:  df4b_l1 = ntap_dn3p3v.enclosed(dnwell_3p3v, 0.62.um, euclidian)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:153:  df4b_l1.output('DF.4b_LV', 'DF.4b_LV : Min. DNWELL overlap of NCOMP well tap. : 0.62µm')
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:157:  # Rule DF.4b_MV: Min. DNWELL overlap of NCOMP well tap. is 0.66µm
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:159:  df4b_l1 = ntap_dn56v.enclosed(dnwell_56v, 0.66.um, euclidian)
+/foss/pdks/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/comp.drc:160:  df4b_l1.output('DF.4b_MV', 'DF.4b_MV : Min. DNWELL overlap of NCOMP well tap. : 0.66µm')
+== Netgen setup device names with dnwell
+264:lappend devices diode_dnw2pw
+265:lappend devices diode_dnw2ps
+== docs
+libs.ref
+libs.tech
+SOURCES
+gf180mcu_as_sc_mcu7t3v3
+gf180mcu_fd_io
+gf180mcu_fd_ip_sram
+gf180mcu_fd_pr
+gf180mcu_fd_sc_mcu7t5v0
+gf180mcu_fd_sc_mcu9t5v0

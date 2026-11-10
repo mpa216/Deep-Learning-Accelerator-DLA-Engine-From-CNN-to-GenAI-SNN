@@ -1,0 +1,83 @@
+== schematic netlist
+.SUBCKT gf180mcu_fd_sc_mcu7t5v0__inv_1 I ZN VDD VNW VPW VSS
+X_i_0 ZN I VSS VPW nfet_05v0 W=8.2e-07 L=6e-07
+X_i_1 ZN I VDD VNW pfet_05v0 W=1.22e-06 L=5e-07
+.ENDS
+(copied nfet gencell gds)
+PDK=gf180mcuD PDK_ROOT=/foss/pdks STD_CELL_LIBRARY=gf180mcu_fd_sc_mcu7t5v0
+
+##### sak-drc.sh -m (Magic DRC) on gf180mcu_fd_sc_mcu7t5v0__inv_1
+[INFO] DEBUG is enabled!
+[INFO] CELL_LAY=gf180mcu_fd_sc_mcu7t5v0__inv_1.mag
+[INFO] Results are put into </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work>.
+[INFO] Launching Magic DRC...
+[INFO] Magic runs DRC on .mag file.
+---
+[INFO] Magic DRC is clean!
+---
+CONGRATULATIONS! No DRC errors in <gf180mcu_fd_sc_mcu7t5v0__inv_1.mag> found!
+---
+[DONE] Bye!
+
+##### sak-drc.sh -k (KLayout DRC) on gf180mcu_fd_sc_mcu7t5v0__inv_1
+[INFO] Results are put into </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work>.
+[INFO] Launching KLayout DRC...
+[ERROR] KLayout DRC for gf180mcuD not yet supported!
+
+##### sak-drc.sh -m on the Magic gencell nfet gds (nfetgen)
+[INFO] Results are put into </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work>.
+[INFO] Launching Magic DRC...
+---
+[INFO] Magic DRC is clean!
+---
+CONGRATULATIONS! No DRC errors in <nfetgen.gds> found!
+---
+[DONE] Bye!
+
+##### sak-lvs.sh  (layout .mag vs spice)
+[INFO] Running LVS of </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work/gf180mcu_fd_sc_mcu7t5v0__inv_1.mag> vs </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work/gf180mcu_fd_sc_mcu7t5v0__inv_1.spice>.
+[INFO] Using SPICE netlist </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work/gf180mcu_fd_sc_mcu7t5v0__inv_1.spice>...
+[INFO] Extracting netlist from layout </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work/gf180mcu_fd_sc_mcu7t5v0__inv_1.mag>...
+[INFO] Run netgen...
+---
+CONGRATULATIONS! LVS is OK, schematic/netlist and layout match!
+---
+[DONE] Bye!
+
+##### result files
+total 60
+drwxr-xr-x 2 1000 1000 4096 Nov 10 17:18 .
+drwxr-xr-x 3 1000 1000 4096 Nov 10 17:18 ..
+-rw-r--r-- 1 1000 1000 1163 Nov 10 17:18 drc_gf180mcu_fd_sc_mcu7t5v0__inv_1.tcl
+-rw-r--r-- 1 1000 1000 1913 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.ext
+-rw-r--r-- 1 1000 1000  317 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.ext.spc
+-rw-r--r-- 1 1000 1000 5035 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.lvs.log
+-rw-r--r-- 1 1000 1000 3546 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.lvs.out
+-rw-r--r-- 1 1000 1000 2604 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.mag
+-rw-r--r-- 1 1000 1000  124 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.magic.drc.rpt
+-rw-r--r-- 1 1000 1000  161 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.sch.spc
+-rw-r--r-- 1 1000 1000  161 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.spice
+-rw-r--r-- 1 1000 1000 7076 Nov 10 17:18 nfetgen.gds
+-rw-r--r-- 1 1000 1000  101 Nov 10 17:18 nfetgen.magic.drc.rpt
+
+##### netgen comparison summary
+Netlists match uniquely.
+Final result: Circuits match uniquely.
+
+##### sak-pex.sh -m 2  (parasitic extraction)
+[INFO] Running PEX using magic...
+[DONE] PEX (C-coupled) done, extracted SPICE netlist is </foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/sim/env/sak_smoke/work/gf180mcu_fd_sc_mcu7t5v0__inv_1.pex.spice>.
+total 60
+drwxr-xr-x 2 1000 1000 4096 Nov 10 17:18 .
+drwxr-xr-x 3 1000 1000 4096 Nov 10 17:18 ..
+-rw-r--r-- 1 1000 1000 1163 Nov 10 17:18 drc_gf180mcu_fd_sc_mcu7t5v0__inv_1.tcl
+-rw-r--r-- 1 1000 1000  317 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.ext.spc
+-rw-r--r-- 1 1000 1000 5035 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.lvs.log
+-rw-r--r-- 1 1000 1000 3546 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.lvs.out
+-rw-r--r-- 1 1000 1000 2604 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.mag
+-rw-r--r-- 1 1000 1000  124 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.magic.drc.rpt
+-rw-r--r-- 1 1000 1000  703 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.pex.spice
+-rw-r--r-- 1 1000 1000  161 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.sch.spc
+-rw-r--r-- 1 1000 1000  161 Nov 10 17:18 gf180mcu_fd_sc_mcu7t5v0__inv_1.spice
+-rw-r--r-- 1 1000 1000 7076 Nov 10 17:18 nfetgen.gds
+-rw-r--r-- 1 1000 1000  101 Nov 10 17:18 nfetgen.magic.drc.rpt

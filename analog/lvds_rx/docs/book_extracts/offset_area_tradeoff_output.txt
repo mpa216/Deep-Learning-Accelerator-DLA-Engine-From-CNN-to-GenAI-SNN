@@ -1,0 +1,28 @@
+Branch current ID = 50 uA, VDS = 1.0 V.   k = sigma_dVT / AVT = 1/sqrt(W*L) in 1/um (multiply by AVT in mV*um)
+
+Input pair (nfet): area, 1/sqrt(WL), Cgg, fT
+  L(um) gm/ID    W(um)  WL(um^2)  k=1/sqrt(WL)   Cgg(fF)  fT(GHz)  gm(mS)
+  0.5     8        7.0       3.5   0.533           12.3     5.17  0.400
+  0.5    12       18.5       9.3   0.329           29.0     3.30  0.600
+  0.5    16       48.2      24.1   0.204           65.9     1.93  0.800
+  1.0     8       13.6      13.6   0.271           42.9     1.48  0.400
+  1.0    12       36.3      36.3   0.166          102.4     0.93  0.600
+  1.0    16       92.4      92.4   0.104          227.0     0.56  0.800
+  2.0     8       28.5      57.0   0.132          173.9     0.37  0.400
+  2.0    12       79.3     158.6   0.079          439.2     0.22  0.600
+  2.0    16      208.9     417.9   0.049         1014.8     0.13  0.800
+
+Load / mirror (pfet) at the same current: area and the weight r = (gm/ID)2/(gm/ID)1 of its mismatch in the offset
+  L(um) gm/ID(load)   W(um)  WL(um^2)  k2=1/sqrt(WL)   r for (gm/ID)1=12   r*k2
+  0.5     5            10.1       5.1   0.444            0.42           0.185
+  0.5     8            25.0      12.5   0.283            0.67           0.189
+  0.5    10            40.8      20.4   0.221            0.83           0.185
+  1.0     5            22.8      22.8   0.209            0.42           0.087
+  1.0     8            58.4      58.4   0.131            0.67           0.087
+  1.0    10            96.7      96.7   0.102            0.83           0.085
+  2.0     5            49.4      98.8   0.101            0.42           0.042
+  2.0     8           128.0     256.0   0.062            0.67           0.042
+  2.0    10           213.0     426.0   0.048            0.83           0.040
+
+Example: nfet pair L=1.0 gm/ID=12, pfet load L=1.0 gm/ID=8:  sigma_Vos/AVT = sqrt(k1^2 + (r k2)^2)  (if AVTn = AVTp)
+  k1=0.166  k2=0.131  r=0.67  ->  sigma_Vos = 0.187 * AVT  (pair alone: 0.166 * AVT)

@@ -1,0 +1,41 @@
+################ sak-drc.sh -h
+Illegal option -h
+[ERROR] Layout <> not found!
+################ sak-lvs.sh -h
+Illegal option -h
+[ERROR] No schematic/SPICE netlist/Verilog file found!
+################ sak-pex.sh -h
+/foss/tools/sak/sak-pex.sh: illegal option -- h
+[ERROR] No cellname provided!
+################ sak-sch2svg.sh -h
+[ERROR] File <-h> not found!
+################ tools invoked by the scripts
+/foss/tools/sak/sak-drc.sh:262:	magic -dnull -noconsole \
+/foss/tools/sak/sak-drc.sh:263:		-rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+/foss/tools/sak/sak-drc.sh:280:		klayout -b \
+/foss/tools/sak/sak-drc.sh:289:		klayout -b \
+/foss/tools/sak/sak-drc.sh:298:		klayout -b \
+/foss/tools/sak/sak-drc.sh:301:			-r "$PDKPATH/libs.tech/klayout/drc/met_min_ca_density.lydrc" \
+/foss/tools/sak/sak-drc.sh:304:		klayout -b \
+/foss/tools/sak/sak-drc.sh:312:		klayout -b \
+/foss/tools/sak/sak-drc.sh:348:		echo "[ERROR] No magic output found!"
+/foss/tools/sak/sak-drc.sh:363:		echo "[ERROR] No klayout output found!"
+/foss/tools/sak/sak-drc.sh:375:		echo "[ERROR] No klayout output found!"
+/foss/tools/sak/sak-drc.sh:387:		echo "[ERROR] No klayout output found!"
+/foss/tools/sak/sak-drc.sh:399:		echo "[ERROR] No klayout output found!"
+/foss/tools/sak/sak-drc.sh:411:		echo "[ERROR] No klayout output found!"
+/foss/tools/sak/sak-lvs.sh:48:	echo "       -s Use this <schematic> (xschem .sch schematic or a SPICE netlist)"
+/foss/tools/sak/sak-lvs.sh:294:		xschem --rcfile "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc" \
+/foss/tools/sak/sak-lvs.sh:374:magic -dnull -noconsole \
+/foss/tools/sak/sak-lvs.sh:375:	-rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+/foss/tools/sak/sak-lvs.sh:390:	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$NETLIST_SCH $TOPCELL" \
+/foss/tools/sak/sak-lvs.sh:391:		"$PDK_ROOT/$PDK/libs.tech/netgen/${PDK}_setup.tcl" \
+/foss/tools/sak/sak-lvs.sh:397:	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$CELL_V $TOPCELL" \
+/foss/tools/sak/sak-lvs.sh:398:                "$PDK_ROOT/$PDK/libs.tech/netgen/${PDK}_setup.tcl" \
+/foss/tools/sak/sak-pex.sh:257:   	echo "[ERROR] magic could not be found!"
+/foss/tools/sak/sak-pex.sh:266:	magic -dnull -noconsole \
+/foss/tools/sak/sak-pex.sh:267:		-rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+/foss/tools/sak/sak-pex.sh:271:	magic -dnull -noconsole \
+/foss/tools/sak/sak-pex.sh:272:		-rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+/foss/tools/sak/sak-sch2svg.sh:64:xschem \
+/foss/tools/sak/sak-sch2svg.sh:66:	--command "xschem zoom_full; xschem toggle_colorscheme; xschem print svg $SVGFILE" \

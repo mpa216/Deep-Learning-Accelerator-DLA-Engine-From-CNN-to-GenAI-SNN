@@ -1,0 +1,143 @@
+### ngspice .subckt names (sm141064.ngspice + sm141064_*.ngspice)
+cap_mim_1f0fF cap_mim_1f0_m2m3_noshield cap_mim_1f0_m3m4_noshield cap_mim_1f0_m4m5_noshield cap_mim_1f0_m5m6_noshield cap_mim_1f5fF cap_mim_1f5_m2m3_noshield cap_mim_1f5_m3m4_noshield cap_mim_1f5_m4m5_noshield cap_mim_1f5_m5m6_noshield cap_mim_2f0fF cap_mim_2f0_m2m3_noshield cap_mim_2f0_m3m4_noshield cap_mim_2f0_m4m5_noshield cap_mim_2f0_m5m6_noshield cap_nmos_03v3 cap_nmos_03v3_b cap_nmos_06v0 cap_nmos_06v0_b cap_pmos_03v3 cap_pmos_03v3_b cap_pmos_06v0 cap_pmos_06v0_b efuse nfet_03v3 nfet_03v3_dss nfet_05v0 nfet_06v0 nfet_06v0_dss nfet_06v0_nvt nplus_s nplus_u nplus_u_m1 nplus_u_m2 npn_00p54x02p00 npn_00p54x04p00 npn_00p54x08p00 npn_00p54x16p00 npn_05p00x05p00 npn_10p00x10p00 npolyf_s npolyf_u nwell pfet_03v3 pfet_03v3_dss pfet_05v0 pfet_06v0 pfet_06v0_dss pnp_05p00x00p42 pnp_05p00x05p00 pnp_10p00x00p42 pnp_10p00x10p00 pplus_s pplus_u pplus_u_m1 pplus_u_m2 ppolyf_s ppolyf_u ppolyf_u_1k ppolyf_u_1k_6p0 ppolyf_u_2k ppolyf_u_2k_6p0 ppolyf_u_3k rm1 rm2 rm3 rm4 tm11k tm30k tm6k tm9k 
+### ngspice .lib section names
+bjt_ff bjt_mc bjt_ss bjt_statistical bjt_typical cap_mim dio diode_ff diode_ss diode_typical efuse fets_mm ff fs mimcap_ff mimcap_ss mimcap_statistical mimcap_typical moscap moscap_ff moscap_ss moscap_typical nfet_03v3_f nfet_03v3_fs nfet_03v3_s nfet_03v3_sf nfet_03v3_stat nfet_03v3_t nfet_06v0_nvt_stat nfet_06v0_nvt_t nfet_06v0_t noise_corner pfet_03v3_f pfet_03v3_fs pfet_03v3_s pfet_03v3_sf pfet_03v3_stat pfet_03v3_t pfet_06v0_stat pfet_06v0_t res res_ff res_ss res_statistical res_statistical_par res_typical sf 'sm141064_mim.ngspice' 'sm141064.ngspice' ss statistical typical 
+### Magic: gencell procs (xxx_defaults) in gf180mcuD.tcl
+diode_nd2ps_03v3 diode_pd2nw_03v3 diode_nd2ps_06v0 diode_pd2nw_06v0 nwell ppolyf_u npolyf_u ppolyf_s npolyf_s nplus_u pplus_u rm1 rm2 rm3 rm4 rm5 ppolyf_u_1k ppolyf_u_1k_6p0 pfet_03v3 pfet_05v0 pfet_06v0 pfet_03v3_dss pfet_06v0_dss nfet_03v3 nfet_05v0 nfet_06v0 nfet_06v0_nvt nfet_10v0_asym pfet_10v0_asym nfet_03v3_dss nfet_06v0_dss nmoscap_3p3 nmoscap_6p0 npn_05p00x05p00 npn_00p54x02p00 npn_10p00x10p00 npn_00p54x10p00 npn_00p54x04p00 npn_00p54x08p00 pnp_05p00x05p00 pnp_05p00x00p42 pnp_10p00x10p00 pnp_10p00x00p42 
+### Magic: device names in the extract section (device lines)
+csubcircuit cap_mim_2f0_m4m5_noshield;msubcircuit nfet_03v3;msubcircuit nfet_03v3_dss;msubcircuit nfet_05v0;msubcircuit nfet_06v0;msubcircuit nfet_06v0_dss;msubcircuit nfet_06v0_nvt;msubcircuit nfet_10v0_asym;msubcircuit npn_00p54x02p00;msubcircuit npn_00p54x04p00;msubcircuit npn_00p54x08p00;msubcircuit npn_00p54x16p00;msubcircuit npn_05p00x05p00;msubcircuit npn_10p00x10p00;msubcircuit pfet_03v3;msubcircuit pfet_03v3_dss;msubcircuit pfet_05v0;msubcircuit pfet_06v0;msubcircuit pfet_06v0_dss;msubcircuit pfet_10v0_asym;msubcircuit pnp_05p00x00p42;msubcircuit pnp_05p00x05p00;msubcircuit pnp_10p00x00p42;msubcircuit pnp_10p00x10p00;ndiode diode_nd2ps_03v3;ndiode diode_nd2ps_06v0;ndiode diode_nd2ps_06v0_nvt;pdiode diode_pd2nw_03v3;pdiode diode_pd2nw_06v0;pdiode sc_diode;rsubcircuit efuse;rsubcircuit nplus_s;rsubcircuit nplus_u;rsubcircuit npolyf_s;rsubcircuit npolyf_u;rsubcircuit nwell;rsubcircuit pplus_s;rsubcircuit pplus_u;rsubcircuit ppolyf_s;rsubcircuit ppolyf_u;rsubcircuit ppolyf_u_1k;rsubcircuit ppolyf_u_1k_6p0;rsubcircuit rm1;rsubcircuit rm2;rsubcircuit rm3;rsubcircuit rm4;rsubcircuit tm11k;subcircuit cap_nmos_03v3;subcircuit cap_nmos_03v3_b;subcircuit cap_nmos_06v0;subcircuit cap_nmos_06v0_b;subcircuit cap_pmos_03v3;subcircuit cap_pmos_03v3_b;subcircuit cap_pmos_06v0;subcircuit cap_pmos_06v0_b;subcircuit Short;
+
+### Magic: all gencell-able names (find 'gencell' types in the .tech 'devices' / tcl 'Device Generator')
+13:# "gf180mcu" is the namespace used for all devices
+92:   # List of devices is long.  Divide into two sections for active and passive deivces
+93:   magic::add_toolkit_menu $layoutframe "Devices 1" pdk1
+95:   magic::add_toolkit_command $layoutframe "nmos - nMOSFET" "magic::gencell gf180mcu::nfet_03v3" pdk1
+96:   magic::add_toolkit_command $layoutframe "pmos - pMOSFET" "magic::gencell gf180mcu::pfet_03v3" pdk1
+100:#   magic::add_toolkit_command $layoutframe "nfet_dss - mosfet (unsalicided drain)" "magic::gencell gf180mcu::nfet_03v3_dss" pdk1
+101:#   magic::add_toolkit_command $layoutframe "pfet_dss - mosfet (unsalicided drain)" "magic::gencell gf180mcu::pfet_03v3_dss" pdk1
+105:#   magic::add_toolkit_command $layoutframe "ldnmos - nMOSFET" "magic::gencell gf180mcu::nfet_10v0_asym" pdk1
+106:#   magic::add_toolkit_command $layoutframe "ldpmos - nMOSFET" "magic::gencell gf180mcu::pfet_10v0_asym" pdk1
+109:   magic::add_toolkit_command $layoutframe "diode_nd2ps_03v3 - n-diode" "magic::gencell gf180mcu::diode_nd2ps_03v3" pdk1
+110:   magic::add_toolkit_command $layoutframe "diode_pd2nw_03v3 - p-diode" "magic::gencell gf180mcu::diode_pd2nw_03v3" pdk1
+113:   magic::add_toolkit_command $layoutframe "npn_10p00x10p00  (3.3V) - 10.0um x 10.0um " "magic::gencell gf180mcu::npn_10p00x10p00" pdk1
+114:   magic::add_toolkit_command $layoutframe "npn_05p00x05p00  (3.3V) - 5.0um x 5.0um " "magic::gencell gf180mcu::npn_05p00x05p00" pdk1
+115:   magic::add_toolkit_command $layoutframe "npn_10p00x10p00  (3.3V) - 10.0um x 10.0um " "magic::gencell gf180mcu::npn_00p54x04p00" pdk1
+116:   magic::add_toolkit_command $layoutframe "npn_00p54x10p00  (3.3V) - 0.54um x 10.0um " "magic::gencell gf180mcu::npn_00p54x10p00" pdk1
+117:   magic::add_toolkit_command $layoutframe "npn_00p54x08p00  (3.3V) - 0.54um x 8.0um " "magic::gencell gf180mcu::npn_00p54x08p00" pdk1
+118:   magic::add_toolkit_command $layoutframe "npn_00p54x02p00  (3.3V) - 0.54um x 2.0um " "magic::gencell gf180mcu::npn_00p54x02p00" pdk1
+119:   magic::add_toolkit_command $layoutframe "pnp_10p00x10p00  (3.3V) - 10.0um x 10.0um " "magic::gencell gf180mcu::pnp_10p00x10p00" pdk1
+120:   magic::add_toolkit_command $layoutframe "pnp_05p00x05p00  (3.3V) - 5.0um x 5.0um " "magic::gencell gf180mcu::pnp_05p00x05p00" pdk1
+121:   magic::add_toolkit_command $layoutframe "pnp_10p00x00p42  (3.3V) - 10.0um x 0.42um " "magic::gencell gf180mcu::pnp_10p00x00p42" pdk1
+### Netgen setup: device/model names
+6:property default
+7:property parallel none
+21:# always circuit2, so some items like property "par1" only need to
+29:lappend devices nwell_1p5
+30:lappend devices ppolyf_u
+31:lappend devices npolyf_u
+32:lappend devices ppolyf_s
+33:lappend devices nplus_u
+34:lappend devices pplus_u
+35:lappend devices nw1a_6p0
+37:lappend devices npolyf_s
+38:lappend devices pfield_1p5
+39:lappend devices pf1va_6p0
+40:lappend devices ppolyf_u_1k
+41:lappend devices ppolyf_u_1k_6p0
+46:	property "-circuit1 $dev" series enable
+47:	property "-circuit1 $dev" series {r_width critical}
+48:	property "-circuit1 $dev" series {r_length add}
+49:	property "-circuit1 $dev" parallel enable
+50:	property "-circuit1 $dev" parallel {r_length critical}
+51:	property "-circuit1 $dev" parallel {r_width add}
+52:	property "-circuit1 $dev" tolerance {r_length 0.01} {r_width 0.01}
+54:	property "-circuit1 $dev" delete par1 pm par r
+58:	property "-circuit2 $dev" series enable
+59:	property "-circuit2 $dev" series {r_width critical}
+60:	property "-circuit2 $dev" series {r_length add}
+61:	property "-circuit2 $dev" parallel enable
+62:	property "-circuit2 $dev" parallel {r_length critical}
+63:	property "-circuit2 $dev" parallel {r_width add}
+64:	property "-circuit2 $dev" tolerance {r_length 0.01} {r_width 0.01}
+66:	property "-circuit2 $dev" delete par1 pm par r
+75:lappend devices rm1
+76:lappend devices rm2
+77:lappend devices rm3
+78:lappend devices rm4
+79:lappend devices rmtp
+84:	property "-circuit1 $dev" series enable
+85:	property "-circuit1 $dev" series {r_width critical}
+86:	property "-circuit1 $dev" series {r_length add}
+87:	property "-circuit1 $dev" parallel enable
+88:	property "-circuit1 $dev" parallel {r_length critical}
+89:	property "-circuit1 $dev" parallel {r_width add}
+90:	property "-circuit1 $dev" tolerance {r_length 0.01} {r_width 0.01}
+92:	property "-circuit1 $dev" delete par1 pm par r
+96:	property "-circuit2 $dev" series enable
+97:	property "-circuit2 $dev" series {r_width critical}
+98:	property "-circuit2 $dev" series {r_length add}
+99:	property "-circuit2 $dev" parallel enable
+100:	property "-circuit2 $dev" parallel {r_length critical}
+101:	property "-circuit2 $dev" parallel {r_width add}
+102:	property "-circuit2 $dev" tolerance {r_length 0.01} {r_width 0.01}
+104:	property "-circuit2 $dev" delete par1 pm par r
+113:lappend devices nfet_03v3
+114:lappend devices pfet_03v3
+115:lappend devices nfet_05v0
+116:lappend devices nfet_06v0
+117:lappend devices pfet_05v0
+118:lappend devices pfet_06v0
+119:lappend devices nfet_06v0_nvt
+124:	property "-circuit1 $dev" parallel enable
+125:	property "-circuit1 $dev" parallel {l critical}
+126:	property "-circuit1 $dev" parallel {w add}
+127:	property "-circuit1 $dev" tolerance {w 0.01} {l 0.01}
+129:	property "-circuit1 $dev" delete par1 NRD NRS par
+130:	property "-circuit1 $dev" delete sa sb sd par dtemp nf
+131:	property "-circuit1 $dev" delete as ad ps pd
+132:	property "-circuit1 $dev" delete \$D \$X \$Y
+136:	property "-circuit2 $dev" parallel enable
+137:	property "-circuit2 $dev" parallel {l critical}
+138:	property "-circuit2 $dev" parallel {w add}
+139:	property "-circuit2 $dev" tolerance {w 0.01} {l 0.01}
+141:	property "-circuit2 $dev" delete par1 NRD NRS par
+142:	property "-circuit2 $dev" delete sa sb sd par dtemp nf
+143:	property "-circuit2 $dev" delete as ad ps pd
+144:	property "-circuit2 $dev" delete \$D \$X \$Y
+155:lappend devices nfet_03v3_dss
+156:lappend devices pfet_03v3_dss
+157:lappend devices nfet_06v0_dss
+158:lappend devices pfet_06v0_dss
+163:	property "-circuit1 $dev" parallel enable
+### KLayout PCell names (register_pcell / library entries)
+68:        self.layout().register_pcell(
+71:        self.layout().register_pcell(
+74:        self.layout().register_pcell("nfet_06v0_nvt", nfet_06v0_nvt())
+75:        # self.layout().register_pcell("nfet_10v0_asym", nfet_10v0_asym())
+76:        # self.layout().register_pcell("pfet_10v0_asym", pfet_10v0_asym())
+79:        self.layout().register_pcell(
+83:        self.layout().register_pcell(
+88:        self.layout().register_pcell(
+91:        self.layout().register_pcell(
+94:        self.layout().register_pcell(
+97:        self.layout().register_pcell(
+100:        self.layout().register_pcell(
+103:        self.layout().register_pcell("sc_diode", sc_diode())
+106:        self.layout().register_pcell("cap_mim", cap_mim())
+109:        self.layout().register_pcell(
+112:        self.layout().register_pcell(
+115:        self.layout().register_pcell(
+118:        self.layout().register_pcell(
+123:        self.layout().register_pcell("metal_resistor", metal_resistor())
+124:        self.layout().register_pcell("nplus_s_resistor", nplus_s_resistor())
+125:        self.layout().register_pcell("pplus_s_resistor", pplus_s_resistor())
+126:        self.layout().register_pcell("nplus_u_resistor", nplus_u_resistor())
+127:        self.layout().register_pcell("pplus_u_resistor", pplus_u_resistor())
+128:        self.layout().register_pcell("nwell_resistor", nwell_resistor())
+129:        self.layout().register_pcell("pwell_resistor", pwell_resistor())
+130:        self.layout().register_pcell("npolyf_s_resistor", npolyf_s_resistor())
+131:        self.layout().register_pcell("ppolyf_s_resistor", ppolyf_s_resistor())
+132:        self.layout().register_pcell("npolyf_u_resistor", npolyf_u_resistor())
+133:        self.layout().register_pcell("ppolyf_u_resistor", ppolyf_u_resistor())
+134:        self.layout().register_pcell(
+139:        self.layout().register_pcell("via_dev", via_dev())

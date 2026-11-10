@@ -1,0 +1,34 @@
+* in-deck Monte Carlo loop check
+* ---- GF180 header (harness): corner=tt_27c_3v30 mc=mismatch ----
+.param sw_stat_global=0 sw_stat_mismatch=1 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice moscap_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice mimcap_typical
+.temp 27
+* ---- end header ----
+
+vdd vdd 0 3.3
+vcm cm 0 1.5
+v1 in1 cm 0
+v2 in2 cm 0
+it tail 0 20u
+Xn1 d1 in1 tail 0 nfet_03v3 w=1u l=0.5u
+Xn2 d2 in2 tail 0 nfet_03v3 w=1u l=0.5u
+r1 vdd d1 20k
+r2 vdd d2 20k
+b1 od 0 V=v(d1)-v(d2)
+rt tail 0 1e9
+.control
+setseed 4242
+let k = 0
+dowhile k < 200
+  reset
+  dc v1 -0.1 0.1 0.2m
+  meas dc vos when v(od)=0
+  echo ITER $&k $&vos
+  let k = k + 1
+end
+.endc
+.end

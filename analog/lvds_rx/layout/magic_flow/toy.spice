@@ -1,0 +1,17 @@
+* lf_toy : 5-transistor OTA with resistor bias (gf180mcuD, 3.3 V devices) -- the LVS reference netlist
+* Same device-instance style as the Magic extraction (X lines, 4 terminals D G S B).
+* Each transistor is drawn as 2 fingers of 4 um: written here as TOTAL w=8u nf=2 (ngspice bins on w/nf with wnflag=1,
+* Netgen sums the parallel fingers and ignores nf).
+* M1/M2: ABBA input pair with one dummy finger at each end (the two dummies are real transistors in the layout:
+*         gate = VSS, source = VSS, drain = N1 (the shared diffusion with the A finger next to it)).
+.subckt lf_toy INP INN OUT VDD VSS
+XM1 N1  INP TAIL VSS nfet_03v3 w=8u nf=2 l=0.5u
+XM2 OUT INN TAIL VSS nfet_03v3 w=8u nf=2 l=0.5u
+XMD1 N1 VSS VSS VSS nfet_03v3 w=4u l=0.5u
+XMD2 N1 VSS VSS VSS nfet_03v3 w=4u l=0.5u
+XM3 N1  N1  VDD VDD pfet_03v3 w=8u nf=2 l=1u
+XM4 OUT N1  VDD VDD pfet_03v3 w=8u nf=2 l=1u
+XM5 TAIL IB VSS VSS nfet_03v3 w=8u nf=2 l=1u
+XM6 IB   IB VSS VSS nfet_03v3 w=8u nf=2 l=1u
+XR1 VDD IB VSS ppolyf_u_1k r_width=1u r_length=19.5u
+.ends

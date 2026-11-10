@@ -1,0 +1,14 @@
+{
+  "name": "ota_cmp_mc",
+  "description": "Demo: mismatch Monte Carlo (N=200, one ngspice process per seed) of the comparator at TT and at the slow corner, VIC 1.65 V. Pass criterion: mean +- 3 sigma inside the limits, no failed sample.",
+  "deck": "ota_cmp.spice",
+  "corners": ["tt:27:3.3", "ss:125:3.0"],
+  "grid": {"vic": [1.65]},
+  "mc": {"n": 200, "mode": "mismatch", "seed": 20261110, "k": 3},
+  "limits": {
+    "vtrip": {"min": -0.05, "max": 0.05, "scale": 1000, "unit": "mV"},
+    "tplh":  {"max": 5e-9, "scale": 1e9, "unit": "ns"}
+  },
+  "timeout": 120,
+  "jobs": 6
+}

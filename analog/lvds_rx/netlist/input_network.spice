@@ -1,0 +1,99 @@
+* ============================================================================
+* input_network.spice -- model of ONE LVDS lane's input path, from the driver to the macro pins
+*                        (use it in every later testbench that needs "what really arrives at the receiver")
+* ----------------------------------------------------------------------------
+*   driver emf --RS--> board node --[off-chip 100 ohm]-- ... --LPKG-- die node --> asig_5p0 pad --> [secondary ESD] --> RX pin
+*   (one copy per side, P and N; the RX macro connects to rxp / rxn)
+*
+* What is in the chain, per side (all values are .param defaults you can override per instance):
+*   RS      50 ohm   stand-in for driver output impedance + 50 ohm line (UNVERIFIED, from handoff 9.1)
+*   package pi-model: CPKG/2 at the board end, series LPKG + RLPKG, CPKG/2 at the die end
+*           LPKG 3 nH, CPKG 0.7 pF, RLPKG 0.2 ohm  (UNVERIFIED: package unknown. Assumed range LPKG 2-5 nH, CPKG 0.5-1 pF.
+*           Ask the organizers; keep them as parameters!)
+*   pad     gf180mcu_fd_io__asig_5p0 (netlist/pad_asig_5p0.spice): primary ESD, about 0.76-1.15 pF (see log/pad_model.md)
+*   ESD2    secondary ESD hook: lvds_esd2_none (a 1 mohm wire) or lvds_esd2_poly (first-cut proposal, series poly R + 2 diodes)
+* Between P and N:
+*   RT_OFF  100 ohm ideal termination at the BOARD side of the package (the default plan: termination is off-chip, ~2 cm from the pins)
+*   RT_ON   on-die/ideal termination at the DIE side (pad node), default 1e12 = not present.  For an on-die termination set
+*           RT_OFF=1e12 and RT_ON=100 (or any value).  Both at once is allowed (they just go in parallel at DC).
+*
+* The deck that includes this file must define the PDK model sections (the pad needs diode_* and moscap_*; the ESD proposal needs
+* res_*), e.g. with sim/env/gf180_corners.py header(corner), and must provide DVDD (3.3 V) and DVSS (0 V).
+* The deck must ALSO .include netlist/pad_asig_5p0.spice (this file instantiates gf180mcu_fd_io__asig_5p0 but does not include it).
+* Do not include design.ngspice.  (Remember: line 1 of an ngspice deck is the title and is ignored: do not put .param there.)
+*
+* TOP-LEVEL SUBCIRCUITS
+*   lvds_input_network      srcp srcn rxp rxn dvdd dvss      (no secondary ESD)   -- the baseline
+*   lvds_input_network_esd  srcp srcn rxp rxn dvdd dvss      (with lvds_esd2_poly)
+*   srcp/srcn are the ideal source nodes (voltage referenced to node 0 / dvss).  Drive them either with your own PWL/pulse
+*   sources or with lvds_drv_pulse below.  For observation, internal nodes are reachable as  x1.padp, x1.padn (the die/pad
+*   nodes) and x1.xf.bp, x1.xf.bn (board-side pin nodes) if the instance is named x1.
+*
+* HELPER  lvds_drv_pulse  srcp srcn  [VOS VOD TR TD HALF RS RT]
+*   Alternating 1010... pattern generator (half-period HALF = one bit time UI = 1/bit-rate: 10n for 100 Mb/s, 5n for 200 Mb/s).
+*   VOD  = |V(P)-V(N)| arriving at an ideal RT across the pins at low frequency, in each logic state
+*          (so the differential swing is +-VOD, peak-to-peak 2*VOD; 350 mV = nominal TIA-644 level).
+*   The source emf is scaled by (2*RS+RT)/RT so that the divider formed with the 2*RS series resistors still delivers VOD
+*   at the termination (RS=50, RT=100 -> emf is 2*VOD differential).
+*   VOS  = common-mode level at the termination (default 1.2 V).  TR = 0-100 % ramp time of each edge (default 0.5 ns,
+*   i.e. 10-90 % = 0.4 ns); TD = delay before the first edge.
+* ============================================================================
+
+* ---- ideal driver: complementary pulses ----
+.subckt lvds_drv_pulse srcp srcn params: VOS=1.2 VOD=0.35 TR=0.5n TD=1n HALF=10n RS=50 RT=100
+.param k_emf = {(2*RS+RT)/RT}
+* emf amplitude per side = k_emf * VOD / 2 around VOS (so the differential emf swings +-k_emf*VOD)
+vdp srcp 0 pulse({VOS+k_emf*VOD/2} {VOS-k_emf*VOD/2} {TD} {TR} {TR} {HALF-TR} {2*HALF})
+vdn srcn 0 pulse({VOS-k_emf*VOD/2} {VOS+k_emf*VOD/2} {TD} {TR} {TR} {HALF-TR} {2*HALF})
+.ends lvds_drv_pulse
+
+* ---- secondary ESD hooks (a b = in from the pad, out to the receiver pin) ----
+* none: just a 1 milli-ohm wire so the node names stay separate
+.subckt lvds_esd2_none a b dvdd dvss
+rw a b 1m
+.ends lvds_esd2_none
+
+* first-cut proposal (handoff 7.9): series unsalicided poly resistor + small diodes to the rails.
+*   ppolyf_u r_width=5u r_length=1.8u  -> about 150 ohm incl. end resistance (measured in log/pad_model.md)
+*   dh: diode_pd2nw_03v3 (P+/Nwell) anode=b cathode=dvdd, area 40 um2, perimeter 28 um
+*   dl: diode_nd2ps_03v3 (N+/Psub)  anode=dvss cathode=b
+* area/pj are in m^2 / m (same convention as the pad cell).  The receiver input capacitance is NOT part of this cell.
+* CAVEAT: these are not sized for ESD robustness (HBM current); replace with the organizers' Metal2/Metal3 cell when it arrives.
+.subckt lvds_esd2_poly a b dvdd dvss params: RW=5u RL=1.8u DA=40e-12 DP=28e-6
+xr a b dvss ppolyf_u r_width={RW} r_length={RL}
+dh b dvdd diode_pd2nw_03v3 area={DA} pj={DP}
+dl dvss b diode_nd2ps_03v3 area={DA} pj={DP}
+.ends lvds_esd2_poly
+
+* ---- front end: source -> RS -> board -> package -> pad (both sides, with terminations) ----
+.subckt lvds_front srcp srcn padp padn dvdd dvss params: RS=50 LPKG=3n CPKG=0.7p RLPKG=0.2 RT_OFF=100 RT_ON=1e12
+* P side
+rsp  srcp bp {RS}
+cbp1 bp dvss {CPKG/2}
+lpp  bp  mp {LPKG}
+rlp  mp  padp {RLPKG}
+cdp1 padp dvss {CPKG/2}
+xpadp padp dvdd dvss dvdd dvss gf180mcu_fd_io__asig_5p0
+* N side
+rsn  srcn bn {RS}
+cbn1 bn dvss {CPKG/2}
+lpn  bn  mn {LPKG}
+rln  mn  padn {RLPKG}
+cdn1 padn dvss {CPKG/2}
+xpadn padn dvdd dvss dvdd dvss gf180mcu_fd_io__asig_5p0
+* terminations
+rtoff bp bn {RT_OFF}
+rton  padp padn {RT_ON}
+.ends lvds_front
+
+.subckt lvds_input_network srcp srcn rxp rxn dvdd dvss params: RS=50 LPKG=3n CPKG=0.7p RLPKG=0.2 RT_OFF=100 RT_ON=1e12
+xf srcp srcn padp padn dvdd dvss lvds_front RS={RS} LPKG={LPKG} CPKG={CPKG} RLPKG={RLPKG} RT_OFF={RT_OFF} RT_ON={RT_ON}
+xep padp rxp dvdd dvss lvds_esd2_none
+xen padn rxn dvdd dvss lvds_esd2_none
+.ends lvds_input_network
+
+.subckt lvds_input_network_esd srcp srcn rxp rxn dvdd dvss params: RS=50 LPKG=3n CPKG=0.7p RLPKG=0.2 RT_OFF=100 RT_ON=1e12 RESD_W=5u RESD_L=1.8u DA=40e-12 DP=28e-6
+xf srcp srcn padp padn dvdd dvss lvds_front RS={RS} LPKG={LPKG} CPKG={CPKG} RLPKG={RLPKG} RT_OFF={RT_OFF} RT_ON={RT_ON}
+xep padp rxp dvdd dvss lvds_esd2_poly RW={RESD_W} RL={RESD_L} DA={DA} DP={DP}
+xen padn rxn dvdd dvss lvds_esd2_poly RW={RESD_W} RL={RESD_L} DA={DA} DP={DP}
+.ends lvds_input_network_esd

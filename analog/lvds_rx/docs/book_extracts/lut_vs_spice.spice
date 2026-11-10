@@ -1,0 +1,27 @@
+* lut_vs_spice.spice -- does the LUT agree with a direct ngspice .op of the same device at the same bias?
+* Device instance parameters copied from the techsweep decks that generated the LUTs
+* (W=5u, nf=1, ad/as/pd/ps/nrd/nrs formulas, sa=sb=sd=0).
+* Bias points are the ones verify_pygmid.py prints for gm/ID = 12, L = 0.5 um, VDS(VSD) = 1.0 V:
+*   NMOS  VGS = 0.8016 V          PMOS  VSG = 0.9007 V   (pmos source = 3.3 V rail, bulk at source, VSB = 0)
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+
+* ---- NMOS
+vgn gn 0 0.8015774
+vdn dn 0 1.0
+XMN dn gn 0 0 nfet_03v3 L=0.5u W=5u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+
+* ---- PMOS (source and bulk on the 3.3 V rail)
+vdd vdd 0 3.3
+vgp gp 0 2.3993035
+vdp dp 0 2.3
+XMP dp gp vdd vdd pfet_03v3 L=0.5u W=5u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+
+.control
+op
+print @m.xmn.m0[id] @m.xmn.m0[gm] @m.xmn.m0[gds] @m.xmn.m0[cgg] @m.xmn.m0[vth] @m.xmn.m0[cgso] @m.xmn.m0[cgdo] @m.xmn.m0[cgs] @m.xmn.m0[cgd] @m.xmn.m0[cgb] @m.xmn.m0[cdd]
+print @m.xmp.m0[id] @m.xmp.m0[gm] @m.xmp.m0[gds] @m.xmp.m0[cgg] @m.xmp.m0[vth] @m.xmp.m0[cgso] @m.xmp.m0[cgdo] @m.xmp.m0[cgs] @m.xmp.m0[cgd] @m.xmp.m0[cgb] @m.xmp.m0[cdd]
+.endc
+.end

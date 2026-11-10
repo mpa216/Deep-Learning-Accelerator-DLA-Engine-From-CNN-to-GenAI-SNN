@@ -1,0 +1,22 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * e02b_junction.spice -- do ad/as/pd/ps change the drain capacitance of nfet_03v3?
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+imag(i(vd1))/w_*1e15 = -5.54840e+00
+imag(i(vd2))/w_*1e15 = -1.21209e+01
+imag(i(vd3))/w_*1e15 = -1.21209e+01
+imag(i(vd4))/w_*1e15 = -1.21209e+01
+imag(i(vd5))/w_*1e15 = -9.00718e+00
+abs(imag(i(vd1)))/w_*1e15 = 5.548400e+00
+abs(imag(i(vd2)))/w_*1e15 = 1.212090e+01
+abs(imag(i(vd3)))/w_*1e15 = 1.212090e+01
+abs(imag(i(vd4)))/w_*1e15 = 1.212090e+01
+abs(imag(i(vd5)))/w_*1e15 = 9.007181e+00
+ngspice-46 done

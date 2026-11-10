@@ -1,0 +1,117 @@
+====================================================================== 
+1. CONTENTS OF THE .mat FILES
+ ======================================================================
+
+[nfet_03v3] top-level key = ['nfet_03v3']
+  fields: INFO, CORNER, TEMP, VGS, VDS, VSB, L, W, NFING, ID, VT, GM, GMB, GDS, CGG, CGB, CGD, CGS, CDD, CSS, STH, SFL
+  INFO   = ['G' 'l' 'o' 'b' 'a' 'l' 'F' 'o' 'u' 'n' 'd' 'r' 'i' 'e' 's' ',' ' ' '1'
+ '8' '0' 'n' 'm' ' ' 'M' 'C' 'U' ' ' 'C' 'M' 'O' 'S' ' ' ',' ' ' 'B' 'S'
+ 'I' 'M' '4']
+  CORNER = ['N' 'O' 'M']  TEMP = 300.0  W = 5.0  NFING = 1
+  L   (um) = [0.28, 0.29, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 3.0]
+  VGS (V)  : 133 pts, 0.000 .. 3.300, step 0.0250
+  VDS (V)  : 133 pts, 0.000 .. 3.300, step 0.0250
+  VSB (V)  = [-0.0, 0.2, 0.4]
+  ID array shape [L,VGS,VDS,VSB] = (12, 133, 133, 3)
+  ID  min/max = -4.339e-29 / 2.546e-03 A (W = 5 um)
+  VT  min/max = 0.588 / 0.839 V
+  has VDSAT field? False | has leakage field (IG)? False
+PASS  nfet_03v3: data arrays are 4-D [L,VGS,VDS,VSB]
+PASS  nfet_03v3: ID is positive in the table (PMOS stores magnitudes)   -> min ID (VGS,VDS>=0.125) = 4.505e-13
+PASS  nfet_03v3: VT positive in the table   -> VT range 0.588..0.839
+
+[pfet_03v3] top-level key = ['pfet_03v3']
+  fields: INFO, CORNER, TEMP, VGS, VDS, VSB, L, W, NFING, ID, VT, GM, GMB, GDS, CGG, CGB, CGD, CGS, CDD, CSS, STH, SFL
+  INFO   = ['G' 'l' 'o' 'b' 'a' 'l' 'F' 'o' 'u' 'n' 'd' 'r' 'i' 'e' 's' ',' ' ' '1'
+ '8' '0' 'n' 'm' ' ' 'M' 'C' 'U' ' ' 'C' 'M' 'O' 'S' ' ' ',' ' ' 'B' 'S'
+ 'I' 'M' '4']
+  CORNER = ['N' 'O' 'M']  TEMP = 300.0  W = 5.0  NFING = 1
+  L   (um) = [0.28, 0.29, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 3.0]
+  VGS (V)  : 133 pts, 0.000 .. 3.300, step 0.0250
+  VDS (V)  : 133 pts, 0.000 .. 3.300, step 0.0250
+  VSB (V)  = [-0.0, 0.2, 0.4]
+  ID array shape [L,VGS,VDS,VSB] = (12, 133, 133, 3)
+  ID  min/max = 0.000e+00 / 1.247e-03 A (W = 5 um)
+  VT  min/max = 0.703 / 0.957 V
+  has VDSAT field? False | has leakage field (IG)? False
+PASS  pfet_03v3: data arrays are 4-D [L,VGS,VDS,VSB]
+PASS  pfet_03v3: ID is positive in the table (PMOS stores magnitudes)   -> min ID (VGS,VDS>=0.125) = 5.319e-15
+PASS  pfet_03v3: VT positive in the table   -> VT range 0.703..0.957
+
+====================================================================== 
+2. CALL PATTERNS (nfet_03v3)
+ ======================================================================
+mode 3  n.lookup("ID_W", GM_ID=12, L=0.5, VDS=1.0)       = 2.702363910027819e-06  A/um
+PASS  mode 3 returns a scalar-like value
+mode 3  n.lookup("GM_CGG", GM_ID=12, L=0.5, VDS=1.0)     = 20720944209.06016  rad/s ->  fT = 3.298 GHz
+mode 3  n.lookup("GM_GDS", GM_ID=12, L=0.5, VDS=1.0)     = 153.36279455968247  (intrinsic gain gm/gds, V/V)
+mode 3  vector GM_ID [6, 9, 12, 15, 18] -> [113.3, 139.8, 153.4, 158.6, 157.9]
+PASS  mode 3 accepts a vector of gm/ID
+mode 3  vector L [0.28, 0.5, 1.0, 2.0] -> [28.8, 153.4, 344.3, 526.3]
+PASS  mode 3 accepts a vector of L
+mode 2  n.lookup("GM_ID", VGS=[0.6,0.8,1.0,1.2], L=0.5, VDS=1.0) = [23.02, 12.08, 5.62, 3.31]
+PASS  mode 2 gm/ID falls monotonically with VGS (strong inversion side)
+mode 1  n.lookup("ID", VGS=...) (A, for W = 5 um) = ['3.723e-07', '1.326e-05', '6.945e-05', '1.639e-04']
+PASS  mode 1: ID/W from "ID" equals ID_W lookup
+lookupVGS mode 1: n.lookupVGS(GM_ID=12, L=0.5, VDS=1.0, VSB=0)  = 0.8015774025430232 V
+PASS  lookupVGS round trip: gm/ID at the returned VGS equals 12   -> gm/ID(VGS=0.8016) = 12.0037
+lookupVGS by ID/W: n.lookupVGS(ID_W=10e-6, ...)  = 0.9465676358977181 V  (10 uA/um)
+lookupVGS vector gm/ID [8,12,16]               = [0.8998, 0.8016, 0.7329]
+PASS  lookupVGS: higher gm/ID -> lower VGS
+lookupVGS mode 2 (floating S): n.lookupVGS(GM_ID=12, L=0.5, VDB=1.5, VGB=1.2) = 0.9003008818823023 V
+   -> the solver found the source node at VSB = VGB - VGS = 0.300 V above bulk
+PASS  lookupVGS mode 2 returns a sane VGS (0.3..1.5 V) for a feasible request
+
+====================================================================== 
+3. PITFALLS (each one reproduced)
+ ======================================================================
+3a  GM_ID first   -> shape ()
+    L first       -> shape (133,) (the GM_ID=12 was IGNORED, you got a VGS sweep)
+PASS  3a keyword order: wrong order returns a VGS sweep, not a scalar
+3b  default VDS = max(VDS)/2 = 1.650 V;  GM_GDS(default) = 176.251, GM_GDS(VDS=1.65) = 176.251
+PASS  3b default VDS is 1.65 V (not the book 0.6 V)
+3c  n.lookup("GM", GM_ID=12, ...) (single out, ratio in) -> []
+PASS  3c single-quantity out with a ratio variable returns [] (no error)
+3d  ID_W at VSB=0.2 (inside table) = 9.064e-06 ;  at VSB=0.8 (outside 0..0.4) = -1.412e-06   [printed msg: '']
+PASS  3d out-of-range VSB extrapolates silently (finite number, no exception)
+    GM_ID at VSB=1.5 V (far outside) = 19.288911617728033
+3e  gm/ID = 40 (above the physical maximum ~27.9): ID_W = 4.4233703092830904e-07 ; messages: 'Look up warning: GM_ID input larger than maximum! Output is NaN'
+PASS  3e out-of-range gm/ID gives a number plus a print (not an exception)
+3f  lookupVGS mode 2, VGB=2.0, VDB=3.0 (source would have to be at ~VSB>0.4) -> VGS = 85.26089104453142 V  [msg 'look_upVGS: GM_ID input larger than maximum!']
+3g  L = 1.50 (between grid points) -> GM_GDS = 435.15 (linear interpolation in L)
+3g  L = 0.45 (between grid points) -> GM_GDS = 122.47 (linear interpolation in L)
+PASS  3g L=1.5 is the straight-line mid-point of L=1 and L=2 (interpolation, not a model)
+3i  X=GM_CGS=2e10 (one crossing)  -> array(16.34985306)  printed: ''
+    X=GM_CGS=7e10 (two crossings) -> []  printed: 'Crossing warning'
+PASS  3i two crossings -> "Crossing warning" and [] ; one crossing -> a value   -> peak of GM_CGS on the VGS sweep is at VGS = 1.875 V (deep strong inversion)
+    X=GM_GDS=0.01 (below the table minimum 0.47) -> array(0.11591228)  printed: ''  (silently extrapolated garbage)
+3h  NaNs in ID table: 0 ; zeros in CGG: 0
+
+====================================================================== 
+4. PMOS CONVENTIONS (pfet_03v3)
+ ======================================================================
+p.lookup("ID_W", GM_ID=12, L=0.5, VDS=1.0)  = 7.724e-07 A/um  (positive)
+p.lookupVGS(GM_ID=12, L=0.5, VDS=1.0)        = 0.9007 V  = VSG (a magnitude).  Netlist: V_G = V_S - 0.9007
+PASS  PMOS: lookup uses positive magnitudes (ID_W>0, VSG>0)
+same gm/ID=12, L=0.5: NMOS ID/W = 2.702e-06, PMOS ID/W = 7.724e-07  -> PMOS carries 3.50x less current per um, so it needs 3.50x the W for the same ID
+   n: peak gm/ID at L=0.5, VDS=1.0: 27.89 1/V
+   p: peak gm/ID at L=0.5, VDS=1.0: 27.07 1/V
+
+====================================================================== 
+5. UNITS AND SANITY
+ ======================================================================
+nfet L=0.5 gm/ID=12: VGS = 0.802 V, VT = 0.711 V, ID/W = 2.702 uA/um
+  VDsat proxy 2/(gm/ID) = 0.167 V ; VGS-VT = 0.091 V (the proxy is a rule of thumb)
+  CGG (W=5um) = 7.825e-15 F -> 1.565 fF/um
+PASS  GM/ID lookup (mode 2) equals GM/ID computed from the raw arrays   -> 11.9800
+PASS  GM_CGG (mode 3) equals GM/CGG taken from the raw table at the same bias (rad/s)   -> ratio 0.9997
+  sizing example: gm = 1 mS at gm/ID=12, L=0.5 -> ID = 83.3 uA, W = ID/(ID/W) = 30.84 um
+  fT = 3.30 GHz => Cgg = gm/(2 pi fT) = 48.3 fF
+
+  Keys usable in lookup() (numerator or denominator, any pair "A_B" or single):
+    ID, VT, GM, GMB, GDS, CGG, CGB, CGD, CGS, CDD, CSS, STH, SFL
+  n.gamma(GM_ID=12,L=0.5,VDS=1.0) (thermal-noise gamma, from STH/gm/4kT) = 0.7215230644411978
+  n.fco(...)  (SFL/STH, flicker-to-thermal ratio at 1 Hz) = 1442046.7675767303
+
+======================================================================
+SUMMARY: 24/24 checks passed

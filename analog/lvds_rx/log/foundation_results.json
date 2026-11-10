@@ -1,0 +1,979 @@
+{
+ "review:circuit": {
+  "overall": "The architecture class is right and buildable. A hybrid N/P input stage with a folded PMOS path and resistor loads is the standard way to cover 0.05-2.35 V at 3.0-3.3 V. I found no simpler topology that meets the full range without hidden costs. The plan's real weakness is the spec, not the circuit. The mandatory 6-sigma failsafe shift of about 50 mV makes the offset budget, area, delay, DCD and verification effort much harder, and the handoff's budget leaves out PVT variation of the shift and hysteresis, stage-2 offset, and edge-rate effects. I measured these in the container (details in log/review_circuit.md). Four numbers carry the review:\n- The pair-offset budget is 4.9 mV only if the shift and hysteresis do not move with PVT. Corner-aware it is 1.7-2.2 mV, which means 5-8x more pair area (about 15-25 um\u00b2 effective W*L).\n- With no failsafe shift it is 12.6 mV and the area is trivial.\n- At SS/3.0 V the N/P overlap is only 0.33 V wide.\n- DCD at 100 mV VID with a 50 mV shift is 10 % UI at a 2 ns edge, against a 5 % spec.\nMy recommendation is to demote failsafe to a stretch variant (default V_fs = 0, a knob in the script), keep the baseline topology but run a feasibility spike on the input stage before sizing, decouple the bias core from the signal path, and fix the pass criteria listed below. Then the autonomous plan is low-risk.",
+  "findings": [
+   {
+    "section": "4.4 / 7.7 / 8.1 (failsafe, offset budget)",
+    "severity": "blocker",
+    "problem": "The two-sided failsafe window is evaluated with nominal V_fs and V_H, but both move with PVT and VIC. I measured a 1.8:1 W-ratio shift at -24/+42 % (NMOS: 45.7 / 60.5 / 86.0 mV at ff-40C / TT / ss125C) and -28/+44 % for PMOS (82 / 114 / 164 mV). V_H varies 2x with VIC (A1 doubles in the overlap) and about 1.3x with corners, and the >10 mV floor forces V_Hmax to about 33 mV. Corner-aware, the 6-sigma requirement is sigma_total <= 1.7-2.2 mV, not 4 mV. That needs pair WLeff of 15-25 um\u00b2 (W = 44-72 um at L=0.5, or 18-30 um at L=1) instead of 4.6 um\u00b2. The 4 mV figure is only correct as a 3-sigma-with-PVT number.",
+    "improvement": "Replace G2's 'failsafe HIGH, 6 sigma' with a staged requirement. Baseline v0 has V_fs = 0 (symmetric, centred window, sigma allowance about 12.6 mV at 6 sigma, so no area pressure). Failsafe is a separate variant v1 controlled by one script knob: nominal V_fs about 42-46 mV, asymmetric guarantee (3 sigma on the failsafe side, 4.5 sigma on the +-100 mV sensitivity side), V_H nominal 12-15 mV with a floor of 6 mV, and sigma_total <= 3 mV. Make the sizing script compute V_fs(corner), V_H(VIC, corner) and assert both inequalities with those spreads, not nominal values. Do not hard-wire a W ratio: the shift depends strongly on inversion level (same ratio gives 60 mV NMOS, 114 mV PMOS) and is PTAT, so derive it per pair from vgs_at_gmid and check every corner.",
+    "evidence": "fs_shift.py and window_budget.py output (scratch dir). Table in log/review_circuit.md item 3 and 4. Sensitivity inequality V_fs,max + V_Hmax/2 + sys + 6 sigma + m <= 100 gives max sigma 1.70 mV with the measured spread and VHmax 33; with V_fs = 0 it gives 12.6 mV."
+   },
+   {
+    "section": "4.4 (DCD, pulse skew, eye) vs 7.7 / 9.1 TB4-TB5",
+    "severity": "major",
+    "problem": "The spec is internally contradictory. A -50 mV failsafe shift turns into duty-cycle distortion DCD = V_fs*tr/A. At VID = +-100 mV that is 5 % UI at tr = 1 ns, 10 % at 2 ns, 15 % at 3 ns. The spec asks for DCD <= 5 % UI and pulse skew <= 0.5 ns while TIA-644 allows 0.5-3 ns generator edges at VID = 100 mV. TB4/TB5 do not state the input edge time or the VID at which DCD is judged. Propagation delay at the +-100 mV worst-case trip is also unbounded (the 6-sigma budget deliberately leaves about 5 mV of margin, so the comparator sits at its threshold).",
+    "improvement": "State DCD and skew at a named condition: DCD <= 5 % UI at VID = 350 mV, tr <= 1 ns (pure circuit skew), and DCD <= 15 % UI at VID = 100 mV, tr = 2 ns (includes the shift). TB4 uses tr = 0.3-0.5 ns so it measures the circuit and not the stimulus. Add one delay check at VID = 100 mV with the trip point shifted by 3 sigma (a deliberate +-10 mV input offset source) and require tPD <= 8 ns, or drop the failsafe shift as in finding 1, which removes the issue.",
+    "evidence": "window_budget.py DCD table: 100 mV: 2.5 / 5 / 10 / 15 % at tr 0.5 / 1 / 2 / 3 ns; 350 mV: 0.7 / 1.4 / 2.9 / 4.3 %."
+   },
+   {
+    "section": "8.1-8.3 (offset budget)",
+    "severity": "major",
+    "problem": "The budget allocates 70 % of sigma to stage 1 only. The input-referred contribution of stage 2 is sigma_2/A1 and stage 3 /(A1*A2). With A1 = 3-5 and a modest comparator (sigma_2 about 6-8 mV) that is 1.5-2.5 mV, which equals the whole corner-aware allowance. At the CM extremes only one pair is active, gm and A1 halve, and the stage-2 term doubles. Random spread of the hysteresis itself (alpha mismatch in the cross-coupled pair) is also not budgeted. The handoff itself notes each pair must meet sigma alone at the extremes, but the formulas do not carry A1(VIC).",
+    "improvement": "Budget sigma_total^2 = sigma_stage1^2 + (sigma_stage2/A1_min)^2 + (sigma_VH/2)^2 + (sigma_3/(A1*A2))^2 with A1_min taken at the single-pair VIC extremes and the low-gm corner. Add the term to the script assert. Size stage 2's input pair and loads to sigma_2 <= 0.5*A1_min*sigma_target (so stage 2 needs about 6 um\u00b2 effective area, not minimum size). Add a stage-1 gain target of at least 4 at the single-pair extremes, or use the optional extra gain stage of 7.4 by default.",
+    "evidence": "Arithmetic from handoff 7.5/8.2; A1 doubling in overlap is stated in handoff 5.2 'What to watch'."
+   },
+   {
+    "section": "5.2 / 7.3 step 7 / 7b (CM range, dump devices)",
+    "severity": "major",
+    "problem": "The N/P overlap at the worst corner is much narrower than the TT numbers used for planning. Measured with the real models (tail current at 90 % of plateau): NMOS pair valid from 1.15 V (TT) / 1.30 V (ss, 125C); PMOS pair valid up to 1.775 V (TT, 3.0 V) / 1.60-1.65 V (ss, 3.0 V). The overlap is 0.33 V at ss/3.0 V against 0.63 V at TT 3.0 V. The dump-gate reference of 'about 1.4-1.6 V' would be outside the window at SS (the N pair needs VIC above 1.275 V and the P pair below 1.6 V, and the switching region spans about +-0.1 V). The plan also treats the dump-device CM fix as 'UNVERIFIED' but schedules it inside the full sizing flow.",
+    "improvement": "Make the reference a VDD ratio: Vref = 0.48*VDD from a resistor divider (centre of the window at TT 3.3, ss 3.0 and ff 3.6 within 30 mV), EN-gated. Add a one-day spike before the sizing script: stage 1 only, ideal bias sources and ideal current-source tails, VIC sweep 0.05-2.35 V at TT, ss/3.0/125C, ss/3.0/-40C, fs, sf, ff/3.6/-40C, measuring output CM, differential gain and the overlap. Pass: output CM within +-0.15 V over VIC at every corner and gain variation under 2.2x. If the spike fails, fall back immediately to Option B or the simplification in 'simplifications' rather than iterating the dump devices. Put the PMOS-only Option A milestone behind the same criteria: it tops out at 1.60 V at ss, which is marginal even for a standard LVDS high pin (VOS 1.375 + VOD/2 0.227 = 1.60 V).",
+    "evidence": "cm_window.py output table (log/review_circuit.md item 2). TT 3.0 V overlap 1.150-1.775 matches handoff 7.3 step 7; ss 3.0 V gives 1.275-1.600."
+   },
+   {
+    "section": "9.1 TB3 / 9.3 (trip-point measurement and Monte Carlo)",
+    "severity": "major",
+    "problem": "A 1 us, +-150 mV triangle sweeps 0.6 mV/ns. With tPD about 4 ns each trip point is read 2.4 mV late and V_H reads 4.8 mV too wide (20 % of a 25 mV target), a systematic error as large as the sigma budget. Running 200 transient samples x 3 VIC x 2 corners (about 1200 tran runs, plus every re-sizing iteration) is also expensive on a machine shared with other agents.",
+    "improvement": "Measure trip points with DC sweeps: one up-sweep started at -150 mV (output unambiguously LOW) and one down-sweep started at +150 mV, each a monotone .dc with continuation, so there is no delay error and each run takes well under a second. Keep one transient triangle only as a cross-check at TT and correct by 2*slope*tPD. If .dc fails to converge at the regenerative fold, fall back to a 20 us triangle plus the delay correction. Use the DC method inside the Monte Carlo loop, and keep tran MC only for tPD/DCD at TT and the worst corner with N = 100.",
+    "evidence": "window_budget.py last block: slope 0.6 mV/ns, tPD 2/4/5 ns gives 2.4/4.8/6.0 mV apparent V_H growth."
+   },
+   {
+    "section": "9.2 / 9.3 (Monte Carlo mechanics, netlist rules)",
+    "severity": "major",
+    "problem": "Monte Carlo is correct only if matched devices are written as total w with nf. I verified the mechanism (setseed plus reset plus op in a dowhile loop re-draws mismatch and a re-run with the same seed is identical) and the Pelgrom model (sigma 3.41 mV measured vs 3.34 mV predicted for W=13 L=0.5; nf=4 W=13 total gives 3.31 mV). But a pair written as W=3.25 with m=4 gave 6.79 mV, 2x too pessimistic, because the m copies share one random draw. A netlist generator that uses m for 'unit cells' would silently mis-size the whole design, and layout/LVS later has to reconcile it.",
+    "improvement": "Add a netlist-lint script rule: every device in a matched group is generated with nf (total w) and no m; fail the build otherwise. Record the verified numbers above as the resolution of UNVERIFIED items 1, 7 and 8 and add a regression deck (mc_pair.spice style) that re-checks sigma against Pelgrom after any PDK or ngspice change. State that no resistor mismatch exists in the model (no agauss on ppolyf_u_1k), so RL pair mismatch is budgeted by hand (about 0.4 mV input-referred at 0.5 % dR/R).",
+    "evidence": "mc_pair2.log: RESULT lines a/b/c/d; identical on re-run (mc_pair2_rerun.log). Model source sm141064.ngspice lines 742-770 (one agauss per instance, area from w, par, not m)."
+   },
+   {
+    "section": "9.1 (testbench completeness)",
+    "severity": "major",
+    "problem": "Missing tests that an automated flow will otherwise discover only post-layout: (1) bias-loop stability (the constant-gm loop is a positive-feedback loop with a stable zero state; TB8 only checks start-up); (2) start-up across ramp rates (1 us, 100 us) with EN already high, EN rising during a ramp, and with all three lanes sharing the bias; (3) EN glitches: runt pulses on the output during EN rise/fall and during power-up with idle inputs; (4) supply sensitivity of the trip point and hysteresis (VDD 3.0-3.6); (5) input leakage at 125 C and 3.6 V at VIN = 0.05 and 2.4 V (TB9 only lists 20 uA); (6) Monte Carlo for tPD and DCD, not only threshold; (7) stage-1 output CM versus VIC (needed to validate the dump devices); (8) an explicit 200 Mb/s check, because 'design margin to 200 Mb/s' is in the spec but TB5 only runs 1.5x (150 Mb/s) and TB2 is anchored to DR = 100.",
+    "improvement": "Add TB11 (loop gain by breaking the mirror and AC-injecting; require phase margin > 45 deg or show the loop gain stays below 1 at all frequencies at every corner), TB8 extended with the cases above, TB1/TB2 with stage-1 output CM versus VIC plotted per corner, a leakage sweep in TB9, and a 200 Mb/s eye at TT and ss (pass >= 0.5 UI at VID = 350 mV). Pass criterion for EN: output monotonic (no pulse narrower than 2 ns) and defined LOW whenever EN = 0 or VDD < 2.0 V.",
+    "evidence": "Handoff 9.1 table rows TB1-TB10; item 8 comes from handoff 4.4 'Design margin to 200 Mb/s' versus TB5 'and 1.5x the rate'."
+   },
+   {
+    "section": "7.1 (bias core) / 5.2",
+    "severity": "major",
+    "problem": "The plan couples every analog block to a PMOS-referenced constant-gm core plus a second N-referenced core, cascoded mirrors, a start-up circuit and a replica loop. Together with dump reference, VB2, VB1 and tails that is at least six distinct bias nodes and several matched groups, and the most failure-prone block (start-up and loop stability) gates all the signal-path verification. For a digital-output comparator at 100 Mb/s, gm constancy matters little; what matters is tPD, V_H and DCD spread.",
+    "improvement": "Decouple. Phase 1 builds and verifies the signal path (stages 1-3) with a simple always-starting bias: resistor-from-VDD into a diode-connected mirror (I = (VDD-VGS)/R, about +-13 % over supply plus the process/temperature spread) and a VDD-ratio divider for the dump reference. Phase 2 swaps in the constant-gm core and start-up only if corner results show a need (current spread above the measured limit, tPD variation above 1 ns). Use a single P-referenced core in Phase 2 and verify the NMOS-side gain spread over fs/sf instead of building a second core, unless the corner table shows it is needed. Script one interface (VBN, VBP, VB2, Vref, EN) so the swap needs no signal-path edit.",
+    "evidence": "Handoff 7.1 limitation paragraph (PMOS core stabilises only PMOS gm), 7.1 step 5 (start-up mandatory), and 7.2; constant-gm gives ID -22 %/+33 % (handoff Table 5.15 citation), only modestly better than the +-13 % plus Vt spread of a resistor-diode bias."
+   },
+   {
+    "section": "4.4 (hysteresis, power-down), 7.5",
+    "severity": "minor",
+    "problem": "Hysteresis nominal 20-30 mV costs window margin on both sides (V_Hmax/2 of 16 mV at VHmax 33), yet input noise is about 0.2-0.4 mV rms (handoff 7.10) and a >10 mV floor already prevents chatter. IDD <= 1 uA is stated without a temperature; my leakage check shows silicon leakage is not an issue (5.6 nA per 100 um of NMOS at ff/125 C), so the spec is fine if resistive paths are cut by EN.",
+    "improvement": "Set hysteresis to 12-15 mV nominal at the single-pair extremes, floor 6 mV at the worst VIC/corner, VHmax about 20 mV. State IDD <= 1 uA at 27 C and <= 5 uA at 125 C. EN must also open the failsafe bias resistors, the VDD-ratio divider for Vref, and the start-up path, and the TB8 pass criterion should quote the temperature.",
+    "evidence": "window_budget.py rows with VHmax 20 vs 33 (sigma allowance 2.8 vs 1.7 mV). fs_shift.py leakage table."
+   },
+   {
+    "section": "0.3 rule 3, 7 (script as single source of truth, automation traps)",
+    "severity": "major",
+    "problem": "Traps for an automated designer: (a) 'never tune W in SPICE' plus an iteration loop with no cap can run forever when two specs conflict; (b) pygmid LUT extrapolation is guarded, but the VSB range is only 0-0.4 V and the NMOS pair at VIC = 2.35 V needs VSB about 1.4 V from a not-yet-regenerated LUT (a silent-wrong-answer risk if the regenerated *_vsb2 table is not validated); (c) every UNVERIFIED item is a hypothesis the plan lets the flow build on; (d) 'a pass' is judged by the same flow that produced the design.",
+    "improvement": "Guard rails: (1) hard iteration cap of 5 per block with an exit report listing which spec failed and which design variable moved; two consecutive failures of the same spec escalate to a stage-count or spec change recorded in the log, never to a hand-edit. (2) Cross-check every LUT-derived bias point against an ngspice .op or DC sweep at the real VSB and fail if VGS differs by more than 30 mV or ID by more than 10 %; log the error table. This also validates the *_vsb2 LUT. (3) A spec/corner table in code with pass/fail assertions and a summary written by a separate script from the raw .meas output (so the audit agent re-runs the same files). (4) Keep the failsafe, on-die termination, constant-gm core and NMOS-pair addition behind build flags with the simple variant as the default, so an unfinished feature never blocks the macro.",
+    "evidence": "Handoff 0.3 rule 3, 6.4 (VSB grid {0,0.2,0.4} V), 7 'load-bearing rules', 16 UNVERIFIED list."
+   },
+   {
+    "section": "4.4 power, area, delay (consistency check)",
+    "severity": "minor",
+    "problem": "These pass my consistency check, but note the assumptions. Power: stage 1 about 300-400 uA (PMOS tail 110 uA, NMOS tail 90 uA, RL branches 2x90 uA), stages 2-3 about 300 uA, bias about 100-200 uA, so about 0.8-1.0 mA per lane at TT and about +33 % at ss/125 C, which sits at the 1.5 mA limit if the failsafe-sized (3-5x larger) pairs are chosen. Bandwidth: 150-180 MHz per stage at TT against 0.5-0.75*DR = 50-75 MHz is generous and consistent with 200 Mb/s margin. tPD <= 5 ns with 1 ns variation over VID/VIC is plausible (preamp about 1 ns + comparator about 1 ns + chain about 0.7 ns) but the 'PVT within one die' wording is ambiguous.",
+    "improvement": "Add a current tally per block to the sizing report and assert I_lane at ss/125 C/3.6 V <= 1.5 mA. Rewrite the delay variation spec as three explicit items: variation over VID at fixed VIC, over VIC at fixed VID, and lane-to-lane mismatch contribution (Monte Carlo, 3 sigma).",
+    "evidence": "Arithmetic from handoff 5.2, 7.3, 8.4 values; no simulation."
+   }
+  ],
+  "gate_decisions": [
+   {
+    "gate": "G0 (environment)",
+    "verdict": "agree",
+    "decision": "Resolve by automated checks, book folder at /foss/designs/Analog.",
+    "rationale": "I confirmed ngspice-46, the PDK models and the mismatch section are present and usable; the checks should additionally include the Monte Carlo regression deck (setseed/reset reproducibility and Pelgrom sigma) so UNVERIFIED items 1, 7 and 8 are closed by observation."
+   },
+   {
+    "gate": "G1 (ambition)",
+    "verdict": "agree",
+    "decision": "Macro only (P0-P6), no chip integration, no padframe or info.yaml change.",
+    "rationale": "Correct and low risk. Add one qualifier: the macro's own spec must not assume a specific host, so state the CM range and failsafe as separate tested variants rather than one monolithic guarantee."
+   },
+   {
+    "gate": "G2 (spec)",
+    "verdict": "change",
+    "decision": "Keep 100 Mb/s with margin to 200 Mb/s (add an explicit 200 Mb/s eye check), full 0.05-2.35 V range as the target, off-chip termination, 3 lanes, EN power-down. Change failsafe: baseline v0 has V_fs = 0 and defined no-oscillation behaviour only; failsafe HIGH is variant v1 with a 3-sigma guarantee on the failsafe side and 4.5 sigma on the +-100 mV side. Hysteresis 12-15 mV nominal, floor 6 mV, instead of 20-30 mV. Define DCD at VID = 350 mV, tr <= 1 ns.",
+    "rationale": "A mandatory 6-sigma failsafe forces sigma_total <= about 2 mV once V_fs and V_H spread over PVT (measured -24/+42 % shift spread), 5-8x the pair area, 10 % UI DCD at 100 mV, and the sweeps all become tight. With V_fs = 0 the allowance is 12.6 mV. The link protocol is CS_N-framed and a floating clock lane is held by hysteresis, so failsafe-HIGH is not functionally needed here."
+   },
+   {
+    "gate": "G3 (architecture)",
+    "verdict": "agree",
+    "decision": "Baseline of handoff 5.2 (hybrid complementary input, resistor loads, hysteresis comparator, converter plus inverter chain), PMOS-only first, NMOS pair second, but gated by a stage-1-only feasibility spike with ideal bias, and with the bias decoupled from the signal path (simple resistor-diode bias first, constant-gm core as an upgrade).",
+    "rationale": "I found no simpler topology covering the full range: two independent comparators combined digitally give an undefined output in the single-pair regions, source-follower level shifting fails at 0.05 V, and the PMOS-only option tops out at 1.60 V at ss/3.0 V. The risk is concentrated in the dump-device CM fix and the bias core, so test those first with explicit fallback criteria (Option B)."
+   },
+   {
+    "gate": "G4/G5 (layout and sign-off gates)",
+    "verdict": "agree",
+    "decision": "Replace by written pass criteria checked by scripts plus an independent audit that re-runs everything.",
+    "rationale": "Reasonable if the audit uses the same raw .meas files and a separate summary script, and if the criteria include the corrected items above (corner-aware window, delay at shifted trip, EN glitch, loop stability). Without those the criteria would pass a design that fails in silicon."
+   },
+   {
+    "gate": "G6 (info.yaml / padframe)",
+    "verdict": "agree",
+    "decision": "Remains a hard human gate, out of scope.",
+    "rationale": "Touching the signed-off A56 submission is irreversible and needs the organizers' answers."
+   },
+   {
+    "gate": "Layout (scripted, including matched pairs)",
+    "verdict": "agree",
+    "decision": "Fully scripted Magic/KLayout layout, images reviewed afterwards.",
+    "rationale": "Feasible for a simple v0 (symmetric pairs, no W-ratio). The deliberate failsafe imbalance and the m-vs-nf netlist rule (matched devices must be nf-based) both feed into the generator, so state them as layout inputs."
+   },
+   {
+    "gate": "Secondary ESD (own poly R plus diodes, flagged unqualified)",
+    "verdict": "agree",
+    "decision": "Own series poly R plus diodes, clearly flagged unqualified.",
+    "rationale": "Fine for a learning macro. ESD capability cannot be shown in simulation; only capacitance and leakage can, so the TB0/TB9 pass criteria must say that."
+   },
+   {
+    "gate": "Schematics (SPICE is the source of truth)",
+    "verdict": "agree",
+    "decision": "SPICE netlists generated from the sizing script, xschem views generated for the owner.",
+    "rationale": "Keeps one source of truth; add the netlist lint (nf not m for matched groups) at generation time."
+   }
+  ],
+  "human_only": [
+   "Choosing the host/driver type if the owner wants to guarantee the full 0.05-2.35 V range or failsafe on a real board: needs the owner's knowledge of the real LVDS source (FPGA bank, MCU or a dedicated driver) and its VOS/ground-shift. Least effort: one sentence from the owner naming the driver part; otherwise stay with v0 and document the tested range.",
+   "Physical bring-up values that need the owner or organizers: package bond-wire and pad capacitance (handoff 9.1 marks these UNVERIFIED), the organizers' secondary-ESD cell, and any pin or analog-pad allocation in ACV. Least effort: use the documented stand-in values and flag them; no action needed from the owner until integration.",
+   "Final decision to integrate, change info.yaml or the padframe, or push anything (G6): hard human gate by design."
+  ],
+  "simplifications": [
+   "Make V_fs = 0 the default build (symmetric pairs, centred window, sigma allowance 12.6 mV at 6 sigma instead of about 2 mV); failsafe becomes a single script knob and a separate variant.",
+   "Build the signal path first with a resistor-diode bias (always starts, no loop) and a VDD-ratio divider for the dump reference; defer the constant-gm core and start-up circuit to a second phase that is entered only if corner results demand it.",
+   "Run a stage-1-only spike with ideal bias before writing the sizing script, with the numeric pass criteria in finding 4 and Option B as the pre-agreed fallback.",
+   "Use DC sweeps (up from -150 mV, down from +150 mV) for trip points and Monte Carlo, keeping tran only for tPD/DCD and eyes; cut the Monte Carlo grid to TT plus the worst corner at three VIC values.",
+   "Generate every matched device with total w and nf (no m) and enforce it with a netlist lint; verified: m inflates mismatch 2x.",
+   "Treat the PMOS-only Option A as a flow-shakedown milestone with a stated usable range (about 0 to 1.6 V at ss/3.0 V), not as a deliverable.",
+   "Keep on-die termination, trim bits and the 100 kOhm open-input failsafe bias out of v0 (already default off-chip); add them only after v0 passes."
+  ]
+ },
+ "build:pdk-facts": {
+  "status": "partial",
+  "summary": "All nine pdk-facts items were resolved by experiments I re-ran and observed this session. The one thing I could not finish is repairing a kit file that the interrupted earlier attempt overwrote. The permission system denied that write, so status is partial. ENV_REPORT.md, log/pdk_facts.md and the decks/scripts under sim/env/ (raw outputs in sim/env/results/, run_all.sh regenerates them) are written. Headline results: (1) the deterministic header runs under `ngspice -b` with a .control block; leaving out any of sw_stat_global, sw_stat_mismatch, res_mc_skew or fnoicor is a hard 'Undefined parameter' error (rc=1), while mc_skew and cap_mc_skew are not needed. (2) W is the total width; wnflag=1 bins on W per finger (nf=10 W=50u ID/W 7.336 -> 7.359 uA/um, matching nf=1 W=5u). Geometry limits are L 0.28..50 u and W 0.22..100 u (per finger only with wnflag=1). (3) Poly resistor ppolyf_u is 359 ohm/sq with +20/-20 % corner spread and -77 ppm/K; worst-case untrimmed spread over corners and temperature is 1.51:1, wider than the 1.47:1 TIA-644 window. The MOS cap is 3.98 fF/um2 (cap_nmos_03v3; the Magic gencell name is nmoscap_3p3) and MIM cap_mim_2f0 is 2.085 fF/um2; per-tool device names are in the report. (4) Slowest-corner thresholds (ss, -40C, L=0.5) are 0.889 V for the nfet and 0.978 V for the pfet, so 1.87 V of the 3.0 V is gone before any overdrive. Peak gm/ID is 27.8 at 27C. (5) Corners are set by .lib sections plus .temp; ss/ff move the nfet current -56 %/+86 % at |VGS|=1 V. (6) Deep n-well exists: the DNWELL layer, DN.* DRC rules, and a KLayout PCell deepnwell option (bbox 3.08x3.34 um plain, 9.0x9.26 with DNWELL, 15.5x15.76 with guard ring). The Magic gencell silently ignores it. (7) xschem netlists headlessly. SVG works headless with `--command \"xschem zoom_full; xschem print svg f\"`, PNG needs xvfb plus the same --command style, and a hand-written .sch was generated, netlisted, simulated and exported. (8) sak-drc -m, sak-lvs and sak-pex work for gf180mcuD (inv_1: DRC clean, 'Circuits match uniquely', PEX written); sak-drc -k is unsupported for this PDK. (9) 27 corner/supply/temperature runs gave 0 warnings or errors.",
+  "files": [
+   "docs/ENV_REPORT.md",
+   "log/pdk_facts.md",
+   "sim/env/run_all.sh",
+   "sim/env/e01_header.spice",
+   "sim/env/e01_variants.py",
+   "sim/env/e02_geometry.py",
+   "sim/env/e02b_junction.spice",
+   "sim/env/e02c_capbd.spice",
+   "sim/env/e03_resistors.py",
+   "sim/env/e03b_term.py",
+   "sim/env/e04_diode_cap.py",
+   "sim/env/e05_vth_gmid.py",
+   "sim/env/e05_summary.csv",
+   "sim/env/e06_corners.py",
+   "sim/env/gf180_corners.py",
+   "sim/env/hdr_tt.spice",
+   "sim/env/hdr_ss.spice",
+   "sim/env/hdr_ff.spice",
+   "sim/env/hdr_fs.spice",
+   "sim/env/hdr_sf.spice",
+   "sim/env/e07_klayout_dnwell.py",
+   "sim/env/e07a_dnwell_grep.sh",
+   "sim/env/e07b_dnwell_grep2.sh",
+   "sim/env/e08_sak_help.sh",
+   "sim/env/e08_sak_try.sh",
+   "sim/env/e08b_gencell_drc.tcl",
+   "sim/env/e09_device_names.sh",
+   "sim/env/e10_gencell_syntax.tcl",
+   "sim/env/e11_paste_check.spice",
+   "sim/env/results/ (raw output of every experiment)",
+   "xschem/smoke/try_export.sh",
+   "xschem/smoke/try_export2.sh",
+   "xschem/smoke/try_generate.sh",
+   "xschem/smoke/try_netlist.sh",
+   "xschem/smoke/cs_stage.sch",
+   "xschem/smoke/try_export_output.txt"
+  ],
+  "how_to_rerun": "docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash sim/env/run_all.sh   (about 2 minutes; rewrites sim/env/results/). Then docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash xschem/smoke/try_export2.sh and the same with xschem/smoke/try_generate.sh. try_export.sh variants D/E/F are expected to time out (hang); they are wrapped in `timeout 60`.",
+  "verified_facts": [
+   "Header + .control under ngspice -b: nfet ID=73.51 uA, pfet ID=7.80 uA, Vth 0.712/0.788 V (sim/env/results/e01_header.txt)",
+   "Missing sw_stat_global/sw_stat_mismatch/res_mc_skew/fnoicor -> rc=1 'Undefined parameter'; missing mc_skew or cap_mc_skew -> rc=0 with identical currents (e01_variants.txt)",
+   "Installed design.ngspice sets sw_stat_global=0 and sw_stat_mismatch=0, so the handoff claim that upstream defaults them to 1 is false for this install",
+   "wnflag test: nf=10 W=50u ID/W 7.336 without the option and 7.359 with wnflag=1; W=200u nf=10 errors without it and passes with it; W=101u nf=1, L=60u, W=0.2u and L=0.27u all error (e02_geometry.txt)",
+   "capbd/capbs (not cbd/cdd) are the right variable names: W=10u capbd is 4.13 fF default, 10.70 fF with ad=10p, 6.76 fF with the kit formula (e02c_capbd.txt)",
+   "ppolyf_u rsh 359 (tt) / 431 (ss) / 287 (ff) ohm/sq, TC -77 ppm/K; worst-case spread over corners and -40..125C is 1.514 (e03_resistors.txt)",
+   "Diode area coefficients at 0 V: nd2ps 0.968, pd2nw 0.943 fF/um2; cap_nmos_03v3 3.98 fF/um2 (collapses to 0.023 below 0 V); cap_nmos_03v3_b 3.24 at 0 V; MIM 2f0 2.085 fF/um2 (e04_diode_cap.txt)",
+   "Slowest-corner Vth (ss, -40C, L=0.5): nfet 0.889 V, pfet 0.978 V; peak gm/ID 27.8 (27C), 35.8 (-40C), 20.6 (125C) (e05_vth_gmid.txt)",
+   "Corner direction at |VGS|=1 V: nfet ID tt 143.2 uA, ss 62.5 uA, ff 265.8 uA; fs/sf move n and p in opposite directions (e06_corners.txt)",
+   "27 corner/supply/temperature runs (3 corners x VDD 3.0/3.3/3.6 x T -40/27/125) gave 0 warnings or errors (e06_corners.txt)",
+   "KLayout PCell nfet with deepnwell=True writes GDS layer 12/0 (DNWELL); plain does not; PDK must be unset (env -u PDK) or the PCells come out empty (e07_klayout_dnwell.txt)",
+   "Magic gencell ignores unknown keys silently (rc=0 for 'deepnwell 1'); all handoff 11.1 gencell lines return rc=0 (e10_gencell_syntax.txt)",
+   "xschem netlist works headless (rc=0; same netlist with and without --rcfile). SVG works with `-x -q --command \"xschem zoom_full; xschem print svg f\"` (43 KB). PNG works under xvfb-run with `--command \"xschem zoom_full; xschem print png f 1000 700; xschem exit closewindow force\"` (124 KB, viewed). `--svg --plotfile` alone gives an empty 3 KB SVG; `--png` under -x writes no file; `xvfb-run xschem --png -q` hangs (rc=124 under timeout)",
+   "Hand-written cs_stage.sch netlists, simulates (v(out)=2.534 V, i(vdd)=-76.6 uA) and exports SVG and PNG (try_generate.sh)",
+   "sak-drc.sh -m: no DRC errors on inv_1 and on the nfet gencell GDS; sak-lvs.sh: 'Circuits match uniquely'; sak-pex.sh wrote inv_1.pex.spice; sak-drc.sh -k prints 'KLayout DRC for gf180mcuD not yet supported!'; none of the three has a -h option (e08_sak_try.txt)",
+   "The 'DRC count 8' of a lone gencell nfet is Metal1 min area M1.3 on gate-contact stubs in Magic's in-session check, which the GDS export checked by sak-drc does not show (e08b_gencell_drc.txt)",
+   "The ready-to-paste instance/header block runs in ngspice with no error (e11_paste_check.txt; R=109.0 ohm, MOS cap 3.984 and MIM cap 2.085 fF/um2)",
+   "run_all.sh from a deleted results/ directory regenerated all 19 result files with every script rc=0"
+  ],
+  "handoff_corrections": [
+   "Sections 2.5/9.2 say design.ngspice defaults sw_stat_global and sw_stat_mismatch to 1; in this install it sets both to 0. The explicit .param line is still required: missing sw_stat_global, sw_stat_mismatch, res_mc_skew or fnoicor is an ngspice 'Undefined parameter' error.",
+   "Section 9.2 wnflag was UNVERIFIED: wnflag=1 bins on W per finger. ID/W changes under 0.3 %, but the maximum total W becomes 100 u times nf instead of 100 u. Use .option wnflag=1 in every deck.",
+   "Section 11.1 lmin 0.28 and wmin 0.22 are confirmed; add Lmax 50 u and Wmax 100 u per finger (with wnflag=1).",
+   "Section 7.8 resistor numbers are close (ppolyf_u 359/431/287 vs the claimed 350/420/280). Poly end resistance is ~61 ohm for both ends at W=2u (consistent with ~60 ohm.um/W per end, measured only at W=2u/tt). The 110-ohm ppolyf_u point W=2u, L=0.27u meets the TIA-644 window but is below the Magic gencell lmin of 1.0 um, so it cannot be drawn. W=5u L=1.21u misses the window slightly (89.4..130.6 ohm).",
+   "Section 7.8 MOS-cap collapse is 0.6 % of plateau (3.98 fF/um2) for plain cap_nmos_03v3 below ~0.4 V; the _b variants do not collapse.",
+   "MOS-cap device names differ per tool: ngspice/xschem cap_nmos_03v3, Magic gencell nmoscap_3p3. Diode names diode_nd2ps_03v3 / diode_pd2nw_03v3 are identical in all tools.",
+   "Section 2.6 xschem command: `-o OUTDIR` works (and --netlist_path did in the first attempt). Headless image export needs --command \"xschem zoom_full; xschem print svg|png ...\"; --svg/--png with --plotfile alone gives an empty SVG, no PNG, or a hang. Wire lab= attributes in a .sch are ignored on load; name nets with lab_pin.",
+   "Section 16 item 14: the sak scripts exist, but have no -h and sak-drc.sh -k/-b is unsupported for gf180mcuD.",
+   "Section 16 item 13: deep n-well exists in gf180mcuD but is not offered by the Magic gencell, only by the KLayout PCell with PDK unset.",
+   "Diode leakage numbers from the model are unreliable: nd2ps leakage is 489 pA at 27C and 41 pA at 125C and does not move with corner. Treat as an order-of-magnitude bound of below 1 nA."
+  ],
+  "open_issues": [
+   "Analog/starter_files_open_source_tools/gf180mcuD/simulation/techsweep_nfet_03v3.spice was overwritten (1858 bytes, mtime 2026-11-10 17:36) by the interrupted FIRST attempt: its try_netlist.sh TRY 2 passed the kit's own xschemrc, which sets local_netlist_dir 1. The pristine copy exists at lut_regen/decks/kit_original/techsweep_nfet_03v3.spice (it has gf180mcuC paths and m=1, like the sibling pfet file). I tried to restore it with cp and the permission system denied the write, so it is NOT restored. I removed the offending TRY 2 from try_netlist.sh. Only that cached netlist is affected; .mat/.raw data and notebooks are untouched.",
+   "Only the nfet bin limits were probed; pfet limits are assumed identical.",
+   "Diode leakage values from the model are not physically trustworthy (see corrections).",
+   "Safe-operating-area / oxide reliability at 3.6 V plus fast corner was not checked; the 'no warnings' result is about model validity only.",
+   "The mc_skew and cap_mc_skew parameters are unneeded for the sections tested; they are probably used by MIM/statistical sections not exercised. Kept in the header as harmless.",
+   "xschem/smoke/netlist_kit/t2 is an empty leftover directory and xschem/smoke/work/ holds small regenerable outputs; delete if not wanted in git."
+  ],
+  "needs_human": [
+   "Restore the kit file that the earlier attempt overwrote (permission was denied to me): cp /home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx/analog/lvds_rx/lut_regen/decks/kit_original/techsweep_nfet_03v3.spice /home/mpa216/Desktop/APIC_Return/Analog/starter_files_open_source_tools/gf180mcuD/simulation/techsweep_nfet_03v3.spice (the sibling files there are mode 755; mtime does not matter). Low impact: nothing else reads that cached netlist."
+  ]
+ },
+ "build:sim-harness": {
+  "status": "pass",
+  "summary": "Built the dependency-light simulation harness (sim/harness: corners, runner, MC, stimulus, analysis, report, CLI, README, 41 tests) and a demo suite (sim/harness_demo). The Monte Carlo mechanism is verified on this PDK. The method is `.option seed=N` with one ngspice process per seed. It is reproducible bit-for-bit, gives different per-instance draws (including for two identical transistors in one netlist), and the NMOS-pair offset sigma follows Pelgrom. Over 12 gate areas x 200 seeds the measured sigma is 1.013-1.021x the formula, which includes the mobility (beta) mismatch term. An independent run (new base seed, N=1000) gave a ratio of 1.025, which is 1.11 standard errors. The in-deck `setseed` + `reset` loop also works (ratio 0.991) and is documented as the alternative. A bench author writes one deck template, one JSON spec and one launch line. The full run_demo.sh from a clean state exited 0, with 41/41 unit/integration tests OK and 3/3 MC mechanism checks PASS. The demo testbench limits are demo values, and several demos report FAIL on purpose to show the highlighting (for example tPLH 5.99 ns against a 5 ns limit at ss/125C/3.0V).",
+  "files": [
+   "sim/harness/__init__.py",
+   "sim/harness/corners.py",
+   "sim/harness/runner.py",
+   "sim/harness/report.py",
+   "sim/harness/mc.py",
+   "sim/harness/stimulus.py",
+   "sim/harness/analysis.py",
+   "sim/harness/cli.py",
+   "sim/harness/README.md",
+   "sim/harness/tests/test_helpers.py",
+   "sim/harness/tests/test_runner_ngspice.py",
+   "sim/harness_demo/run_demo.sh",
+   "sim/harness_demo/pelgrom_pair.spice",
+   "sim/harness_demo/pelgrom_pair.json",
+   "sim/harness_demo/pelgrom_n1000.json",
+   "sim/harness_demo/check_pelgrom.py",
+   "sim/harness_demo/check_repro.py",
+   "sim/harness_demo/mc_loop_check.py",
+   "sim/harness_demo/ota_cmp.spice",
+   "sim/harness_demo/ota_cmp_corners.json",
+   "sim/harness_demo/ota_cmp_mc.json",
+   "sim/harness_demo/ota_cmp_global.json",
+   "sim/harness_demo/ota_cmp_eye.spice",
+   "sim/harness_demo/ota_cmp_eye.json",
+   "sim/harness_demo/demo_hooks.py",
+   "sim/harness_demo/results/pelgrom_pair/pelgrom_check.md",
+   "sim/harness_demo/results/pelgrom_pair/plots/pelgrom_sigma_vs_area.png",
+   "sim/harness_demo/results/ota_cmp_corners/summary.md",
+   "sim/harness_demo/results/ota_cmp_mc/summary.md",
+   "sim/harness_demo/results/ota_cmp_global/summary.md",
+   "sim/harness_demo/results/ota_cmp_eye/summary.md",
+   "log/sim_harness.md"
+  ],
+  "how_to_rerun": "Everything from a clean state (~3 min): docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash sim/harness_demo/run_demo.sh ; exit code 0 means the unit tests and the MC mechanism checks pass. Unit tests only: docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx python3 -m unittest discover -s sim/harness/tests -v . One spec: ... tools/cx python3 sim/harness/cli.py run sim/harness_demo/ota_cmp_corners.json [--jobs 6 --force --corners worst5 --n-mc 50].",
+  "verified_facts": [
+   "Mechanism: `.option seed=N` gives identical offsets for the same seed (seed 1 twice: 1.48262) and different offsets for different seeds. Two identical devices in one netlist draw independently, shown by the measured pair sigma matching the independent-draw formula (t1.py/t2.py).",
+   "In-deck loop (mc_loop_check.py): `setseed` + `reset` gives 200 distinct values, identical in a second process (max |diff| 0 V), sigma 11.540 mV vs 11.649 predicted (ratio 0.991). Without `reset` the loop returns the same value every iteration (21.7525 mV x5), so setseed alone does not re-draw.",
+   "Pelgrom (check_pelgrom.py, 12 areas x 200 seeds = 2400 runs, 0 failed, 53 s at 6 jobs): measured/predicted sigma ratio 1.013-1.021 (mean 1.017). For example 1u/0.5u gives 11.90 vs 11.65 mV and 20u/2u gives 1.19 vs 1.175 mV. Fitted A=7.385 mV*um vs 7.148 (VT only)/7.22 (with beta). The 12 groups share the same seeds, so they are not independent confirmations.",
+   "Independent confirmation (check_repro.py d): base seed 777, N=1000, 1u/0.5u: sigma 11.946 mV vs 11.649 predicted, ratio 1.025, 1.11 standard errors, mean +0.313 mV (+-0.378).",
+   "Reproducibility and cache (check_repro.py): a --force re-run of 1200 runs is bit-identical to the first campaign (max |diff| = 0 V). A re-run without --force serves 1200/1200 from the cache. Editing the deck gives 0/240 cached.",
+   "Per-instance model (sm141064.ngspice fets_mm): var_vth = 0.7071*par_vth*1e-6/sqrt(Leff*Weff), Leff = L-0.15u, Weff = W+0.1u, par_vth 0.007148 (nfet) / 0.00666 (pfet). Pair sigma = par_vth/sqrt(Leff*Weff) = 11.52 mV for 1u/0.5u.",
+   "Parallel ngspice thrashes with default OpenMP: for 2 processes a 0.1 s run took 3.3 s, and for 6 processes 11.3 s (load average 23). OMP_NUM_THREADS=1 did not fix it, while OMP_THREAD_LIMIT=1 (0.087 s) and OMP_WAIT_POLICY=PASSIVE (0.17 s) do. The runner sets all three, after which 2400 runs take 53 s.",
+   "`.lib statistical` loaded together with `typical` fails with 'Mismatch: 24 formal but 15 actual params' (8 orderings tried). `statistical` is a complete MOS section and must replace `typical`, only around tt. With that header, ota_cmp_global (mode both, N=100) runs with all runs ok.",
+   "Deck-level `.dc` + `.tran` with `.meas` loses measurements in ngspice 46 batch mode: dc then tran gives 'no such vector v(out)', and tran then dc makes the dc meas vanish. A `.control` block with dc/meas/tran/meas works. The harness lints and refuses the bad pattern.",
+   "Unit/integration tests: `python3 -m unittest discover -s sim/harness/tests` gives Ran 41 tests, OK. They cover PRBS7 period 127, 64 ones and 127 distinct words, PWL, crossings, delays and skew, hysteresis, DCD, eye with injected jitter and DCD, headers, seeds, stats, log parsing and lint, plus ngspice integration (cache/force/hash change, failed measurement, undefined model, timeout via `shell sleep`, seeded MC with post hook).",
+   "run_demo.sh from a clean state (results dir deleted) finished with rc=0: unit tests OK, check_pelgrom, check_repro OVERALL PASS and mc_loop_check OVERALL PASS.",
+   "Demo results: ota_cmp_corners (worst5 x 2 VIC, 10 runs, all status ok) shows worst tPLH 5.992 ns at ss_125c_3v00 vic0.9 (limit 5 ns, FAIL, highlighted). ota_cmp_mc (N=200 each at tt and ss) shows vtrip sigma 4.67 mV at tt and PASS at mean+-3sigma. ota_cmp_eye (PRBS7 100 Mb/s) shows h-open 0.85-0.92 UI and DCD 7.9-15.2 % UI. The eye PNG was inspected visually and is a clean two-lobe eye.",
+   "Failure handling is explicit: sim_error, nonconverged, meas_failed, timeout and post_error are all reported. Missing or failed limited metrics count as FAIL and are never dropped. ngspice exits 0 even when a measurement fails, so status is derived from the log."
+  ],
+  "handoff_corrections": [
+   "HANDOFF 9.3: the `setseed` + `reset` loop does work on this PDK, but `setseed` alone does not re-draw. For parallel, cached, reproducible campaigns use `.option seed=N` per process instead. Seeding is deterministic across processes.",
+   "HANDOFF 9.2/9.3: `sw_stat_global=1` needs `.lib ... statistical` INSTEAD of `typical` (a complete MOS section), not in addition to it. Loading both fails. Global statistics exist only around tt.",
+   "HANDOFF 9.1/9.4 (automation): do not combine deck-level `.dc` and `.tran` with `.meas`. Use one analysis per deck, or a `.control` block with `meas` commands. This applies to TB3/TB4-style decks that mix analyses.",
+   "Running several ngspice processes in parallel requires OMP_THREAD_LIMIT=1 (or OMP_WAIT_POLICY=PASSIVE). OMP_NUM_THREADS=1 alone is not enough. Anyone launching ngspice directly in parallel must set it.",
+   "The handoff's PRBS snippet is correct (period 127, 64 ones). It is implemented in stimulus.py with an added tr < UI check."
+  ],
+  "open_issues": [
+   "Pelgrom scaling was verified for NMOS pairs only. The PMOS formula uses par_vth 6.66 mV*um but was not measured.",
+   "Global (die-to-die) Monte Carlo exists only around tt (the PDK `statistical` section). ss/ff/fs/sf with global variation are not available; the harness raises a clear error. Mismatch-only works at every corner.",
+   "The 12 Pelgrom groups use identical seeds (common random numbers), so the 1.017 mean ratio reflects one 200-sample draw; the independent N=1000 run is the unbiased confirmation.",
+   "Post-layout (extracted) decks and the handoff 9.2 `wnflag` test were not exercised, as they are outside this item.",
+   "Demo limits are placeholders; the several FAIL verdicts in the demos are intentional demonstrations, not design findings.",
+   "work/ run directories are git-ignored; I deleted pelgrom_pair/work and pelgrom_n1000/work to save disk, so a plain re-run of pelgrom_pair re-simulates (about 1 min) rather than hitting the cache."
+  ],
+  "needs_human": []
+ },
+ "verify:sim-harness": {
+  "confirmed": true,
+  "reran": [
+   "bash sim/harness_demo/run_demo.sh from a clean results dir: rc=0; 41 unit tests OK; Pelgrom 2400 runs ratio mean 1.017 (1.013-1.021), pelgrom_check.md byte-identical to the earlier output; check_repro: forced rerun max|diff| 0 V, 1200/1200 cached, edited deck 0/240 cached, N=1000 seed 777 ratio 1.025 (1.11 se); mc_loop_check OVERALL PASS (200 distinct, ratio 0.991)",
+   "Demo numbers: worst tPLH 5.992 ns at ss_125c_3v00 vic0.9 (FAIL highlighted), tt vtrip sigma 4.667 mV - match the report",
+   "Own indep_analysis.py (known-answer synthetic signals for crossings, delays, skew, eye jitter/DCD, hysteresis, PRBS7, diff PWL, corners, stats): all pass after the temperature-name fix",
+   "Own indep_failures.py: meas_failed, nonconverged, sim_error (unknown model, missing include, garbage, undefined param), timeout and cache counts 0/2/0 all behave as claimed; MC deck without {seed_line} was silently accepted (fixed)",
+   "Own PMOS Pelgrom run (4 areas x N=400, new seed): ratios 1.06-1.17 vs VT-only formula, area scaling holds to 3 percent",
+   "Own global-only vs mismatch-only MC on ota_cmp (N=100): global vtrip sigma 0.30 mV / IDD 0.5 percent; mismatch vtrip 4.64 mV / IDD 42 percent",
+   "CLI from cwd=/tmp with absolute paths: rc 0 for pass, rc 1 for fail spec, header/corners work",
+   "After fixes: unit suite 43 tests OK"
+  ],
+  "discrepancies": [
+   "log/sim_harness.md attributed the ota_cmp_global IDD limit failure to global process spread; mismatch-only MC shows the same IDD sigma (43 uA vs 39 uA), global-only is only 0.41 uA. Corrected in the log.",
+   "Corner name for fractional temperatures collided (27.5 C named like 27 C). Fixed.",
+   "MC with a deck lacking {seed_line} was silently accepted (non-reproducible yet cache-trusted). Fixed.",
+   "Minor: README says unresolved {names} are listed in the run log; they are only printed once on stderr. README JSON example has // comments."
+  ],
+  "fixes_applied": [
+   "sim/harness/corners.py: _fmt_temp uses %g and replaces '.' with 'p' (integer names unchanged)",
+   "sim/harness/runner.py build_runs: raises ValueError when mc is requested but the template has no live {seed_line}/{seed} (comment mentions ignored)",
+   "sim/harness/tests/test_helpers.py: added TestVerificationFixes (2 tests); suite is now 43 tests, OK",
+   "log/sim_harness.md: corrected the IDD/global-spread statement with measured numbers",
+   "Deleted regenerable bulky work dirs (pelgrom_pair/work, pelgrom_n1000/work) to save disk; wrote log/verify_sim-harness.md"
+  ],
+  "remaining_issues": [
+   "PMOS Pelgrom only checked to about 10 percent: VT-only formula is optimistic by 6-17 percent at small W/L because the mobility (par_k) term was not modelled; designers should use the measured MC rather than the VT-only formula for PMOS pairs at high overdrive",
+   "Global (statistical) MC exists only around tt and is very small for this circuit (vtrip 0.3 mV, IDD 0.5 percent); process spread should come from ss/ff/fs/sf corners, mismatch from per-seed MC",
+   "Cosmetic: README JSON example not literal JSON; unresolved placeholder names only on stderr; single-point PWL for all-equal bit sequences",
+   "The 12 Pelgrom groups share seeds, so only the N=1000 run is an independent confirmation (builder already documented this)"
+  ],
+  "usable_for_next_phase": true,
+  "notes": "Verification notes are in analog/lvds_rx/log/verify_sim-harness.md; scratch scripts in analog/lvds_rx/.scratch/verify_sim_harness/ (git-ignored). The harness code, run_demo.sh and the builder's numbers all reproduced; the three defects found were small and are fixed with regression tests. Design agents should launch ngspice only through the harness (it sets OMP_THREAD_LIMIT=1, without which parallel runs thrash) and should note that MC decks must contain {seed_line}."
+ },
+ "build:luts": {
+  "status": "pass",
+  "summary": "The gm/ID LUT toolkit is delivered and every exit criterion was observed to pass. It has the guarded wrapper (sizing/gmid_gf180.py), a 296-check self-test, regenerated nfet_03v3 and pfet_03v3 tables at typical 27 C with VSB 0..2.0 V (12 L values, 133x133 VGS/VDS), and ss 125 C and ff -40 C corner tables (7 L values, VSB 0..0.8 V). The regenerated tables are bit-identical to the kit tables on the shared grid (VSB 0, 0.2, 0.4). An independent direct-ngspice spot check agrees to at most 0.085 % in normal use, and at most 0.83 % in weak inversion off-grid, which is informative only. Kit load test at gm/ID=12, L=0.5, VDS=1.0: VGS=0.8016 V, fT=3.298 GHz, ID/W=2.70 uA/um, matching the handoff. A from-scratch re-run of both typical sweeps with the final scripts reproduced the delivered tables exactly. Disk use: luts/ 709 MB, scratch 44 KB, no .raw, .txt or .log files left.",
+  "files": [
+   "analog/lvds_rx/sizing/gmid_gf180.py",
+   "analog/lvds_rx/sizing/selftest_gmid.py",
+   "analog/lvds_rx/lut_regen/README.md",
+   "analog/lvds_rx/lut_regen/regen_all.sh",
+   "analog/lvds_rx/lut_regen/run_sweep.sh",
+   "analog/lvds_rx/lut_regen/make_decks.py",
+   "analog/lvds_rx/lut_regen/techsweep_txt2mat.py",
+   "analog/lvds_rx/lut_regen/validate_all.sh",
+   "analog/lvds_rx/lut_regen/validate_vs_kit.py",
+   "analog/lvds_rx/lut_regen/spot_check.py",
+   "analog/lvds_rx/lut_regen/facts_check.py",
+   "analog/lvds_rx/lut_regen/validation_report.txt",
+   "analog/lvds_rx/lut_regen/decks/",
+   "analog/lvds_rx/luts/nfet_03v3.mat",
+   "analog/lvds_rx/luts/pfet_03v3.mat",
+   "analog/lvds_rx/luts/nfet_03v3_ss_125C.mat",
+   "analog/lvds_rx/luts/pfet_03v3_ss_125C.mat",
+   "analog/lvds_rx/luts/nfet_03v3_ff_n40C.mat",
+   "analog/lvds_rx/luts/pfet_03v3_ff_n40C.mat",
+   "analog/lvds_rx/log/luts.md"
+  ],
+  "how_to_rerun": "Run everything through the container wrapper, from the worktree root.\n\n1. Full regeneration plus validation (about 20 min): docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash lut_regen/regen_all.sh all\n2. Validation only, on the existing tables: docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash lut_regen/validate_all.sh   (read lut_regen/validation_report.txt; the last line should read '296/296 checks passed')\n3. Self-test alone: docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx python3 sizing/selftest_gmid.py\n4. Self-test on the original kit tables: set GF180_LUT_DIR=/foss/designs/Analog/starter_files_open_source_tools/gf180mcuD/simulation before step 3. That also needs a small script file, since the harness refuses inline env assignments.",
+  "verified_facts": [
+   "validate_all.sh was re-run after the ff tables were built and the off-grid check was fixed: every section PASS and the self-test printed '296/296 checks passed'.",
+   "Kit load test and self-test (6.3): at gm/ID=12, L=0.5, VDS=1.0, VSB=0 the NMOS gives VGS=0.8016 V, fT=3.298 GHz, ID/W=2.7024 uA/um, gm/gds=153.4. For 1 mS it needs ID=83.3 uA and W=30.84 um with nf=7. The PMOS needs W=107.9 um and has fT=0.781 GHz. The selftest passes on both the kit LUTs and the regenerated ones.",
+   "Kit grids: L = 0.28 0.29 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 2 3 um, VGS and VDS 0..3.3 V in 25 mV steps (133 points), VSB = {0, 0.2, 0.4}, TEMP 300.0 K, W=5 um, nf=1. The regenerated table has the same L, VGS and VDS grids and VSB = 0..2.0 V in 11 points.",
+   "Regenerated vs kit on the shared grid: np.array_equal is True with max abs difference 0.0 for ID, GM, GDS, CGG, CDD, VT and STH on both devices (.scratch/luts/ident.py). validate_vs_kit.py reports max and RMS relative difference 0.0 for ID, GM, GDS, CGG and CDD. The only difference is the TEMP label, 300.15 K in ours vs 300.0 K in the kit. This closes the gf180mcuC vs gf180mcuD doubt (fact 3).",
+   "Direct-ngspice spot check, 6 random points per run, worst relative difference across ID, gm, gds and cgg. On grid nodes with VSB up to 2.0 V: n 0.034 %, p 0.041 %. Off-grid VGS/VDS with ID > 1 uA: n 0.060 %, p 0.085 %. Weak inversion off-grid (informative): n 0.15 %, p 0.83 %. ss 125 C: 0.025 % (n), 0.032 % (p). ff -40 C: 0.032 % (n), 0.042 % (p).",
+   "The original off-grid check failed at 3.7 % (n) and 6.1 % (p). All offending points had ID between 1e-10 and 1e-7 A, so this is linear interpolation of an exponential subthreshold current, not a data error. I added a --min-id filter (default 1 uA) and a separate informative weak-inversion run.",
+   "Fact 9 confirmed: with L midway between grid nodes (e.g. 1.5 um) the error reaches 22 % (n) and 47 % (p) in gds, and 10-16 % in ID.",
+   "Fact 10 differs here: design.ngspice in this install has sw_stat_global = 0 and sw_stat_mismatch = 0 (lines 64-65 of the file).",
+   "Reproducibility: re-running both typical sweeps from scratch with the final run_sweep.sh took 927 s of ngspice (2.33 million rows) plus conversion, and the output matched the delivered luts/nfet_03v3.mat and pfet_03v3.mat exactly (np.array_equal True on all fields). The ff -40 C sweeps took 249 s and 256 s of ngspice.",
+   "Facts 1, 2, 4, 5, 6 and 7 were confirmed with live probes (details in lut_regen/README.md). Fact 7 on the kit: unguarded ID/W at VSB=0.8 V is -1.10 uA/um, and the wrapper guard raises ValueError."
+  ],
+  "handoff_corrections": [
+   "Section 6.1 fact 8, 'other X ratios with multiple crossings print Crossing warning and return []', was not reproduced. A lookup with X=GM_GDS=100 returned a number (5.0006) and printed nothing. Treat non-monotonic X ratios as unreliable.",
+   "Section 6.1 fact 10 says upstream design.ngspice sets statistics on, but this install's file sets sw_stat_global and sw_stat_mismatch to 0. Decks should still set the switches explicitly.",
+   "Section 6.1 fact 3 (C and D models are the same) is now confirmed rather than unverified.",
+   "Section 6.2 says to create the wrapper 'verbatim', but the LUT location now resolves in the order $GF180_LUT_DIR, then analog/lvds_rx/luts, then the kit folder, and tables can be loaded by corner name, e.g. lut('nfet_03v3_ss_125C').",
+   "A regeneration sweep takes about 15.5 min per typical table and about 4.3 min per corner table, and the raw text is about 1 GB for typical. The ngspice log is about 280 MB and is now deleted by the script.",
+   "Corner tables are named *_ss_125C and *_ff_n40C. They cover 7 L values (0.28 0.3 0.4 0.5 0.7 1 2) and VSB 0..0.8 V only.",
+   "Fact 7's claim that lookupVGS mode 2 (floating source) returns 83 V at VGB=2.0 V was not re-tested. We do not use mode 2."
+  ],
+  "open_issues": [
+   "The 5 V device tables (nfet_05v0, pfet_05v0) were not regenerated. They are not needed for the 3.3 V LVDS receiver.",
+   "Corner tables stop at VSB = 0.8 V and use a reduced L grid. Widen the L list in make_decks.py if a corner design needs other lengths.",
+   "The wrapper does not interpolate in L accurately: errors reach 47 % between grid nodes, so use L values on the grid.",
+   "The kit's techsweep_*.spice files are copies of its xschem netlists (snapshot in lut_regen/decks/kit_original/) and are not re-derived from the schematics. If the kit netlist changes, make_decks.py needs --kit pointing at the new files."
+  ],
+  "needs_human": []
+ },
+ "verify:luts": {
+  "confirmed": true,
+  "reran": [
+   "selftest_gmid.py on delivered tables: 296/296 passed (exit 0), again after my edit",
+   "selftest_gmid.py on kit tables via GF180_LUT_DIR, run from /tmp: 296/296 passed; NMOS 6.3 gives ID=83.33uA W=30.84 nf=7 VGS=0.8016",
+   "mutation test: corner tables renamed as typical make the selftest exit 1, so it can fail",
+   "np.array_equal of delivered typical tables vs kit tables (13 fields x 2 devices, VSB 0/0.2/0.4): True everywhere, max abs diff 0",
+   "grid and sanity checks: VSB grid exact, no NaN, ID(VGS) never decreasing, body effect has the right sign, corner VT and ID shifts have the right sign (ss/125C VT 0.716 V vs typical 0.711 V; ff/-40C 0.673 V)",
+   "regenerated ss/125C NMOS from scratch (fresh decks, run from /tmp, private output dir): decks identical to the delivered ones, 240 s ngspice, 619116 rows, every field and axis array_equal True vs the delivered table",
+   "own independent ngspice check (.option temp, AC-analysis caps, new seed, on-grid points, VSB up to 2.0 V; 8 points per typical device, 4 per corner device): ID, gm, gds, gmb, VT, Cgg, Cgd, Cdd all <= 0.05 % for all six tables",
+   "end-to-end: size() then spice_line() then ngspice .op for 7 cases. Found that W>100um fails to netlist; that default-bin results are 1-10 % off; that wnflag=1 results are within 0.1 %",
+   "wrapper edge cases from a foreign cwd: out-of-range L, VDS and VSB raise ValueError; gm/ID 40 raises ValueError; gm/ID 0.1 raises RuntimeError from the consistency check; missing LUT raises FileNotFoundError",
+   "pygmid X=GM_GDS above the table max prints a warning but returns a number (-6e-4)"
+  ],
+  "discrepancies": [
+   "Builder's spice_line() output was not netlistable for total W > 100 um. The handoff 6.3 PMOS (W=107.9 um, nf=22) gave 'could not find a valid modelname'. The builder never simulated a sized device.",
+   "Undocumented requirement: LUT-faithful netlists need .option wnflag=1. Without it the BSIM4 width bin follows total W, so Cgg was 9.9 % off at L=0.28 um, W=29.8 um (36.5 fF vs 33.2 fF predicted). ID and gm were 1-2 % off. With wnflag=1, ID, gm and Cgg were within 0.02-0.1 %.",
+   "pygmid returns a garbage number, not NaN, for a non-GM_ID X above the table maximum. This extends the builder's fact-8 correction. Only at_gmid, with X=GM_ID, has a range guard.",
+   "All of the builder's numeric claims that I re-checked held: 296/296, kit match, bit-identity with kit, corner and typical reproducibility, spot-check magnitudes."
+  ],
+  "fixes_applied": [
+   "sizing/gmid_gf180.py: spice_line() now splits devices wider than 99 um into m=2 (or more) identical instances (nf divided accordingly). Output is unchanged for smaller devices (m=1). The docstring now states the .option wnflag=1 requirement.",
+   "lut_regen/README.md: appended a section on wnflag=1, the W>100 um limit and the pygmid out-of-range behaviour.",
+   "log/luts.md: verifier addendum.",
+   "log/verify_luts.md: written (full evidence)."
+  ],
+  "remaining_issues": [
+   "Downstream netlists must include '.option wnflag=1' and use nf near W/5 um, or LUT-predicted capacitances can be about 10 % off at minimum L. Make this part of the sim-harness include or deck template, and check that the sim-harness already sets it.",
+   "Corner tables cover only 7 L values and VSB <= 0.8 V.",
+   "The 5 V device tables were not regenerated.",
+   "L must be on the grid; interpolating in L gave up to 47 % error.",
+   "The typical 15-minute sweeps were not re-run by me; I re-ran one corner sweep instead and checked the typical tables by direct simulation."
+  ],
+  "usable_for_next_phase": true,
+  "notes": "The LUT deliverable holds up. The regenerated tables are bit-identical to the kit tables on the shared grid. A from-scratch corner sweep reproduced the delivered table exactly. My own independent ngspice checks agree to about 0.05 % for ID, gm, gds, gmb, VT, Cgg, Cgd and Cdd. The two gaps I found were in the wrapper's netlist helper and its documentation, not in the tables. I fixed both. Evidence and scripts: analog/lvds_rx/log/verify_luts.md and analog/lvds_rx/lut_regen/work/verify/ (git-ignored). Nothing was committed."
+ },
+ "build:pad-model": {
+  "status": "pass",
+  "summary": "Pad model, TB0, lane input network and transient sanity bench are all built, run and documented. The asig_5p0 pad is only primary ESD (D2 N+/Psub diode to DVSS, D3 P+/Nwell diode to DVDD, rail diode D0, 36 x 15x15 um NMOS decap C1; VDD/VSS pins unconnected). Measured C_pad = 0.88-0.99 pF at tt/27C over 0.05-2.35 V (876 fF at 1.8 V, 987 fF at 0.05 V), 1.0-1.15 pF at ss/125C, 0.76-0.85 pF at ff/-40C, flat 1 MHz-10 GHz. Leakage is a few fA at tt and ff, 44.7 pA at ss/125C, against the 20 uA limit. The diodes reach 1 uA at 3.88 V and -0.58 V at tt (3.66 V / -0.35 V ss/125C). With DVDD=0, D3 conducts from 0.58 V. The first-cut secondary ESD (ppolyf_u 5u/1.8u = 151 ohm tt, plus 40 um2 diodes) makes a pole of 2.91 GHz tt / 2.49 GHz ss / 3.49 GHz ff into 300 fF per side. The transient at 100 and 200 Mb/s (VOD 350 and 100 mV) shows full amplitude at the end of each bit (350.0 mV and 100.0 mV), a 13% overshoot without the ESD resistor (396 mV, up to 24% with a 5 nH package) and about 0 with it, and 360 ps (no ESD) / 420 ps (with ESD) 10-90% rise at the macro pins.",
+  "files": [
+   "netlist/pad_asig_5p0.spice",
+   "netlist/input_network.spice",
+   "sim/tb0_pad/run_tb0.py",
+   "sim/tb0_pad/run_net.py",
+   "sim/tb0_pad/check_pad_netlist.sh",
+   "sim/tb0_pad/decks/tb0_ac_tt27_1p2V.spice",
+   "sim/tb0_pad/decks/tb0_dc_tt27.spice",
+   "sim/tb0_pad/decks/tb_tran_tt27_200M_350mV_esd.spice",
+   "sim/tb0_pad/results/tb0_table.md",
+   "sim/tb0_pad/results/tb0_table.csv",
+   "sim/tb0_pad/results/tb0_results.json",
+   "sim/tb0_pad/results/net_table.md",
+   "sim/tb0_pad/results/net_results.json",
+   "sim/tb0_pad/results/plots/tb0_cpad.png",
+   "sim/tb0_pad/results/plots/tb0_dc_sweep.png",
+   "sim/tb0_pad/results/plots/tb0_leakage.png",
+   "sim/tb0_pad/results/plots/net_ac.png",
+   "sim/tb0_pad/results/plots/net_tran_100M.png",
+   "sim/tb0_pad/results/plots/net_tran_200M.png",
+   "log/pad_model.md"
+  ],
+  "how_to_rerun": "cd to the worktree root, then run each of these (about 4 s, 16 s and 1 s):\ndocker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx python3 sim/tb0_pad/run_tb0.py\ndocker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx python3 sim/tb0_pad/run_net.py\ndocker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash sim/tb0_pad/check_pad_netlist.sh\n(sim/tb0_pad/work/ and results/ are regenerated; work/ is git-ignored. I deleted both and re-ran from clean at the end: all outputs reproduced.)",
+  "verified_facts": [
+   "PDK ships a converted ngspice netlist of the pad; check_pad_netlist.sh printed 'pad netlist device lines: IDENTICAL to PDK spice (4 devices)'. Only change from the CDL is C1 '$[cap_nmos_06v0] l= w=' becoming 'X1 cap_nmos_06v0 c_length= c_width='.",
+   "Across 146 ngspice logs the only warnings are 'diode_nd2ps_06v0 / diode_pd2nw_06v0: IKR too small - model effect disabled!' (146 each); no errors (grep over sim/tb0_pad/work/*.log).",
+   "Liberty file gf180mcu_fd_io__tt_025C_3v30.lib has 'capacitance : 0' on every pin of asig_5p0 (grep).",
+   "C_pad at 100 MHz, tt/27C: 987/911/881/876/891 fF at 0.05/0.6/1.2/1.8/2.35 V. ss/125C: 1150/1041/1001/996/1017 fF. ff/-40C: 846/788/764/760/771 fF (results/tb0_table.md). Hand junction estimate about 1.0 pF at 0.05 V agrees, which validates the area=150e-12 (m2) unit convention.",
+   "Leakage into the pin 0.05-2.35 V: |I| <= 3.6 fF-level (about 3e-15 A) at tt and ff, 4.47e-11 A at ss/125C. Limit 20 uA.",
+   "DC sweep -1.2..4.6 V: I>1 uA / >20 uA at pin = 3.88/3.96 V (tt), 3.66/3.77 V (ss/125C), 4.03/4.09 V (ff/-40C); lower side -0.58/-0.66, -0.35/-0.46, -0.72/-0.79 V. DVDD=0 (tt): +0.58 V (1 uA), +0.66 V (20 uA).",
+   "Measured ppolyf_u r_width=5u r_length=1.8u = 151.4 ohm tt, 173.3 ohm ss/125C, 129.4 ohm ff/-40C. AC -3 dB of ESD2 + 300 fF load: 2.91/2.49/3.49 GHz.",
+   "Lane differential -3 dB (source to macro pins, 300 fF across): no ESD2 3.20 GHz with 4.30 dB peaking (tt); with ESD2 2.44 GHz flat (tt), 2.18 GHz (ss/125C).",
+   "Transient tt/27C, 100 and 200 Mb/s identical: VOD 350 mV: end-of-bit amplitude 350.0 mV, peak 396.3 mV, tr 360 ps (no ESD2); with ESD2 peak 350.4 mV, tr 420 ps. VOD 100 mV: 100.0 mV, peak 113.2 mV (no ESD2). Package sensitivity at 200 Mb/s, VOD 350 mV: L5n/C1p gives peak 434 mV no ESD2, 377 mV with; L2n/C0.5p gives 385 / 350 mV.",
+   "ngspice transient with .option abstol=1e-15 reltol=1e-4 did not finish in 10 minutes; with default options it takes about 1.2-1.5 s. A test with the MOS cap removed (both D0 and X1) was equally slow, so the cap is not the cause; the tolerances are."
+  ],
+  "handoff_corrections": [
+   "Handoff 1.3 / 9.1 guess C_pad about 1-1.5 pF: measured 0.76-1.17 pF over all corners and 0.05-3.3 V bias (0.9 pF nominal). Use 1.0 pF typical, 1.15 pF worst.",
+   "Handoff 9.1 says 'convert the CDL first': the PDK already ships the converted ngspice netlist (libs.ref/gf180mcu_fd_io/spice/gf180mcu_fd_io.spice); the only conversion needed is the C1 line, and it is identical to the one in netlist/pad_asig_5p0.spice.",
+   "Handoff 9.1 asks for the DC sweep -0.5..3.8 V: at tt/27C the ESD diodes reach 1 uA only at 3.88 V (and -0.58 V), so I swept -1.2..4.6 V instead.",
+   "Use default ngspice tolerances in transient decks; tightening abstol/reltol made the decks hang for more than 10 minutes.",
+   "ppolyf_u is a 3-terminal subckt (1 2 bulk) with params r_width/r_length, not a 2-terminal element."
+  ],
+  "open_issues": [
+   "Package L/C (3 nH, 0.7 pF) and RS=50 ohm are assumptions; the organizers' package is unknown. They are parameters of lvds_input_network.",
+   "Secondary ESD is a first cut, not sized for HBM current (a 5 um poly resistor and 40 um2 diodes are far too small); replace it with the organizers' Metal2/Metal3 cell when it arrives and re-run run_net.py.",
+   "The transient bench is lossless and uses an ideal driver (no line loss, reflections, crosstalk or common-mode noise); the amplitude loss at the end of a bit is therefore 0 and only overshoot and edge rate are meaningful. Receiver input capacitance is taken as 300 fF across the pins (literal reading of the task) and 300 fF per side for the pole.",
+   "Leakage numbers at tt and ff are at the simulator's resolution (about fA), not physical.",
+   "The decks use ngspice's PDK pad model with 6 V diode models at 3.3 V as in the layout; no silicon correlation exists.",
+   "I did not run TB0 at other DVDD values (3.0 and 3.6 V); only DVDD=3.3 V (plus DVDD=0 power-off) as asked."
+  ],
+  "needs_human": []
+ },
+ "verify:pad-model": {
+  "confirmed": true,
+  "reran": [
+   "Deleted sim/tb0_pad/work and results (old copy kept in /tmp); ran run_tb0.py (5 s), run_net.py (18 s), check_pad_netlist.sh: all exit 0, regenerated results/ byte-identical to the builder's (diff -r), 'IDENTICAL to PDK spice (4 devices)'.",
+   "grep over 447 work files: 0 logs with 'error'; only warnings are 146+146 'IKR too small' notes, exactly as claimed.",
+   "Hand calc of pad C from PDK diode params: 987.0/911.0/880.5/875.9/891.0 fF at 0.05..2.35 V = builder's table; ramp-method transient C = 877.6 fF at 1.2-1.4 V.",
+   "Independent linear lane transient (own netlist, pad = 0.88 pF): flat 350.0 mV, peak 396.35 mV, tr 360.1 ps = builder's 396.3 mV / 360 ps.",
+   "ESD2 poly resistor 151.45 ohm at tt (builder 151.4); on-die termination knob works (349.3 mV differential at pins).",
+   "ff/125C leakage (corner builder did not run): about 60 pA, vs 20 uA limit.",
+   "Liberty asig_5p0 pins all 'capacitance : 0' confirmed.",
+   "Re-ran both python scripts after my fixes: rc 0, results still byte-identical; check script works from /tmp."
+  ],
+  "discrepancies": [],
+  "fixes_applied": [
+   "run_tb0.py and run_net.py: delete stale .log/.txt for each deck before running ngspice so a failed run cannot be masked by old output.",
+   "check_pad_netlist.sh: cd to its own tree so it works from any directory.",
+   "input_network.spice header: documented that the including deck must also .include pad_asig_5p0.spice and that deck line 1 is the title (a .param there is silently ignored)."
+  ],
+  "remaining_issues": [
+   "Package L/C, RS=50 ohm and ideal lossless driver are assumptions (flagged by builder); transient shows only overshoot/edge rate, amplitude loss 0 by construction.",
+   "Secondary ESD (5u/1.8u poly, 40 um2 diodes) is a first cut, not HBM-sized.",
+   "TB0 only at DVDD=3.3 V (and 0 V); worst leakage corner is ff/125C (~60 pA), not ss/125C (44.7 pA); both far below 20 uA.",
+   "sim/tb0_pad/work is ~130 MB (git-ignored); delete before archiving."
+  ],
+  "usable_for_next_phase": true,
+  "notes": "Notes in /home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx/analog/lvds_rx/log/verify_pad-model.md. Scratch tests in analog/lvds_rx/.scratch/verify_pad/. Builder's headline numbers (C_pad 0.76-1.17 pF, clamp thresholds, 396 mV overshoot, 360/420 ps rise, 2.91 GHz pole) all reproduced or independently cross-checked."
+ },
+ "build:book-digest": {
+  "status": "pass",
+  "summary": "Wrote docs/GMID_METHOD_NOTES.md covering all nine requested sections plus a corrections-to-handoff section, with PDF page and equation-number citations. Equations are images in the PDF, so I rendered about 20 pages with Ghostscript and read them directly. Also wrote docs/book_extracts/README.md and log/book_digest.md. An earlier interrupted attempt had left the text extracts, scripts and outputs. I kept that work after re-running it: all six scripts reproduced their stored outputs exactly, and the pygmid check reports 24/24 PASS. Headline results: every handoff page range is correct, and the PDF page index equals the printed folio. This PDF copy is uncorrected, so (4.54), (4.55) and (6.58) are printed in their wrong form. On GF180 at L=0.5 um, gm/ID=12, VDS=1 V the nfet gives 2.70 uA/um, fT 3.30 GHz and gm/gds 153, and the pfet needs 3.5x the width. A worked 100 MHz / 500 fF gain stage matches ngspice to 0.5 % on ID, gm/ID, VGS and fu, but gm/gds is -4.3 %.",
+  "files": [
+   "docs/GMID_METHOD_NOTES.md",
+   "docs/book_extracts/README.md",
+   "docs/book_extracts/.gitignore",
+   "docs/book_extracts/verify_pygmid.py",
+   "docs/book_extracts/verify_pygmid_output.txt",
+   "docs/book_extracts/gf180_fom_table.py",
+   "docs/book_extracts/gf180_fom_table_output.txt",
+   "docs/book_extracts/vdsat_check.py",
+   "docs/book_extracts/vdsat_check_output.txt",
+   "docs/book_extracts/offset_area_tradeoff.py",
+   "docs/book_extracts/offset_area_tradeoff_output.txt",
+   "docs/book_extracts/worked_igs_gf180.py",
+   "docs/book_extracts/worked_igs.spice",
+   "docs/book_extracts/worked_igs_gf180_output.txt",
+   "docs/book_extracts/run_lut_vs_spice.sh",
+   "docs/book_extracts/lut_vs_spice.spice",
+   "docs/book_extracts/lut_vs_spice_ref.py",
+   "docs/book_extracts/lut_vs_spice_output.txt",
+   "docs/book_extracts/ch*.txt and app*.txt (15 raw page extracts, git-ignored)",
+   "log/book_digest.md"
+  ],
+  "how_to_rerun": "Run each line from the host: docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx python3 docs/book_extracts/verify_pygmid.py  (prints SUMMARY: 24/24 checks passed). The same command works for gf180_fom_table.py, vdsat_check.py, offset_area_tradeoff.py and worked_igs_gf180.py. For the LUT-vs-ngspice check use: docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash docs/book_extracts/run_lut_vs_spice.sh. Each command must run from analog/lvds_rx, which the cx wrapper sets. Compare against the stored *_output.txt files.",
+  "verified_facts": [
+   "The re-runs of verify_pygmid.py, gf180_fom_table.py, vdsat_check.py, offset_area_tradeoff.py, worked_igs_gf180.py and run_lut_vs_spice.sh matched the stored outputs (diff showed no differences). verify_pygmid.py ended with SUMMARY: 24/24 checks passed.",
+   "Handoff section 3.1 PDF page ranges all match the section headings extracted from Book.pdf (1.2 p26, 2.3 p74, 3.1 p106, 3.2 p145, 3.3 p157, 4.1 p174, 4.2.2 p198, 4.3 p218, 5.1 p237, 5.2 p244, 5.6 p298, 6.2 p341, 6.4.1 p386, 6.5 p390, App2 p415, App3 p435). The folio printed at the foot of each page equals the PDF index, checked on pp.82, 142, 224, 342, 363.",
+   "Errata hardback page to PDF page mapping was verified by locating the equations: (1.6)/(1.8) on p36, (4.54)/(4.55) on p224, (6.29) on p325, (6.58) on p363, switch step on p392. Missing rows located: (6.21) p321, (6.28) p325, (6.34/35/37) p334, (6.75) p384, Tables 5.7/5.8 p270-273.",
+   "Page images of p224 and p363 show the PDF still prints (4.54), (4.55) and (6.58) in the uncorrected form.",
+   "Book p228-229: the offset formula is (4.56)/(4.57), VOS = dVT1 + dVT2 (gm/ID)2/(gm/ID)1. (4.58) is only the beta-mismatch term and (4.59)-(4.62) cover offset drift. Pelgrom is (4.44)-(4.45) on p219, with a pocket-implant note (4.46) on p220.",
+   "Book p240 code uses VGS1 = VGS2 - VR, so R sits in M1's source. The text on p239 saying M2 needs a separate well is therefore a slip; it is M1. This was read from the book's code, not simulated.",
+   "Book p350 code computes cdd_w2 and cdd_w3 both with CDD_CSS. On GF180 tables (gm/ID 15, L 0.4) the ratio cdd2/cdd3 is 1.0447 as printed vs 1.0932 with CDD_W, so fp2 is 0.827 vs 0.800 GHz (lut_vs_spice_output.txt).",
+   "Table 5.15 (p306) gives gm2 -4.3/+4.2 %, ID1 -23.5/+33.5 % (SPICE) and ID2 -22.0/+31.3 %. From these, gm2/ID2 = 658.8 uS/50 uA = 13.2 nominal, 683/39.0 = 17.5 fast/cold (+33 %) and 631/65.7 = 9.6 slow/hot (-27 %). The handoff's '+-25 % gm/ID from Table 5.15' is therefore not printed there.",
+   "GF180 kit tables hold L = 0.28...3.0 (12 values), VGS and VDS 0..3.3 V in 25 mV steps (133 points), VSB {0, 0.2, 0.4}. The arrays are [L,VGS,VDS,VSB] = (12,133,133,3) with W=5 um and nf=1.",
+   "pygmid on nfet L=0.5, VDS=1.0, gm/ID=12 returns ID/W 2.702 uA/um, fT 3.298 GHz, gm/gds 153.4 and lookupVGS 0.8016 V. The pfet has ID/W 0.772 uA/um (3.50x wider) and VSG 0.9007 V.",
+   "pygmid pitfalls reproduced: a wrong keyword order returns a 133-point VGS sweep, the default VDS is 1.65 V, VSB=0.8 gives a negative ID/W (-1.4e-6), gm/ID=40 prints a NaN message but returns a number, and lookupVGS mode 2 returned 85 V.",
+   "worked_igs_gf180.py predicts ID 26.651 uA and W 9.862 um (nf=5). ngspice shows ID +0.00 %, gm/ID 12.011, VGS 0.8011 V vs 0.8016 V, fu 100.45 MHz and gm/gds 146.7 vs 153.4 (-4.3 %). Adding .option wnflag=1 gave identical results (gm 3.201205e-04, fu 1.00449e+08).",
+   "LUT vs ngspice .op at the same bias: nfet ID 0.15 %, gm 0.04 %, gds 0.06 %. pfet ID 0.09 %, gm 0.01 %, gds 0.04 %. ngspice's op-print @cgg (5.98 fF) is not the table's Cgg (7.82 fF), so take Cgg from an AC analysis.",
+   "At the VDsat proxy 2/(gm/ID), gm/gds is about 10x lower than at VDS=1 V (nfet L=0.5, gm/ID=10: 13 vs 145). The weak-inversion plateau is gm/ID 27.9 (n) and 27.1 (p), with n of about 1.39 and 1.43.",
+   "Offset trade, ID=50 uA: an L=1.0 nfet pair at gm/ID 12 (k1=0.166) with an L=1.0 pfet load at gm/ID 8 (r=0.67, k2=0.131) gives sigma_VOS = 0.187*AVT. The load adds only 13 % over the pair alone. With AVT = 7.15 mV um this is about 1.3 mV.",
+   "Noise: for gm=1 mS and gamma=0.72, the input-referred density is 3.5 nV/rtHz (4kT*gamma/gm = 1.2e-20/1e-3). That is about 49 uV rms over 200 MHz, roughly 1000x below the 100 mV LVDS threshold. n.fco at L=0.5, gm/ID=12 is 1.44e6, a corner near 1.4 MHz.",
+   "Raw extracts ch*.txt and app*.txt are ignored by docs/book_extracts/.gitignore, and .scratch is ignored by analog/lvds_rx/.gitignore, as shown by git check-ignore. Nothing outside the allowed directories was written."
+  ],
+  "handoff_corrections": [
+   "Path: $GMID_BOOK / external/Book-on-gm-ID-design-main does not exist here. Use /foss/designs/Analog (read-only).",
+   "Section 6.1/17.3 errata table: the rows it lists are correct. It omits (6.21) on PDF p321, (6.28) Cgs=(CS+CFtot)/2 on p325, (6.34)/(6.35)/(6.37) on p334, the Ex. 6.5 step wording on p352, (6.75) on p384, Tables 5.7/5.8 and the F formula on p270-273, and two_stage.m line 24. None matters for the RX preamp.",
+   "The handoff's PDF copy is uncorrected. (4.54), (4.55) and (6.58) are printed wrong in Book.pdf, so apply the errata by hand.",
+   "Section 3.1 cites (4.56)-(4.58) for the offset formula. The offset itself is (4.56)/(4.57); (4.58) is the beta-mismatch term referred to the input.",
+   "Section 7.5, line 956: 'gm/ID moves +-25 % over corners (book Table 5.15)'. Table 5.15 lists bias-circuit quantities (gm2 +-4 %, ID -22 %/+33 %). The gm/ID spread derived from it is +33 %/-27 %. The book's Fig. 5.36 (65 nm, VDS 0.6 V) shows +-30 % at constant ID and up to +-50 % at constant gm. The '+33 % current at SS/125 C' statements (lines 525, 866) are correct for ID1/ID2, but they describe a 65 nm 1.2 V bias, not GF180.",
+   "Confirmed both 'possible inconsistencies' from 17.3. The separate well belongs to M1, the device carrying R (p240 code: VGS1 = VGS2 - VR). The CDD_CSS vs CDD_W slip is real and has a 3 % effect on fp2 with GF180 data.",
+   "Section 6.1 fact 3 (C vs D model paths) is closed by log/luts.md: the tables are bit-identical. Facts 5, 6, 7 and 8 reproduced; fact 7's 83 V became 85 V for a slightly different call, the same failure mode.",
+   "Appendix 3's rule nf=max(round(W/2 um),1) is the book's reference layout (10 um, 5 fingers of 2 um). The GF180 kit LUT is W=5 um, nf=1, so netlists meant to match the LUT should use nf about W/5 um and .option wnflag=1 (see log/verify_luts.md).",
+   "The errata hardback page numbers do not map to PDF pages by a constant offset (13 to 36, 157 to 224, 287 to 392). Locate by equation number."
+  ],
+  "open_issues": [
+   "The exact width labels in eq. (5.7) (the gain of a differential pair biased by the constant-gm cell) are too small to read in the 85 dpi page image. The notes describe the equation qualitatively and say to check p240 before using it.",
+   "Pole equations (3.20)/(3.21) and the folded-cascode noise factor (6.54) are described in words only, not transcribed.",
+   "Whether GF180 offers an isolated (deep-nwell) 3.3 V NMOS, so M1 of the constant-gm core can have its own well, was not checked. The notes flag this for handoff 7.1.",
+   "No folded-cascode or bias circuit was simulated here; sections 3 and 4 follow the book's procedure and still need validation on real circuits by the design agents.",
+   "Book sections not read in depth, as irrelevant to this macro: 5.3 LDO, 5.4 LNA, 5.5 charge amplifier, 6.1 basic OTA and 6.3 two-stage OTA."
+  ],
+  "needs_human": []
+ },
+ "build:layout-magic": {
+  "status": "pass",
+  "summary": "Built a scripted Magic flow (lib/lf.tcl, 309 lines) on top of the PDK gencell generator. It makes the common toy cell lf_toy (ABBA input pair with a dummy finger at each end, interdigitated PMOS mirror in its own n-well, tail/diode pair, ppolyf_u_1k 19.5u x 1u about 20 kohm bias, p+ and n+ guard rings, pins INP INN OUT VDD VSS on M2/M3). All five exit criteria were observed to pass in a from-clean run of scripts/run_all.sh (39 s wall). (a) Magic DRC total 0, both on the .mag and on the GDS read back. (b) KLayout foundry deck on a GDS with DBU 0.001: main 0, antenna 0. (c) Netgen: 8 devices and 8 nets on both sides, pins equivalent, \"Netlists match uniquely\" with no property errors; a negative control (schematic M1 w=7u) is flagged NOT CLEAN. (d) PEX netlists simulate in ngspice with an operating-point/AC bench: Vout 1.6518 V and Idd 213.67 uA identical in schematic, extracted devices and pex_c; unity-gain frequency 280.07 -> 270.44 (extracted devices, -3.4 %) -> 260.87 MHz (pex_c, -6.9 %) -> 260.15 MHz (pex_rc, -7.1 %); gain 40.86 dB throughout. (e) PNG rendered in batch with KLayout. Also delivered: generic scripts (build, drc_magic, drc_klayout, lvs, pex, sim_compare, render, bbox), a self-test cell (taps, vias, wires, pin, ABAB row; Magic 0, KLayout 0/0), a 204-transistor scaling test, a cookbook with 20 pitfalls and an honest assessment, and a learner log. Per iteration on the toy: about 15 s, of which the KLayout deck is 10-11 s. A 204-transistor cell takes 1.8 s to build, 0.9 s for Magic DRC, 10.9 s for KLayout and 0.4 s for extraction. Conclusion: tool run time is not the limit at 200 devices; hand-routing logic is.",
+  "files": [
+   "layout/magic_flow/COOKBOOK.md",
+   "layout/magic_flow/lib/lf.tcl",
+   "layout/magic_flow/toy.spice",
+   "layout/magic_flow/build_toy.tcl",
+   "layout/magic_flow/build_selftest.tcl",
+   "layout/magic_flow/build_scale.tcl",
+   "layout/magic_flow/scripts/run_all.sh",
+   "layout/magic_flow/scripts/build.sh",
+   "layout/magic_flow/scripts/drc_magic.sh",
+   "layout/magic_flow/scripts/drc_magic.tcl",
+   "layout/magic_flow/scripts/drc_klayout.sh",
+   "layout/magic_flow/scripts/lyrdb_count.py",
+   "layout/magic_flow/scripts/dbu.py",
+   "layout/magic_flow/scripts/bbox.py",
+   "layout/magic_flow/scripts/lvs.sh",
+   "layout/magic_flow/scripts/extract.tcl",
+   "layout/magic_flow/scripts/pex.sh",
+   "layout/magic_flow/scripts/sim_compare.py",
+   "layout/magic_flow/scripts/render.py",
+   "layout/magic_flow/scripts/lone_gencell.sh",
+   "layout/magic_flow/scripts/lone_gencell.tcl",
+   "layout/magic_flow/scripts/scale_test.sh",
+   "layout/magic_flow/results/lf_toy.png",
+   "layout/magic_flow/results/lf_toy.gds",
+   "layout/magic_flow/results/lf_toy.mag",
+   "layout/magic_flow/results/lf_toy.pex_c.spice",
+   "layout/magic_flow/results/summary.txt",
+   "log/layout_magic.md"
+  ],
+  "how_to_rerun": "docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash layout/magic_flow/scripts/run_all.sh    (wipes and recreates layout/magic_flow/work, writes work/summary.txt, copies deliverables to results/; about 39 s). Scaling test: ... tools/cx bash layout/magic_flow/scripts/scale_test.sh 34. Single steps: build.sh [script.tcl] [workdir]; drc_magic.sh CELL SRC; drc_klayout.sh GDS CELL; lvs.sh CELL SRC SCHEMATIC.spice; pex.sh CELL SRC [pex_c|pex_rc]; sim_compare.py CELL NET1 NET2 ...; render.py GDS CELL OUT.png.",
+  "verified_facts": [
+   "run_all.sh from a clean work/: total_wall_seconds=39; build 1 s; Magic DRC 1 s; KLayout deck 10-11 s; LVS <1 s; pex+sim 2 s.",
+   "(a) drc_magic.sh lf_toy: MAGIC_DRC_TOTAL 0 for the .mag and MAGIC_DRC_TOTAL 0 for lf_toy.gds read back (style drc(full)).",
+   "(b) drc_klayout.sh lf_toy.gds: GDS_DBU 0.001 OK; KLAYOUT_DRC_MAIN 0, KLAYOUT_DRC_ANTENNA 0, each with 1 lyrdb. The deck is live: earlier iterations of the same cell gave M1.2a, M1.3, M2.1 and CO.2a items.",
+   "(c) lvs.sh: 'Number of devices: 8 | 8', 'Number of nets: 8 | 8', 'Subcircuit pins ... equivalent', 'Netlists match uniquely.', 'Final result: Circuits match uniquely.', no property errors. Negative control with M1 w=7u prints 'Netlists match uniquely with property errors.' while the last line is still 'Final result: Circuits match uniquely.', so a naive grep gives a false pass; lvs.sh reports NOT CLEAN.",
+   "(d) sim_compare.py (typical, 27C, wnflag=1, open-loop AC with 1 GH inductor/1 F cap, 200 fF load): toy Vout 1.6518 V, Idd 213.67 uA, gain 40.86 dB, UGF 280.066 MHz, f3dB 2984.07 kHz; extracted devices UGF 270.439 (-3.44 %), f3dB 2942.97 (-1.38 %); pex_c (15 devices, 25 caps) UGF 260.871 (-6.85 %), f3dB 2890.03 (-3.15 %); pex_rc (86 caps, 130 resistors) UGF 260.152 (-7.11 %), Idd 213.12 uA (-0.26 %).",
+   "(e) results/lf_toy.png rendered by KLayout offscreen with the PDK gf180mcu.lyp; bbox 12.26 x 32.20 um (scripts/bbox.py).",
+   "Lone gencell nfet W=4 L=0.5 nf=4 guard 1 reports 8 M1.3 (min area 0.1444 um2) errors; flattened + GDS written: Magic readback total 8 and KLayout deck M1.3: 8. The 8 are real (poly-contact M1 pads are 0.48 x 0.23 = 0.11 um2); wiring a pad removes them.",
+   "Generator cells are read-only sub-cells: erase in the parent had no effect until flatten; after flatten pad erasure worked (M1.3 slivers disappeared).",
+   "Magic 'box values' with no unit takes lambda (0.05 um) but returns internal 5 nm units; gencell places the lower-left corner at the box; GDS from Magic is DBU 0.001 by default (gdsii cifoutput style, klayout dbu check).",
+   "Library self-test cell lf_selftest (n/p taps, via1/via2, wires, pin, ABAB pfet W=2 L=0.5 with ring): in-session 0 but the GDS readback flagged PP.8a/NP.8a (implant area) until taps were enlarged to 0.60 um diffusion; then Magic 0 and KLayout 0/0. Magic flagged NP.8a on the n-well tap where KLayout did not (one-item checker disagreement).",
+   "Scale test 34 rows x 6 = 204 transistors (scale_test.sh): build 1.82 s, Magic DRC from GDS 0.94 s, KLayout deck 10.93 s, extraction 0.39 s (204 devices extracted), Magic DRC 0, KLayout main 34 items all DF.14_LV (no taps within 20 um in that synthetic cell, absent from the toy because of the rings), antenna 0.",
+   "Magic in-session DRC on an unflattened gencell instance reports 16 (8 counted twice, cell and instance); after flatten 8."
+  ],
+  "handoff_corrections": [
+   "ENV_REPORT / pdk-facts note 'lone gencell nfet 8 DRC errors is an artefact; exporting to GDS and running sak-drc.sh -m says clean' did not reproduce: the same 8 M1.3 (poly-contact pad min area 0.1444 um2) errors appear in the GDS read back into Magic and in the foundry KLayout deck. They are real for an unwired gencell and vanish once each pad is wired into a larger M1 shape.",
+   "Handoff 11.1 shows gencell with 'guard 1 full_metal 1' per device; for matched rows use guard 0 and draw one shared ring yourself, because the gencell fingers are not tied together (one gate pad per finger top and bottom), which is what makes ABBA possible without drawing from primitive layers.",
+   "Handoff 11.3 says Netgen exit criterion is 'Circuits match uniquely': the final line of the Netgen log says this even when W/L properties mismatch; the true clean verdict also needs 'Netlists match uniquely.' without 'property errors'.",
+   "Handoff 11.3 lists Magic-based sak-drc only as 'macro' level DRC; Magic misses KLayout-only rules such as DF.14_LV (tap within 20 um of every NCOMP) and disagreed once on NP.8a, so the KLayout deck must be the sign-off deck.",
+   "Handoff 11.1 gives the n-well/substrate tap as a single-call generator; there is no tap gencell in the PDK Tcl. Taps and rings have to be painted (lf::tap needs 0.60 x 0.60 um diffusion for DF.9 and PP.8a/NP.8a, well >= 0.86 um for NW.1a)."
+  ],
+  "open_issues": [
+   "Routing is by hand-chosen M2 tracks and M3 columns; there is no track/column allocator and no short/open locator (Netgen reports internal coordinate-based net names). This is the real scaling cost for 150-300 devices.",
+   "Only W=4 um with L=0.5/1.0 um (toy) and W=2 um with L=0.5 (selftest) were exercised; formulas for pad offsets and pitch (L+0.52) are measured, not exhaustively verified.",
+   "pex_rc was run on all nets only; selective resistance extraction on critical nets was not tried. Simulation corner was typical 27C only.",
+   "No dummy fingers on the PMOS mirror or tail pair (only on the input pair, as asked); no deep-n-well (gencell lacks it); resistor gencell used as single straight 1 x 19.5 um unit (no snake, no dummies, no common-centroid).",
+   "LEF/abstract generation, pin-ring planning and the Vn.2b via-array checker from handoff 11.3 were not exercised.",
+   "Magic and KLayout comparisons with the KLayout-Python pathfinder were not done (other agent's assignment)."
+  ],
+  "needs_human": []
+ },
+ "verify:layout-magic": {
+  "confirmed": true,
+  "reran": [
+   "run_all.sh from clean work/ (results/ moved aside): 40 s; Magic DRC 0 (.mag and GDS readback); GDS_DBU 0.001 OK, KLAYOUT_DRC_MAIN 0 and ANTENNA 0 (1 lyrdb each); Netgen 8/8 devices, 8/8 nets, 'Netlists match uniquely.', LVS_RESULT clean; w=7u negative control NOT CLEAN; sim Vout 1.6518 V, Idd 213.67 uA, UGF 280.066/270.439/260.871/260.152 MHz, all equal to the report; PNG regenerated and viewed",
+   "regenerated results/ files have the same sizes as the builder's (gds 38830 B, png 164380 B)",
+   "scale_test.sh 34: 204 devices, build 1.85 s, Magic DRC 0 in 0.93 s, KLayout 34 DF.14_LV items in 10.97 s, antenna 0, 204 devices extracted",
+   "read gate order from the Magic .ext device lines sorted by x: VSS INP INN INN INP VSS, so ABBA with end dummies is real",
+   "new negctl.sh on the finished GDS: M1 sliver gives Magic 1 and KLayout 1; INP-OUT M3 short gives Netgen 'Netlists do not match', NOT CLEAN; cutting the INN M3 wire gives 'match uniquely with port errors', NOT CLEAN"
+  ],
+  "discrepancies": [],
+  "fixes_applied": [
+   "added scripts/negctl.py and scripts/negctl.sh (DRC and LVS negative controls on the finished GDS)",
+   "wrote analog/lvds_rx/log/verify_layout-magic.md"
+  ],
+  "remaining_issues": [
+   "Netgen merges parallel fingers, so LVS does not check finger order. Only M1/M2 ABBA was checked independently, by gate x-order; the PMOS mirror and tail pair orders rest on the pattern list. Add a finger-order check to the library if matching matters there.",
+   "Routing is by hand-chosen tracks and columns, with no allocator and no short/open locator (Netgen names nets by coordinates). This is the real cost at 150-300 devices; the builder says so too. Recommended fix: generate the Tcl from a Python track/column allocator.",
+   "Only W=4 um with L=0.5/1.0 um (plus W=2 um in the self-test) were exercised. Pad offsets and pitch are measured, not proven for other sizes.",
+   "The scale test is a replicated synthetic cell with no routing. It shows tool run time is small, not that routing scales."
+  ],
+  "usable_for_next_phase": true,
+  "notes": "The deliverable reproduces exactly. The KLayout deck is the sign-off check, since Magic misses DF.14_LV and disagreed once on NP.8a. lvs.sh correctly requires 'Netlists match uniquely.' with no property or port errors, because the final Netgen line still reads 'Circuits match uniquely' even in the failing cases. The lone-gencell 8 x M1.3 DRC count is real: it appears in Magic after a GDS readback and in the KLayout deck. Notes are in analog/lvds_rx/log/verify_layout-magic.md."
+ },
+ "review:automation": {
+  "overall": "The plan can be run end to end by agents if a few things change. The technical content is sound, and the autonomous decisions are mostly right. The weaknesses are about automation, not circuits.\n\n- Most human touchpoints are already obsolete: GUIDE sections 5 and 6 (cloning, copying the book, docker setup) were done on this machine.\n- The sequence of gates is replaceable by frozen, script-evaluated criteria. That only works if the criteria are committed before any results exist and every number in the reports is generated, never typed.\n- The \"weeks\" in P4/P5 are human review and iteration time. A full regression is roughly 180 CPU-minutes, about 30-40 minutes on 6 jobs. That figure is extrapolated from proxy circuits and must be re-measured on the real netlist.\n- One thing hurts right now: `tools/cx` does not set the OpenMP limits that the harness sets. I measured a 120-FET, 1.5 \u00b5s transient at 7.3 s wall and 639% CPU without the variables, against 4.0 s on one core with them. Six parallel jobs thrash.\n- Two gaps in the proposal need fixing. G2 has no pre-authorised fallback ladder, so the first missed spec forces a stop. The failsafe guarantee level (\u03c3-level) is not pinned.\n- The handoff's pass criteria include \"6\u03c3 inside \u00b1100 mV\" from N=200 runs, which cannot be measured. It must be redefined or backed by a cheap DC offset Monte Carlo with N=1000.\n\nNotes with the full tables and the proposed layout are in analog/lvds_rx/log/review_automation.md. Measurement scratch is in analog/lvds_rx/.scratch/review_automation/.",
+  "findings": [
+   {
+    "section": "Handoff 9.3/9.4; tools/cx",
+    "severity": "major",
+    "problem": "tools/cx does not export OpenMP limits, so any ngspice run outside the harness uses many threads and thrashes under parallel jobs. Agents that call ngspice directly (iterate loops, ad-hoc scripts) will be slow and will slow everything else down.",
+    "improvement": "Add `export OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 OMP_WAIT_POLICY=PASSIVE` to tools/cx. Route every simulation through sim/harness (no bare `ngspice` in project scripts). Add a lint in `make check` that fails if a flow script calls ngspice without the harness.",
+    "evidence": "Measured with .scratch/review_automation/tp_eye.spice (120 FETs, 1.5 \u00b5s, tmax 0.1 ns, 57,470 iterations). Plain cx: 7.34 s wall at 639% CPU. With the three variables: 3.97 s on 1 core. harness/runner.py line ~207 already sets them. log/sim_harness.md measured 0.1 s becoming 11 s with 6 parallel runs."
+   },
+   {
+    "section": "Handoff 0.4 G4/G5, 15; GUIDE 7",
+    "severity": "major",
+    "problem": "Replacing gates with 'written pass criteria checked by scripts' lets an agent move the goalposts after seeing results. There is also no guard against a vacuous PASS, such as a missing run, a skipped corner, or a failed .meas that the harness reports as meas_failed.",
+    "improvement": "Commit spec/gates.yaml first, with every limit AND the expected run counts per testbench. flow/gates.py reads results.json and writes gates.json. report.py prints PASS only if all runs have status ok and the actual run count equals the expected count. Any later change to a limit needs a dated waiver entry in spec/decisions.yaml, and the report prints waivers at the top. Run `make audit` with a different agent in a fresh work dir.",
+    "evidence": "log/sim_harness.md section 2: ngspice returns exit code 0 even when measurements fail, and a missing measurement is classed as meas_failed. log/layout_magic.md: Netgen prints 'Circuits match uniquely' even with property errors, so a naive grep passes a wrong layout."
+   },
+   {
+    "section": "Handoff 9.1-9.4 (QC for G4/G5)",
+    "severity": "major",
+    "problem": "Without a human at the gates, nothing proves the gates can fail, and nothing cross-checks the sizing method against the simulator.",
+    "improvement": "Add four checks to `make check` and `make full`. (1) Gate mutation tests: one deliberately broken variant per gate, each of which must FAIL it, for example input pair area divided by 4 (offset gate), failsafe polarity swapped (TB7), one W doubled (LVS property gate), guard ring opened (DRC/LVS). (2) A generated LUT-versus-SPICE table from TB1: per device gm/ID, ID, and VDS minus VDsat against the sizing script, at all 7 VIC and all corners. (3) Sanity limits: Idd band, no node outside -0.3 V to VDD+0.3 V, no model warnings, output toggle count equal to input toggle count, BER = 0 over the 127-bit PRBS sampled at mid-UI before any eye number is trusted. (4) A clean-room replay by the audit agent, comparing results.json to the builder's within tolerance. Monte Carlo is seeded and was proven bit-identical.",
+    "evidence": "The harness already has 41 unit tests, selftest_gmid has 296 checks, and layout run_all.sh proves LVS fails on a wrong W=7u. log/verify_luts.md and log/luts.md show LUT-versus-.op agreement of 0.03-0.09% in normal use, so a tolerance of \u00b110% on gm/ID is realistic. Re-running 1200 MC runs with --force gave max |diff| = 0 V."
+   },
+   {
+    "section": "Handoff 9.3, 8.1; GUIDE 7 G2",
+    "severity": "major",
+    "problem": "The '6\u03c3 inside \u00b1100 mV' criterion cannot be measured with N=200. The standard error of \u03c3 at N=200 is about 5%, and tail extrapolation from 200 samples is not statistics. The proposed G2 also says 'failsafe output HIGH' but not at what guarantee level. The handoff says full 6\u03c3 needs \u03c3 of about 4 mV, which is expensive in area and speed. An agent will otherwise stop at the first failure.",
+    "improvement": "Pin the G2 guarantee level in spec.yaml. Open or idle-terminated inputs read HIGH at \u22654\u03c3 over mismatch across all 45 corners. Shorted inputs read HIGH at \u22653\u03c3, with a documented deviation. Report mean \u00b1 k\u03c3 with a Gaussian normality check on N=1000 DC offset samples. Make the offset MC a DC measurement with hysteresis off, about 0.3 s per sample. Use a smaller transient MC (N=100) only to confirm the hysteresis spread. Derive seeds from a hash of the run key and skip seeds 1 and 2.",
+    "evidence": "log/sim_harness.md: the 12 Pelgrom groups share the same 200 seeds (common random numbers); the independent N=1000 check gave ratio 1.025 at 1.11 standard errors; seeds 1 and 2 produced the same offset to 0.01 mV. Handoff 8.1 and GUIDE 1.6 give the \u03c3 of about 4 mV requirement for a 6\u03c3 failsafe."
+   },
+   {
+    "section": "Handoff 0.4 G2/G3, 10, 16 (risks)",
+    "severity": "major",
+    "problem": "The proposed G2 and G3 contain no fallback ladder. When PMOS-pair speed, the N/P overlap at ss/3.0 V, or offset area fails, the handoff's answer is to 'move up a level' or lower the rate. Those are spec changes and would trigger a stop-and-ask, contradicting the minimal-involvement goal.",
+    "improvement": "Add spec/decisions.yaml with pre-authorised, ordered fallbacks that agents may take, each recorded with its measured reason. Rate: 100, then 80, then 50 Mb/s per lane, with margin to 200 retained only at the first rung. Failsafe guarantee: 4\u03c3, then 3\u03c3. Hysteresis band: 20-30 mV, then 15-40 mV. Extra gain stage, then PMOS L from 0.4 to 0.28 \u00b5m. Reduced CM range (about 0.05-1.8 V) only as the last rung, and flagged 'deviates from TIA-644-A'. flow/iterate.py is bounded, for example 8 iterations per phase, logs iterations.jsonl, and ends in a report rather than a question.",
+    "evidence": "Handoff 10 gives the symptom-to-knob table, which is already machine-friendly. Handoff 16 risk rows list these exact mitigations. Handoff 5.3 option A reaches only about 2.07-2.16 V CM at 3.3 V, so the CM-range rung is real."
+   },
+   {
+    "section": "Handoff 2.1-2.7, 3.3, 12, 15 P6; GUIDE 5, 6",
+    "severity": "major",
+    "problem": "Many paths and steps in the plan are wrong for this machine. An agent following them verbatim would write outside the allowed directory, edit main's git config, or fail to find a reference.",
+    "improvement": "Apply this substitution table in the plan or in spec/paths.yaml. GMID_BOOK becomes /foss/designs/Analog (read-only). No venv or pip: pygmid 1.2.12, numpy, scipy, matplotlib and pyyaml are system-wide. No docker run or clone: the container exists and the worktree is /foss/designs/.claude/worktrees/lvds-rx on branch worktree-lvds-rx, so the branch name analog/lvds-rx-macro is not used and the orchestrator commits. Use the in-tree analog/lvds_rx/.gitignore instead of .git/info/exclude. Macro packaging goes to analog/lvds_rx/package/ instead of macros/lvds_rx_x3/ and rtl/lvds_rx_x3.v. The simple_por reference is at /foss/designs/layout_announcement/caravel-gf180mcu-main/macros/simple_por (not in the worktree). `origin/main:` references become `git show main:<path>`. Result logs must be .json/.csv/.md because *.log is gitignored. The handoff expects commit 6f2310f; HEAD is 9be761d. Replace DESIGN_LOG.md and sim/plots with generated results/REPORT.md.",
+    "evidence": "`git rev-parse --git-dir` returns .git/worktrees/lvds-rx, so .git is a file and its common dir is the main checkout. `git check-ignore` confirms luts/*.mat, *.raw and work/ are ignored in-tree. `ls layout_announcement/caravel-gf180mcu-main/macros` fails in the worktree but succeeds under /foss/designs (main checkout). The .gitignore in analog/lvds_rx lists *.log. ENV_REPORT section 7 documents the kit-xschemrc write hazard."
+   },
+   {
+    "section": "Handoff 2.7, 9.1, 9.4, 15 (reproducibility)",
+    "severity": "major",
+    "problem": "The plan has no single command, no machine-readable result contract, and a hand-written DESIGN_LOG that mixes narrative with numbers. A reader cannot tell which commit, netlist, or LUT produced a number.",
+    "improvement": "Add a Makefile and flow/run_all.py on top of the existing harness, with targets check, smoke, full, layout, report, audit and clean. Use the layout documented in log/review_automation.md (spec/, flow/, results/, package/). results/manifest.json records commit and dirty flag, tool versions, sha256 of sizes.spice, netlists, specs and LUT files, expected versus actual run counts, and wall times. sizes.spice carries a header hash of the sizing script, LUTs and spec; the netlist build refuses a stale hash, which mechanically enforces 'never tune W by hand'. report.py templates every number, and the narrative cites result IDs only. Commit results/ (JSON, CSV, small PNGs).",
+    "evidence": "sim/harness already writes summary.md, results.json, results.csv, a per-run result.json, a SHA-256 cache key and a --force flag (sim/harness/README.md). make, python3 and pyyaml 6.0.3 exist in the container (checked with tchk.sh). Handoff rule 3 and the pipeline_adc_design README define the single-source-of-truth idea."
+   },
+   {
+    "section": "Handoff 15 (time expectations), 9.4",
+    "severity": "major",
+    "problem": "The estimates are weeks of calendar time, and the plan gives no run counts, so an agent could either under-test or burn hours. The dominant cost is Monte Carlo transients, not corners.",
+    "improvement": "Size the regression as follows. Full tier: TB1 full45 x 7 VIC x 3 VID (945 runs, about 3 CPU-min). TB2 full45 x 7 VIC (315 runs, about 3 min). TB3 full45 x 3 VIC (135 runs, about 9 min). TB4 full45 x 7 VIC x 2 VID (630 runs, about 4 min). TB5 eye with 15 corners x 3 VIC x 2 VID x 2 rates (180 runs, about 24 min). TB6-TB10 about 150 runs (about 20 min). DC offset MC N=1000 x 3 VIC x 5 corners (15000 runs, about 75 min). Transient hysteresis MC N=100 x 3 VIC x 2 corners (600 runs, about 40 min). Total about 18000 runs, roughly 180 CPU-minutes, so 30-40 minutes on 6 jobs. Smoke tier: tt plus worst5, MC N=30, 3-5 minutes. Post-layout: about 100 runs, 25 CPU-min. Put expected counts and a time budget into gates.yaml and re-measure on the real netlist.",
+    "evidence": "Measured: 120 FETs, 1.5 \u00b5s transient is 4 s single-threaded; 2400 small harness runs took 53 s on 6 jobs (0.13 s per run per job); one layout DRC plus LVS round is about 15 s (log/layout_magic.md). The per-run costs for the real RX and the pad network are assumptions, flagged as such. The 8 core machine is now used by one agent only."
+   },
+   {
+    "section": "Handoff 11, 15 P5, 16 (layout effort); GUIDE 9.8, 14",
+    "severity": "minor",
+    "problem": "'The user does the critical matched devices by hand' is no longer needed, but the scripted flow has two known gaps. Netgen's internal net names are coordinates, so a mismatch cannot be located, and widths can drift between sizing and layout.",
+    "improvement": "layout/gen_lvds_rx.tcl reads the device table (W, L, nf, matching group) generated by the sizing script, so layout and netlist cannot drift. Label every net segment in the layout so Netgen and Magic reports name nets. Gates: Magic DRC 0, KLayout foundry deck 0 main and 0 antenna, Netgen LVS including the 'property errors' line, pin list equals the package pin list, and post-layout delta \u226430% of margin. The owner receives rendered PNGs, not a blocking review.",
+    "evidence": "log/layout_magic.md: ABBA with dummies, interdigitated mirror, guard rings and labelled pins were built by script. DRC and LVS were clean in 39 s for the toy. Its 'Gaps I did not close' section lists the missing routing allocator and short/open locator. The Netgen property-line trap is documented there too. sak-drc -k is unsupported for gf180mcuD, so the KLayout run_drc.py deck must be called directly (ENV_REPORT section 8)."
+   },
+   {
+    "section": "Handoff 9.1 (input network), 14.9 Q4, 7.9",
+    "severity": "minor",
+    "problem": "The package bond wire (2-5 nH, 0.5-1 pF) is marked UNVERIFIED and the plan asks the organizers for package data. This is a human dependency for something a sweep covers.",
+    "improvement": "Replace the question by a bounded sensitivity corner. L in {1, 5} nH and C in {0.5, 1.5} pF run at worst-case corners only (4 combinations multiply only the worst cases of TB5 and TB6). Record the result as a 'package sensitivity' table. Ask for real package data only as an optional owner follow-up. The secondary ESD (own series R plus diodes) gets no pass/fail simulation claim; check only R times peak current and diode area against the pad's own diodes, and write package/KNOWN_LIMITS.json with `esd_secondary: UNQUALIFIED`.",
+    "evidence": "log/pad_model.md and sim/tb0_pad hold the pad CDL conversion already. Handoff 9.1 itself says the L/C numbers are UNVERIFIED. The organizers' ESD cell is stated as unavailable in the task."
+   },
+   {
+    "section": "Handoff 5.4, 2.7 (xschem)",
+    "severity": "minor",
+    "problem": "'Generated or consistent xschem schematics' is vague and could consume time, since schematic connectivity is by coordinate and hand-placed wires for about 60 devices are error-prone.",
+    "improvement": "Make xschem strictly optional and last. Generate .sch by script with every device on a grid and a lab_pin on every terminal (no wires), then check it automatically: `xschem -n` netlist compared against the golden netlist with Netgen. Export SVG for the owner. Never use the kit xschemrc; use the PDK rcfile and always wrap xvfb in `timeout`.",
+    "evidence": "docs/ENV_REPORT.md section 7: a hand-written .sch was netlisted and simulated correctly; the lab= attribute on N wires is ignored on load; connectivity is by coordinate; xvfb without --command hangs; the kit xschemrc once overwrote a kit file."
+   },
+   {
+    "section": "Handoff 0.3 rule 1, 12; Task G1/G6",
+    "severity": "minor",
+    "problem": "Packaging (P6) wants macros/lvds_rx_x3/ and rtl/lvds_rx_x3.v at the repo root, and `Odb.CheckDesignAntennaProperties`/OpenSTA checks need a consumer. Writing to repo-root directories breaks the 'only inside analog/lvds_rx' rule, and the LEF/liberty have nothing to be tested against until integration.",
+    "improvement": "Build the package under analog/lvds_rx/package/ with the same internal structure. Test it with the tools that exist in the container (openroad and sta are present): LEF antenna property check, liberty load in OpenSTA, and the behavioural-model testbench with iverilog. The orchestrator copies it to macros/ and rtl/ at the P8 gate. State in package/README that nothing under macros/, rtl/, info.yaml, lvs_config.json or the padframe was touched.",
+    "evidence": "`which openroad sta yosys` returned /foss/tools/bin entries (tchk.sh). Handoff section 12 gives the paths. Task rule 2 restricts writes to analog/lvds_rx/ subdirectories."
+   }
+  ],
+  "gate_decisions": [
+   {
+    "gate": "G0 (environment)",
+    "verdict": "agree",
+    "decision": "Resolve by an automated `make check` that confirms the book path /foss/designs/Analog, LUT load numbers (0.802 V, 3.30 GHz, 2.70 \u00b5A/\u00b5m), PDK sections and mismatch coefficients, tool versions, and the OMP environment in tools/cx. It writes results/env.json. Add the OMP exports to tools/cx.",
+    "rationale": "Everything the handoff lists for G0 is already verified in docs/ENV_REPORT.md and log/luts.md. The only open item is the OMP environment, measured above."
+   },
+   {
+    "gate": "G1 (ambition)",
+    "verdict": "agree",
+    "decision": "Macro only, P0-P6, all inside analog/lvds_rx/ (including the package). P7/P8, info.yaml, lvs_config.json, the padframe, and anything on main stay owner-gated. No push, no tag.",
+    "rationale": "This matches handoff rule 1 and the cost/benefit in 0.2: LVDS alone gives about 1x speed. The macro is a self-contained learning deliverable, and the single-agent worktree cannot disturb the A56 submission. Packaging under analog/lvds_rx/package/ keeps the write boundary clean."
+   },
+   {
+    "gate": "G2 (spec)",
+    "verdict": "change",
+    "decision": "Keep the proposed numbers (100 Mb/s with margin to 200, CM 0.05-2.35 V, off-chip termination, hysteresis 20-30 mV, failsafe HIGH, 3 lanes sharing one bias, EN). Also pin the failsafe guarantee (open and idle inputs HIGH at \u22654\u03c3 over all corners, shorted inputs \u22653\u03c3 with a documented deviation), define pass at mean\u00b1k\u03c3 from N=1000 DC offset MC, and add a pre-authorised fallback ladder in spec/decisions.yaml (rate, guarantee level, hysteresis band, extra stage, CM range last).",
+    "rationale": "The proposal is right on the numbers but incomplete. A 6\u03c3 claim from N=200 is unmeasurable, and without a ladder the first missed spec (PMOS speed at offset-sized area, N/P overlap at ss/3.0 V) forces a stop and ask. The handoff itself names those risks."
+   },
+   {
+    "gate": "G3 (architecture)",
+    "verdict": "agree",
+    "decision": "Baseline hybrid complementary-input preamp with resistor loads, hysteresis comparator, single-ended stage plus inverter chain, constant-gm bias. Build PMOS-only option A first but time-box it to TB1-TB4 at TT plus worst5, with no MC and no layout. Use it as the shake-down of the regression flow. Parameterise the netlist so that the NMOS pair and tail-dump devices are an enable switch, not a rewrite.",
+    "rationale": "Option A cannot meet the full 0.05-2.35 V range (about 2.07-2.16 V CM top at 3.3 V). It is therefore only valuable as a cheap end-to-end exercise of sizing, netlist, harness, gates and report. Spending full MC and layout effort on it would be wasted."
+   },
+   {
+    "gate": "G4/G5 (go to layout / macro sign-off)",
+    "verdict": "change",
+    "decision": "Replace by frozen spec/gates.yaml, script-evaluated gates.json, expected-run-count checks, gate mutation tests, the LUT-versus-SPICE cross-check, and an independent `make audit` by a different agent from clean. Allow layout scripting to start once TT plus worst5 smoke passes, not after full MC, because scripted layout is cheap (15 s per DRC/LVS round); full MC gates the layout sign-off, not its start. Results are reported at the end.",
+    "rationale": "The proposal is right to automate but under-specified. The two failure modes are moving the goalposts after seeing results and counting a vacuous PASS (meas_failed, missing runs, Netgen's 'match uniquely' line with property errors). Both are documented in the harness and layout logs. Letting layout start early cuts serial dependency without risk."
+   },
+   {
+    "gate": "G6 (info.yaml / padframe)",
+    "verdict": "agree",
+    "decision": "Hard human gate, out of scope. Not touched. The organizer email (GUIDE section 8) stays an owner action.",
+    "rationale": "Changing pins needs a new padframe from the auditor, a full re-harden, and a new review. That affects a submitted chip and requires the organizers' answers, which an agent cannot obtain."
+   },
+   {
+    "gate": "Layout fully scripted",
+    "verdict": "agree",
+    "decision": "Scripted Magic Tcl (gencell-based) with the device table read from sizing. Matched pairs as ABBA or cross-quad with dummies, guard rings, every net segment labelled. Owner views rendered PNGs afterwards, non-blocking.",
+    "rationale": "log/layout_magic.md proves ABBA with dummies, interdigitated mirror, guard rings and labelled pins by script, DRC 0 on Magic and the foundry KLayout deck, Netgen match, and a post-layout simulation delta of 6.9%. The remaining gaps (net locator, routing allocator) are addressed by labelling every net."
+   },
+   {
+    "gate": "Secondary ESD (own R + diode, flagged unqualified)",
+    "verdict": "agree",
+    "decision": "Series poly resistor plus diodes from the PDK gencell diodes, sized by an R x I and diode-area rule only. package/KNOWN_LIMITS.json states `esd_secondary: UNQUALIFIED`, and the REPORT shows it. No simulated ESD pass/fail claim.",
+    "rationale": "There is no HBM/CDM model in this open flow. Claiming an ESD pass would be a pass nobody observed. Flagging it keeps the macro honest and lets organizers substitute their cell later."
+   },
+   {
+    "gate": "Schematics (SPICE source of truth; xschem generated)",
+    "verdict": "agree",
+    "decision": "SPICE netlists plus sizes.spice are the source of truth. xschem is optional and last: a label-only generated .sch, checked by netlisting it and comparing with Netgen, exported to SVG.",
+    "rationale": "The handoff already says this (5.4), and ENV_REPORT proves script generation and headless netlisting work. A generated and automatically checked schematic costs little. Hand-placed wiring would cost much for no verification gain."
+   }
+  ],
+  "human_only": [
+   "Anything touching info.yaml, lvs_config.json, the padframe, signed-off collateral, or main: owner decision plus a new template from the organizers. Least effort: the owner reads the draft questions in GUIDE section 8, edits them, and sends them. Nothing else is needed from the owner until answers arrive.",
+   "Sending the organizer email and relaying the answers (pin count, analog template geometry, package and bond wire data, secondary ESD cell, LVS keys). Agents cannot contact anyone; the draft already exists, so this is one send action.",
+   "Merging or pushing the worktree-lvds-rx branch, tagging a freeze, and deciding on P7/P8 integration or shuttle: the owner types an explicit yes. The orchestrator can prepare the commit and a one-paragraph summary.",
+   "Providing the organizers' real secondary-ESD cell or ESD qualification, and the actual package, pad-to-pin and bond-wire data. These exist only on the organizers' side. The sweep (L 1-5 nH, C 0.5-1.5 pF) and the flagged own network make the macro work without them.",
+   "Silicon, board and bring-up (LVDS driver, FPGA board, 100 ohm termination, scope). Out of scope until silicon exists.",
+   "Optional and non-blocking: looking at the rendered layout PNGs and the sizing report for learning. The REPORT and a short generated digest can be reviewed at any time; no gate waits on it."
+  ],
+  "simplifications": [
+   "Make DC input-referred offset Monte Carlo (hysteresis off, about 0.3 s per sample, N=1000) the main statistical gate. Use the deterministic corner sweep for hysteresis and a small transient MC (N=100) only to confirm. This avoids the 4 s per sample transient cost and the unmeasurable 6\u03c3 claim.",
+   "Two tiers everywhere: smoke (tt plus worst5, MC N=30, 3-5 minutes) for every iteration, full (full45 and MC, 30-40 minutes on 6 jobs) only at checkpoints and for the audit. Agents never run full inside the iterate loop.",
+   "Express matched devices as total W with nf, never with m, so the Monte Carlo is not 2x pessimistic (review_circuit measured 6.79 mV for m=4 against 3.4 mV for nf=4).",
+   "Use the parameter-only SPICE netlist plus one generated numeric flat LVS reference (gen_lvs_ref.py) so sizing, simulation, layout and LVS all read one device table.",
+   "Build option A (PMOS-only) only through TB1-TB4 at TT plus worst5 as a flow shake-down, then go straight to the baseline; skip MC and layout for A.",
+   "Defer xschem entirely until layout passes. Produce it as a generated, auto-checked, label-only schematic, since nothing downstream depends on it.",
+   "Put package under analog/lvds_rx/package/ and test it with openroad and sta already in the container, so P6 is complete inside the allowed directory and the orchestrator copies it at integration time.",
+   "Drop the 3-lane TB10 and TB6 supply-noise runs from the full45 grid; run them at worst5 plus tt only, since lane-to-lane skew and supply-noise sensitivity do not need 45 corners."
+  ]
+ },
+ "review:layout": {
+  "overall": "The layout side of the plan is sound in direction but too trusting of tool output, and it keeps the human in the wrong place. Pathfinder evidence (toy cell: Magic DRC 0, foundry KLayout deck 0 at 0.001 um DBU, Netgen unique match, PEX simulation) shows fully scripted Magic layout is viable, so critical matched layout does not need a GUI. Real risks are checker divergence, silent generator parameters and a macro geometry mismatch. (1) Magic's in-session DRC is blind to rules the foundry deck enforces. I observed NP.12/PP.3cii on a PMOS gencell with guard 1, DF.13_LV on one with guard 0, and MSLOT.1 on a 40 um wide Metal3 plate, all with Magic DRC 0. (2) The gencell silently ignores `m`/`area` on diodes and `snake`/`dummy` on resistors, and `ppolyf_u` sits in an n-well whose bulk node is unlabeled. (3) The plan's LVS exit string \"Circuits match uniquely\" is a known false pass (the cookbook shows it appears even with W/L errors). (4) The 400x250 um budget is fine for area (about 0.03 mm2 of devices) but wrong in shape: six pads at 100 um pitch need about 545 um of width. (5) The LEF and Liberty packaging works (Liberty parsed in OpenSTA, LEF emits pins and ANTENNADIFFAREA), but there are origin and unit traps. Nothing in P0-P6 truly needs the human. Changing the exit criteria to the KLayout deck on the written GDS plus strict Netgen, adding a generator self-check, and resizing the macro to a wide strip removes most layout risk. Evidence and scratch scripts are in log/review_layout.md and .scratch/review_layout/.",
+  "findings": [
+   {
+    "section": "11.1, 16 (layout effort row)",
+    "severity": "major",
+    "problem": "The plan leaves the input-pair common centroid, symmetric differential routing and termination to the owner in a GUI. The owner now wants no hand layout, and the pathfinder already built an ABBA pair with end dummies, a mirror and rings by script. The real gap is routing logic, not devices.",
+    "improvement": "Make Magic (Tcl, layout/magic_flow/lib/lf.tcl with magic::gencell devices) the layout engine, driven by a small Python orchestrator that emits the Tcl. Add the missing pieces: (a) a track/column allocator that assigns each net a Metal2 column and a Metal3 channel track and rejects overlaps before painting; (b) a short/open locator, either Magic `select`/`what` at the coordinates in Netgen's auto-names or KLayout LayoutToNetlist tracing; (c) leaf generators: matched pair with dummies, mirror, resistor array with own dummies, ring, via stack, tap, ESD cell. Use KLayout Python only for checks (deck, via arrays, bbox, ABBA gate-order read-back). Do not use gdsfactory. The KLayout pymacros pfet has interdig/patt/deepnwell, but extraction and LVS still go through Magic and Netgen, so it adds a second device model with no LVS of its own. Keep 1-D ABBA with end dummies; a 2-D quad is unnecessary because the pairs are far larger than the offset needs.",
+    "evidence": "COOKBOOK.md sections 3 and 6 (gaps 1 and 2 named, toy clean in all checks, 204-device build 1.8 s). KLayout pcell param list printed in k4.sh: pfet params include interdig, patt, deepnwell. Offset arithmetic: WL = 2*(6.66/2)^2 = 22 um2 per device for sigma(dVth pair) = 2 mV."
+   },
+   {
+    "section": "11.3 exit criteria, 14.5",
+    "severity": "blocker",
+    "problem": "The exit list starts with \"Magic DRC 0\" and \"Netgen Circuits match uniquely\". Magic misses foundry rules, and the Netgen string is a false pass.",
+    "improvement": "Gate every build iteration on the KLayout foundry deck (main plus antenna, read from the .lyrdb counts, on the written GDS, DBU checked = 0.001). Use Magic DRC only as a fast first filter, run on the GDS read-back. Replace the LVS criterion with lvs.sh semantics: the exact line \"Netlists match uniquely.\", no \"property errors\", no port errors, device and net counts equal. Add negative controls (wrong W, cut wire, bridge) to the macro sign-off script. Add a read-back check of the ABBA gate order from the .ext, because Netgen merges parallel fingers. Order: Magic DRC, KLayout main and antenna, check_via_arrays.py, strict LVS, PEX C then selective RC, post-layout sim.",
+    "evidence": "Observed Magic DRC 0 against KLayout NP.12 x1 + PP.3cii x2 (pfet guard 1 topc 0 botc 0), DF.13_LV x1 (pfet guard 0), MSLOT.1 x1 (40x40 um Metal3). Cookbook pitfall 8 (false pass with property errors) and pitfall 7 (NP.8a disagreement)."
+   },
+   {
+    "section": "11.1 (gencell syntax), 7.8, 7.9",
+    "severity": "major",
+    "problem": "The gencell silently ignores unknown keywords. Diode `m`/`area` and resistor `snake`/`dummy` have no effect, so a layout can pass DRC and LVS while having the wrong ESD diode size or no dummy resistors. The `ppolyf_u` gencell sits in an n-well, so its bulk is a well node that needs a VDD tie, not VSS. `ppolyf_u_1k` sits in p-substrate (VSS).",
+    "improvement": "Use the diode generator's real parameters (w, l, nx, ny; w 5 l 5 gives area=25p pj=20u). Add a generator self-check step to every leaf: after gencell, extract and assert W/L/nf, area/pj and r_width/r_length against the request, and fail the build otherwise. Build resistor dummies and snakes by own painting. Label the well node and netlist the bulk terminal explicitly: VDD for `ppolyf_u`, VSS for `ppolyf_u_1k`. Record the choice per resistor in the schematic.",
+    "evidence": "d5.sh and d6.sh output: `m 4` and `area 100` both extracted area=0.2025p pj=1.8u; `w 5 l 5` gave area=25p pj=20u, Magic 0 and KLayout 0. `snake 1 dummy 1` gave a straight 40 um resistor with one extracted device; `nx 3` gave three. r5.py layer dump: x_res2 (`ppolyf_u`) has Nwell 21/0, x_res1 (`ppolyf_u_1k`) does not. Extracted `ppolyf_u` third node was `w_n416_n1318#`."
+   },
+   {
+    "section": "11.2 item 7, 12 (VDD/VSS Metal3 straps)",
+    "severity": "major",
+    "problem": "VDD/VSS are specified as Metal3 straps without a width limit. The foundry deck flags metal wider than 30 um unslotted (MSLOT.1), Magic does not, and shielding plates over the pairs hit the same rule. Metal3 straps also share the layer with horizontal signal routes in the proposed layer discipline.",
+    "improvement": "Cap every Metal1-Metal3 shape at 29 um in either dimension (use several parallel 8-20 um straps, no solid plates). Reserve Metal3 tracks: power straps only at row boundaries (over ring gaps), signals on Metal2 vertical and in Metal3 channels between rows. Size the strap pitch to cross at least two block M4 PDN stripes so add_pdn_connect lands (read the M4 pitch from the block pdn_cfg.tcl before drawing). After integration, rerun check_via_arrays.py on Via3, since the PDN builds the M3-M4 via arrays.",
+    "evidence": "d7.sh: 40x40 um Metal3 gave Magic 0 and KLayout MSLOT.1 x1; 40x40 um Metal1 the same; 25 um wide strap clean. check_via_arrays.py header: Vn.2b is not in the open deck and only matters for arrays of 4x4 or more."
+   },
+   {
+    "section": "14.2, 12 (LEF SIZE), 11 header",
+    "severity": "major",
+    "problem": "The macro budget of at most 400x250 um conflicts with the pad geometry: six analog pads at 100 um pitch span about 545 um, so a 400 um macro needs long lateral routes that break P/N symmetry. Area itself is not the problem: devices need roughly 0.03 mm2.",
+    "improvement": "Make the macro a wide strip, about 600 x 130-150 um plus a 15-25 um margin via FIXED_BBOX. Centre lane k under pad slots 2k and 2k+1 (lane centres 200 um apart) and give each of P and N an equal-length, mirrored Metal3 fan-in of about 50 um. Put pin x-positions in one parameter list (slot x from the pad map), because the finger positions are inferred, so a late change re-spins only the pin row. Total area stays below the 100000 um2 of the original box.",
+    "evidence": "Handoff 14.2 itself: N01-N06 span x about 45-590 um and the pin pitch is 100 um. Device estimate: pair 10 fingers x 5 um is about 11.3 x 6.8 um from the cookbook formula width=(nf-1)(L+0.52)+L+1.12+0.62, lane about 70x110 um, three lanes plus bias about 0.03 mm2."
+   },
+   {
+    "section": "7.9, 11.2 items 5-6, 16",
+    "severity": "major",
+    "problem": "The own secondary ESD is reasonable as a learning structure behind the asig_5p0 pad (which has primary diodes only, D2/D3 4x150 um2 each and no power clamp), but several points are unspecified. The default gencell diode is 0.45x0.45 um, far too small. The `nd2ps` diode injects electrons when the pin goes below VSS, so it needs a p+ guard ring and spacing from NMOS. The only latch-up rule coverage in the open deck is DF.13_LV/DF.14_LV (20 um tap distance) and off-grid/angle checks on Latchup_MK, so latch-up cannot actually be verified. R_esd current robustness is unquantified.",
+    "improvement": "Build ESD as one swappable sub-cell with a fixed pin interface (pad side, gate side, VDD, VSS) so the organizers' Metal2/Metal3 cell can replace it without touching the lanes. Use w 5 l 5 or larger diodes (or nx/ny arrays), a wide R_esd (at least 2 um, check current density against the resistor and metal width rules), diodes placed right at the pair gates, and a guard ring around the NMOS diode. Flag as UNQUALIFIED in README, LEF notes and the final report: no HBM/CDM data, no foundry ESD rule deck run (only ESD implant geometry rules exist), no latch-up verification, no transient ESD simulation. Do not claim ESD compliance anywhere.",
+    "evidence": "Handoff 1.3 item 4 (asig_5p0 netlist). d6.sh: gencell diode w 5 l 5 area=25p, Magic 0 and KLayout 0; default 0.2025p. Deck grep: Latchup_MK used only in geom.drc offgrid/angle; DF.13_LV/DF.14_LV in comp.drc; GR.* is GUARD_RING_MK (seal ring)."
+   },
+   {
+    "section": "12.2 (LEF)",
+    "severity": "minor",
+    "problem": "`lef write -hide` works, but the plan does not mention three traps: ORIGIN is the cell bbox lower-left, so the LEF origin is nonzero unless the bbox starts at (0,0); `property FIXED_BBOX` is read in lambda (0.05 um) while displayed in internal units, so a wrong scale silently gives a 10x wrong SIZE; ANTENNADIFFAREA is only written after `extract all` and only for nets with diffusion.",
+    "improvement": "In the build script: move the content so the lower-left is (0,0), set FIXED_BBOX in lambda computed from microns (um/0.05) with lower-left 0 0 so the 15-25 um margin is in SIZE and ORIGIN is 0 0, run `extract all` before `lef write -hide`, then verify by reading the LEF into OpenROAD with the tech LEF and asserting SIZE, pin layers (RXn_P/N on Metal2 or Metal3 on the top edge), USE POWER on VDD/VSS, ANTENNADIFFAREA on the pad pins, and that the GDS bbox equals SIZE. No Metal4/Metal5 shapes, so OBS limits are met by construction.",
+    "evidence": "ant.sh: LEF with a diode on the pin net had `ANTENNADIFFAREA 2.376100`, `ORIGIN 0.310 0.310`. fb.sh: typed FIXED_BBOX -400 -600 4000 3400, stored -4000 -6000 40000 34000, LEF `ORIGIN 20.000 30.000`, `SIZE 220.000 BY 200.000`. r3.sh/r4.sh: Nwell and Pwell are MASTERSLICE in the tech LEF and the SRAM LEF also lists `LAYER Nwell`."
+   },
+   {
+    "section": "12.3 (Liberty), 14.4",
+    "severity": "minor",
+    "problem": "The Liberty plan is correct in spirit but incomplete. Parseability is unproven in the plan, the corner list is only the three keys the config uses, and the macro SPICE for LVS_SPICE_FILES must have the same subckt name and pin names as the Verilog and LEF.",
+    "improvement": "Use the tested skeleton (pg_pin VDD/VSS with voltage_map, `is_analog : true` inout pad pins with capacitance from PEX, EN as input, RXn_O outputs with max_capacitance, is_macro_cell, same corner names as the block config: tt_025C_3v30, ss_125C_3v00, ff_n40C_3v60). Add a check script that runs OpenSTA read_liberty on each file, and a name-equality check between LEF pins, Liberty pins, Verilog ports and the .spice subckt header. The Magic-extracted .spice is for standalone LVS; for the integration file write a clean subckt with the gf180mcuD device names and the pin order of the Verilog. The semantics of LVS_NOFLATTEN remain an organizer question (owner-gated, G6).",
+    "evidence": "t2.sh: OpenSTA 3.1.0 `read_liberty` of .scratch/review_layout/t.lib printed LIB_OK. librelane/config_acv.yaml lines 61-67 key the SRAM libs by tt_025C_3v30, ss_125C_3v00, ff_n40C_3v60. The repo SRAM .lib files carry pg_pin."
+   },
+   {
+    "section": "11.3 (check_via_arrays, density, antenna)",
+    "severity": "minor",
+    "problem": "Two sign-off details are easy to misplace: Vn.2b only matters for arrays of at least 4x4, so inside an M1-M3 macro it is mostly trivially clean and the real risk is at integration; density is a chip-level matter, but the poly-resistor markers constrain chip fill (DPF.8 requires dummy poly 19.7 um from RES_MK, DCF.8a 3.5 um for dummy COMP).",
+    "improvement": "Run check_via_arrays.py on the macro (cheap) and again on the integrated block. Ask the organizers (bundle with the G6 questions) whether chip fill respects RES_MK and whether analog regions are excluded. Keep resistors compact in one RES_MK region far below the 15000 um2 limit (PRES.9b/HRES.12b). Run KLayout antenna on the macro with the diodes in place and check the antenna count of the three lane inputs both with and without the secondary diodes.",
+    "evidence": "check_via_arrays.py header and code; deck lines dummy_poly2.drc 74-77, dummy_comp.drc 70-73, pres.drc 96, hres.drc 139; density.drc rules DCF.1b/M1.4 etc. are die-wide percentages."
+   },
+   {
+    "section": "11.1 (hierarchy), cookbook pitfalls",
+    "severity": "minor",
+    "problem": "Hierarchy handling for three replicated lanes is unspecified. gencell devices are read-only sub-cells that must be flattened before editing, extraction needs flat or consistent hierarchy for Netgen, and the pathfinder verified only W=4 um with L=0.5 and 1.0 um (plus W=2 um in the self-test).",
+    "improvement": "Build one lane cell fully (place, flatten, wire), then instantiate it three times with `getcell` and mirror/offset only; flatten the final macro for the KLayout deck and use `ext2spice subcircuit descend off` with the schematic written hierarchically (lane subckt x3 + bias) or flat consistently. Add leaf tests for the final device sizes (finger width 5 um at L 0.28 and 0.5 for the pair, the resistor sizes, the large diodes) before the lane build, each through the KLayout deck and strict LVS.",
+    "evidence": "COOKBOOK.md pitfalls 2, 11 and gap 6 (verified sizes); layout_magic.md gap list (only W=4/L=0.5,1.0 and W=2/L=0.5)."
+   }
+  ],
+  "gate_decisions": [
+   {
+    "gate": "G0 environment",
+    "verdict": "agree",
+    "decision": "Resolved by automated checks; book folder at /foss/designs/Analog.",
+    "rationale": "The layout toolchain was exercised end to end in the container (Magic gencell, KLayout deck at 0.001 um DBU, Netgen, OpenSTA read_liberty)."
+   },
+   {
+    "gate": "G1 ambition",
+    "verdict": "agree",
+    "decision": "Macro only (P0-P6); no integration, no chip or padframe change.",
+    "rationale": "Integration needs organizer answers (slot x positions, LVS keys, ESD cell) that are inferred in the handoff. The macro LEF/Liberty can still be produced and self-checked."
+   },
+   {
+    "gate": "G2 spec",
+    "verdict": "agree",
+    "decision": "100 Mb/s with margin to 200, full CM range, off-chip 100 ohm, hysteresis 20-30 mV, failsafe HIGH, 3 lanes + one bias, EN.",
+    "rationale": "Off-chip termination removes trimmed poly arrays and switches from the layout. Layout consequence: 3 lanes plus bias fit comfortably (about 0.03 mm2); shape is pad-pitch limited, so size the macro as a wide strip."
+   },
+   {
+    "gate": "G3 architecture",
+    "verdict": "agree",
+    "decision": "Hybrid complementary preamp baseline, PMOS-only option A first, then the NMOS pair.",
+    "rationale": "Layout-wise build both pair generators from the start (n-well vs p-sub guard, bulk ties) so adding the NMOS pair is placement only. 1-D ABBA with end dummies is enough at these areas."
+   },
+   {
+    "gate": "G4/G5 go to layout / macro sign-off",
+    "verdict": "change",
+    "decision": "Accept script-checked pass criteria plus an independent audit agent, but change the criteria: KLayout foundry deck on the written GDS, strict Netgen (exact match line, no property or port errors), ABBA gate-order read-back, negative controls, via-array script, LEF/Liberty/Verilog/spice name-equality check, PEX re-simulation.",
+    "rationale": "The plan's criteria (Magic DRC 0, \"Circuits match uniquely\") passed layouts that fail the foundry deck or have wrong W/L in my experiments, so a script gate built on them would be a false pass."
+   },
+   {
+    "gate": "G6 info.yaml / padframe",
+    "verdict": "agree",
+    "decision": "Hard human gate, out of scope now.",
+    "rationale": "Slot order, finger geometry, LVS key semantics and the secondary ESD cell are all unverified and owned by the organizers."
+   },
+   {
+    "gate": "Layout fully scripted (no GUI)",
+    "verdict": "agree",
+    "decision": "Scripted Magic Tcl driven by Python, with a track allocator and a short/open locator, and rendered images for the owner afterwards.",
+    "rationale": "Pathfinder shows it works. The missing routing logic is the main work item, so budget it as its own deliverable and test it on the toy before the lane."
+   },
+   {
+    "gate": "Secondary ESD (own R + diodes, flagged unqualified)",
+    "verdict": "agree",
+    "decision": "Keep, but as a swappable sub-cell with fixed pins and large diodes (w and l at least 5 um), a wide R_esd and guard rings; documented as unqualified (no HBM/CDM data, no latch-up deck).",
+    "rationale": "Primary protection already exists in the pad. A swappable cell lets the organizers' Metal2/Metal3 cell replace it without a lane rebuild."
+   },
+   {
+    "gate": "Schematics: SPICE netlists are the source of truth",
+    "verdict": "agree",
+    "decision": "Keep, with the schematic written hierarchically to match the layout and with dummies written in.",
+    "rationale": "Netgen merges parallel fingers, so dummies must be explicit and the layout-to-schematic mapping must be unambiguous; xschem views are generated afterwards."
+   }
+  ],
+  "human_only": [
+   "Nothing in phases P0-P6 truly needs the owner.",
+   "Later and owner-gated (G6): confirm with the organizers the real pad slot x positions and the info.yaml pin order, the semantics of LVS_NOFLATTEN / LVS_SPICE_FILES, whether chip fill respects RES_MK and excludes analog regions, and request their Metal2/Metal3 secondary-ESD cells. Least effort: one email or GitHub issue with these four numbered questions; the macro is built so only the pin row and the ESD sub-cell change.",
+   "ESD and latch-up qualification cannot be done by anyone here (no foundry ESD deck, no open latch-up deck): the owner only has to accept that the macro ships flagged UNQUALIFIED.",
+   "Optional: look at the rendered PNG of the macro for a sanity check. It is not a gate."
+  ],
+  "simplifications": [
+   "Use 1-D ABBA with dummy fingers at both ends for the pairs (not a 2-D quad): the pairs are far larger than the offset needs (about 22 um2 per device for 2 mV).",
+   "Fix the macro as a wide strip of about 600 x 140 um with a parameterised pin row and one lane cell instantiated three times, rather than a free 400x250 floorplan.",
+   "Cap all Metal1-Metal3 shapes at 29 um and use parallel straps instead of plates, which removes the MSLOT.1 class of surprises.",
+   "Prefer `ppolyf_u_1k` (p-substrate body, tied to VSS) for the bias and load resistors if the corner spread is acceptable; use `ppolyf_u` only with a labeled n-well tied to VDD.",
+   "Build ESD as one swappable cell with a fixed interface, and develop it last so the lanes do not depend on its details.",
+   "Keep PEX at C-coupled for all nets and run RC extraction only on the input pair, bias and output nets.",
+   "Skip DNWELL: the Magic gencell cannot generate it and nothing in the macro needs it for the shared-supply v1."
+  ]
+ }
+}

@@ -1,0 +1,65 @@
+
+===== NMOS  L=0.5u  options: (none)
+case                   ID[uA]  ID/Wtot[uA/um]   gm/ID   gds[uS]   Cgg[fF]   Cgs[fF]   Cgd[fF]   Cbs[fF]   Cbd[fF]    vth
+nf=1  W=5u             36.795          7.3590    7.91     1.792     6.857    -5.559     0.005     2.217     2.063  0.710
+nf=10 W=50u           366.807          7.3361    7.94    17.631    68.441   -55.374     0.047    22.170    20.634  0.712
+nf=1  W=50u           368.111          7.3622    7.94    17.693    68.441   -55.374     0.047    22.170    20.634  0.712
+nf=1  W=5u m=10       367.950          7.3590    7.91    17.922    68.569   -55.586     0.048    22.170    20.634  0.710
+nf=4  W=20u           146.723          7.3361    7.94     7.052    27.377   -22.150     0.019     8.868     8.253  0.712
+nf=2  W=10u            73.361          7.3361    7.94     3.526    13.688   -11.075     0.009     4.434     4.127  0.712
+
+===== NMOS  L=0.5u  options: .option wnflag=1
+case                   ID[uA]  ID/Wtot[uA/um]   gm/ID   gds[uS]   Cgg[fF]   Cgs[fF]   Cgd[fF]   Cbs[fF]   Cbd[fF]    vth
+nf=1  W=5u             36.795          7.3590    7.91     1.792     6.857    -5.559     0.005     2.217     2.063  0.710
+nf=10 W=50u           367.950          7.3590    7.91    17.922    68.569   -55.586     0.048    22.170    20.634  0.710
+nf=1  W=50u           368.111          7.3622    7.94    17.693    68.441   -55.374     0.047    22.170    20.634  0.712
+nf=1  W=5u m=10       367.950          7.3590    7.91    17.922    68.569   -55.586     0.048    22.170    20.634  0.710
+nf=4  W=20u           147.180          7.3590    7.91     7.169    27.427   -22.235     0.019     8.868     8.253  0.710
+nf=2  W=10u            73.590          7.3590    7.91     3.584    13.714   -11.117     0.010     4.434     4.127  0.710
+
+===== PMOS  L=0.5u  options: (none)
+case                   ID[uA]  ID/Wtot[uA/um]   gm/ID   gds[uS]   Cgg[fF]   Cgs[fF]   Cgd[fF]   Cbs[fF]   Cbd[fF]    vth
+nf=1  W=5u              3.949          0.7898   11.98     0.164     7.846    -6.137     0.004     1.647     1.819  0.786
+nf=10 W=50u            39.083          0.7817   12.08     1.621    78.437   -61.338     0.035    16.466    18.188  0.788
+nf=1  W=50u            38.942          0.7788   12.08     1.615    78.437   -61.338     0.035    16.466    18.188  0.788
+nf=1  W=5u m=10        39.489          0.7898   11.98     1.643    78.458   -61.372     0.035    16.466    18.188  0.786
+nf=4  W=20u            15.633          0.7817   12.08     0.648    31.375   -24.535     0.014     6.586     7.275  0.788
+nf=2  W=10u             7.817          0.7817   12.08     0.324    15.687   -12.268     0.007     3.293     3.638  0.788
+
+===== PMOS  L=0.5u  options: .option wnflag=1
+case                   ID[uA]  ID/Wtot[uA/um]   gm/ID   gds[uS]   Cgg[fF]   Cgs[fF]   Cgd[fF]   Cbs[fF]   Cbd[fF]    vth
+nf=1  W=5u              3.949          0.7898   11.98     0.164     7.846    -6.137     0.004     1.647     1.819  0.786
+nf=10 W=50u            39.489          0.7898   11.98     1.643    78.458   -61.372     0.035    16.466    18.188  0.786
+nf=1  W=50u            38.942          0.7788   12.08     1.615    78.437   -61.338     0.035    16.466    18.188  0.788
+nf=1  W=5u m=10        39.489          0.7898   11.98     1.643    78.458   -61.372     0.035    16.466    18.188  0.786
+nf=4  W=20u            15.796          0.7898   11.98     0.657    31.383   -24.549     0.014     6.586     7.275  0.786
+nf=2  W=10u             7.898          0.7898   11.98     0.329    15.692   -12.274     0.007     3.293     3.638  0.786
+
+===== NMOS nf=1 W=10u L=0.5u: junction-cap dependence on ad/as/pd/ps (capbd, capbs in fF)
+  default ad=0 ps=0                  Cbd=   4.127  Cbs=   4.434  Cgg=  13.688
+  ad=as=10p pd=ps=7u (1u strip)      Cbd=  10.699  Cbs=  15.230  Cgg=  13.688
+  ad=as=5p pd=ps=6u                  Cbd=   7.413  Cbs=  10.224  Cgg=  13.688
+
+===== bin-limit probes (does ngspice accept the geometry?)
+ options: (none)
+   W=0.22u L=0.28u (min)                rc=0 ID=    7.848uA  []
+   W=0.2u L=0.28u                       rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=1u L=0.27u                         rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=1u L=0.2u                          rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=100u L=0.5u                        rc=0 ID=  736.367uA  []
+   W=101u L=0.5u nf=1                   rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=200u L=0.5u nf=10 (20u/finger)     rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=500u L=0.5u nf=10 (50u/finger)     rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=2u L=50u                           rc=0 ID=    0.169uA  []
+   W=2u L=60u                           rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+ options: .option wnflag=1
+   W=0.22u L=0.28u (min)                rc=0 ID=    7.848uA  []
+   W=0.2u L=0.28u                       rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=1u L=0.27u                         rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=1u L=0.2u                          rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=100u L=0.5u                        rc=0 ID=  736.367uA  []
+   W=101u L=0.5u nf=1                   rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']
+   W=200u L=0.5u nf=10 (20u/finger)     rc=0 ID= 1471.575uA  []
+   W=500u L=0.5u nf=10 (50u/finger)     rc=0 ID= 3681.110uA  []
+   W=2u L=50u                           rc=0 ID=    0.169uA  []
+   W=2u L=60u                           rc=1 ID=      nanuA  ['Error on line 1573 or its substitute:']

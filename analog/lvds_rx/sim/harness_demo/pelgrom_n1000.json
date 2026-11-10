@@ -1,0 +1,30 @@
+{
+ "name": "pelgrom_n1000",
+ "description": "Monte Carlo mechanism proof: sigma of the input offset of an NMOS pair at four gate areas, mismatch only, 200 seeds each (one ngspice process per seed). Compare with harness_demo/check_pelgrom.py.",
+ "deck": "pelgrom_pair.spice",
+ "corners": "tt",
+ "grid": {
+  "w": [
+   "1u"
+  ],
+  "l": [
+   "0.5u"
+  ]
+ },
+ "mc": {
+  "n": 1000,
+  "mode": "mismatch",
+  "seed": 777,
+  "k": 3
+ },
+ "limits": {
+  "vos": {
+   "min": -0.05,
+   "max": 0.05,
+   "scale": 1000,
+   "unit": "mV"
+  }
+ },
+ "timeout": 60,
+ "jobs": 6
+}

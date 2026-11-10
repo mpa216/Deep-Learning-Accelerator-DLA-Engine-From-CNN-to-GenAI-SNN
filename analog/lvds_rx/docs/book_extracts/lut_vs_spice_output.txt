@@ -1,0 +1,36 @@
+## ngspice-46 .op (docs/book_extracts/lut_vs_spice.spice), gf180mcuD models, typical
+@m.xmn.m0[id] = 1.351689e-05
+@m.xmn.m0[gm] = 1.621181e-04
+@m.xmn.m0[gds] = 1.057574e-06
+@m.xmn.m0[cgg] = 5.977495e-15
+@m.xmn.m0[vth] = 7.107651e-01
+@m.xmn.m0[cgso] = 9.990384e-16
+@m.xmn.m0[cgdo] = 8.495299e-16
+@m.xmn.m0[cgs] = -4.33782e-15
+@m.xmn.m0[cgd] = 3.466599e-18
+@m.xmn.m0[cgb] = -1.64314e-15
+@m.xmn.m0[cdd] = -1.78829e-18
+@m.xmp.m0[id] = 3.861924e-06
+@m.xmp.m0[gm] = 4.634390e-05
+@m.xmp.m0[gds] = 2.108065e-07
+@m.xmp.m0[cgg] = 7.847866e-15
+@m.xmp.m0[vth] = 7.862909e-01
+@m.xmp.m0[cgso] = 8.197176e-16
+@m.xmp.m0[cgdo] = 7.777902e-16
+@m.xmp.m0[cgs] = -6.14162e-15
+@m.xmp.m0[cgd] = 2.533946e-18
+@m.xmp.m0[cgb] = -1.70878e-15
+@m.xmp.m0[cdd] = -6.68568e-19
+
+## LUT lookup at the same bias (docs/book_extracts/lut_vs_spice_ref.py)
+LUT values at the lut_vs_spice.spice bias points (all for the W = 5 um, nf = 1 table device):
+  NMOS: ID=1.3538e-05 A  gm=1.6218e-04 S  gds=1.0582e-06 S  Cgg=7.8248e-15 F  Vth=0.7108 V
+  PMOS: ID=3.8652e-06 A  gm=4.6347e-05 S  gds=2.1089e-07 S  Cgg=9.4455e-15 F  Vth=0.7863 V
+
+Book oddity: Ex. 6.4 computes cdd_w3/cdd_w2 with CDD_CSS where CDD_W was probably meant.
+Fold-pole denominator (1 + 2*cdd_css3 * 2*(cdd_w2/cdd_w3)) evaluated with GF180 NMOS tables, gm/ID=15, L=0.4,
+M3 at VDS=0.4 V, VSB=0.2 V; M2 at VDS=0.2 V, VSB=0 (same bias points as the book code):
+  as printed (CDD_CSS twice)   cdd_w2/cdd_w3 = 1.0447  -> fp2 = 0.827 GHz
+  with CDD_W                   cdd_w2/cdd_w3 = 1.0932  -> fp2 = 0.800 GHz
+  (Cdd/Css is a ratio of two caps, Cdd/W a cap per width; both are W-independent, so the two
+   readings give different numbers whenever Css/W differs between the two VDS points.)

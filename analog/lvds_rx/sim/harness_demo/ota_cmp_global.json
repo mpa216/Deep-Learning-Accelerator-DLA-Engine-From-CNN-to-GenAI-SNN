@@ -1,0 +1,14 @@
+{
+  "name": "ota_cmp_global",
+  "description": "Demo: global (die-to-die) plus mismatch statistics, mode both: sw_stat_global=1 with the statistical .lib section and sw_stat_mismatch=1. N=100.",
+  "deck": "ota_cmp.spice",
+  "corners": "tt",
+  "grid": {"vic": [1.65]},
+  "mc": {"n": 100, "mode": "both", "seed": 99, "k": 3},
+  "limits": {
+    "vtrip": {"min": -0.05, "max": 0.05, "scale": 1000, "unit": "mV"},
+    "idd":   {"max": 200e-6, "scale": 1e6, "unit": "uA"}
+  },
+  "timeout": 120,
+  "jobs": 6
+}
