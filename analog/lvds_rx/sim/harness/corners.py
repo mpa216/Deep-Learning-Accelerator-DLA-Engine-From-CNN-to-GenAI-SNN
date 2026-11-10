@@ -9,7 +9,7 @@ explicit sw_stat_global / sw_stat_mismatch, explicit .lib sections, NO design.ng
         print(c.name, c.vdd, c.temp)
         text = c.header(mc="none")        # or "mismatch" | "global" | "both"
 
-Named sets (see CORNER_SETS):  tt, worst5, tt_temps, full45, speed4.
+Named sets (see CORNER_SETS):  tt, worst5, worst7, tt_temps, full45, full47, speed4, cross2, extreme2, eye15.
 Custom corners can be written as strings  "proc:temp:vdd[:key=value ...]", e.g.
     "ss:125:3.0"            ss process, 125 C, 3.0 V  (res/moscap/diode follow the process)
     "fs:27:3.3:res=res_ss"  override the resistor section
@@ -62,6 +62,14 @@ class Corner:
         object.__setattr__(self, "res", self.res or "res_" + fam)
         object.__setattr__(self, "moscap", self.moscap or "moscap_" + fam)
         object.__setattr__(self, "diode", self.diode or "diode_" + fam)
+        # a passive section that differs from the process family (cross corner) must show in the name, otherwise
+        # "ss 125C 3.0V with res_ff" and the plain ss corner collide in de-duplication and in run ids
+        if not self.tag:
+            extra = [pre + s[len(pre0):] for pre, pre0, s in
+                     (("r", "res_", self.res), ("c", "moscap_", self.moscap), ("d", "diode_", self.diode))
+                     if s != pre0 + fam]
+            if extra:
+                object.__setattr__(self, "tag", "x" + "".join(extra))
 
     @property
     def name(self):
@@ -77,6 +85,9 @@ class Corner:
         fam = PASSIVE_FAMILY[self.process]
         L = [
             "* ---- GF180 header (harness): corner=%s mc=%s ----" % (self.name, mc),
+            # bin on W per finger (LUT-faithful netlists; without it Cgg was 9.9 % off at L=0.28, W=29.8 um).
+            # Limits then apply per finger: L 0.28-50 um, W 0.22-100 um.  PLAN_V2 1.5, log/verify_luts.md.
+            ".option wnflag=1",
             ".param sw_stat_global=%d sw_stat_mismatch=%d mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0" % (sg, sm),
         ]
         if sg:
@@ -135,7 +146,16 @@ CORNER_SETS = {
     "tt_temps": _grid(["tt"], [-40, 27, 125], [3.0, 3.3, 3.6]),
     # 5 processes x 3 temperatures x 3 supplies
     "full45": _grid(PROCESSES, [-40, 27, 125], [3.0, 3.3, 3.6]),
+    # resistor cross corners (headroom): slow transistors with fast resistors and the reverse.
+    # The resistor section follows the process by default (Corner.res), so these are the only mixed ones.
+    "cross2": [Corner("ss", 125, 3.0, res="res_ff"), Corner("ff", -40, 3.6, res="res_ss")],
+    # slow/hot/low-V and fast/cold/high-V only (transient Monte Carlo)
+    "extreme2": [Corner("ss", 125, 3.0), Corner("ff", -40, 3.6)],
+    # 5 processes x the three "diagonal" PVT points (cold/high-V, nominal, hot/low-V) = 15 (TB5 eye)
+    "eye15": [Corner(p, t, v) for p in PROCESSES for t, v in ((-40, 3.6), (27, 3.3), (125, 3.0))],
 }
+CORNER_SETS["worst7"] = CORNER_SETS["worst5"] + CORNER_SETS["cross2"]
+CORNER_SETS["full47"] = CORNER_SETS["full45"] + CORNER_SETS["cross2"]
 
 
 def get_corner_set(spec):

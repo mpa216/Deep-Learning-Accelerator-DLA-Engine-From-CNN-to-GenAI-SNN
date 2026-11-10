@@ -36,7 +36,7 @@ from . import corners as _corners
 from . import mc as _mc
 
 NGSPICE = os.environ.get("NGSPICE", "ngspice")
-HARNESS_VERSION = "1.0"
+HARNESS_VERSION = "1.1"   # 1.1: .option wnflag=1 in the header, cross corners, record carries `res`
 
 ERR_NONCONV = [r"no convergence", r"singular matrix", r"timestep too small", r"iteration limit reached",
                r"gmin stepping failed", r"source stepping failed", r"convergence problem"]
@@ -359,7 +359,7 @@ def run_testbench(template, work_dir, out_dir=None, corners="tt", grid=None, mc=
                 status = "post_error"
                 errors.append("post-processing raised %r" % (e,))
         records.append({"id": r["id"], "corner": r["corner"].name, "process": r["corner"].process,
-                        "temp": r["corner"].temp, "vdd": r["corner"].vdd, "params": r["params"],
+                        "temp": r["corner"].temp, "vdd": r["corner"].vdd, "res": r["corner"].res, "params": r["params"],
                         "seed": r["seed"], "status": status, "metrics": metrics, "errors": errors,
                         "elapsed": rr["elapsed"], "cached": rr["cached"], "hash": rr["hash"],
                         "run_dir": os.path.relpath(r["run_dir"], out_dir or work_dir)})

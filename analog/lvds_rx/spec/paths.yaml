@@ -1,0 +1,65 @@
+# paths.yaml -- FROZEN path and tool table (PLAN_V2 section 1.4 and 5.1).  All project paths are relative to analog/lvds_rx.
+version: 1
+
+host:
+  worktree_root: /home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx
+  project: /home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx/analog/lvds_rx
+container:
+  name: apic_headless
+  worktree_root: /foss/designs/.claude/worktrees/lvds-rx
+  project: /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx
+  wrapper: tools/cx          # sets PDK env + OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 OMP_WAIT_POLICY=PASSIVE
+
+read_only:                   # never written by any task
+  book: /foss/designs/Analog
+  pdk_root: /foss/pdks
+  main_checkout: /foss/designs         # outside the worktree
+  caravel_reference: /foss/designs/layout_announcement/caravel-gf180mcu-main   # gitignored, exists only here
+pdk:
+  name: gf180mcuD
+  ngspice_lib: /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice
+  gmid_kit: /foss/designs/Analog/starter_files_open_source_tools/gf180mcuD
+
+project_dirs:
+  spec: spec
+  sizing: sizing
+  luts: luts
+  netlist: netlist
+  sim: sim
+  harness: sim/harness
+  flow: flow
+  layout: layout
+  results: results
+  package: package
+  log: log
+
+generated:                   # files produced by the flow (committed unless gitignored)
+  env: results/env.json
+  gates: results/gates.json
+  report: results/REPORT.md
+  manifest: results/manifest.json
+  iterations: results/iterations.jsonl
+  mutants: results/mutants.json
+  sizes: sizing/sizes.spice
+  device_table: layout/device_table.json
+
+hash_inputs:                 # what the sizes.spice header hash covers (PLAN_V2 section 0 rule 3)
+  sizing_script: sizing/lvds_rx_sizing.py
+  luts_dir: luts
+  spec: spec/spec.yaml
+
+frozen_files:                # lint rule "frozen": a change needs a decisions.yaml entry carrying the new sha256
+  - spec/spec.yaml
+  - spec/gates.yaml
+  - spec/pins.yaml
+  - spec/paths.yaml
+
+lint:
+  matched_device_globs: [netlist/lvds_*.spice, sizing/sizes.spice]    # nf, never m (C6); pad/PDK netlists excluded
+  bare_ngspice_scan: [flow, Makefile, sim/tb*, sizing, netlist, layout/lib]   # only sim/harness may start ngspice
+  # files that name the tool without running it, and the TB0 pad scripts that predate the harness (done, not re-run)
+  allow_ngspice_files: [flow/lint.py, flow/mutants.py, sim/tb0_pad/run_tb0.py, sim/tb0_pad/run_net.py]
+
+tools:                       # names looked up by `make check` (versions recorded in results/env.json)
+  required: [ngspice, python3, make]
+  optional: [magic, netgen, klayout, openroad, sta, iverilog, yosys]

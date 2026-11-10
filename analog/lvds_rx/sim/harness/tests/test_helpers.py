@@ -231,6 +231,27 @@ class TestCorners(unittest.TestCase):
         self.assertNotIn("design.ngspice", h)
         self.assertEqual(h, corners.Corner("ss", 125, 3.0).header())
 
+    def test_header_sets_wnflag(self):
+        # PLAN_V2 1.5: binning on W per finger is required for LUT-faithful netlists
+        for mc in corners.MC_MODES:
+            proc = "tt"
+            h = corners.Corner(proc, 27, 3.3).header(mc=mc)
+            self.assertIn(".option wnflag=1", h.splitlines())
+
+    def test_resistor_corner_follows_process_and_cross_corners(self):
+        fam = {"tt": "typical", "ss": "ss", "ff": "ff", "fs": "typical", "sf": "typical"}
+        for c in corners.get_corner_set("full45"):
+            self.assertEqual(c.res, "res_" + fam[c.process])
+            self.assertIn(".lib %s %s" % (corners.PDK_LIB, c.res), c.header())
+        cross = corners.get_corner_set("cross2")
+        self.assertEqual([(c.process, c.res) for c in cross], [("ss", "res_ff"), ("ff", "res_ss")])
+        names = {c.name for c in corners.get_corner_set("full47")}
+        self.assertEqual(len(names), 47)                  # cross corners do not collide with ss/ff 125C/3.0V, -40C/3.6V
+        self.assertEqual(len(corners.get_corner_set("worst7")), 7)
+        self.assertEqual(len(corners.get_corner_set("eye15")), 15)
+        self.assertEqual(len(corners.get_corner_set("extreme2")), 2)
+        self.assertEqual(corners.parse_corner("ss:125:3.0:res=res_ff").name, cross[0].name)
+
     def test_fs_sf_use_typical_passives(self):
         h = corners.Corner("fs", 27, 3.3).header()
         self.assertIn("sm141064.ngspice fs", h)

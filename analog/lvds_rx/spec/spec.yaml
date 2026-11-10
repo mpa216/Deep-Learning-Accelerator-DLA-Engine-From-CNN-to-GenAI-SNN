@@ -1,0 +1,154 @@
+# spec.yaml -- FROZEN specification of lvds_rx_x3 (PLAN_V2 section 3.1).  Written by task T0, 2026-11-11.
+# SI units everywhere (V, A, s, Hz, m for lengths in the layout section is um).
+# Changing a value needs a dated entry in spec/decisions.yaml (waiver or fallback-ladder rung) that carries the
+# new sha256 of this file; `make check` (flow/lint.py, rule "frozen") refuses an unexplained change.
+# Every value cites the PLAN_V2 row it comes from.  Values that are assumptions are listed under `assumptions`.
+
+version: 1
+frozen_on: 2026-11-11
+macro: lvds_rx_x3
+process: gf180mcuD          # 3.3 V devices nfet_03v3 / pfet_03v3
+
+data:                       # PLAN_V2 3.1 "Data rate"
+  rate_bps: 100.0e6         # NRZ per lane, UI = 10 ns
+  ui_s: 10.0e-9
+  margin_rate_bps: 200.0e6  # margin eye
+  pattern: PRBS7            # period 127
+  prbs_period: 127
+  lanes: 3                  # CLK, D0, D1; one shared bias, one EN
+
+input:
+  vic_range_v: [0.05, 2.35] # TIA/EIA-644-A 4.2.4, for |VID| >= 100 mV
+  vic_test_v: [0.05, 0.3, 0.6, 1.2, 1.8, 2.1, 2.35]
+  vic_trip_v: [0.05, 1.2, 2.35]   # the 3 VIC used by the trip / offset / MC benches (extremes + middle)
+  vid_min_v: 0.100
+  vid_nom_v: 0.350
+  vid_set_v: [0.100, 0.350] # the two VID used by TB4 / TB5
+  termination: off_chip_100ohm   # no on-die termination, no TRIM pins
+  leakage_max_a: 20.0e-6    # TIA 4.2.1
+  leakage_balance_max_a: 6.0e-6
+  leakage_report_corner: {temp_c: 125, vdd_v: 3.6, vin_v: [0.05, 2.4]}
+
+hysteresis:                 # C9: input-referred, DC sweep, every corner and every VIC
+  min_v: 0.008
+  max_v: 0.025
+  nominal_v: 0.014
+
+offset:                     # A3 / 3.1 "Trip window"
+  design_sigma_v: 5.0e-3    # sigma_total design target
+  hard_sigma_limit_v: 8.0e-3
+  window_v: 95.0e-3         # |mean| + 6*sigma_fit + V_Hmax/2 + 3 mV <= 95 mV
+  k_sigma: 6
+  margin_v: 3.0e-3
+  mc_n_dc: 1000             # DC input-referred offset MC, hysteresis off
+  mc_n_tran: 100            # transient hysteresis MC (functional at VID = +-100 mV)
+  mc_n_smoke: 30
+  skip_seeds: [1, 2]        # gave the same offset to 0.01 mV (log/sim_harness.md)
+
+failsafe:                   # C1: v0 = not guaranteed
+  variant: false            # v1 flag; true => run T13b with the v1 guarantee levels
+  v0_guarantee: stable_held_state_no_oscillation_no_pulse_below_2ns
+  min_pulse_s: 2.0e-9
+  v1_levels: {open_idle_sigma: 3.0, shorted_sigma: 4.5, vfs_range_v: [0.042, 0.046]}
+
+timing:                     # 3.1 "Propagation delay", "DCD"
+  tpd_max_s: 5.0e-9         # at VID = 350 mV (goal 2-3 ns)
+  tpd_goal_s: [2.0e-9, 3.0e-9]
+  tpd_vid100_max_s: 8.0e-9  # at VID = 100 mV with a +-10 mV input-offset source
+  vid100_offset_source_v: 0.010
+  delta_tpd_over_vid_max_s: 1.0e-9    # VID 200-450 mV at fixed VIC
+  delta_tpd_over_vic_max_s: 1.0e-9    # VID 350 mV
+  lane_skew_3sigma_max_s: 0.5e-9      # MC
+  dcd_ui_max_vid350: 0.05             # <= 5 % UI at VID 350 mV, tr <= 1 ns
+  dcd_ui_max_vid100: 0.10             # <= 10 % UI at VID 100 mV, tr = 2 ns
+  input_rise_s: {vid350: 1.0e-9, vid100: 2.0e-9}
+
+eye:                        # 3.1 "Eye (RX output, mid-UI)"
+  opening_ui_min_tt_100mbps: 0.7      # VID 100 mV, tt
+  opening_ui_min_worst_100mbps: 0.6   # worst corner
+  opening_ui_min_200mbps: 0.5         # VID 350 mV, tt and ss/125C/3.0 V
+  ber_errors_max: 0         # over 127 bits
+  bits: 127
+
+output:
+  swing: cmos_3v3
+  edge_10_90_max_s: 1.0e-9
+  load_f: 30.0e-15          # 20 fF + ~10 fF flop input (assumption)
+
+pvt:
+  vdd_v: [3.0, 3.3, 3.6]
+  temp_c: [-40, 27, 125]
+  process: [tt, ss, ff, fs, sf]
+  corner_sets: {full: full45, smoke: worst5, tt_only: tt}
+  resistor_corner: follows_process   # verified in T0 (see DESIGN_LOG 2026-11-11)
+  cross_corners:            # headroom check, set `cross2` in the harness; not part of the 45
+    - {process: ss, temp_c: 125, vdd_v: 3.0, res: res_ff}
+    - {process: ff, temp_c: -40, vdd_v: 3.6, res: res_ss}
+
+current:
+  i_lane_max_a: 1.5e-3      # every corner of the 45
+  i_bias_max_a: 0.3e-3
+  idd_en0_max_a: {t27c: 1.0e-6, t125c: 5.0e-6}   # excludes pad leakage
+
+en:
+  en0_or_vdd_below_v: 2.0   # output LOW
+  valid_after_s: 1.0e-6
+  min_pulse_s: 2.0e-9       # no runt pulse on EN edges or supply ramps
+  supply_ramps_s: [1.0e-6, 100.0e-6]
+
+input_network:              # assumptions, flagged; netlist/input_network.spice
+  source_ohm: 50
+  pkg_l_h: 3.0e-9
+  pkg_c_f: 0.7e-12
+  pad_c_typ_f: 1.0e-12
+  pad_c_worst_f: 1.15e-12
+  esd2: {rpoly: "ppolyf_u 5 x 1.8 um (151 ohm tt)", diode_area_um2: 40}
+  pkg_sweep: {l_h: [1.0e-9, 5.0e-9], c_f: [0.5e-12, 1.5e-12]}   # TB12
+
+stage1:
+  a1_min: 4.0               # at the single-pair VIC extremes, low-gm corner
+  a1_spread_max: 2.2        # over VIC
+  out_cm_window_v: 0.15     # +- over VIC at every corner
+  np_overlap_min_v: 0.25    # measured 0.33 V at ss/3.0 V
+  node_v_margin: 0.3        # nodes stay in [-0.3, VDD+0.3]
+
+bandwidth:
+  stage_f3db_min_fraction_of_dr: 0.8   # worst corner
+  chain_f3db_min_hz: 50.0e6            # 0.5 * DR
+
+tb1:                        # LUT-vs-SPICE cross-check tolerances (C11, 5.2 item 3)
+  vdsat_headroom_min_v: 0.050
+  gmid_rel_tol: 0.10
+  id_rel_tol: 0.10
+  vgs_abs_tol_v: 0.030
+
+layout:
+  macro_max_um: [600, 150]  # plus 15-25 um margin (FIXED_BBOX)
+  lane_max_um: [150, 130]
+  margin_um: [15, 25]
+  max_metal_layer: Metal3
+  m1_m3_max_shape_um: 29.0
+  dbu_um: 0.001
+
+pad:                        # TB0 (done)
+  c_pad_max_f: 1.2e-12
+  pin_leakage_max_a: 1.0e-6
+
+variants:                   # build flags, simplest variant is the default (4.1)
+  nmos_pair: true
+  dump_devices: true
+  extra_gain_stage: false
+  bias: resistor            # resistor | constgm  (ladder R6)
+  failsafe: false
+  on_die_term: false
+
+documented_deviations:      # package/KNOWN_LIMITS.json
+  - power_off_input_behaviour   # pad ESD diode to DVDD conducts from 0.58 V when DVDD = 0
+  - secondary_esd_unqualified
+  - failsafe_not_guaranteed_v0
+  - latchup_unverified
+
+assumptions:                # none of these is verified against real hardware
+  - output load 30 fF
+  - package L = 3 nH, C = 0.7 pF per pin, 50 ohm source per side, ideal lossless driver
+  - pad slot x positions inferred (spec/pins.yaml)

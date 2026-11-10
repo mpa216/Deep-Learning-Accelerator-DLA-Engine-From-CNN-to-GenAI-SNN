@@ -1,5 +1,5 @@
 {
- "harness": "1.0",
+ "harness": "1.1",
  "ngspice": "46",
  "runs": [
   {
@@ -8,6 +8,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -21,9 +22,9 @@
     "idd": 0.000168122
    },
    "errors": [],
-   "elapsed": 0.38,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "ae5b2d927ecf8ea324934795fb0be652410324aa490444c85b63e0858230b104",
+   "hash": "563fcac595ccfbd072c9576b6d3cbefe92f3a896f0ac3c44094af3ec041b34c3",
    "run_dir": "work/tt_27c_3v30__vic1.65__s867536309"
   },
   {
@@ -32,6 +33,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -45,9 +47,9 @@
     "idd": 6.18236e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.374,
    "cached": false,
-   "hash": "331061e28f59c9f6367fee8b304112e2511fbad85518decad9ea0996df0d183f",
+   "hash": "972f94504da016e7509d455645751a4542fc6f346e1414aeb38ef24bb9b8154a",
    "run_dir": "work/tt_27c_3v30__vic1.65__s817660059"
   },
   {
@@ -56,6 +58,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -69,9 +72,9 @@
     "idd": 6.70118e-05
    },
    "errors": [],
-   "elapsed": 0.422,
+   "elapsed": 0.424,
    "cached": false,
-   "hash": "20907826fb2d14dbde3161fa571f4c9835cfd2b802fad44dbae65d52fedb7d1c",
+   "hash": "9189e0e1856e06ae7e7a350f91287b07f646b2829d69a96b627ea23292384f40",
    "run_dir": "work/tt_27c_3v30__vic1.65__s429658752"
   },
   {
@@ -80,6 +83,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -93,9 +97,9 @@
     "idd": 0.000110246
    },
    "errors": [],
-   "elapsed": 0.43,
+   "elapsed": 0.425,
    "cached": false,
-   "hash": "5c893704a80d10aa1ef143b59e6da21b3b2004b6cc07233a2d598c0cf932951f",
+   "hash": "85ce70fd5731d440753012f95d61f7b170b9bbe38a0c6c6c5023272ef09157ec",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1287285678"
   },
   {
@@ -104,6 +108,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -117,9 +122,9 @@
     "idd": 6.30285e-05
    },
    "errors": [],
-   "elapsed": 0.379,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "2ba0ac851e9fdd78c37b71a3ca083a3a1da70dc863560bfd99f044a5bf7dfaf1",
+   "hash": "31c27782ec1db898a1a25dacc6ee1425141e5e920a8442e412c231324a919b3b",
    "run_dir": "work/tt_27c_3v30__vic1.65__s383975071"
   },
   {
@@ -128,6 +133,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -141,9 +147,9 @@
     "idd": 9.51934e-05
    },
    "errors": [],
-   "elapsed": 0.425,
+   "elapsed": 0.32,
    "cached": false,
-   "hash": "d048456405c13fd8921e4a8f2b90084db43ed0bb0f832196ffb86c9bbf85b503",
+   "hash": "a0ca3158b6e0ece946f00b5487b97ce800ba2196b2c874fc5d2ae37c6cf93cdd",
    "run_dir": "work/tt_27c_3v30__vic1.65__s494485441"
   },
   {
@@ -152,6 +158,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -165,9 +172,9 @@
     "idd": 0.000178176
    },
    "errors": [],
-   "elapsed": 0.431,
+   "elapsed": 0.421,
    "cached": false,
-   "hash": "b4c405c705c377564be496a5a1adfa22c8148db549562ad8ef17685d09f55a6d",
+   "hash": "31c1b6742b0a28700dc956beb6a26778d70641ecb4538092a29c777aaf34b0c8",
    "run_dir": "work/tt_27c_3v30__vic1.65__s533502200"
   },
   {
@@ -176,6 +183,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -189,9 +197,9 @@
     "idd": 0.000107507
    },
    "errors": [],
-   "elapsed": 0.43,
+   "elapsed": 0.377,
    "cached": false,
-   "hash": "d4adb3fb5e7a22490a5970c7d42297ea4468b83dcbacea0b3f75f2c35c4cb4b3",
+   "hash": "5ed99cf6aff8dd1389c99e7d2e4166bda3a342957828eaa11c37fd4f1c9317c6",
    "run_dir": "work/tt_27c_3v30__vic1.65__s286140161"
   },
   {
@@ -200,6 +208,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -213,9 +222,9 @@
     "idd": 7.79869e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.425,
    "cached": false,
-   "hash": "c50580054dc16377d5b08f6d29a4012fd672a9a41ed9370df47567315e900d11",
+   "hash": "272e211b81e90cfce6f1eb5030b96d3ab9d04b2a1d130ba0128c2f2f0898f66c",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1631824381"
   },
   {
@@ -224,6 +233,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -237,9 +247,9 @@
     "idd": 0.000123216
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.424,
    "cached": false,
-   "hash": "57d2c96c15212e4a456bb80d5c330e37cf1df4eae95591c70cff0db5b0b572b2",
+   "hash": "2b581c85f828f6ad67b83f664f48412edb6a27dd0d4e6cc26dbc9883ab966f47",
    "run_dir": "work/tt_27c_3v30__vic1.65__s185925872"
   },
   {
@@ -248,6 +258,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -261,9 +272,9 @@
     "idd": 9.31888e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.27,
    "cached": false,
-   "hash": "83935ce33a0eab1b934ab7e5db8f435de3b3d6a8f7906c3a03db4c2ffa285ce9",
+   "hash": "c1f8a778d1dd11a54f902a990a41797e72e89bbbf127f300e39aa55fb5e3f366",
    "run_dir": "work/tt_27c_3v30__vic1.65__s539342680"
   },
   {
@@ -272,6 +283,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -285,9 +297,9 @@
     "idd": 7.17032e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.374,
    "cached": false,
-   "hash": "70bb345170feb93c7b2d88b66a82c679f06e85747f2ad6bf652e84d07e96fa87",
+   "hash": "6ff3e2fe0466a1d6a037cdd605bf0a335a39a69b3639436c468772a2a59ecdf0",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1565582201"
   },
   {
@@ -296,6 +308,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -309,9 +322,9 @@
     "idd": 9.68875e-05
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "6e16fc34894c7646615837af2f6b95de0b5111d7a7915a58f89096007e551e5a",
+   "hash": "6c65db59f2271b19e09fd4908551331bef86f7d71dc6636dc9701e724b942a73",
    "run_dir": "work/tt_27c_3v30__vic1.65__s822631363"
   },
   {
@@ -320,6 +333,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -333,9 +347,9 @@
     "idd": 6.09837e-05
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.428,
    "cached": false,
-   "hash": "7a482b2a980dbb9395d74a501d35374aad4885ec1466aae1fbd565ddd76c8920",
+   "hash": "a19e94ac741c6b42a3025f792874b0591a30614a26f83aa33cd267a517de2151",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1139911386"
   },
   {
@@ -344,6 +358,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -357,9 +372,9 @@
     "idd": 7.07201e-05
    },
    "errors": [],
-   "elapsed": 0.428,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "cbf2c325645773b1dbfa1fddf701701d29f3ea741598a67fc4914376055fe8fe",
+   "hash": "bf6e4c25382446e3eb46b90cbe964f2bcccbe7d4d3e7284ea450cea1d2cefb67",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1469541615"
   },
   {
@@ -368,6 +383,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -381,9 +397,9 @@
     "idd": 0.000127842
    },
    "errors": [],
-   "elapsed": 0.428,
+   "elapsed": 0.321,
    "cached": false,
-   "hash": "d9fa06e657bdd4ea6bca0638311a7af2a9a36e8c4e11efc9a5db7f7a0b34c8e7",
+   "hash": "59b36beebff65d11da8b385bff30def9fcac1c2110839be1609903da8f4b60f1",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1504286952"
   },
   {
@@ -392,6 +408,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -405,9 +422,9 @@
     "idd": 6.03279e-05
    },
    "errors": [],
-   "elapsed": 0.379,
+   "elapsed": 0.423,
    "cached": false,
-   "hash": "126685d9be6929ef0d0dc8fdcec9d4f04dfa68f9a66b38aa2842bc87eabde978",
+   "hash": "aa206f52f495fee5020653335ef540924dc7b828d549976ed78c93cbb2001929",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1156697262"
   },
   {
@@ -416,6 +433,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -429,9 +447,9 @@
     "idd": 0.000135159
    },
    "errors": [],
-   "elapsed": 0.426,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "aca4a78c0f39abc6709bcd37d1ce0248f847db3d6e369cae8ea988c7da2423ab",
+   "hash": "f6b1b0f476ba1c32d93f7edfa71cc0c0b7b1787e4b6667449273262e1e3d8f54",
    "run_dir": "work/tt_27c_3v30__vic1.65__s192921970"
   },
   {
@@ -440,6 +458,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -453,9 +472,9 @@
     "idd": 8.63615e-05
    },
    "errors": [],
-   "elapsed": 0.382,
+   "elapsed": 0.431,
    "cached": false,
-   "hash": "ab3744ee2ee8034af759c8a5a7e609f96c73daf5fc13c9a26d09f2774400b031",
+   "hash": "7d63e08df199acf728a27b4c7bf55a694801f80f8137474176f1a446d1662ab5",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2015148946"
   },
   {
@@ -464,6 +483,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -477,9 +497,9 @@
     "idd": 0.000153485
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.431,
    "cached": false,
-   "hash": "38364ba25bec6db4bdcec2188d7e0067c62d49012d4dc440d2df473709e3f480",
+   "hash": "f919b392f3166d5497783233c6ae487f59f23b1601920b16a779ba34498cd5f1",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1339857259"
   },
   {
@@ -488,6 +508,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -501,9 +522,9 @@
     "idd": 6.06831e-05
    },
    "errors": [],
-   "elapsed": 0.425,
+   "elapsed": 0.423,
    "cached": false,
-   "hash": "c448f1dddb5db95968683ea252baa9c8990ff57d45ee73fec997ef608685372f",
+   "hash": "ee96ad6a21413313890b239ae327811d79afa9ff96fab8dbb4c4309a0774ef9d",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1050709974"
   },
   {
@@ -512,6 +533,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -525,9 +547,9 @@
     "idd": 6.61366e-05
    },
    "errors": [],
-   "elapsed": 0.428,
+   "elapsed": 0.321,
    "cached": false,
-   "hash": "e091861e052c85fdf0b0b5031aad642556a6b19bd0a175e8c7559663fdcf3f3c",
+   "hash": "e4f68a15ebdd9d48697ccf30014676a84dc43b5780694fbf6232edfc48e07a90",
    "run_dir": "work/tt_27c_3v30__vic1.65__s428354534"
   },
   {
@@ -536,6 +558,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -549,9 +572,9 @@
     "idd": 0.000149053
    },
    "errors": [],
-   "elapsed": 0.424,
+   "elapsed": 0.422,
    "cached": false,
-   "hash": "b874cef25cee09afba195bdc5772d9138f629ab7e797361256a3082b3c343794",
+   "hash": "2565bcfdf331771decd2721f648c16ff3023630bd4475b64b99036f53a1de718",
    "run_dir": "work/tt_27c_3v30__vic1.65__s905463474"
   },
   {
@@ -560,6 +583,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -573,9 +597,9 @@
     "idd": 0.00016631
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.329,
    "cached": false,
-   "hash": "0f14edfd365e7a1f19542ccf1d92465d93f0df7cbe3dbaba5994a8007f54b5d3",
+   "hash": "0761ac5fd28b5587cf691e16f2e4130aaa8e71153bc218a60a9c0c2bad183b03",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1550967696"
   },
   {
@@ -584,6 +608,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -597,9 +622,9 @@
     "idd": 7.25192e-05
    },
    "errors": [],
-   "elapsed": 0.322,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "10112c9b9b7201d3f05054841465a1dcef952cddc0a0f6e1e7c972f6f97ae1c3",
+   "hash": "248ac843a484d24f6fbe908c8ae8b69338fbfdc36cec8298cc5cdd857c52557e",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1316871458"
   },
   {
@@ -608,6 +633,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -621,9 +647,9 @@
     "idd": 0.000106192
    },
    "errors": [],
-   "elapsed": 0.381,
+   "elapsed": 0.321,
    "cached": false,
-   "hash": "bde2edf5b053bcd3f628dac065a99375268ee8d2f0967b0a2bda6b9739ea09f2",
+   "hash": "f1390b94c0f8c90582c0f0c0d521ee1f4f110782058b175ea03020810fc1356f",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1263594775"
   },
   {
@@ -632,6 +658,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -645,9 +672,9 @@
     "idd": 0.000134874
    },
    "errors": [],
-   "elapsed": 0.371,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "b3d1e437d2fc1c2c10ae9b435b707bf10f648a85ecdef5d658f1dd08be7135f6",
+   "hash": "fb387548990a3579b17518fd5b6ffcbc97b68ed569b71b9d078acb84e2b016fd",
    "run_dir": "work/tt_27c_3v30__vic1.65__s465343194"
   },
   {
@@ -656,6 +683,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -669,9 +697,9 @@
     "idd": 7.65765e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.331,
    "cached": false,
-   "hash": "48e69e1de5c9f8b1a9e15b3afdf20b995a5579e3e04fa19bf7392ff7811b7a31",
+   "hash": "80f22a064cd6e89a0cd7820a821784c05222c99bfacd9b96f7305cbff6b0e188",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1702125628"
   },
   {
@@ -680,6 +708,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -693,9 +722,9 @@
     "idd": 5.95352e-05
    },
    "errors": [],
-   "elapsed": 0.376,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "3e1c488aeca47d4ae5657ed9d503e984c3f877e6449fc651b3406a1a36b0ab64",
+   "hash": "40b5c571d0b17a432c7fbf1c65a495da077342de8188fb66e0380c2072c10d04",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1937028771"
   },
   {
@@ -704,6 +733,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -717,9 +747,9 @@
     "idd": 5.98856e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "f245ab51f8c06c62bf7519250362d23a8dd15d6b30219fc73b93b4dfa2f83e17",
+   "hash": "00d00681aa0c9da23c4620f891ed948d2dc85a70b77e2f61c704a68d2ad351bd",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1692895943"
   },
   {
@@ -728,6 +758,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -741,9 +772,9 @@
     "idd": 9.80924e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "9f3ecc1bc0e8837be54ee766f28e0b12b81cebfc6fe89c7ce1e4f3f31ef3e0af",
+   "hash": "3a50887fdded15c9dc73d3e3137538b458981bf570c7cac00afd54a6b8196d51",
    "run_dir": "work/tt_27c_3v30__vic1.65__s803115464"
   },
   {
@@ -752,6 +783,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -765,9 +797,9 @@
     "idd": 8.59708e-05
    },
    "errors": [],
-   "elapsed": 0.39,
+   "elapsed": 0.272,
    "cached": false,
-   "hash": "5f6cb6ec61abf0a86ff4dafc8d4b9c49fcba1ba4d2c28f050a011c655e7da959",
+   "hash": "c95ea6270e6532d29b1e4354ca7a5365d20c03dd0208c74b9028b75d230e6084",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1765930398"
   },
   {
@@ -776,6 +808,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -789,9 +822,9 @@
     "idd": 0.000185765
    },
    "errors": [],
-   "elapsed": 0.375,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "e757e85ce4bf2cd0e5332e63be49fb787cbc8b70358912b42162655a2b0af133",
+   "hash": "452cfc5ffb7f21a73663969ff2ec84868f6bcb4eb73b06618907f638ffd319e0",
    "run_dir": "work/tt_27c_3v30__vic1.65__s833463841"
   },
   {
@@ -800,6 +833,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -813,9 +847,9 @@
     "idd": 6.04961e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "38914377564fc4a99bcebb67624f99606fe9f6d1a08b965ec057425602ba6fe2",
+   "hash": "3cd8b7eda345c3611c5aa32cf76cb1e8cc174635bdd2ba75e25d286ee78374bb",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1850040414"
   },
   {
@@ -824,6 +858,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -837,9 +872,9 @@
     "idd": 9.06483e-05
    },
    "errors": [],
-   "elapsed": 0.322,
+   "elapsed": 0.27,
    "cached": false,
-   "hash": "2414b35d104dbca3e6d45271550b4ed9968932c924c1bc089885723ae9824ebd",
+   "hash": "bf0e7457ea331ce1be772eb40d71ef1f8f6d49a7ee26139630c302d535b71ad0",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1465375875"
   },
   {
@@ -848,6 +883,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -861,9 +897,9 @@
     "idd": 6.86467e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "d7bdb6895f17b57209a266717a215044ee7f091f9492e136b7f8e0a39796e8ac",
+   "hash": "33abf58f0253d4c5ae064b1b9e836626a33352f7be4f68c4c3587e51d5223b2e",
    "run_dir": "work/tt_27c_3v30__vic1.65__s456535399"
   },
   {
@@ -872,6 +908,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -885,9 +922,9 @@
     "idd": 0.000173873
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "434322de9ab2b8780ada81b4ad0c19d654102423e3d55631ceabdc0dc0335410",
+   "hash": "8a7a8deb0796d83ad9c0c76ceae2a1df6c67e6b1e090220e0f6e0fd39be9da73",
    "run_dir": "work/tt_27c_3v30__vic1.65__s327011368"
   },
   {
@@ -896,6 +933,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -909,9 +947,9 @@
     "idd": 6.36298e-05
    },
    "errors": [],
-   "elapsed": 0.425,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "c09797422d7bda0ed5b40b80e6f35a803bb28be066ca0f970e557858eaace202",
+   "hash": "159fd01cb2e9960eef602ffef2536918128c5bdf43d519bfd2fb1e96848ee059",
    "run_dir": "work/tt_27c_3v30__vic1.65__s991027823"
   },
   {
@@ -920,6 +958,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -933,9 +972,9 @@
     "idd": 0.000111727
    },
    "errors": [],
-   "elapsed": 0.429,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "bd7a74e7f7ae157f738631ab574f3af2aa7b69b35b951038d0bbd5f82c96e922",
+   "hash": "617b6f61f2d80bf3fe02f6275ece2adeca1b0316ab8e53210ec538ca2b3572a0",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1418558767"
   },
   {
@@ -944,6 +983,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -957,9 +997,9 @@
     "idd": 5.94921e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.327,
    "cached": false,
-   "hash": "e7e4ec78b4ce34d813d3572e50b3d644ec54f6244efc70b106bd9f884b744382",
+   "hash": "c3c5c10e8b206aef8cd0997432bd09b8437b15ac8fa44dce1011f6581942fe70",
    "run_dir": "work/tt_27c_3v30__vic1.65__s384401637"
   },
   {
@@ -968,6 +1008,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -981,9 +1022,9 @@
     "idd": 6.03939e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "4aa333193323ef394fc5ea0c07f3bd346ccb97c7c21a54cc6e781061e7d09795",
+   "hash": "ead1aabd48a0df9ff939c3732da7370eedbae366256885731b0c7056ea89b00e",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1825290653"
   },
   {
@@ -992,6 +1033,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1005,9 +1047,9 @@
     "idd": 0.000201713
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.321,
    "cached": false,
-   "hash": "a7836bb1ed343820916fba51ee55ab69da6db1533295846fbcf935a1994f0d4c",
+   "hash": "7da0c8c346a6113b0de5aa2ba27a208f916bd58aa49d0b5c4eb73480129c6329",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1217440707"
   },
   {
@@ -1016,6 +1058,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1029,9 +1072,9 @@
     "idd": 6.05811e-05
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "d57976bd8251d4298a54c147641914205551c826d90dcea40ae8328e0197a5ca",
+   "hash": "a4dae3b57e9db2ead1e73576084411abd99a7ec228b8e02687439184f5ff68ce",
    "run_dir": "work/tt_27c_3v30__vic1.65__s727581926"
   },
   {
@@ -1040,6 +1083,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1053,9 +1097,9 @@
     "idd": 9.43287e-05
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "b95eb23f81e6c1fa27f0ecb163aa218f0ee4031dca97c25b6c1860771cef155a",
+   "hash": "4eda8c5a9f94c4195516014be4fa643fee9f4c1f591262423fc17770929ea263",
    "run_dir": "work/tt_27c_3v30__vic1.65__s178167072"
   },
   {
@@ -1064,6 +1108,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1077,9 +1122,9 @@
     "idd": 0.000108133
    },
    "errors": [],
-   "elapsed": 0.43,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "399862d3b025a7bca7f55470f788fb862dc39c984fc8b82db0f7950b4069b1e2",
+   "hash": "673a33dd2019a20d655e3a912a1b7299b6d6c634c43625c4c80a406ab9273367",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2033364365"
   },
   {
@@ -1088,6 +1133,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1101,9 +1147,9 @@
     "idd": 6.044e-05
    },
    "errors": [],
-   "elapsed": 0.375,
+   "elapsed": 0.27,
    "cached": false,
-   "hash": "72ffc5f0a272c72f332ecc2d1f89a1c7a5defc6010e5c1c3cc4d910b448d209a",
+   "hash": "e6c7ecec1f5a2636f6ebd389747bf1689d91d1c4344e3cdb5b59a6c65ef4bc6a",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1539058581"
   },
   {
@@ -1112,6 +1158,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1125,9 +1172,9 @@
     "idd": 0.000136694
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "b5d05542e136c413ae57137a063be6c998082f87431d2f17800f725f90c63a2e",
+   "hash": "2bbf6d5f57713590fb4da22a6eef7ee22eb56e34ad01d481d69ac9fbe83d5a0f",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1135409322"
   },
   {
@@ -1136,6 +1183,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1149,9 +1197,9 @@
     "idd": 6.80755e-05
    },
    "errors": [],
-   "elapsed": 0.427,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "52f2283195842271be7bf482edac885f3dab79c719055cef2704f3917a8628e2",
+   "hash": "cf95b49963a5d49c822c304415a3102dffc45ff0a7df7ffc753e966fcd4ddce2",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1454657149"
   },
   {
@@ -1160,6 +1208,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1173,9 +1222,9 @@
     "idd": 6.21977e-05
    },
    "errors": [],
-   "elapsed": 0.425,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "d2d9201520ab05d53fee9552137034aced6cdb4f533c07be81284b2c7dd70831",
+   "hash": "d834c7080829092416a5bb8be6f9ea849037afdb8d18aabc03fa01f38db18b32",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1663169322"
   },
   {
@@ -1184,6 +1233,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1197,9 +1247,9 @@
     "idd": 9.95577e-05
    },
    "errors": [],
-   "elapsed": 0.424,
+   "elapsed": 0.323,
    "cached": false,
-   "hash": "0f0ffdef3d503cd672daeb2117f4132e6bc6cfb1cad8d081185eeaff45b6e7c6",
+   "hash": "95049c2908745a855068f8544057cc905113c9e44ae48d45648d2cc911b2d22e",
    "run_dir": "work/tt_27c_3v30__vic1.65__s188553833"
   },
   {
@@ -1208,6 +1258,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1221,9 +1272,9 @@
     "idd": 0.000169474
    },
    "errors": [],
-   "elapsed": 0.38,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "fb699d3788fe9a475fe1fc3795d357a4641f6a0f1ab3573ea2de0c0016abe643",
+   "hash": "f9afabc088e9340646e804e031f69f6a1e31c6700e955fac568c5d5e85b2c218",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1007253689"
   },
   {
@@ -1232,6 +1283,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1245,9 +1297,9 @@
     "idd": 5.95187e-05
    },
    "errors": [],
-   "elapsed": 0.376,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "64bb46d0240d71b20fe77ce666197cb02883471ce2c182dd31a066e30f5d21ca",
+   "hash": "ec1be525dc2a9464e59570fe14b2dc34cf6eaf873dd5f8ff3b9f576b5db6bc1c",
    "run_dir": "work/tt_27c_3v30__vic1.65__s679418177"
   },
   {
@@ -1256,6 +1308,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1269,9 +1322,9 @@
     "idd": 6.12416e-05
    },
    "errors": [],
-   "elapsed": 0.371,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "f12483551da0f9f871fc2aafc46034ed1acf047dc56061f0da4ae09e9af9621f",
+   "hash": "3b1a8549958d5f2781fa6728f4a2f598af5fece041442ae7d16d41c6b42f86e6",
    "run_dir": "work/tt_27c_3v30__vic1.65__s864625737"
   },
   {
@@ -1280,6 +1333,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1293,9 +1347,9 @@
     "idd": 0.000155594
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "05806648bb07830e867a6ecb023d926d6ef5f90be80b0898423f04005798fb19",
+   "hash": "2c14ab37b1f10f14b3ae3c20e5cfc86b86b087a5f7435c6e4fe31ad711944a01",
    "run_dir": "work/tt_27c_3v30__vic1.65__s91593341"
   },
   {
@@ -1304,6 +1358,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1317,9 +1372,9 @@
     "idd": 0.000126299
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.321,
    "cached": false,
-   "hash": "288eaff6ae6a7522dd0e67d9192e8269b44159a4846eeeb84783cb2c55b9884e",
+   "hash": "bad5268189b7a60edb2941a3710fa5f7a78a4b531ebde54c1b6946e72f86ea75",
    "run_dir": "work/tt_27c_3v30__vic1.65__s578530407"
   },
   {
@@ -1328,6 +1383,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1341,9 +1397,9 @@
     "idd": 7.12011e-05
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "7b9d389650313922270c409add98be666cc1c759fcc44e532bd1cb49854562ae",
+   "hash": "cc91a561a8ddfe8da67a63f62b9f71ae6d0a94522195ebcc7dcc71c8a03cf715",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1198192668"
   },
   {
@@ -1352,6 +1408,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1365,9 +1422,9 @@
     "idd": 9.99176e-05
    },
    "errors": [],
-   "elapsed": 0.427,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "012aafb5ee4cb7d422399e18d44325da05190536c5c93fa3215b2096a1f2c3f9",
+   "hash": "f4a1d11bc0e0d9de03d2793a4fef185f690117c1f224bbdc0054d661a11832bc",
    "run_dir": "work/tt_27c_3v30__vic1.65__s16363392"
   },
   {
@@ -1376,6 +1433,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1389,9 +1447,9 @@
     "idd": 7.49688e-05
    },
    "errors": [],
-   "elapsed": 0.376,
+   "elapsed": 0.324,
    "cached": false,
-   "hash": "c1d0f8ded1accefd2403c974ee2468c304c31a30a9ed147390e06601baa5bf91",
+   "hash": "a7106625d815781d32bfb426961d55e3addbd1130cce55d9812a3908b1185fbb",
    "run_dir": "work/tt_27c_3v30__vic1.65__s913122918"
   },
   {
@@ -1400,6 +1458,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1413,9 +1472,9 @@
     "idd": 6.08674e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.324,
    "cached": false,
-   "hash": "819d065e2579352643ea55ddacd6f9f31930c14fd1330bdd56e3168ad3314846",
+   "hash": "6f33803c1d1cdb19ad08a5ad8624d535397ac7fea9fd1bb85f4ba7ea1f63acff",
    "run_dir": "work/tt_27c_3v30__vic1.65__s437580751"
   },
   {
@@ -1424,6 +1483,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1437,9 +1497,9 @@
     "idd": 0.000126899
    },
    "errors": [],
-   "elapsed": 0.424,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "b85ce7490781fd66f6e928db4bb77e35140b8f707e5b5aca5e3d6371aec82d10",
+   "hash": "28170f33905581ddb7042989c528c88150733e54ef57cba0d763cef37791ad94",
    "run_dir": "work/tt_27c_3v30__vic1.65__s778530364"
   },
   {
@@ -1448,6 +1508,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1461,9 +1522,9 @@
     "idd": 9.67318e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.329,
    "cached": false,
-   "hash": "cf652b166c204ce25a3bfb9d093796d03044174eead1b9e0978a3dd1d02ed1c5",
+   "hash": "c1fc0d1a958280e0de55a7d761015d0746b22e207a32a8b5ed7132a388ec82ea",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2125085322"
   },
   {
@@ -1472,6 +1533,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1487,7 +1549,7 @@
    "errors": [],
    "elapsed": 0.373,
    "cached": false,
-   "hash": "446f21b094f5b9a0d6479a632b2674483ff0d9899a129a651ae453ef46f4c23a",
+   "hash": "72bb34e3001291c0e25057ab22b3ad3fbeeac101eb7ab72cbf6c5d8e0d2342ea",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2003892497"
   },
   {
@@ -1496,6 +1558,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1509,9 +1572,9 @@
     "idd": 6.91937e-05
    },
    "errors": [],
-   "elapsed": 0.424,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "2095b0ca1ab8dc12a923ed82f2a8f08b01aed7da9128bc0220c5eda1cf4e6867",
+   "hash": "b5571f8e192655e5302506c782ddbc8ab152b7c70d1f3a46a9bf76b41ef20a36",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1147422057"
   },
   {
@@ -1520,6 +1583,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1533,9 +1597,9 @@
     "idd": 0.000162399
    },
    "errors": [],
-   "elapsed": 0.422,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "97405b88b7892261f9a1b1a4f940a56502f99d78b19fd30263e483d5f2badaf0",
+   "hash": "0150b3784d84c0d3e00637ff018f07f51a60678d14058015883b96759f56ef47",
    "run_dir": "work/tt_27c_3v30__vic1.65__s173551960"
   },
   {
@@ -1544,6 +1608,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1557,9 +1622,9 @@
     "idd": 6.0253e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "1c52af97a9ebf35009032908d40399d61b4ef87a8c9f69bb4b74f43dc99c2971",
+   "hash": "c40e7c8f7d88eea0a890590357dcc7e826eb55eb5382df804fc5e147ec0acf78",
    "run_dir": "work/tt_27c_3v30__vic1.65__s992323597"
   },
   {
@@ -1568,6 +1633,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1583,7 +1649,7 @@
    "errors": [],
    "elapsed": 0.372,
    "cached": false,
-   "hash": "5541efbefd5d1dc8a98a134c189668fc66078e6bce9cc640e18825958e5ab8dc",
+   "hash": "866abc3437bf4d097ef12d4dc502253498a3c729900fc53702aebb026cd6ea15",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1113803081"
   },
   {
@@ -1592,6 +1658,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1605,9 +1672,9 @@
     "idd": 6.0882e-05
    },
    "errors": [],
-   "elapsed": 0.379,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "5cf1b0fa28396daf965aae82feaa5eb09ec63a5d3c3f020520eb0b9f1443ba83",
+   "hash": "58849c495ca084a3854b8b8429fd494df0ff410f8028433d0ec71e602d91fcb7",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1933255545"
   },
   {
@@ -1616,6 +1683,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1629,9 +1697,9 @@
     "idd": 7.03074e-05
    },
    "errors": [],
-   "elapsed": 0.43,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "678e0ac0212730e3d9e23c45459e044384465f5a6a063da0b1b5f9531ca55e78",
+   "hash": "21a8b9993367e49a0616fa5c94ed7cd95345225a28918c1c0700739f5bfd73e1",
    "run_dir": "work/tt_27c_3v30__vic1.65__s425373339"
   },
   {
@@ -1640,6 +1708,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1653,9 +1722,9 @@
     "idd": 6.30007e-05
    },
    "errors": [],
-   "elapsed": 0.424,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "756abea84cde02fa6c0c7323282417a441836d78d98559e921f95a86fcce1c22",
+   "hash": "029db0d329ffa60be76470ba533b44e338b8b995310a72c16054cb4035ddb753",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1300320951"
   },
   {
@@ -1664,6 +1733,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1677,9 +1747,9 @@
     "idd": 0.000120038
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.376,
    "cached": false,
-   "hash": "5a59ad010f4efb840e292895a0ec648206b836737befbdfe9276dda56a0ce747",
+   "hash": "f7bbda19ca93609b14fc877db8af7562e14a07093809956e2495a49682cdd05a",
    "run_dir": "work/tt_27c_3v30__vic1.65__s993641652"
   },
   {
@@ -1688,6 +1758,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1701,9 +1772,9 @@
     "idd": 7.88041e-05
    },
    "errors": [],
-   "elapsed": 0.375,
+   "elapsed": 0.378,
    "cached": false,
-   "hash": "a5cf9b12ed3ee2c8d548066c2fc2f25a95531cbe3f20d3d60b7cf97ddc8559bf",
+   "hash": "566f1fd01b3a525081565ca659e328e6048a6d24615ef676eef1638a06d63a9c",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2097472804"
   },
   {
@@ -1712,6 +1783,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1725,9 +1797,9 @@
     "idd": 6.09766e-05
    },
    "errors": [],
-   "elapsed": 0.324,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "9837495ddcc71df0a1a6e1cc440c9d61d2865cdcab96ef771542574060fb5f3b",
+   "hash": "bf3b0dc49018cd338409ad79f6364e9b1c3c783b2116128c6f19dffc816a449b",
    "run_dir": "work/tt_27c_3v30__vic1.65__s110204141"
   },
   {
@@ -1736,6 +1808,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1749,9 +1822,9 @@
     "idd": 0.000183968
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "25082fd9185d8066236b182193d1bbaca123fa0a2bab22f9033c683f1f16b0a2",
+   "hash": "4db871fa37d1ac9ce7e4779d437447b7ead2c166cd8ad2b534b881a8dad7ee7c",
    "run_dir": "work/tt_27c_3v30__vic1.65__s767778936"
   },
   {
@@ -1760,6 +1833,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1773,9 +1847,9 @@
     "idd": 5.91944e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.372,
    "cached": false,
-   "hash": "b72b7b423d66cb8aa9777902d15c975bfdc3731a39ff17f627b3e15565957429",
+   "hash": "f95457db5bfee486c21071eea75a75ecdfce92da061db7977e8476b9ccf6ea74",
    "run_dir": "work/tt_27c_3v30__vic1.65__s277325447"
   },
   {
@@ -1784,6 +1858,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1797,9 +1872,9 @@
     "idd": 7.7436e-05
    },
    "errors": [],
-   "elapsed": 0.321,
+   "elapsed": 0.371,
    "cached": false,
-   "hash": "ebd79168697168a72d6efab0b4a8b85eee4be91f044148f1bcc429668deea11d",
+   "hash": "a4b915508f66161222722f4228be389f7740892b1452b007862c35688051219c",
    "run_dir": "work/tt_27c_3v30__vic1.65__s463477012"
   },
   {
@@ -1808,6 +1883,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1821,9 +1897,9 @@
     "idd": 6.08562e-05
    },
    "errors": [],
-   "elapsed": 0.426,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "ef87be1cb70a70aa0f9c41d2efc0cf403145aaa453b1ba26b89e44192e729a74",
+   "hash": "7c9176d3fde56e450bab03d44d0c88f5c67eb0e0f8ff9f0c74ea1e116e8bdf32",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2045318046"
   },
   {
@@ -1832,6 +1908,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1845,9 +1922,9 @@
     "idd": 0.000136077
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "666b05ac62a62353540a02b5fe945a1e3e2b850f3999619c274e814811c21821",
+   "hash": "8a669610b2c22a1234c119c7ed84528bb93819354eb36241358b5b95b1d3e906",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1977326119"
   },
   {
@@ -1856,6 +1933,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1869,9 +1947,9 @@
     "idd": 0.000120511
    },
    "errors": [],
-   "elapsed": 0.422,
+   "elapsed": 0.428,
    "cached": false,
-   "hash": "9199869c43969aac4f95a26b5407c5572387f97fecd9eb5d05f32614445e9abb",
+   "hash": "8b4a2193fa1b3866d2fbb321b7f778b4f71c459fa789c034ff1ba61953f37de7",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1535760996"
   },
   {
@@ -1880,6 +1958,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1893,9 +1972,9 @@
     "idd": 5.98919e-05
    },
    "errors": [],
-   "elapsed": 0.321,
+   "elapsed": 0.424,
    "cached": false,
-   "hash": "49770807aee46eedb57da53ba699695aa6513658f6b0c47ff41a60f3ef50852c",
+   "hash": "85351fd5b8d710c8b76da580d3d63ff515769e654d717fe031231185ef452a14",
    "run_dir": "work/tt_27c_3v30__vic1.65__s345341050"
   },
   {
@@ -1904,6 +1983,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1917,9 +1997,9 @@
     "idd": 6.226e-05
    },
    "errors": [],
-   "elapsed": 0.428,
+   "elapsed": 0.427,
    "cached": false,
-   "hash": "e8b015e5147bd617da0acf7bd150a7d8b20a8feb02bd15b4c78a8eb85b1bbd9a",
+   "hash": "ec30c192f54707a7fa2ae6fc44b80cae8fff83750a7f8f383cf73bee27fae968",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1605261858"
   },
   {
@@ -1928,6 +2008,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1941,9 +2022,9 @@
     "idd": 9.4121e-05
    },
    "errors": [],
-   "elapsed": 0.321,
+   "elapsed": 0.422,
    "cached": false,
-   "hash": "60f4a3c4ba982fbf891656be445fa0af311bd6f4a0d1e7b96b45b4477984f9d2",
+   "hash": "108748df3f20036f815ab70f798877db9279b1a878f91e4a571b1fafa03cf584",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1700461539"
   },
   {
@@ -1952,6 +2033,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1967,7 +2049,7 @@
    "errors": [],
    "elapsed": 0.423,
    "cached": false,
-   "hash": "cf5e0e83486abf0d949315fb7ff8c234e6891bfdcdbc5d83941def49c32d4fcf",
+   "hash": "141450fd0d3d3327614a402d38437b78b0e596b5018b41533d790156cc50ac24",
    "run_dir": "work/tt_27c_3v30__vic1.65__s948574921"
   },
   {
@@ -1976,6 +2058,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -1989,9 +2072,9 @@
     "idd": 6.15166e-05
    },
    "errors": [],
-   "elapsed": 0.422,
+   "elapsed": 0.373,
    "cached": false,
-   "hash": "9f0504d8067952f83039b487eb711e6eab8b693f0a5a4360aa92e699d509c24d",
+   "hash": "ff34f2542cc1d4d53f4c6d5e69f44d73e1c55fe7b5da1e328488047b9bca6167",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1278649378"
   },
   {
@@ -2000,6 +2083,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2013,9 +2097,9 @@
     "idd": 6.05326e-05
    },
    "errors": [],
-   "elapsed": 0.375,
+   "elapsed": 0.327,
    "cached": false,
-   "hash": "85d1961d5ebb8964a1723da5709e5c74177ed8c1c63be00670ae54943453a778",
+   "hash": "47f83b2653ad6301a8ef73cd417a351d23cf14cec9692cddfef249affd060729",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1986093744"
   },
   {
@@ -2024,6 +2108,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2037,9 +2122,9 @@
     "idd": 0.000174232
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.424,
    "cached": false,
-   "hash": "6d2443571380916e05a3883f0c705e68279c7269bfbac145805ce0b5766896d1",
+   "hash": "08146c085535ec1dc360a5e8f96e68913758ae949d9fd2e57c2863c18096b66c",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2110736110"
   },
   {
@@ -2048,6 +2133,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2061,9 +2147,9 @@
     "idd": 6.10266e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.423,
    "cached": false,
-   "hash": "642da8bbbec039e9e419a170d48042ade414bfeccda315204224fd0271b7a585",
+   "hash": "7e81a9b3760f459e7c01bfb1a2e5116b58c1dfc70374db3a89dd065193e7a953",
    "run_dir": "work/tt_27c_3v30__vic1.65__s381447718"
   },
   {
@@ -2072,6 +2158,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2085,9 +2172,9 @@
     "idd": 5.80675e-05
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.327,
    "cached": false,
-   "hash": "34d6997f8d12fbe3e745d985d54831af9fc2c3e90943b57ef24f8b8883d77d4c",
+   "hash": "5621c759a0837d422905a7117b7825bb3d87faec78e216b1c395fd7bceb01d36",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2027032563"
   },
   {
@@ -2096,6 +2183,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2109,9 +2197,9 @@
     "idd": 0.000103366
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.427,
    "cached": false,
-   "hash": "dcbb86e9e2198cf6c876c76b7d970b7cbc7021b430f7792e08df45b089f0f9de",
+   "hash": "d9a370b0dbbf734c53b9af071e27a0f1c1e4ed6b5f5953345a6ce50455ab95cd",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1080603992"
   },
   {
@@ -2120,6 +2208,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2133,9 +2222,9 @@
     "idd": 5.90138e-05
    },
    "errors": [],
-   "elapsed": 0.375,
+   "elapsed": 0.429,
    "cached": false,
-   "hash": "fb6403b543a7f418e2375956acc1f3587c8a49fc6acc21861dc243d66a7e614d",
+   "hash": "7035a98167e1dbd423035dec991b1725949aafecc140ac8558949a64bbfbb268",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1417982715"
   },
   {
@@ -2144,6 +2233,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2157,9 +2247,9 @@
     "idd": 7.50431e-05
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.27,
    "cached": false,
-   "hash": "2b6d2a4257765c51764789eb95059d706fbd8fcf1d09d1f1fcdb79523ecc2e32",
+   "hash": "617767f1f8631d009089f60afbb64479f6e8f7a608f55da4c79fcf799b463c1a",
    "run_dir": "work/tt_27c_3v30__vic1.65__s378006381"
   },
   {
@@ -2168,6 +2258,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2181,9 +2272,9 @@
     "idd": 0.000129897
    },
    "errors": [],
-   "elapsed": 0.423,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "b8371ee9a3bdaf7cced73fb260af6557ea46f51ba2bfb7e6fbbf322b2e418a80",
+   "hash": "b2b77b37b04c0e2c2912505adb0e116aa67d3d16338e458d6be2053b4eed191a",
    "run_dir": "work/tt_27c_3v30__vic1.65__s79590407"
   },
   {
@@ -2192,6 +2283,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2205,9 +2297,9 @@
     "idd": 8.30745e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.429,
    "cached": false,
-   "hash": "34d4d518e3680a56eafef4fa4d79b19a2ef9c42b0bb0c1ec6e78a07a30f1a5a2",
+   "hash": "425a7897bcda123439a7840e29df5f80e3719c315e24c84694041c05116a3ee3",
    "run_dir": "work/tt_27c_3v30__vic1.65__s235777434"
   },
   {
@@ -2216,6 +2308,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2229,9 +2322,9 @@
     "idd": 6.16144e-05
    },
    "errors": [],
-   "elapsed": 0.372,
+   "elapsed": 0.429,
    "cached": false,
-   "hash": "60ebff6496df9b57fbfe2e4b4f701c492422fe27778526d3728a0c0d05e83f81",
+   "hash": "5464dc9d88d7c3b0ff4555c94655066f7ec1ce567d4fead0a1d0ddb7ae3d16a4",
    "run_dir": "work/tt_27c_3v30__vic1.65__s50044638"
   },
   {
@@ -2240,6 +2333,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2253,9 +2347,9 @@
     "idd": 6.82847e-05
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.322,
    "cached": false,
-   "hash": "fcaa6ea805e04c2c0de4d68464404895de24a0473a65d7fe9e951f3307cadb51",
+   "hash": "05baba40fe4f52c7161a1e0ced425071e2e820bc37f4d0d23b0bb30894a3e8c9",
    "run_dir": "work/tt_27c_3v30__vic1.65__s367621775"
   },
   {
@@ -2264,6 +2358,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2277,9 +2372,9 @@
     "idd": 6.6285e-05
    },
    "errors": [],
-   "elapsed": 0.424,
+   "elapsed": 0.427,
    "cached": false,
-   "hash": "c0241c93d27c4fa9bf77db065796c2e082b924b031c946ad8e37418fd3244a1c",
+   "hash": "4d47a049baf514b76a5c2e9b7a0032aaf455208db4e5e3e30ace5237db37f7f9",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1017320731"
   },
   {
@@ -2288,6 +2383,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2301,9 +2397,9 @@
     "idd": 5.97295e-05
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.423,
    "cached": false,
-   "hash": "f8d258b4177fdb219ebce86bab36782459911d3842b44ca69501ff34aad9b5d6",
+   "hash": "63537b42d82a87847726352ae5d01aba29dd879b08da7f3427f0367191a8cab3",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1468588276"
   },
   {
@@ -2312,6 +2408,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2325,9 +2422,9 @@
     "idd": 0.000105707
    },
    "errors": [],
-   "elapsed": 0.373,
+   "elapsed": 0.325,
    "cached": false,
-   "hash": "d59ad8a236cf656b941e2d0a9804453d077f04965c6c044e0f419982573fa90e",
+   "hash": "cd5bb2684c6ac51295bb928c50f4a8a782e3856024e5d12899c638dabe52f66f",
    "run_dir": "work/tt_27c_3v30__vic1.65__s1760223768"
   },
   {
@@ -2336,6 +2433,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2349,9 +2447,9 @@
     "idd": 0.000152089
    },
    "errors": [],
-   "elapsed": 0.375,
+   "elapsed": 0.327,
    "cached": false,
-   "hash": "340d2f28423e124755e699b63d061ab20517ab2f6ec51524d8bf40877027d5e8",
+   "hash": "207cc34ffe191ca294b6d581540dcf8edaf0900d0685ae6d88bc8eae21fcf166",
    "run_dir": "work/tt_27c_3v30__vic1.65__s899845276"
   },
   {
@@ -2360,6 +2458,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2373,9 +2472,9 @@
     "idd": 7.81421e-05
    },
    "errors": [],
-   "elapsed": 0.324,
+   "elapsed": 0.378,
    "cached": false,
-   "hash": "96ab7240cbfd9445f7734438bcf9e0eb9a18c6800f2ce004f9f7927ff21a6242",
+   "hash": "716bf6a0c44aabbcb164d1ebcd0840d13e64556de7eceb9c3d5c40d011e4cd6a",
    "run_dir": "work/tt_27c_3v30__vic1.65__s174290096"
   },
   {
@@ -2384,6 +2483,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -2397,9 +2497,9 @@
     "idd": 0.000118362
    },
    "errors": [],
-   "elapsed": 0.374,
+   "elapsed": 0.378,
    "cached": false,
-   "hash": "9cc7a3458a01b11b1e0040d61e2268cb464b8de5c887989a10dcef2d090b80d3",
+   "hash": "c56a1c249c4c95916438eef2351c73694388ed23b263cea0b723ee427b3a6d8b",
    "run_dir": "work/tt_27c_3v30__vic1.65__s2011510302"
   }
  ]

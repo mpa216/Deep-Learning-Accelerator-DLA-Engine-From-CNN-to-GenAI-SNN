@@ -1,0 +1,29 @@
+{
+ "rules": {
+  "matched": {
+   "findings": [],
+   "failed": 0
+  },
+  "ngspice": {
+   "findings": [],
+   "failed": 0
+  },
+  "sizes": {
+   "findings": [],
+   "failed": 0
+  },
+  "pins": {
+   "findings": [],
+   "failed": 0
+  },
+  "frozen": {
+   "findings": [],
+   "failed": 0
+  }
+ },
+ "failed": 0,
+ "checked": {
+  "matched_files": [],
+  "ngspice_files": 10
+ }
+}

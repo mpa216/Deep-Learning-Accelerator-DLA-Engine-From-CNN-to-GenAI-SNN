@@ -1,0 +1,75 @@
+{
+ "generated": "2026-11-10 22:48:05",
+ "git": {
+  "commit": "6a92d76",
+  "dirty": null
+ },
+ "seconds": 1.1,
+ "mutants": [
+  {
+   "id": "meas_failed",
+   "target": "harness status -> gate STATUS check",
+   "desc": "a testbench whose .meas can never succeed must FAIL the gate (ngspice itself exits 0)",
+   "control": "PASS",
+   "detected": true,
+   "detail": "control PASS; mutant FAIL ['NODATA', 'STATUS'] {'meas_failed': 10}"
+  },
+  {
+   "id": "run_removed",
+   "target": "expected-run-count check",
+   "desc": "removing one run from the results must trip the run-count check",
+   "control": "PASS",
+   "detected": true,
+   "detail": "control PASS (10 runs); mutant FAIL ['COUNT'] expected 10 found 9"
+  },
+  {
+   "id": "limit_exceeded",
+   "target": "per_run limit check",
+   "desc": "a metric pushed beyond its limit in one run must FAIL the gate",
+   "control": "PASS",
+   "detected": true,
+   "detail": "control PASS; mutant FAIL ['LIMIT']"
+  },
+  {
+   "id": "stale_sizes_hash",
+   "target": "lint rule sizes / assert_fresh_sizes (netlist build refusal)",
+   "desc": "a sizes.spice whose header hash is stale must be refused",
+   "control": "PASS",
+   "detected": true,
+   "detail": "control findings []; mutant findings 1, build refused=True"
+  },
+  {
+   "id": "m_not_nf",
+   "target": "lint rule matched",
+   "desc": "a matched device written with m=4 instead of nf must FAIL lint",
+   "control": "PASS",
+   "detected": true,
+   "detail": "mutant findings: [\".scratch/mutants/m_not_nf/bad.spice:2: matched-device rule: 'm=4' (use one device with nf fingers): xm1 d g s b nfet_03v3 w=5u l=0.5u m=4\"]"
+  },
+  {
+   "id": "bare_ngspice",
+   "target": "lint rule ngspice",
+   "desc": "a flow script that starts ngspice itself must FAIL lint",
+   "control": "PASS",
+   "detected": true,
+   "detail": "mutant findings: 1"
+  },
+  {
+   "id": "frozen_edit",
+   "target": "lint rule frozen",
+   "desc": "an edit of a frozen criteria file without a decisions.yaml entry must FAIL lint; with a matching entry it passes",
+   "control": "PASS",
+   "detected": true,
+   "detail": "control []; edit findings 1; with decisions entry []"
+  },
+  {
+   "id": "pin_mismatch",
+   "target": "lint rule pins",
+   "desc": "a subckt that lacks a pin of spec/pins.yaml must FAIL the pin-name equality check",
+   "control": "PASS",
+   "detected": true,
+   "detail": "control []; mutant [\"netlist/lvds_rx_core.spice: pins ['RX0_N', 'RX0_O', 'RX0_P', 'RX1_N', 'RX1_O', 'RX1_P', 'RX2_N', 'RX2_O', 'RX2_P', 'VDD', 'VSS'] differ from spec/pins.yaml ['EN', 'RX0_N', 'RX0_O', 'RX0_P', 'RX1_N', 'RX1_O', 'RX1_P', 'RX2_N', 'RX2_O', 'RX2_P', 'VDD', 'VSS']\"]"
+  }
+ ],
+ "survived": []
+}

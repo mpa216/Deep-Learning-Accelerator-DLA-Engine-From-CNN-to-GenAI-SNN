@@ -1,0 +1,107 @@
+# decisions.yaml -- the fallback-ladder log (PLAN_V2 section 2.3) and the waiver log.
+#
+# HOW IT WORKS
+#  * `ladder` below defines the rungs.  They are ORDERED per ladder: never skip a rung, never relax anything not listed.
+#  * An agent may take the next rung of a ladder when its trigger fires TWICE IN A ROW (rule 7), measured.
+#  * Taking a rung = (1) edit the frozen file(s) the rung relaxes (spec/spec.yaml and/or spec/gates.yaml),
+#    (2) append ONE entry to `entries` with the date, trigger, measured value (and the file holding it), the gate relaxed,
+#    and `files_after`: the new sha256 of each frozen file touched (print them with `python3 flow/lint.py --show-hashes`).
+#  * flow/lint.py (rule "frozen") fails `make check` when a frozen file differs from spec/FREEZE.json AND from the
+#    sha256 in the newest entry that names it.  An edit without an entry therefore cannot pass.
+#  * results/REPORT.md prints every entry at the top as a waiver.
+#  * A waiver (not a rung) is allowed only for something no rung covers; kind: waiver, same fields.  Prefer rungs.
+#  * Ladder exhausted => the task ends with a failing gate and a report.  It never asks a question.
+#
+# ENTRY SCHEMA (append below, newest last)
+#   - id: D-001
+#     date: 2026-MM-DD
+#     kind: rung | waiver | note
+#     ladder: R1            # rung only
+#     rung: 1               # rung only: the rung taken
+#     trigger: "what fired, twice"
+#     measured: "number, file"
+#     gate_relaxed: "spec/spec.yaml data.margin_rate_bps 200e6 -> 150e6"
+#     files_after: {spec/spec.yaml: <sha256>, spec/gates.yaml: <sha256>}
+
+version: 1
+
+ladder:
+  R1:
+    name: rate
+    trigger: "TB4/TB5 miss with the extra gain stage and PMOS L = 0.28 um already used"
+    rungs:
+      0: "100 Mb/s, margin eye at 200 Mb/s (frozen)"
+      1: "100 Mb/s, margin eye at 150 Mb/s"
+      2: "80 Mb/s, then 50 Mb/s (margin check dropped, flagged)"
+  R2:
+    name: offset
+    trigger: "area/delay trade fails"
+    rungs:
+      0: "sigma_total <= 5 mV design target (frozen)"
+      1: "hard limit 8 mV (larger pair area)"
+  R3:
+    name: hysteresis
+    trigger: "chatter or window miss"
+    rungs:
+      0: "8-25 mV (frozen)"
+      1: "6-35 mV"
+  R4:
+    name: gain_speed
+    trigger: "A1_min < 4 or f3dB < 0.8*DR"
+    rungs:
+      0: "baseline stages (frozen)"
+      1: "add the optional extra gain stage (H7.4), variants.extra_gain_stage = true"
+      2: "PMOS L 0.4 -> 0.28 um"
+  R5:
+    name: cm_range
+    trigger: "T1 spike or TB1 CM/overlap gates fail"
+    rungs:
+      0: "0.05-2.35 V hybrid input + dump devices (frozen)"
+      1: "Option B complementary folded cascode"
+      2: "reduced range 0.05-1.6 V (PMOS-only), flagged 'deviates from TIA/EIA-644-A'"
+  R6:
+    name: bias
+    trigger: "I_lane > 1.5 mA at ss/125C/3.6 V, or tPD variation over corners > 1.5 ns at VID 350 mV, or A1_min < 4 at a corner, and bias constancy is the lever (PLAN_V2 4.4)"
+    rungs:
+      0: "resistor-diode bias (frozen)"
+      1: "constant-gm core, P-referenced, single core (enables TB11)"
+      2: "add N-referenced core only if the fs/sf gain spread still fails"
+  R7:
+    name: dcd
+    trigger: "skew gate fails after R4"
+    rungs:
+      0: "<= 5 % UI at VID 350 mV (frozen)"
+      1: "<= 8 % UI"
+  R8:
+    name: output_edge
+    trigger: "edge gate fails"
+    rungs:
+      0: "10-90 % <= 1.0 ns (frozen)"
+      1: "<= 1.5 ns (block SDC max_transition)"
+  R9:
+    name: power
+    trigger: "current gate fails after R6"
+    rungs:
+      0: "<= 1.5 mA/lane (frozen)"
+      1: "<= 2.0 mA/lane"
+
+iteration_caps:             # rule 7: logged to results/iterations.jsonl by flow/iterate.py
+  per_block: 5
+  per_phase: 8
+
+entries:                    # ladder rungs and waivers taken so far (none: only T0 notes). Newest last.
+  - id: D-001
+    date: 2026-11-11
+    kind: note
+    trigger: "T0 had to turn PLAN_V2 3.1/3.2 into countable gates; points the plan table left open were decided here (no limit changed)"
+    measured: "n/a (design decisions, recorded in spec/gates.yaml at freeze)"
+    gate_relaxed: "none"
+    decisions:
+      - "TB4b added: the VID set of TB4 is {0.1, 0.35} V and cannot show 'delta tPD over VID 200-450 mV'; TB4b = worst5 x 7 VIC x VID {0.2, 0.45}."
+      - "TB1 and SELFTEST use corner sets full47/worst7 (45 + the two resistor cross corners ss+res_ff, ff+res_ss) so headroom sees them; all other gates use the plain 45 / worst5 of the plan."
+      - "eye15 = 5 processes x {-40C/3.6V, 27C/3.3V, 125C/3.0V}; extreme2 = ss/125C/3.0V and ff/-40C/3.6V (transient MC, PLAN_V2 3.2)."
+      - "Run-count scopes of TB6-TB10 and TB12 (the plan only says ~150 + 160): TB6 4 cases, TB7 7 VIC x 3 terminations, TB7_mc N=100 x 3 VIC at worst5, TB8 6 cases, TB9 4 input voltages, TB10 nominal + 3-sigma summary, TB12 4 packages x 2 rates."
+      - "Output LOW is defined as <= 0.33 V (0.1*VDD at 3.3 V) in TB8; the plan said only 'LOW'."
+      - "Lane-to-lane 3-sigma skew <= 0.5 ns (PLAN_V2 3.1) is gated in TB10 as metric skew_3sigma_s (the plan's TB10 row only listed the 1 ns skew)."
+      - "Metric names in gates.yaml are the contract with the testbenches; a rename needs a new note entry carrying the new gates.yaml sha256."
+      - "Harness 1.1: .option wnflag=1 in the header; resistor section follows the process family; cross corners are tagged _xrff / _xrss in their names."

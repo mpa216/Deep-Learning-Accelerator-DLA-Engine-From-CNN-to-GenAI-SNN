@@ -79,3 +79,47 @@ All structured agent reports are in `log/foundation_results.json`.
   (`Analog/starter_files_open_source_tools/gf180mcuD/simulation/techsweep_nfet_03v3.spice`). The original is saved at
   `lut_regen/decks/kit_original/techsweep_nfet_03v3.spice`. Nothing reads that file; restoring it is optional.
 - Secondary ESD and latch-up cannot be qualified here. The macro will ship flagged UNQUALIFIED for both.
+
+---
+
+## 2026-11-11 — T0: scaffolding, frozen criteria, gate machinery
+
+**What happened.** Before any circuit exists, the way results will be judged was built and frozen, so later numbers cannot
+quietly move the goalposts. Nothing here simulates the receiver; it is the referee, not the player.
+
+**What was built (all under `analog/lvds_rx/`).**
+- `spec/spec.yaml` (what the receiver must do), `spec/gates.yaml` (how each test is judged: metric, limit, which corners, how many
+  runs), `spec/pins.yaml`, `spec/paths.yaml`: written from PLAN_V2 sections 3 and 2.3, then frozen (`spec/FREEZE.json` holds their
+  sha256). **From now on a change to any of them needs a dated entry in `spec/decisions.yaml` (a fallback-ladder rung or a waiver)
+  that carries the new sha256**; `make check` fails otherwise (lint rule "frozen", proven by a mutant). `decisions.yaml` also holds the
+  nine ladder definitions (R1 rate ... R9 power) and note D-001 listing the open points T0 had to decide (for example an extra
+  testbench TB4b, because TB4's two VID values cannot show the "delta over VID 200-450 mV" requirement).
+- `flow/`: `run_all.py` (runs every testbench that exists at the smoke or full tier, then gates, report, manifest),
+  `gates.py` (a gate passes only if every run is `ok` AND the number of runs equals the count computed from `gates.yaml`: corner-set size
+  x grid x Monte Carlo N, e.g. TB1 smoke 7 corners x 21 = 147, TB3_off full 5 x 3 x 1000 = 15000 runs), `report.py` (REPORT.md generated
+  from JSON, waivers first), `lint.py` (matched devices use `nf` never `m`; no bare ngspice call outside the harness; `sizes.spice`
+  hash header; pin names equal across spice/Verilog/LEF/Liberty; frozen files), `mutants.py`, `envcheck.py`, `iterate.py` (refuses a 6th
+  iteration of a block: take the next ladder rung instead). `Makefile`: check, smoke, full, report, mutants, lint, clean; layout/audit are stubs.
+- Harness fixes: the header now sets `.option wnflag=1`; the resistor section follows the process family (verified, below); named sets
+  `cross2`, `worst7`, `full47`, `extreme2`, `eye15` added; run records carry the resistor section so a gate can filter on it.
+
+**What was measured.**
+- Harness unit tests with wnflag: 45 tests, OK (43 before + 2 new: wnflag in every header, resistor corner/cross corners).
+- Pelgrom demo check after the change: mean measured/predicted 1.017 (min 1.013, max 1.021), the same as before (wnflag changes device
+  binning, not the random draws); reproducibility, cache and in-deck-loop checks all PASS (`.scratch/t0_demo.log`).
+- Resistor corners follow process (`sim/tb_selftest`, `ppolyf_u_1k`, W = L = 1 um): tt/27C 1202 ohm, ss/125C 1263, ff/-40C 1182, and the
+  cross corners really swap the section: ss with res_ff 879 ohm, ff with res_ss 1623 ohm. fs/sf use the typical section (1202).
+- OMP limits: the 120-FET 1.5 us transient run through `tools/cx` took 3.96 s wall at 99 % CPU (57470 iterations); without the exports the
+  same run took 7.34 s at 639 % CPU (`log/review_automation.md`).
+- `make check` green: LUT selftest 296/296, LUT load test VGS 0.8016 V / fT 3.298 GHz / ID/W 2.702 uA/um, toy layout regression
+  (Magic DRC 0, KLayout main 0 / antenna 0, LVS unique, negative control not clean), lint 0 findings, ENV and SELFTEST gates PASS.
+- Gate mutation tests, 8 of 8 caught (each with a passing control): a failed `.meas` (the harness reports `meas_failed` although ngspice
+  exits 0), a removed run (COUNT), a metric pushed past its limit, a stale `sizes.spice` hash (build refused), `m=4` instead of `nf`, a bare
+  ngspice call, an unexplained edit of a frozen file (and the legitimate path with a decisions entry passes), a subckt missing a pin.
+
+**What it means.** A pass can no longer be produced by a missing run, a skipped measurement or a loosened limit without leaving a
+trace in `decisions.yaml` and the report. Later tasks add circuit-specific mutants as `flow/mutants_<task>.py`.
+`make smoke` currently shows 16 gates NOT_RUN: their testbenches (T1-T4) do not exist yet; NOT_RUN is never counted as pass.
+
+**Where.** `spec/`, `flow/`, `Makefile`, `results/{env,gates,mutants,manifest,lint}.json`, `results/REPORT.md`, `sim/tb_selftest/`, `log/T0_report.md`.
+Metric names in `gates.yaml` are the contract the testbenches must write (`.meas` or `RESULT name value`).

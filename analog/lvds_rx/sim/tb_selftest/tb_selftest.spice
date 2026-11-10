@@ -1,0 +1,21 @@
+* tb_selftest: placeholder testbench of task T0.  A PDK resistor and an NMOS biased at {vg}; proves that
+* (a) the resistor corner follows the process corner (r_ohm differs per process family) and
+* (b) the whole harness -> gates -> report chain works.  It carries no design information.
+{header}
+{seed_line}
+vdd vdd 0 {vdd}
+* 1k poly resistor (bulk tied to ground), 0.1 V across it
+vr a 0 0.1
+xr a 0 0 ppolyf_u_1k r_width=1u r_length=1u
+* NMOS, W = 4 x 5 um per finger, L = 0.5 um (wnflag=1 bins on the finger width)
+vg g 0 {vg}
+vd vdd d 0
+xn d g 0 0 nfet_03v3 w=20u l=0.5u nf=4
+.control
+op
+let r = 0.1 / abs(i(vr))
+echo RESULT r_ohm $&r
+let id = abs(i(vd))
+echo RESULT idsat_a $&id
+.endc
+.end

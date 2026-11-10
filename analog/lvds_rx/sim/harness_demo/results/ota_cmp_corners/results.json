@@ -1,5 +1,5 @@
 {
- "harness": "1.0",
+ "harness": "1.1",
  "ngspice": "46",
  "runs": [
   {
@@ -8,6 +8,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 0.9
    },
@@ -21,9 +22,9 @@
     "idd": 6.1861e-05
    },
    "errors": [],
-   "elapsed": 0.426,
-   "cached": true,
-   "hash": "9d81397fe1d276cf374adac832b9662fc06da98ad6802cb852c0988d222778d7",
+   "elapsed": 0.371,
+   "cached": false,
+   "hash": "ae2358f4111c24b6f3aab227dd120cbc124c1d8d303abb1e5dd9b564c8bec4b3",
    "run_dir": "work/tt_27c_3v30__vic0.9"
   },
   {
@@ -32,6 +33,7 @@
    "process": "tt",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -45,9 +47,9 @@
     "idd": 8.5371e-05
    },
    "errors": [],
-   "elapsed": 0.422,
-   "cached": true,
-   "hash": "ee148bb61150832752b8c8ab3fc33be3d0036f79bd610b760a33422a415d937a",
+   "elapsed": 0.376,
+   "cached": false,
+   "hash": "5d7b1e08549f71222d62e62f6468ccb7e8ce0a8d1dad826988e348bf85ae3e9a",
    "run_dir": "work/tt_27c_3v30__vic1.65"
   },
   {
@@ -56,6 +58,7 @@
    "process": "ss",
    "temp": 125,
    "vdd": 3.0,
+   "res": "res_ss",
    "params": {
     "vic": 0.9
    },
@@ -69,9 +72,9 @@
     "idd": 5.17105e-05
    },
    "errors": [],
-   "elapsed": 0.431,
-   "cached": true,
-   "hash": "cd79345f1e5e5c06603e36fd23893c4c85c29c8435485688d9ca1d3206333494",
+   "elapsed": 0.377,
+   "cached": false,
+   "hash": "c911adb7a93edf88109bee219232d14eec4027a736d7504304d8304d43eb48f9",
    "run_dir": "work/ss_125c_3v00__vic0.9"
   },
   {
@@ -80,6 +83,7 @@
    "process": "ss",
    "temp": 125,
    "vdd": 3.0,
+   "res": "res_ss",
    "params": {
     "vic": 1.65
    },
@@ -93,9 +97,9 @@
     "idd": 8.40434e-05
    },
    "errors": [],
-   "elapsed": 0.425,
-   "cached": true,
-   "hash": "e5adbba39937196a87994e77e898a9c9a1bf08a212165bdcdc5abc832f8d0c90",
+   "elapsed": 0.376,
+   "cached": false,
+   "hash": "0ae17548cfc0d2b96b845375989377324d8ef1aa1d3ff23806d20ad7ef210ed1",
    "run_dir": "work/ss_125c_3v00__vic1.65"
   },
   {
@@ -104,6 +108,7 @@
    "process": "ff",
    "temp": -40,
    "vdd": 3.6,
+   "res": "res_ff",
    "params": {
     "vic": 0.9
    },
@@ -117,9 +122,9 @@
     "idd": 7.66338e-05
    },
    "errors": [],
-   "elapsed": 0.327,
-   "cached": true,
-   "hash": "58c3a77b1be02eff5f1fbd51242e19456651b9ce7860a8ba13795aa3b957226e",
+   "elapsed": 0.375,
+   "cached": false,
+   "hash": "eaa5b8b4c37079a522871cc68d90a4c9bf37288117d33c65f0cdbbed41c7ac2e",
    "run_dir": "work/ff_m40c_3v60__vic0.9"
   },
   {
@@ -128,6 +133,7 @@
    "process": "ff",
    "temp": -40,
    "vdd": 3.6,
+   "res": "res_ff",
    "params": {
     "vic": 1.65
    },
@@ -141,9 +147,9 @@
     "idd": 8.70012e-05
    },
    "errors": [],
-   "elapsed": 0.323,
-   "cached": true,
-   "hash": "d97bf31eed6ee7d8d8527a4c811ea92f0679e13c295a602c448953faf05d3d4a",
+   "elapsed": 0.375,
+   "cached": false,
+   "hash": "6554f721ec6a2c1192f7e429cd1db44e5cd853882e5f366c17cfa6aace051bc8",
    "run_dir": "work/ff_m40c_3v60__vic1.65"
   },
   {
@@ -152,6 +158,7 @@
    "process": "fs",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 0.9
    },
@@ -165,9 +172,9 @@
     "idd": 7.33242e-05
    },
    "errors": [],
-   "elapsed": 0.374,
-   "cached": true,
-   "hash": "f7096f314c54851b4b581252cb715aaaf94f7aca89255b35502912e3bcc96c45",
+   "elapsed": 0.273,
+   "cached": false,
+   "hash": "2930d8587e954f2f1072d379d282de4af362fce6936b69eafc1831032fa5c7ca",
    "run_dir": "work/fs_27c_3v30__vic0.9"
   },
   {
@@ -176,6 +183,7 @@
    "process": "fs",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -189,9 +197,9 @@
     "idd": 8.53165e-05
    },
    "errors": [],
-   "elapsed": 0.323,
-   "cached": true,
-   "hash": "145faa5dc44675813c6d0c72de707a590e09f0230dff1c209ab1e4e0502967fc",
+   "elapsed": 0.276,
+   "cached": false,
+   "hash": "8fa341dee9d08efb2335078c515fd2b6ede1414f11bbff435c2e23a7e1d16254",
    "run_dir": "work/fs_27c_3v30__vic1.65"
   },
   {
@@ -200,6 +208,7 @@
    "process": "sf",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 0.9
    },
@@ -213,9 +222,9 @@
     "idd": 4.84472e-05
    },
    "errors": [],
-   "elapsed": 0.38,
-   "cached": true,
-   "hash": "8bde0767102c9862c712e78858d93723866487f42c279cb7f6efdb1a348009bd",
+   "elapsed": 0.271,
+   "cached": false,
+   "hash": "6a884db71b1d0d79987b31d6802a0b3d502196fb67b1d026044bf32de0119297",
    "run_dir": "work/sf_27c_3v30__vic0.9"
   },
   {
@@ -224,6 +233,7 @@
    "process": "sf",
    "temp": 27,
    "vdd": 3.3,
+   "res": "res_typical",
    "params": {
     "vic": 1.65
    },
@@ -237,9 +247,9 @@
     "idd": 8.54353e-05
    },
    "errors": [],
-   "elapsed": 0.32,
-   "cached": true,
-   "hash": "c4e41e314177dd1c737ed99abcbe21f59126948195aa7ada0ec5a9608d6d6f41",
+   "elapsed": 0.278,
+   "cached": false,
+   "hash": "16b02b09d97fa18346344d4dd9b8333d31cbcb4651a84fbd2e206a5e70d90185",
    "run_dir": "work/sf_27c_3v30__vic1.65"
   }
  ]

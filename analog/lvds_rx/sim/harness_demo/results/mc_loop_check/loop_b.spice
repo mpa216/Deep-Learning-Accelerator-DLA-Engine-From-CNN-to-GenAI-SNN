@@ -1,5 +1,6 @@
 * in-deck Monte Carlo loop check
 * ---- GF180 header (harness): corner=tt_27c_3v30 mc=mismatch ----
+.option wnflag=1
 .param sw_stat_global=0 sw_stat_mismatch=1 mc_skew=3 res_mc_skew=3 cap_mc_skew=3 fnoicor=0
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical

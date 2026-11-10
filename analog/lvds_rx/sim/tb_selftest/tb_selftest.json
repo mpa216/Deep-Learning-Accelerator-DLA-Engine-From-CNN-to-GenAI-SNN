@@ -1,0 +1,10 @@
+{
+  "name": "tb_selftest",
+  "description": "T0 placeholder testbench: PDK resistor + NMOS over a corner set; used by the SELFTEST gate and by the gate mutants.",
+  "deck": "tb_selftest.spice",
+  "corners": "full47",
+  "grid": {"vg": [1.2, 3.3]},
+  "limits": {},
+  "timeout": 60,
+  "jobs": 6
+}

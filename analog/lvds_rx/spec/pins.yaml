@@ -1,0 +1,26 @@
+# pins.yaml -- FROZEN pin list of lvds_rx_x3 (PLAN_V2 section 3.1 "Pin list", 6.3 floorplan).
+# Pin names are checked for equality across the spice subckt, LEF, Liberty and Verilog by flow/lint.py.
+# x positions are INFERRED pad-slot positions (UNVERIFIED, organizer item): a late change re-spins only the pin row
+# and needs a decisions.yaml entry.  Positions are in um from the macro lower-left (0,0) after FIXED_BBOX handling,
+# macro strip ~600 um wide; lane k is centred under pad slots 2k and 2k+1 (centres 200 um apart, 100 um pad pitch).
+
+version: 1
+macro: lvds_rx_x3
+no_pins: [TRIM]             # no trim pins, no on-die termination
+
+pins:                       # order = subckt header order = Verilog port order
+  - {name: VDD,    dir: inout,  use: power,  layer: Metal3, side: strap}
+  - {name: VSS,    dir: inout,  use: ground, layer: Metal3, side: strap}
+  - {name: RX0_P,  dir: inout,  use: signal, layer: Metal3, side: top,  x_um: 50,  lane: 0, analog: true}
+  - {name: RX0_N,  dir: inout,  use: signal, layer: Metal3, side: top,  x_um: 150, lane: 0, analog: true}
+  - {name: RX1_P,  dir: inout,  use: signal, layer: Metal3, side: top,  x_um: 250, lane: 1, analog: true}
+  - {name: RX1_N,  dir: inout,  use: signal, layer: Metal3, side: top,  x_um: 350, lane: 1, analog: true}
+  - {name: RX2_P,  dir: inout,  use: signal, layer: Metal3, side: top,  x_um: 450, lane: 2, analog: true}
+  - {name: RX2_N,  dir: inout,  use: signal, layer: Metal3, side: top,  x_um: 550, lane: 2, analog: true}
+  - {name: EN,     dir: input,  use: signal, layer: Metal2, side: core, x_um: 100, analog: false}
+  - {name: RX0_O,  dir: output, use: signal, layer: Metal2, side: core, x_um: 200, lane: 0, analog: false}
+  - {name: RX1_O,  dir: output, use: signal, layer: Metal2, side: core, x_um: 300, lane: 1, analog: false}
+  - {name: RX2_O,  dir: output, use: signal, layer: Metal2, side: core, x_um: 400, lane: 2, analog: false}
+
+pin_pitch_um: 100           # inferred pad slot pitch
+lane_centres_um: [100, 300, 500]   # nominal, same inferred frame (centre of each P/N pair)

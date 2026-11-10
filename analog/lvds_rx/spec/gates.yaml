@@ -1,0 +1,321 @@
+# gates.yaml -- FROZEN pass criteria (PLAN_V2 section 3.2).  Written by task T0, 2026-11-11.
+#
+# A gate passes only if (a) every run of its spec has status `ok`, (b) the number of runs EQUALS the expected count that
+# flow/gates.py computes from `scope` here (corner-set size x grid counts x MC samples), and cross-checks against the
+# spec file's own corners / grid, and (c) every check holds.  A limited metric that is missing or NaN FAILS.
+# Limits are SI units and come from spec/spec.yaml through "$spec.<path>" references (single source of truth);
+# a plain number here is a limit that has no spec.yaml entry.
+#
+# Changing anything in this file after T0 needs an entry in spec/decisions.yaml (rung or waiver) carrying the new sha256.
+# Metric names below are the CONTRACT between the testbenches (tasks T1-T4) and the gates: a testbench must write exactly
+# these names (`.meas`, `RESULT name value`, or a `post` hook).  A rename is a decisions.yaml `note` entry with the new sha256.
+#
+# STRUCTURE
+#   gates:
+#     <ID>:
+#       phase: env | prelayout | layout | postlayout     (make check -> env; make smoke/full -> env+prelayout)
+#       spec: path of the harness spec JSON (results are read from <spec dir>/results/<spec name>/results.json)
+#       scope: {corners: {full: SET, smoke: SET}, grid: {param: n_values}, mc: {full: N, smoke: N}}   -> expected run count
+#       checks: list of {kind: per_run | spread | mc_offset_window | report | json_value, ...}
+#       condition: {ladder: R6, min_rung: 1}      the gate applies only when decisions.yaml has taken that rung
+#       deferred: "text"                          the evaluator/spec comes with a later task; reported NOT_RUN, never PASS
+#   `where` filters: {param_or_corner_field: value | [values]} (corner fields: process temp vdd corner).
+#   Corner sets (sim/harness/corners.py): tt worst5 worst7 full45 full47 eye15 extreme2 cross2.
+
+version: 1
+frozen_on: 2026-11-11
+time_budget: {full_cpu_min: 180, flag_over_factor: 2.0}   # a full run over 2x the estimate is flagged (PLAN_V2 5.3)
+
+gates:
+
+  # ------------------------------------------------------------------ environment and self-test
+  ENV:
+    title: "make check: tools, LUT load + self-test, harness tests, lint, OMP exports"
+    phase: env
+    json: results/env.json
+    checks:
+      - {kind: json_value, path: lut_selftest.failed,           eq: 0}
+      - {kind: json_value, path: lut_selftest.passed,           min: 296}
+      - {kind: json_value, path: lut_load.vgs_v,                min: 0.7996, max: 0.8036}    # 0.8016 V (nfet, gm/ID 12, L 0.5, VDS 1.0)
+      - {kind: json_value, path: lut_load.ft_hz,                min: 3.25e9, max: 3.35e9}    # 3.298 GHz
+      - {kind: json_value, path: lut_load.id_w_a_per_um,        min: 2.67e-6, max: 2.74e-6}  # 2.7024 uA/um
+      - {kind: json_value, path: harness_tests.failures,        eq: 0}
+      - {kind: json_value, path: harness_tests.run,             min: 45}
+      - {kind: json_value, path: lint.failed,                   eq: 0}
+      - {kind: json_value, path: omp.ok,                        eq: 1}
+      - {kind: json_value, path: layout_toy.ok,                 eq: 1}
+
+  SELFTEST:
+    title: "placeholder testbench: PDK resistor/MOS over the harness corner sets (proves resistor corners follow process, wnflag set)"
+    phase: env
+    spec: sim/tb_selftest/tb_selftest.json
+    scope:
+      corners: {full: full47, smoke: worst7}
+      grid: {vg: 2}
+    checks:
+      # measured 2026-11-11 (T0): tt/27C 1202, ss/125C 1263, ff/-40C 1182, ss+res_ff 879, ff+res_ss 1623 ohm
+      # (ppolyf_u_1k, W = L = 1 um).  Windows are +-5 %; they prove the resistor section follows the process
+      # (fs/sf use typical) and that the cross corners really swap it.
+      - {kind: per_run, metric: r_ohm, min: 1150.0, max: 1250.0, where: {corner: [tt_27c_3v30, fs_27c_3v30, sf_27c_3v30]}}
+      - {kind: per_run, metric: r_ohm, min: 1200.0, max: 1330.0, where: {corner: ss_125c_3v00}}
+      - {kind: per_run, metric: r_ohm, min: 1130.0, max: 1240.0, where: {corner: ff_m40c_3v60}}
+      - {kind: per_run, metric: r_ohm, min: 820.0,  max: 940.0,  where: {corner: ss_125c_3v00_xrff}}
+      - {kind: per_run, metric: r_ohm, min: 1550.0, max: 1700.0, where: {corner: ff_m40c_3v60_xrss}}
+      - {kind: report,  metric: idsat_a}
+
+  SIZE:
+    title: "sizing script asserts, current tally, nf-not-m"
+    phase: prelayout
+    json: results/sizing.json              # written by sizing/lvds_rx_sizing.py (T2)
+    checks:
+      - {kind: json_value, path: asserts_failed,       eq: 0}
+      - {kind: json_value, path: nf_m_violations,      eq: 0}
+      - {kind: json_value, path: tally_ok,             eq: 1}
+
+  # ------------------------------------------------------------------ pad (done)
+  TB0:
+    title: "analog pad: C_pad and pin leakage (built before T0)"
+    phase: prelayout
+    json: sim/tb0_pad/results/tb0_results.json
+    checks:
+      - {kind: json_value, path: "rows[*].C_100MHz_fF", agg: count, eq: 15}
+      - {kind: json_value, path: "rows[*].C_100MHz_fF", agg: max, scale: 1.0e-15, max: $spec.pad.c_pad_max_f}
+      - {kind: json_value, path: "rows[*].I_leak_A",    agg: abs_max, max: $spec.pad.pin_leakage_max_a}
+
+  # ------------------------------------------------------------------ pre-layout benches
+  TB1:
+    title: "operating point: headroom, LUT-vs-SPICE, stage-1 CM, currents, node range"
+    phase: prelayout
+    spec: sim/tb1_op/tb1_op.json
+    scope:
+      corners: {full: full47, smoke: worst7}      # full45 + the two resistor cross corners (headroom)
+      grid: {vic: 7, vid: 3}
+    checks:
+      - {kind: per_run, metric: min_headroom_v,    min: $spec.tb1.vdsat_headroom_min_v}      # VDS - VDsat, devices where intended
+      - {kind: per_run, metric: gmid_err,          abs: true, max: $spec.tb1.gmid_rel_tol}   # |gm/ID - script| / script
+      - {kind: per_run, metric: id_err,            abs: true, max: $spec.tb1.id_rel_tol}
+      - {kind: per_run, metric: vgs_err_v,         abs: true, max: $spec.tb1.vgs_abs_tol_v}
+      - {kind: per_run, metric: s1_cm_dev_v,       abs: true, max: $spec.stage1.out_cm_window_v}
+      - {kind: per_run, metric: np_overlap_v,      min: $spec.stage1.np_overlap_min_v}
+      - {kind: per_run, metric: vnode_min_v,       min: -0.3}
+      - {kind: per_run, metric: vnode_over_vdd_v,  max: $spec.stage1.node_v_margin}
+      - {kind: per_run, metric: model_warnings,    max: 0}
+      - {kind: per_run, metric: i_lane_a,          max: $spec.current.i_lane_max_a}
+      - {kind: per_run, metric: i_bias_a,          max: $spec.current.i_bias_max_a}
+
+  TB2:
+    title: "AC: stage-1 gain, bandwidth"
+    phase: prelayout
+    spec: sim/tb2_ac/tb2_ac.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {vic: 7}
+    checks:
+      - {kind: per_run, metric: a1,                min: $spec.stage1.a1_min, where: {vic: [0.05, 2.35]}}   # single-pair VIC extremes
+      - {kind: spread,  metric: a1, over: vic, mode: ratio, max: $spec.stage1.a1_spread_max}
+      - {kind: per_run, metric: f3db_stage_over_dr, min: $spec.bandwidth.stage_f3db_min_fraction_of_dr}
+      - {kind: per_run, metric: f3db_chain_hz,     min: $spec.bandwidth.chain_f3db_min_hz}
+      - {kind: report,  metric: cmrr_db}
+      - {kind: report,  metric: psrr_db}
+
+  TB3_trip:
+    title: "hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)"
+    phase: prelayout
+    spec: sim/tb3_trip/tb3_trip.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {vic: 3, sweep: 2}
+    checks:
+      - {kind: per_run, metric: vh_v, min: $spec.hysteresis.min_v, max: $spec.hysteresis.max_v}
+      - {kind: report,  metric: dvh_dvdd}
+      - {kind: report,  metric: dvtrip_dvdd}
+
+  TB3_off:
+    title: "DC input-referred offset Monte Carlo, hysteresis off (N = 1000)"
+    phase: prelayout
+    spec: sim/tb3_off/tb3_off.json
+    scope:
+      corners: {full: worst5, smoke: worst5}
+      grid: {vic: 3}
+      mc: {full: 1000, smoke: 30}
+    checks:
+      # |mean| + k*sigma_fit + V_Hmax/2 + margin <= window, per (corner, vic) group
+      - kind: mc_offset_window
+        metric: vos_v
+        k: $spec.offset.k_sigma
+        window: $spec.offset.window_v
+        extra: [{ref: hysteresis.max_v, mul: 0.5}, {ref: offset.margin_v}]
+        sigma_max: $spec.offset.hard_sigma_limit_v
+      - {kind: report, metric: vos_v}
+
+  TB3_hmc:
+    title: "transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)"
+    phase: prelayout
+    spec: sim/tb3_hmc/tb3_hmc.json
+    scope:
+      corners: {full: extreme2, smoke: extreme2}
+      grid: {vic: 3}
+      mc: {full: 100, smoke: 30}
+    checks:
+      - {kind: per_run, metric: vh_v,         min: $spec.hysteresis.min_v, max: $spec.hysteresis.max_v}
+      - {kind: per_run, metric: ok_pm100,     min: 1}
+
+  TB4:
+    title: "propagation delay, pulse skew, DCD, output edge"
+    phase: prelayout
+    spec: sim/tb4_pd/tb4_pd.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {vic: 7, vid: 2}
+    checks:
+      - {kind: per_run, metric: tpd_s,       max: $spec.timing.tpd_max_s,         where: {vid: 0.35}}
+      - {kind: per_run, metric: tpd_s,       max: $spec.timing.tpd_vid100_max_s,  where: {vid: 0.1}}    # includes the +-10 mV offset source
+      - {kind: per_run, metric: dcd_ui,      max: $spec.timing.dcd_ui_max_vid350, where: {vid: 0.35}}
+      - {kind: per_run, metric: dcd_ui,      max: $spec.timing.dcd_ui_max_vid100, where: {vid: 0.1}}
+      - {kind: per_run, metric: edge_10_90_s, max: $spec.output.edge_10_90_max_s}
+      - {kind: spread,  metric: tpd_s, over: vic, mode: delta, max: $spec.timing.delta_tpd_over_vic_max_s, where: {vid: 0.35}}
+
+  TB4b:
+    title: "delta tPD over VID 200-450 mV at fixed VIC (the VID set of TB4 cannot show it)"
+    phase: prelayout
+    spec: sim/tb4b_pd_vid/tb4b_pd_vid.json
+    scope:
+      corners: {full: worst5, smoke: worst5}
+      grid: {vic: 7, vid: 2}                     # vid = {0.2, 0.45}
+    checks:
+      - {kind: spread, metric: tpd_s, over: vid, mode: delta, max: $spec.timing.delta_tpd_over_vid_max_s}
+
+  TB5:
+    title: "eye at 100 and 200 Mb/s through the full input network"
+    phase: prelayout
+    spec: sim/tb5_eye/tb5_eye.json
+    scope:
+      corners: {full: eye15, smoke: worst5}
+      grid: {vic: 3, vid: 2, rate: 2}            # rate = {100e6, 200e6}
+    checks:
+      - {kind: per_run, metric: ber_errors,   max: $spec.eye.ber_errors_max}
+      - {kind: per_run, metric: toggle_diff,  abs: true, max: 0}               # output toggle count - input toggle count
+      - {kind: per_run, metric: eye_open_ui,  min: $spec.eye.opening_ui_min_worst_100mbps, where: {rate: 100.0e6}}
+      - {kind: per_run, metric: eye_open_ui,  min: $spec.eye.opening_ui_min_tt_100mbps,    where: {rate: 100.0e6, vid: 0.1, corner: tt_27c_3v30}}
+      - {kind: per_run, metric: eye_open_ui,  min: $spec.eye.opening_ui_min_200mbps,       where: {rate: 200.0e6, vid: 0.35, corner: [tt_27c_3v30, ss_125c_3v00]}}
+      - {kind: report,  metric: dcd_ui}
+
+  TB6:
+    title: "CM step, supply ripple, current spikes"
+    phase: prelayout
+    spec: sim/tb6_cm_supply/tb6_cm_supply.json
+    scope:
+      corners: {full: worst5, smoke: worst5}
+      grid: {case: 4}                            # cm_step 0.05->2.35 V in 2 ns, ripple 100 mVpp 25 MHz, current spike, quiet
+    checks:
+      - {kind: per_run, metric: false_toggles, max: 0}
+      - {kind: per_run, metric: added_jitter_ui, max: 0.1}
+
+  TB7:
+    title: "idle inputs: stable held state, no oscillation, no pulse < 2 ns (v0)"
+    phase: prelayout
+    spec: sim/tb7_idle/tb7_idle.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {vic: 7, term: 3}                    # term = open, terminated, shorted
+    checks:
+      - {kind: per_run, metric: osc_flag,  max: 0}
+      - {kind: per_run, metric: min_pulse_s, min: $spec.failsafe.min_pulse_s}   # no pulse -> large value
+      - {kind: report,  metric: held_state}
+
+  TB7_mc:
+    title: "idle inputs under mismatch (N = 100)"
+    phase: prelayout
+    spec: sim/tb7_idle_mc/tb7_idle_mc.json
+    scope:
+      corners: {full: worst5, smoke: worst5}
+      grid: {vic: 3}
+      mc: {full: 100, smoke: 30}
+    checks:
+      - {kind: per_run, metric: osc_flag,  max: 0}
+      - {kind: per_run, metric: min_pulse_s, min: $spec.failsafe.min_pulse_s}
+
+  TB8:
+    title: "EN and supply ramps"
+    phase: prelayout
+    spec: sim/tb8_en/tb8_en.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {case: 6}    # en0, vdd_below_2v, en_rise, ramp_1us, ramp_100us, en_rising_mid_ramp (3 lanes on one bias in every case)
+    checks:
+      - {kind: per_run, metric: vout_off_v,   max: 0.33, where: {case: [0, 1]}}     # LOW = <= 0.1*VDD (3.3 V)
+      - {kind: per_run, metric: idd_en0_a,    max: $spec.current.idd_en0_max_a.t27c, where: {case: 0, temp: [-40, 27]}}
+      - {kind: per_run, metric: idd_en0_a,    max: $spec.current.idd_en0_max_a.t125c, where: {case: 0, temp: 125}}
+      - {kind: per_run, metric: valid_time_s, max: $spec.en.valid_after_s, where: {case: 2}}
+      - {kind: per_run, metric: min_pulse_s,  min: $spec.en.min_pulse_s}
+
+  TB9:
+    title: "input leakage and balance"
+    phase: prelayout
+    spec: sim/tb9_input/tb9_input.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {vin: 4}                             # 0.05, 1.2, 2.35, 2.4 V
+    checks:
+      - {kind: per_run, metric: iin_a,         abs: true, max: $spec.input.leakage_max_a}
+      - {kind: per_run, metric: iin_balance_a, abs: true, max: $spec.input.leakage_balance_max_a}
+
+  TB10:
+    title: "three lanes: skew and crosstalk"
+    phase: prelayout
+    spec: sim/tb10_lanes/tb10_lanes.json
+    scope:
+      corners: {full: worst5, smoke: worst5}
+      grid: {mc3s: 2}                            # 0 = nominal, 1 = 3-sigma lane-to-lane summary
+    checks:
+      - {kind: per_run, metric: skew_s,       max: 1.0e-9, where: {mc3s: 0}}
+      - {kind: per_run, metric: xtalk_jitter_ui, max: 0.05}
+      - {kind: per_run, metric: skew_3sigma_s, max: $spec.timing.lane_skew_3sigma_max_s, where: {mc3s: 1}}
+
+  TB11:
+    title: "bias loop stability (only if a constant-gm loop exists)"
+    phase: prelayout
+    condition: {ladder: R6, min_rung: 1}
+    spec: sim/tb11_loop/tb11_loop.json
+    scope:
+      corners: {full: full45, smoke: worst5}
+      grid: {}
+    checks:
+      - {kind: per_run, metric: loop_gain_min_margin, min: 0}      # >0: |T| < 1 at all f, or PM > 45 deg (testbench folds both into this margin)
+
+  TB12:
+    title: "package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners"
+    phase: prelayout
+    spec: sim/tb12_pkg/tb12_pkg.json
+    scope:
+      corners: {full: worst5, smoke: worst5}
+      grid: {pkg: 4, rate: 2}
+    checks:
+      - {kind: per_run, metric: ber_errors,  max: 0}
+      - {kind: per_run, metric: eye_open_ui, min: 0.5}
+
+  # ------------------------------------------------------------------ layout and post-layout (stubs the later tasks fill)
+  LAYOUT:
+    title: "layout sign-off (PLAN_V2 6.4 steps 1-6); written by the layout flow to results/layout.json"
+    phase: layout
+    json: results/layout.json
+    checks:
+      - {kind: json_value, path: selfcheck_failed,        eq: 0}
+      - {kind: json_value, path: drc_magic_total,         eq: 0}
+      - {kind: json_value, path: klayout_dbu_um,          eq: $spec.layout.dbu_um}
+      - {kind: json_value, path: klayout_main_total,      eq: 0}
+      - {kind: json_value, path: klayout_antenna_total,   eq: 0}
+      - {kind: json_value, path: via_array_total,         eq: 0}
+      - {kind: json_value, path: lvs_match_unique,        eq: 1}
+      - {kind: json_value, path: lvs_property_errors,     eq: 0}
+      - {kind: json_value, path: lvs_port_errors,         eq: 0}
+      - {kind: json_value, path: lvs_counts_equal,        eq: 1}
+      - {kind: json_value, path: negctl_all_fail,         eq: 1}
+      - {kind: json_value, path: finger_order_ok,         eq: 1}
+      - {kind: json_value, path: m1_m3_max_shape_um,      max: $spec.layout.m1_m3_max_shape_um}
+      - {kind: json_value, path: pn_input_cap_asym_pct,   max: 2.0}
+
+  TBL:
+    title: "post-layout re-simulation: same metrics as TB1,TB2,TB3,TB4,TB5,TB7,TB8,TB10 on PEX netlists"
+    phase: postlayout
+    deferred: "T11 writes sim/tbl_* specs and the evaluator; frozen criterion: every metric within 30 % of its margin to the TB limit (PLAN_V2 3.2, 6.5), about 100 runs"

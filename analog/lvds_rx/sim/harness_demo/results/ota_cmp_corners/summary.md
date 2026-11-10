@@ -4,7 +4,7 @@
 
 Demo: 5T OTA + inverter comparator, worst5 corners x two common-mode voltages. Limits are demo values (propagation delay target of the handoff 9.1 TB4: 5 ns).
 
-Runs: **10** (ok 10); 10 reused from cache.
+Runs: **10** (ok 10); 0 reused from cache.
 
 ## Worst case per metric
 

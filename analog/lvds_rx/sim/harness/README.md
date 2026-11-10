@@ -82,8 +82,13 @@ Run statuses: `ok`, `meas_failed`, `nonconverged` (no convergence / timestep too
 
 `Corner(process, temp, vdd, res, moscap, diode)`; the passive sections default to the process family
 (fs/sf use typical passives, as the PDK does).  Names look like `ss_125c_3v00`, `ff_m40c_3v60`.
+The header also sets `.option wnflag=1` (binning on W per finger, needed for LUT-faithful netlists; added in harness 1.1).
+The resistor section follows the process family (ss -> res_ss, ff -> res_ff, tt/fs/sf -> res_typical); cross corners
+carry the swapped section in their name (`ss_125c_3v00_xrff`).
 Sets: `tt` (1), `worst5` (tt 27C 3.3V, ss 125C 3.0V, ff -40C 3.6V, fs, sf at 27C 3.3V), `speed4` (ss/ff paired and
-cross-paired hot/cold, 4), `tt_temps` (9), `full45` (5 process x 3 T x 3 VDD).
+cross-paired hot/cold, 4), `tt_temps` (9), `full45` (5 process x 3 T x 3 VDD), `cross2` (ss/125C/3.0V with res_ff,
+ff/-40C/3.6V with res_ss), `worst7` (worst5 + cross2), `full47` (full45 + cross2), `extreme2` (ss 125C 3.0V, ff -40C 3.6V),
+`eye15` (5 process x {-40C/3.6V, 27C/3.3V, 125C/3.0V}).
 `python3 sim/harness/cli.py header ss:125:3.0 --mc mismatch` prints a header.  The header always sets
 `sw_stat_global`, `sw_stat_mismatch`, `mc_skew`, `res_mc_skew`, `cap_mc_skew`, `fnoicor` explicitly and never includes
 `design.ngspice`; missing `sw_stat_global`/`sw_stat_mismatch`/`res_mc_skew`/`fnoicor` is a hard ngspice error.
@@ -142,7 +147,7 @@ launch: `python3 sim/harness/cli.py run sim/tb4_pd/tb4_pd.json --jobs 6`, then r
 
 ## 8. Tests
 
-`python3 -m unittest discover -s sim/harness/tests -v` (from `analog/lvds_rx`; 41 tests: PRBS period/balance, PWL,
+`python3 -m unittest discover -s sim/harness/tests -v` (from `analog/lvds_rx`; 45 tests: PRBS period/balance, PWL,
 crossings, delays, hysteresis, eye with known jitter/DCD, headers, seeds/stats, log parsing, and ngspice integration
-tests for cache/force/failed-meas/timeout/seeded runs).
+tests for cache/force/failed-meas/timeout/seeded runs, wnflag in the header, resistor corner follows process, cross corners).
 `bash sim/harness_demo/run_demo.sh` re-runs all demos and the Monte Carlo mechanism checks from a clean state.

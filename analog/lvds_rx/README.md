@@ -18,6 +18,11 @@ Scope is the macro only. Nothing here touches `main`, `info.yaml`, the padframe 
 ## Directory layout
 
 ```
+Makefile        single entry point: check | smoke | full | report | mutants | lint | layout (stub) | audit (stub) | clean
+spec/           FROZEN criteria: spec.yaml, gates.yaml, pins.yaml, paths.yaml, FREEZE.json; decisions.yaml = fallback-ladder + waiver log
+flow/           run_all.py (stage driver), gates.py (results -> results/gates.json), report.py (-> results/REPORT.md),
+                lint.py, mutants.py (gate mutation tests), envcheck.py (-> results/env.json), iterate.py (iteration cap logger)
+results/        generated: env.json, gates.json, REPORT.md, manifest.json, mutants.json
 tools/cx        run any command inside the apic_headless container with the full EDA environment
 sizing/         gm/ID wrapper (gmid_gf180.py) and, later, the sizing script: the single source of truth for every W/L
 luts/           gm/ID lookup tables (git-ignored, regenerate with lut_regen/regen_all.sh)
@@ -36,6 +41,7 @@ All EDA tools live in the docker container `apic_headless`. From the host:
 docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx <command> [args]
 ```
 
+Everything is driven by `make`: `... tools/cx make check` (about 1.5 min, must be green), `make smoke`, `make full`, `make mutants`.
 The wrapper starts in `analog/lvds_rx`, so paths are relative to it, for example
 `... tools/cx python3 sizing/selftest_gmid.py` or `... tools/cx bash layout/magic_flow/scripts/run_all.sh`.
 If the container is stopped: `docker start apic_headless`.

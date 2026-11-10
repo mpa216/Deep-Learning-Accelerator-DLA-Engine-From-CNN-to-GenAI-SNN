@@ -1,0 +1,259 @@
+{
+ "generated": "2026-11-10 22:48:51",
+ "tier": "smoke",
+ "phases": [
+  "env"
+ ],
+ "git": {
+  "commit": "6a92d76",
+  "dirty": null
+ },
+ "gates_sha256": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
+ "spec_sha256": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
+ "summary": {
+  "PASS": 2
+ },
+ "cpu_min": 0.0,
+ "flags": [],
+ "green": true,
+ "waivers": [
+  {
+   "id": "D-001",
+   "date": "2026-11-11",
+   "kind": "note",
+   "trigger": "T0 had to turn PLAN_V2 3.1/3.2 into countable gates; points the plan table left open were decided here (no limit changed)",
+   "measured": "n/a (design decisions, recorded in spec/gates.yaml at freeze)",
+   "gate_relaxed": "none",
+   "decisions": [
+    "TB4b added: the VID set of TB4 is {0.1, 0.35} V and cannot show 'delta tPD over VID 200-450 mV'; TB4b = worst5 x 7 VIC x VID {0.2, 0.45}.",
+    "TB1 and SELFTEST use corner sets full47/worst7 (45 + the two resistor cross corners ss+res_ff, ff+res_ss) so headroom sees them; all other gates use the plain 45 / worst5 of the plan.",
+    "eye15 = 5 processes x {-40C/3.6V, 27C/3.3V, 125C/3.0V}; extreme2 = ss/125C/3.0V and ff/-40C/3.6V (transient MC, PLAN_V2 3.2).",
+    "Run-count scopes of TB6-TB10 and TB12 (the plan only says ~150 + 160): TB6 4 cases, TB7 7 VIC x 3 terminations, TB7_mc N=100 x 3 VIC at worst5, TB8 6 cases, TB9 4 input voltages, TB10 nominal + 3-sigma summary, TB12 4 packages x 2 rates.",
+    "Output LOW is defined as <= 0.33 V (0.1*VDD at 3.3 V) in TB8; the plan said only 'LOW'.",
+    "Lane-to-lane 3-sigma skew <= 0.5 ns (PLAN_V2 3.1) is gated in TB10 as metric skew_3sigma_s (the plan's TB10 row only listed the 1 ns skew).",
+    "Metric names in gates.yaml are the contract with the testbenches; a rename needs a new note entry carrying the new gates.yaml sha256.",
+    "Harness 1.1: .option wnflag=1 in the header; resistor section follows the process family; cross corners are tagged _xrff / _xrss in their names."
+   ]
+  }
+ ],
+ "gates": {
+  "ENV": {
+   "id": "ENV",
+   "title": "make check: tools, LUT load + self-test, harness tests, lint, OMP exports",
+   "phase": "env",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "json_value",
+     "metric": "lut_selftest.failed",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.0,
+     "limit": "== 0",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_selftest.passed",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 296.0,
+     "limit": "296 .. +inf",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_load.vgs_v",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.8015774025430232,
+     "limit": "0.7996 .. 0.8036",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_load.ft_hz",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 3297840696.4033084,
+     "limit": "3.25e+09 .. 3.35e+09",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_load.id_w_a_per_um",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 2.702363910027819e-06,
+     "limit": "2.67e-06 .. 2.74e-06",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "harness_tests.failures",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.0,
+     "limit": "== 0",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "harness_tests.run",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 45.0,
+     "limit": "45 .. +inf",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lint.failed",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.0,
+     "limit": "== 0",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "omp.ok",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 1.0,
+     "limit": "== 1",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "layout_toy.ok",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 1.0,
+     "limit": "== 1",
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": null,
+   "actual_runs": null,
+   "status_counts": {},
+   "results_file": "results/env.json",
+   "results_sha256": "6d439b4df57cab89ff3b59d68240cfb6b7b2bfff4180bf18a3cf8704166cf081"
+  },
+  "SELFTEST": {
+   "id": "SELFTEST",
+   "title": "placeholder testbench: PDK resistor/MOS over the harness corner sets (proves resistor corners follow process, wnflag set)",
+   "phase": "env",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": [
+       "tt_27c_3v30",
+       "fs_27c_3v30",
+       "sf_27c_3v30"
+      ]
+     },
+     "limit": "1150 .. 1250",
+     "n": 6,
+     "reasons": [],
+     "worst": 1201.85,
+     "worst_run": "tt_27c_3v30__vg1.2",
+     "margin": 48.15000000000009,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ss_125c_3v00"
+     },
+     "limit": "1200 .. 1330",
+     "n": 2,
+     "reasons": [],
+     "worst": 1262.92,
+     "worst_run": "ss_125c_3v00__vg1.2",
+     "margin": 62.92000000000007,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ff_m40c_3v60"
+     },
+     "limit": "1130 .. 1240",
+     "n": 2,
+     "reasons": [],
+     "worst": 1181.79,
+     "worst_run": "ff_m40c_3v60__vg1.2",
+     "margin": 51.789999999999964,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ss_125c_3v00_xrff"
+     },
+     "limit": "820 .. 940",
+     "n": 2,
+     "reasons": [],
+     "worst": 879.104,
+     "worst_run": "ss_125c_3v00_xrff__vg1.2",
+     "margin": 59.10400000000004,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ff_m40c_3v60_xrss"
+     },
+     "limit": "1550 .. 1700",
+     "n": 2,
+     "reasons": [],
+     "worst": 1623.49,
+     "worst_run": "ff_m40c_3v60_xrss__vg1.2",
+     "margin": 73.49000000000001,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "idsat_a",
+     "where": null,
+     "limit": "reported",
+     "n": 14,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.000435399,
+     "max": 0.00978911,
+     "mean": 0.004129755071428571
+    }
+   ],
+   "expected_runs": 14,
+   "actual_runs": 14,
+   "status_counts": {
+    "ok": 14
+   },
+   "results_file": "sim/tb_selftest/results/tb_selftest/results.json",
+   "results_sha256": "88c6ad2a02e8fd4262ba03fb0b9b2169c76b51ac38cb5fbe510fb8224a86b113",
+   "cpu_s": 1.1
+  }
+ }
+}

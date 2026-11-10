@@ -1,0 +1,10 @@
+{
+ "frozen_on": "2026-11-11",
+ "task": "T0",
+ "sha256": {
+  "spec/spec.yaml": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
+  "spec/gates.yaml": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
+  "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
+  "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a"
+ }
+}
