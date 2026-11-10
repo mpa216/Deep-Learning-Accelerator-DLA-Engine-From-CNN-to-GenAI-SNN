@@ -105,3 +105,15 @@ entries:                    # ladder rungs and waivers taken so far (none: only 
       - "Lane-to-lane 3-sigma skew <= 0.5 ns (PLAN_V2 3.1) is gated in TB10 as metric skew_3sigma_s (the plan's TB10 row only listed the 1 ns skew)."
       - "Metric names in gates.yaml are the contract with the testbenches; a rename needs a new note entry carrying the new gates.yaml sha256."
       - "Harness 1.1: .option wnflag=1 in the header; resistor section follows the process family; cross corners are tagged _xrff / _xrss in their names."
+  - id: D-002
+    date: 2026-11-11
+    kind: note
+    trigger: "T1 stage-1 spike (PLAN_V2 S0, C4): is the hybrid input stage with dump devices viable over VIC 0.05-2.35 V? Answer measured: yes, no ladder rung taken (R5 stays at rung 0)."
+    measured: "results/spike_stage1.json, 8 corners x 47 VIC x 3 variants (1128 runs, all ok). H1 (hybrid + dump): CM span 12-31 mV (limit +-150 mV), A1 at VIC 0.05/2.35 V >= 4.26, A1 spread <= 1.27x (limit 2.2x), min saturation margin 88 mV (limit 50 mV), f3dB >= 170 MHz. H0 (no dump): CM fails at 7 of 8 corners (span up to 1.20 V), A1 0.08 at ss/125C/2.35 V. Iterations 2 of 8 (results/iterations.jsonl)."
+    gate_relaxed: "none (gates.yaml untouched, sha unchanged)"
+    decisions:
+      - "Stage-1 topology for the real design = hybrid complementary input + dump devices gated by Vref = 0.48*VDD (build flag dump_devices defaults ON; the control H0 shows the frozen CM and gain gates fail without it). Option A stays a shake-down variant (usable up to 1.79-2.35 V depending on corner)."
+      - "INTERPRETATION, not a limit change: np_overlap_v (>= 0.25 V) is the spec's own quantity, the VIC range where both pairs' TAIL transistors carry >= 90 % of plateau current. With dump devices the tails stay saturated everywhere, so TB1 must evaluate it on the dump-free control (same sizes, dump gates disconnected): measured 0.64-1.47 V (>= 0.25 at all 8 corners) AND require Vref to lie >= 0.125 V inside that window on both sides (measured >= 0.252 V). The pair hand-over width (both pairs >= 10 %) is informational: 0.19-0.31 V."
+      - "s1_cm_dev_v is evaluated as span/2 (the +-0.15 V window placed optimally over the VIC sweep); the stricter reading span <= 0.15 V also passes (max span 31 mV)."
+      - "Spike sizes (starting point for T2, not final): pair gm/ID 15 (NMOS L 0.5, PMOS L 0.4), tails and sinks gm/ID 7 L 1.0, cascode gm/ID 10 L 0.5, VR = 1.0 V at tt, fold node Vf 0.45 V, I3 = 1.2 Itp, Itp = Itn = 100 uA. Dump twins identical to the pair devices (a k-times-wider twin to save offset is reasoned, not simulated)."
+      - "Not tested by the spike and left to T2+: mismatch (dump twins add their own sigma at the input), large-signal VID, real bias (a resistor-diode bias makes VR follow VDD - VGS; the A1 margin is only 6-11 % at sf/125C and ss/125C+res_ff), input capacitance, Monte Carlo."

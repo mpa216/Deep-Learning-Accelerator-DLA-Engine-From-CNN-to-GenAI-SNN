@@ -123,3 +123,38 @@ trace in `decisions.yaml` and the report. Later tasks add circuit-specific mutan
 
 **Where.** `spec/`, `flow/`, `Makefile`, `results/{env,gates,mutants,manifest,lint}.json`, `results/REPORT.md`, `sim/tb_selftest/`, `log/T0_report.md`.
 Metric names in `gates.yaml` are the contract the testbenches must write (`.meas` or `RESULT name value`).
+
+---
+
+## 2026-11-11 — T1: stage-1 spike (does the dump-device idea work?)
+
+**Why.** The riskiest idea of the plan is the input stage that has to work from 0.05 V to 2.35 V: a PMOS pair handles low input
+voltages, an NMOS pair handles high ones, and each pair, when it is "off", must not upset the resistor-load voltage (the output
+common mode, CM) that the next stage sees. The plan's cure is "dump devices": next to each pair, a twin pair whose gates sit at
+Vref = 0.48*VDD takes the tail current when the pair is off. Before any real sizing, this spike tested the idea with ideal bias
+sources, on stage 1 alone.
+
+**What was built.** `sizing/spike_stage1.py` sizes the stage with the gm/ID method (W = ID / (ID/W) at a chosen gm/ID and L) and writes
+three netlists: A = PMOS pair only, H0 = hybrid without dump (a control), H1 = hybrid with dump. `sim/spike_stage1/` sweeps VIC
+0.05-2.35 V in 47 steps at 8 corners (the six asked for plus the two resistor cross corners): 1128 simulations in 25 s.
+`docs/SPIKE_STAGE1.md` has the tables, the plots and the reasoning for every gm/ID and L.
+
+**Numbers (`results/spike_stage1.json`).** Two sizing iterations (`results/iterations.jsonl`); the second passes everything:
+- CM moves only 12-31 mV over the whole VIC range (limit +-150 mV). Without the dump devices it moves 0.29-1.2 V.
+- Gain A1 stays between 4.26 and 10.1 and varies at most 1.27x over VIC (limit 2.2x). Without the dump, A1 at ss/125 C collapses to
+  0.08 at VIC = 2.35 V because the NMOS tail leaves saturation.
+- Both pairs hand over exactly at Vref (50 % current share at 0.48*VDD in every corner); tail currents change by only 1.6-3.1 % over VIC.
+- Every device keeps at least 88 mV of saturation margin (limit 50 mV); -3 dB bandwidth is at least 170 MHz with 30 fF load.
+- The sizing script's predictions (LUT) match the simulator: currents within 3.2 %, A1 within 4.6 %.
+
+**What it means.** The dump idea works, so the stage-1 topology is fixed: hybrid complementary input with dump devices (build flag on by
+default; the control proves the frozen gates fail without it). No fallback-ladder rung is used (D-002 in `spec/decisions.yaml`).
+One honest interpretation: the "N/P overlap >= 0.25 V" figure only makes sense without the dump (with dump the tails are saturated
+everywhere), so it is measured on the dump-free control (0.64-1.47 V) plus the requirement that Vref sits at least 0.125 V inside that
+window (measured 0.252 V at worst). The limit itself was not changed.
+
+**What it does not prove.** No mismatch (the dump twins add their own offset: about 2 mV one-sigma for the NMOS twins), no large-signal
+behaviour, ideal bias only (the weakest gain margin is 6-11 % above the limit of 4, and a real resistor-diode bias moves gain the other way
+at slow corners), no input capacitance check. These are listed for T2 in `log/T1_report.md`.
+
+**Where.** `sizing/spike_stage1.py`, `sim/spike_stage1/` (decks, specs, `analyze.py`, plots), `docs/SPIKE_STAGE1.md`, `results/spike_stage1*.json`, `log/T1_report.md`.
