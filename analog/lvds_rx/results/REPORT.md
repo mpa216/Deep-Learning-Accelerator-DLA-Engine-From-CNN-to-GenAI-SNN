@@ -1,12 +1,14 @@
 # LVDS RX macro: verification report (generated)
 
-Generated 2026-11-10 22:48:51 by flow/report.py from results/gates.json. Tier **smoke**, phases env, commit `6a92d76` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
+Generated 2026-11-10 23:48:03 by flow/report.py from results/gates.json. Tier **smoke**, phases env, commit `5b9a30c` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
 
 ## Waivers and fallback-ladder rungs
 
 | id | date | kind | ladder / rung | trigger | measured | gate relaxed |
 |---|---|---|---|---|---|---|
 | D-001 | 2026-11-11 | note |   | T0 had to turn PLAN_V2 3.1/3.2 into countable gates; points the plan table left open were decided here (no limit changed) | n/a (design decisions, recorded in spec/gates.yaml at freeze) | none |
+| D-002 | 2026-11-11 | note |   | T1 stage-1 spike (PLAN_V2 S0, C4): is the hybrid input stage with dump devices viable over VIC 0.05-2.35 V? Answer measured: yes, no ladder rung taken (R5 stays at rung 0). | results/spike_stage1.json, 8 corners x 47 VIC x 3 variants (1128 runs, all ok). H1 (hybrid + dump): CM span 12-31 mV (limit +-150 mV), A1 at VIC 0.05/2.35 V >= 4.26, A1 spread <= 1.27x (limit 2.2x), min saturation margin 88 mV (limit 50 mV), f3dB >= 170 MHz. H0 (no dump): CM fails at 7 of 8 corners (span up to 1.20 V), A1 0.08 at ss/125C/2.35 V. Iterations 2 of 8 (results/iterations.jsonl). | none (gates.yaml untouched, sha unchanged) |
+| D-003 | 2026-11-11 | note |   | T2 part 1 (sizing script + netlist): design choices the plan left open or that the first numbers forced; no frozen file changed, no ladder rung taken | sizing/sizing_report.md (127 assertions, 0 failed), sim/t2_op/results/op_table.md (60 runs worst5 x VIC 0.05/1.2/2.35 V x EN x VID, all ok; min saturation margin 109 mV), results/iterations.jsonl phase T2 | none (gates.yaml / spec.yaml sha unchanged) |
 
 ## Summary
 
@@ -31,14 +33,14 @@ Status **PASS**.
 | lut_load.ft_hz | json_value | all | 3.25e+09 .. 3.35e+09 | 1 | 3.298e+09 | PASS |
 | lut_load.id_w_a_per_um | json_value | all | 2.67e-06 .. 2.74e-06 | 1 | 2.702e-06 | PASS |
 | harness_tests.failures | json_value | all | == 0 | 1 | 0 | PASS |
-| harness_tests.run | json_value | all | 45 .. +inf | 1 | 45 | PASS |
+| harness_tests.run | json_value | all | 45 .. +inf | 1 | 46 | PASS |
 | lint.failed | json_value | all | == 0 | 1 | 0 | PASS |
 | omp.ok | json_value | all | == 1 | 1 | 1 | PASS |
 | layout_toy.ok | json_value | all | == 1 | 1 | 1 | PASS |
 
 ### SELFTEST: placeholder testbench: PDK resistor/MOS over the harness corner sets (proves resistor corners follow process, wnflag set)
 
-Status **PASS**. Runs 14 of 14 expected; run status counts {'ok': 14}; results `sim/tb_selftest/results/tb_selftest/results.json` (sha256 `88c6ad2a02e8...`).
+Status **PASS**. Runs 14 of 14 expected; run status counts {'ok': 14}; results `sim/tb_selftest/results/tb_selftest/results.json` (sha256 `a1d3ee42e2db...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -55,7 +57,7 @@ Status **PASS**. Runs 14 of 14 expected; run status counts {'ok': 14}; results `
 |---|---|
 | LUT selftest | 296/296 passed |
 | LUT load test | vgs_v=0.8016, ft_hz=3.298e+09, id_w_a_per_um=2.702e-06 |
-| harness tests | 45 run, 0 failures |
+| harness tests | 46 run, 0 failures |
 | OMP exports | ok=1 {'OMP_NUM_THREADS': '1', 'OMP_THREAD_LIMIT': '1', 'OMP_WAIT_POLICY': 'PASSIVE'} |
 | lint | 0 findings {'matched': 0, 'ngspice': 0, 'sizes': 0, 'pins': 0, 'frozen': 0} |
 | toy layout regression | ok=1 |
@@ -85,4 +87,4 @@ Status **PASS**. Runs 14 of 14 expected; run status counts {'ok': 14}; results `
 
 ## Manifest
 
-Wall time 0.1 s; sizes.spice sha256 `None`; LUT hash `b6c716358b26...`.
+Wall time 0.1 s; sizes.spice sha256 `5177dbd8c723c4e3885b1e2408bc03f4b3f2eade169b90b4a1c0e66c4a06ef28`; LUT hash `b6c716358b26...`.

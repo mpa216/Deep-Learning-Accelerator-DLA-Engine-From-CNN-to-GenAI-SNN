@@ -117,3 +117,19 @@ entries:                    # ladder rungs and waivers taken so far (none: only 
       - "s1_cm_dev_v is evaluated as span/2 (the +-0.15 V window placed optimally over the VIC sweep); the stricter reading span <= 0.15 V also passes (max span 31 mV)."
       - "Spike sizes (starting point for T2, not final): pair gm/ID 15 (NMOS L 0.5, PMOS L 0.4), tails and sinks gm/ID 7 L 1.0, cascode gm/ID 10 L 0.5, VR = 1.0 V at tt, fold node Vf 0.45 V, I3 = 1.2 Itp, Itp = Itn = 100 uA. Dump twins identical to the pair devices (a k-times-wider twin to save offset is reasoned, not simulated)."
       - "Not tested by the spike and left to T2+: mismatch (dump twins add their own sigma at the input), large-signal VID, real bias (a resistor-diode bias makes VR follow VDD - VGS; the A1 margin is only 6-11 % at sf/125C and ss/125C+res_ff), input capacitance, Monte Carlo."
+  - id: D-003
+    date: 2026-11-11
+    kind: note
+    trigger: "T2 part 1 (sizing script + netlist): design choices the plan left open or that the first numbers forced; no frozen file changed, no ladder rung taken"
+    measured: "sizing/sizing_report.md (127 assertions, 0 failed), sim/t2_op/results/op_table.md (60 runs worst5 x VIC 0.05/1.2/2.35 V x EN x VID, all ok; min saturation margin 109 mV), results/iterations.jsonl phase T2"
+    gate_relaxed: "none (gates.yaml / spec.yaml sha unchanged)"
+    decisions:
+      - "Stage 3 = current-mirror differential-to-single-ended converter (PMOS gates on the stage-2 outputs, NMOS mirror, rail-to-rail node d3) instead of the handoff's NMOS-pair + PMOS-mirror converter: with an NMOS pair at the stage-2 output level (about 2 V) d3 could not go below ~1.7 V."
+      - "Stage 2 has source-degeneration resistors Rs (ppolyf_u_1k, same poly as RL and Rb). A plain pair spreads V_H,in about 4:1 over the corners (V_H2 ~ 1/(gm/ID), A1 ~ gm/ID x VR) against a 3.1:1 window (8-25 mV); with Rs the trip is partly the ratio-metric drop I_T2 x Rs and the predicted max/min ratio over the five proxy corners is 2.2:1 (sizing report section 3). Spec limits unchanged."
+      - "Hysteresis window assertion applies to the 45 corners; the two resistor cross corners (not part of the 45) are reported informationally (predicted V_H,in up to 26 mV at ss/125C + res_ff)."
+      - "BSIM vdsat is 0.80-0.86 x 2/(gm/ID) for NMOS L = 1 um (T1 data, 8 corners): the sizing script uses 0.86 for those devices and 1.0 elsewhere."
+      - "The resistor-diode bias is held to its own predictions: t2_op shows ID within 3 % of the script for the bias devices and tails (final sizes at tt: VBN 0.912 V, VBP 2.283 V, Vref 1.584 V; mirror currents -1.9 %/+3.0 % of the script)."
+      - "Build flags implemented: nmos_pair, dump_devices (tested in sim/t2_op/t2_flags). extra_gain_stage, bias=constgm, failsafe, on_die_term are declared but NOT implemented: setting one aborts the ngspice parse (a resistor with an undefined value inside a .if) and the sizing script asserts they are off."
+      - "T1 variant A (PMOS only) had its M3 sinks reduced by Itn/2; the correct change is an increase by Itn/2 (RL must carry the same current as in the hybrid): fixed in sizing/lvds_rx_sizing.py (the T1 spike files are history and untouched)."
+      - "Harness 1.2: ngspice prints 'Dynamic gmin stepping failed' and then often 'True gmin stepping completed' (or the transient-op fallback finishes) at the first point of a supply ramp; the run is no longer classified nonconverged when a recovery note follows the last stepping failure. Any other convergence message still is. Test added (46 tests)."
+      - "DC operating points of this netlist need a supply ramp (`dc Vsup 0.3 VDD 0.1` with EN and VIC scaled by B sources) and `.option rshunt=1e11`: plain `op` fails on the regenerative stage 2 and EN = 0 leaves floating nodes. TB1 decks must do the same."

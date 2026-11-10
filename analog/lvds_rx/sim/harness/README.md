@@ -147,7 +147,7 @@ launch: `python3 sim/harness/cli.py run sim/tb4_pd/tb4_pd.json --jobs 6`, then r
 
 ## 8. Tests
 
-`python3 -m unittest discover -s sim/harness/tests -v` (from `analog/lvds_rx`; 45 tests: PRBS period/balance, PWL,
+`python3 -m unittest discover -s sim/harness/tests -v` (from `analog/lvds_rx`; 46 tests: PRBS period/balance, PWL,
 crossings, delays, hysteresis, eye with known jitter/DCD, headers, seeds/stats, log parsing, and ngspice integration
 tests for cache/force/failed-meas/timeout/seeded runs, wnflag in the header, resistor corner follows process, cross corners).
 `bash sim/harness_demo/run_demo.sh` re-runs all demos and the Monte Carlo mechanism checks from a clean state.

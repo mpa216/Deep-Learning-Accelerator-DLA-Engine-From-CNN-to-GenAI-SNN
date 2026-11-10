@@ -24,11 +24,14 @@ flow/           run_all.py (stage driver), gates.py (results -> results/gates.js
                 lint.py, mutants.py (gate mutation tests), envcheck.py (-> results/env.json), iterate.py (iteration cap logger)
 results/        generated: env.json, gates.json, REPORT.md, manifest.json, mutants.json
 tools/cx        run any command inside the apic_headless container with the full EDA environment
-sizing/         gm/ID wrapper (gmid_gf180.py) and, later, the sizing script: the single source of truth for every W/L
+sizing/         gm/ID wrapper (gmid_gf180.py); lvds_rx_sizing.py = the single source of truth for every W/L/nf/R -> sizes.spice,
+                sizing_report.md (tables, corner evaluation, offset budget, current tally, asserts), ../layout/device_table.json, ../results/sizing.json
 luts/           gm/ID lookup tables (git-ignored, regenerate with lut_regen/regen_all.sh)
 lut_regen/      scripts that regenerate and validate the lookup tables
-netlist/        SPICE subcircuits (pad model, input network; later the receiver itself)
-sim/harness/    corner / Monte Carlo / eye-diagram automation; sim/tb*/ one directory per testbench
+netlist/        SPICE: pad model, input network; the receiver = lvds_circuit.py (connectivity, written once) -> gen_core.py -> lvds_rx_core.spice
+                (simulation, parameters from sizes.spice) and gen_lvs_ref.py -> lvds_rx_lvs_ref{,_flat}.spice (LVS reference, gf180mcuD names)
+sim/harness/    corner / Monte Carlo / eye-diagram automation; sim/tb*/ one directory per testbench; sim/t2_op/ = first .op of the sized lane
+                (supply-ramp DC, build-flag run; read its results/op_table.md)
 layout/         scripted Magic layout flow (magic_flow/ is the proven pathfinder)
 xschem/         schematic export experiments
 ```

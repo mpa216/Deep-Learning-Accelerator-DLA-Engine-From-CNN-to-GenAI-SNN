@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-10 22:48:51",
+ "generated": "2026-11-10 23:48:03",
  "tier": "smoke",
  "phases": [
   "env"
  ],
  "git": {
-  "commit": "6a92d76",
+  "commit": "5b9a30c",
   "dirty": null
  },
  "gates_sha256": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
@@ -33,6 +33,40 @@
     "Lane-to-lane 3-sigma skew <= 0.5 ns (PLAN_V2 3.1) is gated in TB10 as metric skew_3sigma_s (the plan's TB10 row only listed the 1 ns skew).",
     "Metric names in gates.yaml are the contract with the testbenches; a rename needs a new note entry carrying the new gates.yaml sha256.",
     "Harness 1.1: .option wnflag=1 in the header; resistor section follows the process family; cross corners are tagged _xrff / _xrss in their names."
+   ]
+  },
+  {
+   "id": "D-002",
+   "date": "2026-11-11",
+   "kind": "note",
+   "trigger": "T1 stage-1 spike (PLAN_V2 S0, C4): is the hybrid input stage with dump devices viable over VIC 0.05-2.35 V? Answer measured: yes, no ladder rung taken (R5 stays at rung 0).",
+   "measured": "results/spike_stage1.json, 8 corners x 47 VIC x 3 variants (1128 runs, all ok). H1 (hybrid + dump): CM span 12-31 mV (limit +-150 mV), A1 at VIC 0.05/2.35 V >= 4.26, A1 spread <= 1.27x (limit 2.2x), min saturation margin 88 mV (limit 50 mV), f3dB >= 170 MHz. H0 (no dump): CM fails at 7 of 8 corners (span up to 1.20 V), A1 0.08 at ss/125C/2.35 V. Iterations 2 of 8 (results/iterations.jsonl).",
+   "gate_relaxed": "none (gates.yaml untouched, sha unchanged)",
+   "decisions": [
+    "Stage-1 topology for the real design = hybrid complementary input + dump devices gated by Vref = 0.48*VDD (build flag dump_devices defaults ON; the control H0 shows the frozen CM and gain gates fail without it). Option A stays a shake-down variant (usable up to 1.79-2.35 V depending on corner).",
+    "INTERPRETATION, not a limit change: np_overlap_v (>= 0.25 V) is the spec's own quantity, the VIC range where both pairs' TAIL transistors carry >= 90 % of plateau current. With dump devices the tails stay saturated everywhere, so TB1 must evaluate it on the dump-free control (same sizes, dump gates disconnected): measured 0.64-1.47 V (>= 0.25 at all 8 corners) AND require Vref to lie >= 0.125 V inside that window on both sides (measured >= 0.252 V). The pair hand-over width (both pairs >= 10 %) is informational: 0.19-0.31 V.",
+    "s1_cm_dev_v is evaluated as span/2 (the +-0.15 V window placed optimally over the VIC sweep); the stricter reading span <= 0.15 V also passes (max span 31 mV).",
+    "Spike sizes (starting point for T2, not final): pair gm/ID 15 (NMOS L 0.5, PMOS L 0.4), tails and sinks gm/ID 7 L 1.0, cascode gm/ID 10 L 0.5, VR = 1.0 V at tt, fold node Vf 0.45 V, I3 = 1.2 Itp, Itp = Itn = 100 uA. Dump twins identical to the pair devices (a k-times-wider twin to save offset is reasoned, not simulated).",
+    "Not tested by the spike and left to T2+: mismatch (dump twins add their own sigma at the input), large-signal VID, real bias (a resistor-diode bias makes VR follow VDD - VGS; the A1 margin is only 6-11 % at sf/125C and ss/125C+res_ff), input capacitance, Monte Carlo."
+   ]
+  },
+  {
+   "id": "D-003",
+   "date": "2026-11-11",
+   "kind": "note",
+   "trigger": "T2 part 1 (sizing script + netlist): design choices the plan left open or that the first numbers forced; no frozen file changed, no ladder rung taken",
+   "measured": "sizing/sizing_report.md (127 assertions, 0 failed), sim/t2_op/results/op_table.md (60 runs worst5 x VIC 0.05/1.2/2.35 V x EN x VID, all ok; min saturation margin 109 mV), results/iterations.jsonl phase T2",
+   "gate_relaxed": "none (gates.yaml / spec.yaml sha unchanged)",
+   "decisions": [
+    "Stage 3 = current-mirror differential-to-single-ended converter (PMOS gates on the stage-2 outputs, NMOS mirror, rail-to-rail node d3) instead of the handoff's NMOS-pair + PMOS-mirror converter: with an NMOS pair at the stage-2 output level (about 2 V) d3 could not go below ~1.7 V.",
+    "Stage 2 has source-degeneration resistors Rs (ppolyf_u_1k, same poly as RL and Rb). A plain pair spreads V_H,in about 4:1 over the corners (V_H2 ~ 1/(gm/ID), A1 ~ gm/ID x VR) against a 3.1:1 window (8-25 mV); with Rs the trip is partly the ratio-metric drop I_T2 x Rs and the predicted max/min ratio over the five proxy corners is 2.2:1 (sizing report section 3). Spec limits unchanged.",
+    "Hysteresis window assertion applies to the 45 corners; the two resistor cross corners (not part of the 45) are reported informationally (predicted V_H,in up to 26 mV at ss/125C + res_ff).",
+    "BSIM vdsat is 0.80-0.86 x 2/(gm/ID) for NMOS L = 1 um (T1 data, 8 corners): the sizing script uses 0.86 for those devices and 1.0 elsewhere.",
+    "The resistor-diode bias is held to its own predictions: t2_op shows ID within 3 % of the script for the bias devices and tails (final sizes at tt: VBN 0.912 V, VBP 2.283 V, Vref 1.584 V; mirror currents -1.9 %/+3.0 % of the script).",
+    "Build flags implemented: nmos_pair, dump_devices (tested in sim/t2_op/t2_flags). extra_gain_stage, bias=constgm, failsafe, on_die_term are declared but NOT implemented: setting one aborts the ngspice parse (a resistor with an undefined value inside a .if) and the sizing script asserts they are off.",
+    "T1 variant A (PMOS only) had its M3 sinks reduced by Itn/2; the correct change is an increase by Itn/2 (RL must carry the same current as in the hybrid): fixed in sizing/lvds_rx_sizing.py (the T1 spike files are history and untouched).",
+    "Harness 1.2: ngspice prints 'Dynamic gmin stepping failed' and then often 'True gmin stepping completed' (or the transient-op fallback finishes) at the first point of a supply ramp; the run is no longer classified nonconverged when a recovery note follows the last stepping failure. Any other convergence message still is. Test added (46 tests).",
+    "DC operating points of this netlist need a supply ramp (`dc Vsup 0.3 VDD 0.1` with EN and VIC scaled by B sources) and `.option rshunt=1e11`: plain `op` fails on the regenerative stage 2 and EN = 0 leaves floating nodes. TB1 decks must do the same."
    ]
   }
  ],
@@ -110,7 +144,7 @@
      "agg": "value",
      "reasons": [],
      "n": 1,
-     "worst": 45.0,
+     "worst": 46.0,
      "limit": "45 .. +inf",
      "status": "PASS"
     },
@@ -149,7 +183,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/env.json",
-   "results_sha256": "6d439b4df57cab89ff3b59d68240cfb6b7b2bfff4180bf18a3cf8704166cf081"
+   "results_sha256": "705be66b2629f6e9d0ecf61e9cbf35cb4f675f302cae5d52d1bb2168fd855758"
   },
   "SELFTEST": {
    "id": "SELFTEST",
@@ -252,7 +286,7 @@
     "ok": 14
    },
    "results_file": "sim/tb_selftest/results/tb_selftest/results.json",
-   "results_sha256": "88c6ad2a02e8fd4262ba03fb0b9b2169c76b51ac38cb5fbe510fb8224a86b113",
+   "results_sha256": "a1d3ee42e2dbe900b8374eb7b5dfc7c8190cd48bc9438eddbf2586a85e43dad8",
    "cpu_s": 1.1
   }
  }

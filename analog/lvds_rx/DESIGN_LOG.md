@@ -158,3 +158,60 @@ behaviour, ideal bias only (the weakest gain margin is 6-11 % above the limit of
 at slow corners), no input capacitance check. These are listed for T2 in `log/T1_report.md`.
 
 **Where.** `sizing/spike_stage1.py`, `sim/spike_stage1/` (decks, specs, `analyze.py`, plots), `docs/SPIKE_STAGE1.md`, `results/spike_stage1*.json`, `log/T1_report.md`.
+
+---
+
+## 2026-11-11 — T2 part 1: sizing script and netlist (does the whole lane exist on paper, and does it run?)
+
+**Why.** T1 showed that the input stage works with ideal bias. T2 part 1 turns that into the full receiver: every device of one lane
+(stage 1 input, stage 2 hysteresis comparator, stage 3 + output buffer, secondary ESD) and of the shared bias gets a size from one script,
+and the circuit is written down as a netlist. Only a first look in the simulator is done here (is the output at the right logic level, is
+every transistor where it should be?); the real test benches (TB1-TB5) are the next task.
+
+**What was built (all under `analog/lvds_rx/`).**
+- `sizing/lvds_rx_sizing.py`: the single source of truth. gm/ID sizing of every device, a corner solver (bias, stage 1, stage 2, stage 3,
+  current tally at tt 3.0/3.3/3.6 V, ss/125 C, ff/-40 C and the two resistor cross corners, using the corner tables), 127 assertions
+  (headroom, N/P overlap, fan-out, fold pole, stage-1 pole, gain, hysteresis window, offset budget with the four terms of finding C3, currents).
+  Writes `sizing/sizes.spice` (hash header), `sizing/sizing_report.md` (tables with the book reasoning), `layout/device_table.json`, `results/sizing.json`.
+- `netlist/lvds_circuit.py` (connectivity written once) -> `gen_core.py` -> `netlist/lvds_rx_core.spice` (subckts `lvds_bias lvds_esd2 lvds_pre
+  lvds_hyst lvds_out lvds_lane lvds_rx_x3`, every size a parameter of `sizes.spice`, matched devices `nf` never `m`, build flags `nmos_pair` and
+  `dump_devices` working, the other flags aborting the parse on purpose) and `gen_lvs_ref.py` -> `lvds_rx_lvs_ref.spice` / `_flat.spice` (gf180mcuD
+  device names, numeric sizes). `netlist/check_lvs_ref.sh`: Netgen says hierarchical and flat match uniquely (158 devices, 77 nets, no property errors).
+- `sim/t2_op/`: first operating point (60 runs: tt, ss/125 C, ff/-40 C, fs, sf; VIC 0.05/1.2/2.35 V; EN 0/1; VID +-100 mV), the build-flag run (40 runs) and a stage-1 AC run (15 runs).
+
+**Design choices worth knowing (the report has the reasons).**
+1. *Resistor-diode bias:* Rb from VDD into an NMOS diode; a PMOS diode, a Vf generator for the cascode gate and the EN-gated 0.48 VDD divider
+   hang off it. The gain is a ratio of the same poly resistors, so VR = (VDD - VGS) x RL/Rb: it falls 14 % at ss/125 C. To keep A1 >= 4 there the
+   tt value of VR was raised from the spike's 1.0 V to 1.23 V.
+2. *Stage 2 has source-degeneration resistors.* A plain hysteresis pair would give an input-referred hysteresis that spreads 4:1 over the corners (the stage-2
+   trip grows when gm/ID falls, the stage-1 gain falls too, the two multiply) against a 3.1:1 window (8-25 mV). A resistor in each source adds a trip
+   term proportional to I x R that follows VR and cancels against the gain; predicted spread 2.2:1 (10-22 mV at tt/ss/ff and 3.0-3.6 V).
+3. *Stage 3 is a current-mirror converter* (PMOS gates on the stage-2 outputs, NMOS mirror): the node d3 swings rail to rail with no tail. The
+   handoff's NMOS-pair converter could not pull d3 below about 1.7 V because the stage-2 outputs sit near 2 V.
+4. *Offset budget* (Pelgrom, PMOS +17 % because the measured Monte Carlo is worse than the formula): sigma_total = 3.1 mV against the 5 mV
+   target; trip window 36 mV against 95 mV. Hand estimate only; Monte Carlo (TB3_off) is the judge.
+
+**Numbers.**
+- Script: 127 assertions pass. tt: Iref 52 uA, tails 107/105 uA, VR 1.23 V, stage-1 CM 2.07 V, A1 8.0 (PMOS path at VIC 0.05 V) / 8.4 (NMOS path at 2.35 V);
+  worst predicted A1 4.9 (ss/125 C with resistor section ff, a cross corner), 5.6 at ss/125 C. I_lane 545 uA (tt), 731 uA (ff/-40 C) against 1.5 mA;
+  I_bias 166 uA (tt), 220 uA (ff/-40 C) against 0.3 mA.
+- Simulator (`sim/t2_op/results/op_table.md`, 60 runs all status ok): output correct in every run (+100 mV gives VDD, -100 mV gives 0; EN = 0 gives 0);
+  stage-1 common mode moves 22 mV (tt), 20 mV (ss/125 C), 24 mV (ff/-40 C) over VIC 0.05-2.35 V (limit +-150 mV); at tt every analog device carrying > 1 uA is within
+  -1.9 % / +3.0 % of the script's current (mirrors), gm/ID within 2.0 % and VGS within 4.8 mV of the table at the simulated bias; minimum saturation
+  margin over all 60 runs 109 mV (steered PMOS pair device, ff/-40 C, VIC 0.05 V) and 116 mV (M3 sink at ss/125 C); IDD(EN = 0) 6-7 nA in every corner, which is essentially the 100 Gohm shunt resistors added for convergence (the real leakage is below that; TB8 measures it without the shunt).
+- AC (`sim/t2_op/results/ac_table.md`, 15 runs): stage-1 gain A1 at VID = 0 is 5.49-5.93 at ss/125 C, 7.6-7.9 at tt/fs/sf, 9.9-10.2 at ff/-40 C (limit 4); spread over VIC at most 1.08x (limit 2.2x); within 6.1 % of the script at the VIC extremes; -3 dB frequency 135 MHz (ss/125 C) to 218 MHz (ff/-40 C) (limit 80 MHz per stage).
+- Build flags: default build right at all 5 VIC points; PMOS-only (Option A) right up to 1.8 V and wrong at 2.35 V (as the plan expects); without dump the stage-1 CM moves 2.61 -> 1.98 V.
+
+**What went wrong on the way (kept for the next agent).** (1) The first sizing run failed 11 assertions: the stage-2 hysteresis spread 4.4:1 (cure: degeneration), fold pole 2.6x f1
+(cure: cascode gm/ID 10 -> 13, VR up), M3 headroom at the slow cross corner (cure: gm/ID of the mirror unit 7 -> 7.5, VDsat factor measured in T1). (2) The first simulator check found
+the steered PMOS pair device at only 45 mV margin at ff/-40 C where the script had predicted 110-150 mV: the script had used the half-current device and the nominal VIC;
+fixed (full tail current, input 50 mV lower, fold node 60 mV above F) and F lowered from 0.54 to 0.46 V. (3) `op` does not converge on this circuit (regenerative stage 2, floating nodes at EN = 0): the decks ramp
+the supply (`dc Vsup 0.3 VDD 0.1`, EN and VIC scaled with it) with `.option rshunt=1e11`. (4) ngspice evaluates every `X` line even inside a false `.if`, so the
+"not implemented" guard is a resistor with an undefined value, not an unknown subckt. (5) T1's variant A had its sinks reduced instead of increased by Itn/2 (CM 3.1 V, VR 0.2 V); fixed here.
+(6) The harness called a run `nonconverged` whenever ngspice printed "gmin stepping failed" even when the next homotopy step succeeded; harness 1.2 fixes that (new unit test, 46 tests).
+
+**What it does not prove.** No Monte Carlo, no AC, no transient (tPD, DCD, eye, hysteresis measured), no input-capacitance or ESD pole simulation, fs/sf/ss -40 C only at one VIC point
+for the saturation check, the corner table of the script has no fs/sf/ss -40 C. The hysteresis window 8-25 mV is a prediction (10-22 mV) with a spread that depends on the T1 gain spread (1.27x).
+
+**Where.** `sizing/lvds_rx_sizing.py`, `sizing/sizes.spice`, `sizing/sizing_report.md`, `layout/device_table.json`, `netlist/{lvds_circuit,gen_core,gen_lvs_ref}.py`, `netlist/lvds_rx_core.spice`,
+`netlist/lvds_rx_lvs_ref*.spice`, `netlist/check_lvs_ref.sh`, `sim/t2_op/`, `results/{sizing,t2_op}.json`, decisions `D-003` in `spec/decisions.yaml`, `log/T2_report.md`.

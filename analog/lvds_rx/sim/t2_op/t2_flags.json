@@ -1,0 +1,30 @@
+{
+ "name": "t2_flags",
+ "description": "T2 part 1: build flags nmos_pair / dump_devices switched (tt): the netlist must run and the PMOS-only / no-dump variants behave as T1 predicted",
+ "deck": "t2_flags.spice",
+ "corners": "tt",
+ "grid": {
+  "vic": [
+   0.05,
+   0.6,
+   1.2,
+   1.8,
+   2.35
+  ],
+  "vid": [
+   -0.1,
+   0.1
+  ],
+  "nmos": [
+   0,
+   1
+  ],
+  "dump": [
+   0,
+   1
+  ]
+ },
+ "limits": {},
+ "timeout": 120,
+ "jobs": 6
+}

@@ -1,0 +1,577 @@
+{
+ "generated_by": "sizing/lvds_rx_sizing.py",
+ "hashes": {
+  "sizing_script": "f56ce0c9f84845505bb0aeb89ae92fef6883c3535bdeb44df78e892a57aaaa47",
+  "luts": "b6c716358b263b8d9c055343826f2d0973a6d06cdab4354400f2b570c5828774",
+  "spec": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2"
+ },
+ "flags": {
+  "nmos_pair": 1,
+  "dump_devices": 1,
+  "extra_gain_stage": 0,
+  "bias_constgm": 0,
+  "failsafe": 0,
+  "on_die_term": 0
+ },
+ "units": "um, A, ohm",
+ "devices": [
+  {
+   "stem": "mbn",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "VBN reference diode (Rb branch)",
+   "W_um": 12.5,
+   "L_um": 1.0,
+   "nf": 5,
+   "Wf_um": 2.5,
+   "ID_tt_uA": 52.40449921728536
+  },
+  {
+   "stem": "mbs",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "VBP-branch NMOS sink, 1:1 with MBN",
+   "W_um": 12.5,
+   "L_um": 1.0,
+   "nf": 5,
+   "Wf_um": 2.5,
+   "ID_tt_uA": 52.40449921728536
+  },
+  {
+   "stem": "mnt",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "stage-1 NMOS tail",
+   "W_um": 25.0,
+   "L_um": 1.0,
+   "nf": 10,
+   "Wf_um": 2.5,
+   "ID_tt_uA": 104.80899843457073
+  },
+  {
+   "stem": "m3",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "stage-1 NMOS sinks (fold), each of 2",
+   "W_um": 30.0,
+   "L_um": 1.0,
+   "nf": 12,
+   "Wf_um": 2.5,
+   "ID_tt_uA": 125.77079812148487
+  },
+  {
+   "stem": "mt2",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "stage-2 tail",
+   "W_um": 15.0,
+   "L_um": 1.0,
+   "nf": 6,
+   "Wf_um": 2.5,
+   "ID_tt_uA": 62.88539906074244
+  },
+  {
+   "stem": "mbp",
+   "block": "bias",
+   "model": "pfet_03v3",
+   "role": "VBP reference diode",
+   "W_um": 55.0,
+   "L_um": 1.0,
+   "nf": 11,
+   "Wf_um": 5.0,
+   "ID_tt_uA": 53.73275247651608
+  },
+  {
+   "stem": "mpt",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "stage-1 PMOS tail",
+   "W_um": 110.0,
+   "L_um": 1.0,
+   "nf": 22,
+   "Wf_um": 5.0,
+   "ID_tt_uA": 107.46550495303217
+  },
+  {
+   "stem": "mn1",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "input pair device (x2)",
+   "W_um": 47.5,
+   "L_um": 0.5,
+   "nf": 10,
+   "Wf_um": 4.75,
+   "ID_tt_uA": 52.40449921728536
+  },
+  {
+   "stem": "mnd",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "dump twin (x2), gate at Vref",
+   "W_um": 47.5,
+   "L_um": 0.5,
+   "nf": 10,
+   "Wf_um": 4.75,
+   "ID_tt_uA": 52.40449921728536
+  },
+  {
+   "stem": "mp1",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "input pair device (x2)",
+   "W_um": 105.6,
+   "L_um": 0.4,
+   "nf": 22,
+   "Wf_um": 4.8,
+   "ID_tt_uA": 53.73275247651608
+  },
+  {
+   "stem": "mpd",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "dump twin (x2), gate at Vref",
+   "W_um": 105.6,
+   "L_um": 0.4,
+   "nf": 22,
+   "Wf_um": 4.8,
+   "ID_tt_uA": 53.73275247651608
+  },
+  {
+   "stem": "m5",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "fold cascode (x2)",
+   "W_um": 31.64,
+   "L_um": 0.5,
+   "nf": 7,
+   "Wf_um": 4.52,
+   "ID_tt_uA": 72.03804564496879
+  },
+  {
+   "stem": "msw",
+   "block": "bias",
+   "model": "pfet_03v3",
+   "role": "Rb-branch series switch (gate ENB)",
+   "W_um": 40.0,
+   "L_um": 0.5,
+   "nf": 8,
+   "Wf_um": 5.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "mb2p",
+   "block": "bias",
+   "model": "pfet_03v3",
+   "role": "VB2 branch current source (gate VBP)",
+   "W_um": 20.0,
+   "L_um": 1.0,
+   "nf": 4,
+   "Wf_um": 5.0,
+   "ID_tt_uA": 19.53918271873312
+  },
+  {
+   "stem": "mb2",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "VB2 replica of M5 (diode on Vf)",
+   "W_um": 7.91,
+   "L_um": 0.5,
+   "nf": 1,
+   "Wf_um": 7.91,
+   "ID_tt_uA": 19.53918271873312
+  },
+  {
+   "stem": "mvs",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "Vref divider switch (gate EN)",
+   "W_um": 10.0,
+   "L_um": 0.5,
+   "nf": 2,
+   "Wf_um": 5.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "men_n",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "ENB inverter NMOS",
+   "W_um": 1.0,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 1.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "men_p",
+   "block": "bias",
+   "model": "pfet_03v3",
+   "role": "ENB inverter PMOS",
+   "W_um": 2.5,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 2.5,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "mpd_n",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "parks VBN at 0 when EN=0 (gate ENB)",
+   "W_um": 2.0,
+   "L_um": 0.5,
+   "nf": 1,
+   "Wf_um": 2.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "mpu_p",
+   "block": "bias",
+   "model": "pfet_03v3",
+   "role": "parks VBP at VDD when EN=0 (gate EN)",
+   "W_um": 2.0,
+   "L_um": 0.5,
+   "nf": 1,
+   "Wf_um": 2.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "mpd_2",
+   "block": "bias",
+   "model": "nfet_03v3",
+   "role": "parks VB2 at 0 when EN=0 (gate ENB)",
+   "W_um": 2.0,
+   "L_um": 0.5,
+   "nf": 1,
+   "Wf_um": 2.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "ms",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "stage-2 input pair (x2)",
+   "W_um": 11.58,
+   "L_um": 0.5,
+   "nf": 3,
+   "Wf_um": 3.86,
+   "ID_tt_uA": 31.44269953037122
+  },
+  {
+   "stem": "mld",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "stage-2 diode load (x2)",
+   "W_um": 4.0,
+   "L_um": 0.4,
+   "nf": 2,
+   "Wf_um": 2.0,
+   "ID_tt_uA": 12.577079812148488
+  },
+  {
+   "stem": "mlc",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "stage-2 cross-coupled load (x2)",
+   "W_um": 6.0,
+   "L_um": 0.4,
+   "nf": 3,
+   "Wf_um": 2.0,
+   "ID_tt_uA": 18.865619718222728
+  },
+  {
+   "stem": "mpu2",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "parks d2a/d2b at VDD when EN=0 (x2, gate EN)",
+   "W_um": 2.0,
+   "L_um": 0.5,
+   "nf": 1,
+   "Wf_um": 2.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "mp3",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "stage-3 PMOS mirror copies (x2): current of the load diode x r3",
+   "W_um": 8.0,
+   "L_um": 0.4,
+   "nf": 4,
+   "Wf_um": 2.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "mn3",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "stage-3 NMOS mirror (diode + copy)",
+   "W_um": 3.56,
+   "L_um": 0.5,
+   "nf": 1,
+   "Wf_um": 3.56,
+   "ID_tt_uA": 25.154159624296977
+  },
+  {
+   "stem": "nand_n",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "NAND2 NMOS",
+   "W_um": 2.0,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 2.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "nand_p",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "NAND2 PMOS",
+   "W_um": 3.0,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 3.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "inv1_n",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "INV1 NMOS",
+   "W_um": 1.5,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 1.5,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "inv1_p",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "INV1 PMOS",
+   "W_um": 3.7,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 3.7,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "inv2_n",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "INV2 NMOS",
+   "W_um": 3.0,
+   "L_um": 0.28,
+   "nf": 1,
+   "Wf_um": 3.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "inv2_p",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "INV2 PMOS",
+   "W_um": 7.5,
+   "L_um": 0.28,
+   "nf": 2,
+   "Wf_um": 3.75,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "inv3_n",
+   "block": "lane",
+   "model": "nfet_03v3",
+   "role": "INV3 (output, 30 fF) NMOS",
+   "W_um": 8.0,
+   "L_um": 0.28,
+   "nf": 2,
+   "Wf_um": 4.0,
+   "ID_tt_uA": null
+  },
+  {
+   "stem": "inv3_p",
+   "block": "lane",
+   "model": "pfet_03v3",
+   "role": "INV3 (output, 30 fF) PMOS",
+   "W_um": 20.0,
+   "L_um": 0.28,
+   "nf": 4,
+   "Wf_um": 5.0,
+   "ID_tt_uA": null
+  }
+ ],
+ "resistors": [
+  {
+   "stem": "rl",
+   "model": "ppolyf_u_1k",
+   "r_width_um": 2.0,
+   "r_length_um": 19.664,
+   "R_tt_ohm": 10044.796185931658
+  },
+  {
+   "stem": "rb",
+   "model": "ppolyf_u_1k",
+   "r_width_um": 2.0,
+   "r_length_um": 89.562,
+   "R_tt_ohm": 45448.112760502714
+  },
+  {
+   "stem": "rf",
+   "model": "ppolyf_u_1k",
+   "r_width_um": 2.0,
+   "r_length_um": 46.313,
+   "R_tt_ohm": 23542.438116358713
+  },
+  {
+   "stem": "rdt",
+   "model": "ppolyf_u_1k",
+   "r_width_um": 2.0,
+   "r_length_um": 84.531,
+   "R_tt_ohm": 42899.99999999999
+  },
+  {
+   "stem": "rdb",
+   "model": "ppolyf_u_1k",
+   "r_width_um": 2.0,
+   "r_length_um": 77.547,
+   "R_tt_ohm": 39362.35741444866
+  },
+  {
+   "stem": "rs",
+   "model": "ppolyf_u_1k",
+   "r_width_um": 2.0,
+   "r_length_um": 3.258,
+   "R_tt_ohm": 1735.2294921875
+  },
+  {
+   "stem": "resd",
+   "model": "ppolyf_u",
+   "r_width_um": 5.0,
+   "r_length_um": 1.8,
+   "R_tt_ohm": 151.0,
+   "note": "secondary ESD, 2 per lane"
+  }
+ ],
+ "diodes": [
+  {
+   "stem": "desd_h",
+   "model": "diode_pd2nw_03v3",
+   "w_um": 8.0,
+   "l_um": 5.0,
+   "area_um2": 40.0
+  },
+  {
+   "stem": "desd_l",
+   "model": "diode_nd2ps_03v3",
+   "w_um": 8.0,
+   "l_um": 5.0,
+   "area_um2": 40.0
+  }
+ ],
+ "bias_ratios": {
+  "unit_n_A": 1.0480899843457073e-05,
+  "unit_p_A": 4.88479567968328e-06,
+  "n_ref": 5,
+  "n_refp": 11,
+  "mnt_over_mbn": 2.0,
+  "m3_over_mbn": 2.4,
+  "mt2_over_mbn": 1.2,
+  "mpt_over_mbp": 2.0,
+  "alpha": 1.5,
+  "alpha_fingers": [
+   2,
+   3
+  ]
+ },
+ "cap_vref": {
+  "model": "cap_nmos_03v3",
+  "c_width_um": 20.0,
+  "c_length_um": 25.13,
+  "C_fF": 2000.0
+ },
+ "matched_groups": [
+  {
+   "name": "pmos_input_quad",
+   "devices": [
+    "mp1 x2",
+    "mpd x2"
+   ],
+   "note": "pair + dump twins: identical W/L/nf, common centroid, shared tail node and n-well"
+  },
+  {
+   "name": "nmos_input_quad",
+   "devices": [
+    "mn1 x2",
+    "mnd x2"
+   ],
+   "note": "pair + dump twins: identical W/L/nf, common centroid"
+  },
+  {
+   "name": "fold_sinks",
+   "devices": [
+    "m3 x2"
+   ],
+   "note": "ABBA, same finger count"
+  },
+  {
+   "name": "fold_cascodes",
+   "devices": [
+    "m5 x2"
+   ],
+   "note": "symmetric"
+  },
+  {
+   "name": "stage1_loads",
+   "devices": [
+    "RLa",
+    "RLb"
+   ],
+   "note": "same poly type, width, length, same orientation, dummies"
+  },
+  {
+   "name": "stage2_pair",
+   "devices": [
+    "ms x2"
+   ],
+   "note": "ABBA"
+  },
+  {
+   "name": "stage2_loads",
+   "devices": [
+    "mld x2",
+    "mlc x2"
+   ],
+   "note": "alpha = nf_cross/nf_diode, same finger width, interdigitated with the diode devices"
+  },
+  {
+   "name": "stage3_mirror",
+   "devices": [
+    "mp3 x2",
+    "mn3 x2"
+   ],
+   "note": "mirror pairs"
+  },
+  {
+   "name": "bias_mirrors",
+   "devices": [
+    "mbn",
+    "mbs",
+    "mnt",
+    "m3",
+    "mt2"
+   ],
+   "note": "one NMOS unit finger, integer multiples, interdigitated with dummies; gate net VBN"
+  },
+  {
+   "name": "bias_p_mirrors",
+   "devices": [
+    "mbp",
+    "mpt",
+    "mb2p"
+   ],
+   "note": "one PMOS unit finger, integer multiples; gate net VBP"
+  }
+ ],
+ "esd_note": "secondary ESD UNQUALIFIED (PLAN_V2 L6): no HBM/CDM data; replaceable sub-cell lvds_esd2 with fixed pins A B VDD VSS"
+}

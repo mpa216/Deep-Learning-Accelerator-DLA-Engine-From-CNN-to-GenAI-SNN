@@ -1,0 +1,351 @@
+{
+ "harness": "1.2",
+ "ngspice": "46",
+ "runs": [
+  {
+   "id": "tt_27c_3v30__vic0.05",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 0.05
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.65416,
+    "f3db": 168377000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.371,
+   "cached": false,
+   "hash": "7ccd7ccbcbe7985fa0278559594a7c84aa42f71b2c0a9733fb3013269e6f3839",
+   "run_dir": "work/tt_27c_3v30__vic0.05"
+  },
+  {
+   "id": "tt_27c_3v30__vic1.2",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.71682,
+    "f3db": 168410000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.429,
+   "cached": false,
+   "hash": "18da9eeccb7251e4a025221caea25ba7642d8cf89fc4c858651913d916a9b53e",
+   "run_dir": "work/tt_27c_3v30__vic1.2"
+  },
+  {
+   "id": "tt_27c_3v30__vic2.35",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 2.35
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.89615,
+    "f3db": 167379000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.323,
+   "cached": false,
+   "hash": "a1e0d8fa3c8904df834d78a2cc20397956c704f52ce5bf738190bc31c5753616",
+   "run_dir": "work/tt_27c_3v30__vic2.35"
+  },
+  {
+   "id": "ss_125c_3v00__vic0.05",
+   "corner": "ss_125c_3v00",
+   "process": "ss",
+   "temp": 125,
+   "vdd": 3.0,
+   "res": "res_ss",
+   "params": {
+    "vic": 0.05
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 5.48892,
+    "f3db": 134557000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.378,
+   "cached": false,
+   "hash": "7c98a0e939a5fb15cbc6d1d3e723403ecca01d287f15620acab14c90b6fc191b",
+   "run_dir": "work/ss_125c_3v00__vic0.05"
+  },
+  {
+   "id": "ss_125c_3v00__vic1.2",
+   "corner": "ss_125c_3v00",
+   "process": "ss",
+   "temp": 125,
+   "vdd": 3.0,
+   "res": "res_ss",
+   "params": {
+    "vic": 1.2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 5.51543,
+    "f3db": 135062000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.379,
+   "cached": false,
+   "hash": "8f4c679270fcfeb61b3fcbd0b8cf9d41cf1eb6a3b28261734832509a1abcca07",
+   "run_dir": "work/ss_125c_3v00__vic1.2"
+  },
+  {
+   "id": "ss_125c_3v00__vic2.35",
+   "corner": "ss_125c_3v00",
+   "process": "ss",
+   "temp": 125,
+   "vdd": 3.0,
+   "res": "res_ss",
+   "params": {
+    "vic": 2.35
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 5.92688,
+    "f3db": 135422000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.271,
+   "cached": false,
+   "hash": "cb99847f3f727eee8f5817bd0e8e9331f85424ca4ae4a26e9d2ef28d4c6b76eb",
+   "run_dir": "work/ss_125c_3v00__vic2.35"
+  },
+  {
+   "id": "ff_m40c_3v60__vic0.05",
+   "corner": "ff_m40c_3v60",
+   "process": "ff",
+   "temp": -40,
+   "vdd": 3.6,
+   "res": "res_ff",
+   "params": {
+    "vic": 0.05
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 9.95048,
+    "f3db": 217648000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.321,
+   "cached": false,
+   "hash": "07ab9e0f03400a8cef82d9baba4ab79762f2cb5521fd45aa310ccbe7fa6561a7",
+   "run_dir": "work/ff_m40c_3v60__vic0.05"
+  },
+  {
+   "id": "ff_m40c_3v60__vic1.2",
+   "corner": "ff_m40c_3v60",
+   "process": "ff",
+   "temp": -40,
+   "vdd": 3.6,
+   "res": "res_ff",
+   "params": {
+    "vic": 1.2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 10.1768,
+    "f3db": 217383000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.373,
+   "cached": false,
+   "hash": "d2591cf13fc0217f26a4b913e150aac12f44df32def45067119d015fe8ecd510",
+   "run_dir": "work/ff_m40c_3v60__vic1.2"
+  },
+  {
+   "id": "ff_m40c_3v60__vic2.35",
+   "corner": "ff_m40c_3v60",
+   "process": "ff",
+   "temp": -40,
+   "vdd": 3.6,
+   "res": "res_ff",
+   "params": {
+    "vic": 2.35
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 10.1465,
+    "f3db": 214967000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.323,
+   "cached": false,
+   "hash": "d88db57d4e48f9f5d9d4b85e6f3c39df18754f907bc58d2a0893615ee9ff6df3",
+   "run_dir": "work/ff_m40c_3v60__vic2.35"
+  },
+  {
+   "id": "fs_27c_3v30__vic0.05",
+   "corner": "fs_27c_3v30",
+   "process": "fs",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 0.05
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.62295,
+    "f3db": 172163000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.322,
+   "cached": false,
+   "hash": "af81ee84626335c261c1f436400c5b108801d995fe1fbf0e619aef755f788d59",
+   "run_dir": "work/fs_27c_3v30__vic0.05"
+  },
+  {
+   "id": "fs_27c_3v30__vic1.2",
+   "corner": "fs_27c_3v30",
+   "process": "fs",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.67173,
+    "f3db": 172070000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.271,
+   "cached": false,
+   "hash": "21d91c195da2e63ccbb4ec504261b7d2bdf993311b08875eb0cc0a7c335c772c",
+   "run_dir": "work/fs_27c_3v30__vic1.2"
+  },
+  {
+   "id": "fs_27c_3v30__vic2.35",
+   "corner": "fs_27c_3v30",
+   "process": "fs",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 2.35
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 8.21342,
+    "f3db": 171286000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.372,
+   "cached": false,
+   "hash": "967fb64a3773e8140b77109969e2cc11af3677394917023ad274c6cab1b8eed2",
+   "run_dir": "work/fs_27c_3v30__vic2.35"
+  },
+  {
+   "id": "sf_27c_3v30__vic0.05",
+   "corner": "sf_27c_3v30",
+   "process": "sf",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 0.05
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.65475,
+    "f3db": 164800000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.273,
+   "cached": false,
+   "hash": "ce1441ec5cb0b65da6b300e8a8057b9cc01f6e2c1129799917d5f6204a6be3fd",
+   "run_dir": "work/sf_27c_3v30__vic0.05"
+  },
+  {
+   "id": "sf_27c_3v30__vic1.2",
+   "corner": "sf_27c_3v30",
+   "process": "sf",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.74066,
+    "f3db": 164972000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.227,
+   "cached": false,
+   "hash": "2363e11cc55c42827307a9de6055f543824226420f69218fe2301407c551856b",
+   "run_dir": "work/sf_27c_3v30__vic1.2"
+  },
+  {
+   "id": "sf_27c_3v30__vic2.35",
+   "corner": "sf_27c_3v30",
+   "process": "sf",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 2.35
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "a1": 7.57038,
+    "f3db": 163850000.0,
+    "f3db_found": 1.0
+   },
+   "errors": [],
+   "elapsed": 0.271,
+   "cached": false,
+   "hash": "74d7e66b0c50a0ed70192250904f090aad794577717460d742667cad8e4ac2d7",
+   "run_dir": "work/sf_27c_3v30__vic2.35"
+  }
+ ]
+}

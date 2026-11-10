@@ -1,0 +1,16 @@
+{
+ "name": "t2_ac",
+ "description": "T2 part 1: stage-1 gain A1 and -3 dB frequency at VID = 0 (worst5, VIC 0.05/1.2/2.35 V)",
+ "deck": "t2_ac.spice",
+ "corners": "worst5",
+ "grid": {
+  "vic": [
+   0.05,
+   1.2,
+   2.35
+  ]
+ },
+ "limits": {},
+ "timeout": 120,
+ "jobs": 6
+}

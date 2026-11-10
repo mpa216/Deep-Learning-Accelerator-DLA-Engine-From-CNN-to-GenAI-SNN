@@ -1,16 +1,16 @@
 {
- "generated": "2026-11-10 22:48:51",
+ "generated": "2026-11-10 23:48:04",
  "tier": "smoke",
  "phases": [
   "env"
  ],
  "git": {
-  "commit": "6a92d76",
+  "commit": "5b9a30c",
   "dirty": null
  },
- "harness_version": "1.1",
+ "harness_version": "1.2",
  "hashes": {
-  "sizing_script": "absent",
+  "sizing_script": "f56ce0c9f84845505bb0aeb89ae92fef6883c3535bdeb44df78e892a57aaaa47",
   "luts": "b6c716358b263b8d9c055343826f2d0973a6d06cdab4354400f2b570c5828774",
   "spec": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
   "spec_files": {
@@ -18,14 +18,17 @@
    "spec/gates.yaml": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
    "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
    "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
-   "spec/decisions.yaml": "41d50746b24e82dd88d8301b709716f4958ab578041235b8e0de350bc143463f"
+   "spec/decisions.yaml": "c5afc3cc1e8f6a376ed52d3396b4e88f03101c459159e9578a786e68c5cb7174"
   }
  },
  "netlists": {
   "input_network.spice": "704a49b1e94d46ded6a19e4ffe781f8ec67b248ea5143635f8dc95424e72f2b5",
+  "lvds_rx_core.spice": "ca22c0077896c1c83352aac4db29565814a5e849bb95e50bf86d1c9090600d5e",
+  "lvds_rx_lvs_ref.spice": "b01bcf0462cac3ef83c55a958555115bb5a1f28f7d15bad380836313314fcfe9",
+  "lvds_rx_lvs_ref_flat.spice": "20f723668d1b45226d74d0e05019621c29c20e05d39e95473ef30671458f38f1",
   "pad_asig_5p0.spice": "f7dec41ef2df2b36dd86fb7c48ef6a25404c5c788d71ea9a157800d6e2fd7bb2"
  },
- "sizes_spice_sha256": null,
+ "sizes_spice_sha256": "5177dbd8c723c4e3885b1e2408bc03f4b3f2eade169b90b4a1c0e66c4a06ef28",
  "tools": {
   "ngspice": {
    "path": "/foss/tools/bin/ngspice",

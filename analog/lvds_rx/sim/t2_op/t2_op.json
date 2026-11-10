@@ -1,0 +1,24 @@
+{
+ "name": "t2_op",
+ "description": "T2 part 1: first operating point of the sized lane (tt and worst5), VIC 0.05/1.2/2.35 V, VID +-100 mV, EN 0/1",
+ "deck": "t2_op.spice",
+ "corners": "worst5",
+ "grid": {
+  "vic": [
+   0.05,
+   1.2,
+   2.35
+  ],
+  "vid": [
+   -0.1,
+   0.1
+  ],
+  "en": [
+   0,
+   1
+  ]
+ },
+ "limits": {},
+ "timeout": 120,
+ "jobs": 6
+}

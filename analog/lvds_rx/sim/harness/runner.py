@@ -36,7 +36,7 @@ from . import corners as _corners
 from . import mc as _mc
 
 NGSPICE = os.environ.get("NGSPICE", "ngspice")
-HARNESS_VERSION = "1.1"   # 1.1: .option wnflag=1 in the header, cross corners, record carries `res`
+HARNESS_VERSION = "1.2"   # 1.1: .option wnflag=1 in the header, cross corners, record carries `res`; 1.2: a gmin/source-stepping failure followed by a recovery note is not a non-convergence
 
 ERR_NONCONV = [r"no convergence", r"singular matrix", r"timestep too small", r"iteration limit reached",
                r"gmin stepping failed", r"source stepping failed", r"convergence problem"]
@@ -165,13 +165,29 @@ def parse_log(text, expected):
         if m:
             extra[m.group(1).lower()] = float(m.group(2))
     errors, nonconv = [], False
-    for ln in text.splitlines():
+    hard_nonconv, step_lines = False, []
+    last_step_fail, last_recovery = -1, -1
+    for i, ln in enumerate(text.splitlines()):
         low = ln.lower()
         if any(re.search(p, low) for p in ERR_NONCONV):
             nonconv = True
-            errors.append(ln.strip()[:200])
+            if re.search(r"(dynamic|true) gmin stepping failed|source stepping failed", low):
+                last_step_fail = i
+                step_lines.append(ln.strip()[:200])
+            else:
+                hard_nonconv = True
+                errors.append(ln.strip()[:200])
         elif any(re.search(p, low) for p in ERR_GENERIC):
             errors.append(ln.strip()[:200])
+        if re.search(r"gmin stepping completed|source stepping completed|transient op finished successfully", low):
+            last_recovery = i
+    # harness 1.2: ngspice prints "Dynamic gmin stepping failed" and then often "True gmin stepping completed" (or the source-stepping /
+    # transient-op fallback finishes): the operating point WAS found.  A stepping failure that a later recovery note follows is not a
+    # non-convergence (the note stays in `errors` for the record); any other convergence message still is.
+    if nonconv and not hard_nonconv and last_recovery > last_step_fail:
+        nonconv = False                      # recovered: not an error (ngspice.log in the run directory keeps the lines)
+    else:
+        errors.extend(step_lines)
     return meas, extra, failed, list(dict.fromkeys(errors)), nonconv
 
 

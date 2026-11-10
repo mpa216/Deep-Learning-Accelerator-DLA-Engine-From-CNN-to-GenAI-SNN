@@ -23,7 +23,12 @@
  },
  "failed": 0,
  "checked": {
-  "matched_files": [],
-  "ngspice_files": 11
+  "matched_files": [
+   "netlist/lvds_rx_core.spice",
+   "netlist/lvds_rx_lvs_ref.spice",
+   "netlist/lvds_rx_lvs_ref_flat.spice",
+   "sizing/sizes.spice"
+  ],
+  "ngspice_files": 16
  }
 }

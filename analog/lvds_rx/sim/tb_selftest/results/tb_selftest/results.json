@@ -1,5 +1,5 @@
 {
- "harness": "1.1",
+ "harness": "1.2",
  "ngspice": "46",
  "runs": [
   {
@@ -19,9 +19,9 @@
     "idsat_a": 0.000705583
    },
    "errors": [],
-   "elapsed": 0.073,
+   "elapsed": 0.077,
    "cached": true,
-   "hash": "c36c0b2ef3e826e1e7b47e62232e829da21febd0b5800c8c529e91724e6490db",
+   "hash": "79c19243e67986bef0a1f4b4358b7db43f37e158360250d048c7492724576caf",
    "run_dir": "work/tt_27c_3v30__vg1.2"
   },
   {
@@ -41,9 +41,9 @@
     "idsat_a": 0.00741932
    },
    "errors": [],
-   "elapsed": 0.074,
+   "elapsed": 0.076,
    "cached": true,
-   "hash": "cf87d8cea1478831ae5c145e55dde601fef1fa1c323082a6c96b1c26338261e5",
+   "hash": "b1ccf0b800830f33cb213ce1e8e527fba06df2e942271ca8acb71816bfbbb31c",
    "run_dir": "work/tt_27c_3v30__vg3.3"
   },
   {
@@ -63,9 +63,9 @@
     "idsat_a": 0.000435399
    },
    "errors": [],
-   "elapsed": 0.071,
+   "elapsed": 0.079,
    "cached": true,
-   "hash": "0aecf31c60ad32afce9e58c7efa9abfb0f68869f32602d87295b991e5539715e",
+   "hash": "de9fdd63132673f41fa91924565147ea3fcbda6d61b7ebee11665bcd596b61e5",
    "run_dir": "work/ss_125c_3v00__vg1.2"
   },
   {
@@ -85,9 +85,9 @@
     "idsat_a": 0.00529203
    },
    "errors": [],
-   "elapsed": 0.076,
+   "elapsed": 0.074,
    "cached": true,
-   "hash": "2953bf078a7fc6b25bab09d470197ed76288b40cbd5ba283dbaf6fedd523bb97",
+   "hash": "61f2be65eeaa17058b82ce1c3b24f4748d21703a25ab9c4158275d9350a8d4c9",
    "run_dir": "work/ss_125c_3v00__vg3.3"
   },
   {
@@ -107,9 +107,9 @@
     "idsat_a": 0.00118669
    },
    "errors": [],
-   "elapsed": 0.074,
+   "elapsed": 0.073,
    "cached": true,
-   "hash": "64ba0542dc5dbce6166f4b969c914f2adb536baf9a1f3ce9537f776a112ba01f",
+   "hash": "7f754a32ae612a144a22ef8f678198499d730bf65add2e57443b9c42a7be6a83",
    "run_dir": "work/ff_m40c_3v60__vg1.2"
   },
   {
@@ -129,9 +129,9 @@
     "idsat_a": 0.00978911
    },
    "errors": [],
-   "elapsed": 0.072,
+   "elapsed": 0.071,
    "cached": true,
-   "hash": "218432bc0919cf0ee0d3a36138256d75b78208be774ae49085833a2f1fc5e01e",
+   "hash": "fa5c012cce9797850c8de982c0624580f7c5d9b4a6d1cc1dfb08db4a70de817a",
    "run_dir": "work/ff_m40c_3v60__vg3.3"
   },
   {
@@ -151,9 +151,9 @@
     "idsat_a": 0.000950743
    },
    "errors": [],
-   "elapsed": 0.131,
+   "elapsed": 0.077,
    "cached": true,
-   "hash": "54f7f5d36146dcf643cd5383f63a204d44f9b846b0669fa718808941e0bb370e",
+   "hash": "a6bfbc91746fd471cb478aa5a846febb6b890ca29d66866191e1cf1c67e0e78f",
    "run_dir": "work/fs_27c_3v30__vg1.2"
   },
   {
@@ -173,9 +173,9 @@
     "idsat_a": 0.00816336
    },
    "errors": [],
-   "elapsed": 0.073,
+   "elapsed": 0.076,
    "cached": true,
-   "hash": "24b606db2f0fd43988f5e8b459edb57c4dfc6e7360b5417cd5f078b0209f0b7a",
+   "hash": "a6a393c7fa0a56b4e39e67b7017de0b4eb536f1258af4fd082ad7d77a1438a80",
    "run_dir": "work/fs_27c_3v30__vg3.3"
   },
   {
@@ -195,9 +195,9 @@
     "idsat_a": 0.000499887
    },
    "errors": [],
-   "elapsed": 0.07,
+   "elapsed": 0.077,
    "cached": true,
-   "hash": "9b530b14f3571051c29da5f8dd4e7b076a301cd6096d3f875ab2ff51ac5e1fe5",
+   "hash": "7c13dabc1bbdd979d55aef109a27d21655f063fea0b932bb83db882ddcab0117",
    "run_dir": "work/sf_27c_3v30__vg1.2"
   },
   {
@@ -217,9 +217,9 @@
     "idsat_a": 0.00667122
    },
    "errors": [],
-   "elapsed": 0.072,
+   "elapsed": 0.076,
    "cached": true,
-   "hash": "b653558189f9c2af8750db62e3ac5403b54b186a8af0e6b49a8f4529f099898d",
+   "hash": "1e493a83171581e89cbdca36950591f975b1c00f63410f34159f0c3af416cd7d",
    "run_dir": "work/sf_27c_3v30__vg3.3"
   },
   {
@@ -239,9 +239,9 @@
     "idsat_a": 0.000435399
    },
    "errors": [],
-   "elapsed": 0.073,
+   "elapsed": 0.072,
    "cached": true,
-   "hash": "8651ee7dfdc1bf29575b8e922db58576e0a89cb4b7c4a1b936cabdec48215de5",
+   "hash": "8980966fe37d336fb13ce045a30799a5753b2dcfb7d7168c67fe6a74abe5c07f",
    "run_dir": "work/ss_125c_3v00_xrff__vg1.2"
   },
   {
@@ -261,9 +261,9 @@
     "idsat_a": 0.00529203
    },
    "errors": [],
-   "elapsed": 0.128,
+   "elapsed": 0.076,
    "cached": true,
-   "hash": "d0f0e862ddcb33b59764a1a2df51627d727dc5e59ac4681abef6590d8a1bc55c",
+   "hash": "55341328c9349f38f4b185f0c263438969972567bb55087beb86fed029480299",
    "run_dir": "work/ss_125c_3v00_xrff__vg3.3"
   },
   {
@@ -283,9 +283,9 @@
     "idsat_a": 0.00118669
    },
    "errors": [],
-   "elapsed": 0.07,
+   "elapsed": 0.072,
    "cached": true,
-   "hash": "64b9a1ebea0682b54f15426da7fe6d24f53b19fea350a6e68acbf523f3a25524",
+   "hash": "967f9fab5bcd05044c1026f7ffbe1e4085d369cf28f22efbfbc1f8cc46142164",
    "run_dir": "work/ff_m40c_3v60_xrss__vg1.2"
   },
   {
@@ -305,9 +305,9 @@
     "idsat_a": 0.00978911
    },
    "errors": [],
-   "elapsed": 0.077,
+   "elapsed": 0.074,
    "cached": true,
-   "hash": "bb066b08c6e1816c0256bb407642c91fa692e761aae98c0b720ad71e21fc42d0",
+   "hash": "e9938103fe830c900403f44cecfa05cf7407ea399bfa98f476a97a8a05701424",
    "run_dir": "work/ff_m40c_3v60_xrss__vg3.3"
   }
  ]

@@ -358,6 +358,24 @@ class TestRunnerPure(unittest.TestCase):
         _, _, _, errs, nc = runner.parse_log("doAnalyses: TRAN:  Timestep too small", [])
         self.assertTrue(nc)
 
+    def test_parse_log_homotopy_recovery(self):
+        # harness 1.2: a stepping failure followed by a recovery note is NOT a non-convergence; without the note it still is
+        rec = ("Note: Starting dynamic gmin stepping\nWarning: Dynamic gmin stepping failed\nNote: Starting true gmin stepping\n"
+               "Note: True gmin stepping completed\n")
+        _, _, _, errs, nc = runner.parse_log(rec, [])
+        self.assertFalse(nc)
+        self.assertEqual(errs, [])
+        lost = "Warning: Dynamic gmin stepping failed\nWarning: True gmin stepping failed\nWarning: source stepping failed\n"
+        _, _, _, errs, nc = runner.parse_log(lost, [])
+        self.assertTrue(nc)
+        self.assertEqual(len(errs), 3)
+        hard = rec + "doAnalyses: TRAN:  Timestep too small\n"
+        _, _, _, errs, nc = runner.parse_log(hard, [])
+        self.assertTrue(nc)
+        late = "Note: True gmin stepping completed\nWarning: Dynamic gmin stepping failed\n"      # the failure comes AFTER the last recovery
+        _, _, _, errs, nc = runner.parse_log(late, [])
+        self.assertTrue(nc)
+
     def test_lint_deck(self):
         runner.lint_deck(".tran 1n 1u\n.meas tran a max v(x)\n")
         runner.lint_deck(".dc v1 0 1 0.1\n.tran 1n 1u\n")                        # no meas: fine
