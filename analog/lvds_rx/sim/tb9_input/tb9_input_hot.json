@@ -1,0 +1,14 @@
+{
+ "name": "tb9_input_hot",
+ "description": "TB9 supplement (not gated, reported): the same input-current bench at 125 C / 3.6 V (PLAN_V2 C7: leakage at 125 C / 3.6 V at 0.05 V and 2.4 V) for tt, ss and ff, plus the mid-range points",
+ "deck": "tb9_input.spice",
+ "corners": ["tt:125:3.6", "ss:125:3.6", "ff:125:3.6"],
+ "grid": {"vin": [0.05, 1.2, 2.35, 2.4]},
+ "post": "hooks.py:post",
+ "limits": {
+  "iin_a": {"max": 20e-6, "scale": 1e6, "unit": "uA"},
+  "iin_balance_a": {"max": 6e-6, "scale": 1e6, "unit": "uA"}
+ },
+ "timeout": 300,
+ "jobs": 6
+}

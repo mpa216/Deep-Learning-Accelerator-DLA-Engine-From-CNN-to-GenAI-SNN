@@ -1,0 +1,37 @@
+* tb9_input: TIA/EIA-644-A input current (4.2.1) and balance of lane 0, powered, EN = 1 (task T4, PLAN_V2 TB9).
+* Copy A: P pin at VIN, N pin at 1.25 V (1.2 V + 50 mV)  -> iin_a  = larger magnitude of the two pin currents
+* Copy B: both pins at VIN                                -> iin_balance_a = |I_P - I_N|
+* Pins are driven directly at the asig_5p0 pad nodes (primary ESD in the path; secondary ESD is inside the macro); no termination, no package.
+* All sources ramp with the supply (50 ns), then 350 ns of settling; currents are the means over the last 50 ns.  Other lanes' pins at 1.2 V.
+{header}
+{seed_line}
+.option rshunt=1e11
+.include {deck_dir}/../../sizing/sizes.spice
+.include {deck_dir}/../../netlist/lvds_rx_core.spice
+.include {deck_dir}/../../netlist/pad_asig_5p0.spice
+Vdd vdd 0 PWL(0 0 50n {vdd})
+Ben en 0 V=v(vdd)
+Bsc sc 0 V=v(vdd)/{vdd}
+* the ammeters are 0 V sources (Vpam ...) in series with the drive; the driven node is the pad node
+Bpa pa_s 0 V=v(sc)*{vin}
+Vpam pa_s pa dc 0
+Bna na_s 0 V=v(sc)*1.25
+Vnam na_s na dc 0
+Bpb pb_s 0 V=v(sc)*{vin}
+Vpbm pb_s pb dc 0
+Bnb nb_s 0 V=v(sc)*{vin}
+Vnbm nb_s nb dc 0
+Bcm cm 0 V=v(sc)*1.2
+Xpada pa vdd 0 vdd 0 gf180mcu_fd_io__asig_5p0
+Xnada na vdd 0 vdd 0 gf180mcu_fd_io__asig_5p0
+Xpadb pb vdd 0 vdd 0 gf180mcu_fd_io__asig_5p0
+Xnadb nb vdd 0 vdd 0 gf180mcu_fd_io__asig_5p0
+Vq1pa q1pa cm dc 0
+Xdut_a vdd 0 pa na q1pa q1pa q1pa q1pa en oa o1a o2a lvds_rx_x3
+Xdut_b vdd 0 pb nb q1pa q1pa q1pa q1pa en ob o1b o2b lvds_rx_x3
+.tran 100p 400n 0 500p
+.control
+run
+wrdata tb9.txt i(Vpam) i(Vnam) i(Vpbm) i(Vnbm)
+.endc
+.end

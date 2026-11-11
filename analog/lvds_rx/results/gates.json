@@ -1,22 +1,22 @@
 {
- "generated": "2026-11-11 15:02:33",
+ "generated": "2026-11-11 19:28:37",
  "tier": "smoke",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "ef2e65a",
+  "commit": "409c31d",
   "dirty": null
  },
  "gates_sha256": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
  "spec_sha256": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
  "summary": {
-  "PASS": 12,
-  "NOT_RUN": 7,
+  "PASS": 17,
+  "FAIL": 2,
   "NOT_APPLICABLE": 1
  },
- "cpu_min": 166.8,
+ "cpu_min": 452.8,
  "flags": [],
  "green": false,
  "waivers": [
@@ -83,6 +83,24 @@
     "The PMOS-only variant (flag nmos_pair = 0) is only a shake-down vehicle of the flow (S1): its sink devices m3a have no row in the sizing script's device table and were NOT tuned. At the ss/125C + res_ff cross corner they keep only 13-34 mV of VDS - VDsat (limit 50 mV); at tt + worst5 every TB1 check passes at all 7 VIC. The baseline (hybrid input with dump) is the design; no iteration was spent on variant A.",
     "TB1 helper spec sim/tb1_op/tb1_np.json (dump-free control for the N/P overlap, decision D-002) is run by flow/run_all.py before TB1 (HELPERS) and is not itself a gate; its VIC points are not counted in the TB1 run count.",
     "Stage-3 converter pole was too slow (d3 node 39 MHz at ss/125C vs 80 MHz = 0.8 DR): L of the NMOS mirror 0.5 -> 0.28 um (sizing script variable L_n3), A3 falls 48 -> 19; the chain passes (66 MHz vs 50)."
+   ]
+  },
+  {
+   "id": "D-005",
+   "date": "2026-11-11",
+   "kind": "note",
+   "trigger": "T3: benches TB3 (trip, offset), TB4 (+TB4b), TB5, TB12 written and run at the smoke tier; bench-definition choices the plan left open; no ladder rung taken, no limit changed",
+   "measured": "results/gates.json (smoke): TB3_trip 30/30, TB3_off 450/450, TB4 70/70, TB4b 70/70, TB5 60/60, TB12 40/40, all PASS; sim/tb*/results/*/summary.md",
+   "gate_relaxed": "none (gates.yaml / spec.yaml unchanged); the sizing script was not touched in T3 (no design iteration was needed)",
+   "decisions": [
+    "TB3 offset (`vos_v`) is the input difference at which d2a - d2b crosses zero with the stage-2 cross-coupled loads scaled to m = 0.001, NOT the VDD/2 crossing of the output. Measured (sim/tb3_off/xcheck_trip_mc.json + xcheck_compare.py, 18 paired runs, same seeds, tt): d2-based minus the hysteresis-ON trip-window centre = +0.06 mV mean, 0.81 mV sd; the output-crossing definition is biased by +5.5 mV (sd 3.1) because the weak diode-loaded stage 2 lets the stage-3/inverter threshold leak into the input-referred number. The output-based value stays in the results as `vos_out_v` (report only).",
+    "TB3 trip points come from ONE continuous DC sweep per run (supply ramped inside the same sweep because plain `op` does not converge; VID triangle -150 -> +150 -> -150 mV, or the mirror), 0.1 mV steps inside +-40 mV; grid `sweep` = 0/1 selects up-first / down-first. Supply sensitivity (dvh_dvdd, dvtrip_dvdd) comes from the same sweep repeated at VDD 3.0 and 3.6 V.",
+    "TB4 stimulus is applied directly at the RX pins (circuit measurement; the input network is used in TB5 and TB12). One transient holds two phases: tr = 0.4 ns edges (tpd_s = max(tPLH, tPHL), skew_s, edge_10_90_s) and the NAMED edge time (1 ns at VID 350 mV, 2 ns at VID 100 mV) for dcd_ui = |tPLH - tPHL| / UI. At VID 100 mV a +10 mV input-offset source is included in both phases. tPD is referenced to the 50 % point of the input edge at the pins.",
+    "TB4b (gate TB4b, delta tPD over VID 0.2 / 0.45 V) reuses the TB4 deck and hooks (spec sim/tb4b_pd_vid).",
+    "TB5 / TB12: stimulus through netlist/input_network.spice (lvds_input_network; the lane already contains its own secondary ESD, so the *_esd variant would double it): driver emf per side VIC +- VID, 50 ohm source, 100 ohm termination, package pi-model, asig_5p0 pad. Edge times: 1 ns (VID 350 mV) / 2 ns (VID 100 mV) at 100 Mb/s, half of that at 200 Mb/s. 8 lead-in bits + one PRBS7 period (127 bits) compared. BER = bits whose output level at (nominal edge midpoint + median delay + UI/2) differs from the sent bit; toggle_diff = output crossings after data start minus input toggles. The hook was self-tested on synthetic waveforms (sim/tb5_eye/selftest_hooks.py: clean 0 errors, inverted/glitch/jitter cases detected).",
+    "TB12 uses VIC 1.2 V and VID follows the rate (0.1 V at 100 Mb/s, 0.35 V at 200 Mb/s), the two conditions for which the spec gives eye limits; pkg index 0..3 = (L, C) = (1 nH, 0.5 pF), (1, 1.5), (5, 0.5), (5, 1.5).",
+    "INTERPRETATION of the stimulus, not a limit change: both pins are kept inside the TIA/EIA-644 input range 0..2.4 V, i.e. the effective common mode is min(max(VIC, VID/2), 2.4 - VID/2). For VID = 100 mV this is the whole spec range 0.05..2.35 V (unchanged); for VID = 350 mV the grid values VIC 0.05 / 2.35 V become 0.175 / 2.225 V (reported as vic_eff_v in TB5). Reason (measured): at VIC 0.05 V, VID 350 mV the N pin sits at -0.125 V and ngspice stopped at ss/125C with `Timestep too small` at 70 % of the supply ramp (gear, gmin/reltol and slower ramp did not help); VIC 0.1 V converged. The spec's VIC test points apply to |VID| >= 100 mV per TIA 4.2.4, which does not require pins below 0 V.",
+    "Transient stimuli always ramp from 0 together with the supply (a static +-VID/2 at VDD = 0 made ngspice hang at ss/125C: 7 timeouts of 300 s in the first TB4 run)."
    ]
   }
  ],
@@ -692,8 +710,8 @@
     "ok": 30
    },
    "results_file": "sim/tb3_trip/results/tb3_trip/results.json",
-   "results_sha256": "ac7f9630f407aa6b575e785491a66849509ef04f0c970b9ed1a94197ee523aba",
-   "cpu_s": 602.7
+   "results_sha256": "c3d873beb6b1cf080316cee527efe418e96aa9eca0b4a89ff5b26135404761de",
+   "cpu_s": 555.4
   },
   "TB3_off": {
    "id": "TB3_off",
@@ -737,24 +755,49 @@
     "ok": 450
    },
    "results_file": "sim/tb3_off/results/tb3_off/results.json",
-   "results_sha256": "8b9154a8c84029820e856b8f0dd085ce9f128fb21459742b04786694851b8aed",
-   "cpu_s": 1575.2
+   "results_sha256": "e97bece28150e735ef55c454649cd99b1e78dad0db4ed6b85aee3cb8b311d808",
+   "cpu_s": 1328.9
   },
   "TB3_hmc": {
    "id": "TB3_hmc",
    "title": "transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb3_hmc/tb3_hmc.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "vh_v",
+     "where": null,
+     "limit": "0.008 .. 0.025",
+     "n": 180,
+     "reasons": [],
+     "worst": 0.008499999999999994,
+     "worst_run": "ff_m40c_3v60__vic1.2__s1787767019",
+     "margin": 0.0004999999999999935,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "ok_pm100",
+     "where": null,
+     "limit": "1 .. +inf",
+     "n": 180,
+     "reasons": [],
+     "worst": 1.0,
+     "worst_run": "ss_125c_3v00__vic0.05__s137598247",
+     "margin": 0.0,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 180,
+   "actual_runs": 180,
+   "status_counts": {
+    "ok": 180
+   },
+   "results_file": "sim/tb3_hmc/results/tb3_hmc/results.json",
+   "results_sha256": "75cf3fd8d70cb0a479cf301776ff01e944b8c0eea0a561458936d986928e86a9",
+   "cpu_s": 2836.3
   },
   "TB4": {
    "id": "TB4",
@@ -854,8 +897,8 @@
     "ok": 70
    },
    "results_file": "sim/tb4_pd/results/tb4_pd/results.json",
-   "results_sha256": "6a7d346c43c359b541455cb1f2b31066905721f5bd61ef550fc770953c3f57ef",
-   "cpu_s": 1257.1
+   "results_sha256": "95f71d24a2554686b7db4ce7a836c0302cbc901aa99403c335151a6089376f2e",
+   "cpu_s": 1405.8
   },
   "TB4b": {
    "id": "TB4b",
@@ -885,8 +928,8 @@
     "ok": 70
    },
    "results_file": "sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json",
-   "results_sha256": "ba56c17c016d4c6538fe90e0dcfc17291bf606c5acb00681dac50b4fff625d54",
-   "cpu_s": 1254.8
+   "results_sha256": "27468c1b0993f78d6895533abc7d286b26d2ca2c4db8013ce0766ea0c433167b",
+   "cpu_s": 1399.0
   },
   "TB5": {
    "id": "TB5",
@@ -988,104 +1031,357 @@
     "ok": 60
    },
    "results_file": "sim/tb5_eye/results/tb5_eye/results.json",
-   "results_sha256": "48a95cb185ede205afbfe7545414c6ece13a13cf28371f551d1bd959e0289ddf",
-   "cpu_s": 2884.0
+   "results_sha256": "f898d49551fb4cdcb46e83e82f37f31a9552598731e1fbd58cfd3ccb921bf6bd",
+   "cpu_s": 3221.1
   },
   "TB6": {
    "id": "TB6",
    "title": "CM step, supply ripple, current spikes",
    "phase": "prelayout",
-   "status": "NOT_RUN",
+   "status": "FAIL",
    "reasons": [
     [
-     "MISSING",
-     "testbench spec sim/tb6_cm_supply/tb6_cm_supply.json not written yet"
+     "LIMIT",
+     "added_jitter_ui: 5 of 20 runs outside -inf .. 0.1 (first tt_27c_3v30__case0 = 0.1659702227541856)"
     ]
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "false_toggles",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 20,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__case0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "added_jitter_ui",
+     "where": null,
+     "limit": "-inf .. 0.1",
+     "n": 20,
+     "reasons": [
+      [
+       "LIMIT",
+       "added_jitter_ui: 5 of 20 runs outside -inf .. 0.1 (first tt_27c_3v30__case0 = 0.1659702227541856)"
+      ]
+     ],
+     "worst": 0.24662237564769776,
+     "worst_run": "ss_125c_3v00__case0",
+     "margin": -0.14662237564769776,
+     "status": "FAIL",
+     "detail": "5 of 20 runs violate (first: tt_27c_3v30__case0 = 0.1659702227541856)"
+    }
+   ],
+   "expected_runs": 20,
+   "actual_runs": 20,
+   "status_counts": {
+    "ok": 20
+   },
+   "results_file": "sim/tb6_cm_supply/results/tb6_cm_supply/results.json",
+   "results_sha256": "9007e9ca350f3b0f60551e78b10ce85cc193f1e97c77fc3bf02ebd01202b0cc9",
+   "cpu_s": 2416.7
   },
   "TB7": {
    "id": "TB7",
    "title": "idle inputs: stable held state, no oscillation, no pulse < 2 ns (v0)",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb7_idle/tb7_idle.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "osc_flag",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 105,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05_term0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "min_pulse_s",
+     "where": null,
+     "limit": "2e-09 .. +inf",
+     "n": 105,
+     "reasons": [],
+     "worst": 5.000058936145015e-07,
+     "worst_run": "ff_m40c_3v60__vic0.6_term1",
+     "margin": 4.980058936145015e-07,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "held_state",
+     "where": null,
+     "limit": "reported",
+     "n": 105,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.0,
+     "max": 0.0,
+     "mean": 0.0
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 105,
+   "actual_runs": 105,
+   "status_counts": {
+    "ok": 105
+   },
+   "results_file": "sim/tb7_idle/results/tb7_idle/results.json",
+   "results_sha256": "a241f5dc2eaaab76487990d6d9ae30c2ab2196da1d927f195784ce645b28ab81",
+   "cpu_s": 1248.0
   },
   "TB7_mc": {
    "id": "TB7_mc",
    "title": "idle inputs under mismatch (N = 100)",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb7_idle_mc/tb7_idle_mc.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "osc_flag",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 450,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05__s383651388",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "min_pulse_s",
+     "where": null,
+     "limit": "2e-09 .. +inf",
+     "n": 450,
+     "reasons": [],
+     "worst": 1.0,
+     "worst_run": "tt_27c_3v30__vic0.05__s383651388",
+     "margin": 0.999999998,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 450,
+   "actual_runs": 450,
+   "status_counts": {
+    "ok": 450
+   },
+   "results_file": "sim/tb7_idle_mc/results/tb7_idle_mc/results.json",
+   "results_sha256": "6732b0084db53a9ea76552f4ea0e977794eca15eaeb8b4c172457652f1c1e6f8",
+   "cpu_s": 3709.1
   },
   "TB8": {
    "id": "TB8",
    "title": "EN and supply ramps",
    "phase": "prelayout",
-   "status": "NOT_RUN",
+   "status": "FAIL",
    "reasons": [
     [
-     "MISSING",
-     "testbench spec sim/tb8_en/tb8_en.json not written yet"
+     "LIMIT",
+     "vout_off_v: 5 of 10 runs outside -inf .. 0.33 (first tt_27c_3v30__case1 = 1.90327508)"
     ]
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "vout_off_v",
+     "where": {
+      "case": [
+       0,
+       1
+      ]
+     },
+     "limit": "-inf .. 0.33",
+     "n": 10,
+     "reasons": [
+      [
+       "LIMIT",
+       "vout_off_v: 5 of 10 runs outside -inf .. 0.33 (first tt_27c_3v30__case1 = 1.90327508)"
+      ]
+     ],
+     "worst": 2.01040794,
+     "worst_run": "sf_27c_3v30__case1",
+     "margin": -1.6804079399999998,
+     "status": "FAIL",
+     "detail": "5 of 10 runs violate (first: tt_27c_3v30__case1 = 1.90327508)"
+    },
+    {
+     "kind": "per_run",
+     "metric": "idd_en0_a",
+     "where": {
+      "case": 0,
+      "temp": [
+       -40,
+       27
+      ]
+     },
+     "limit": "-inf .. 1e-06",
+     "n": 4,
+     "reasons": [],
+     "worst": 1.830376096511628e-08,
+     "worst_run": "sf_27c_3v30__case0",
+     "margin": 9.816962390348836e-07,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "idd_en0_a",
+     "where": {
+      "case": 0,
+      "temp": 125
+     },
+     "limit": "-inf .. 5e-06",
+     "n": 1,
+     "reasons": [],
+     "worst": 3.109768011716171e-08,
+     "worst_run": "ss_125c_3v00__case0",
+     "margin": 4.968902319882838e-06,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "valid_time_s",
+     "where": {
+      "case": 2
+     },
+     "limit": "-inf .. 1e-06",
+     "n": 5,
+     "reasons": [],
+     "worst": 2.9578433231021524e-08,
+     "worst_run": "ss_125c_3v00__case2",
+     "margin": 9.704215667689784e-07,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "min_pulse_s",
+     "where": null,
+     "limit": "2e-09 .. +inf",
+     "n": 30,
+     "reasons": [],
+     "worst": 3.033764624303407e-09,
+     "worst_run": "fs_27c_3v30__case1",
+     "margin": 1.033764624303407e-09,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 30,
+   "actual_runs": 30,
+   "status_counts": {
+    "ok": 30
+   },
+   "results_file": "sim/tb8_en/results/tb8_en/results.json",
+   "results_sha256": "011fdf6828e78865ac5dc57dbf9d73baebc1f71f2ea7c0f9d8a5ddc4a06edd15",
+   "cpu_s": 325.6
   },
   "TB9": {
    "id": "TB9",
    "title": "input leakage and balance",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb9_input/tb9_input.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "iin_a",
+     "where": null,
+     "limit": "-inf .. 2e-05",
+     "n": 20,
+     "reasons": [],
+     "worst": 3.878090778217821e-09,
+     "worst_run": "ss_125c_3v00__vin2.4",
+     "margin": 1.9996121909221785e-05,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "iin_balance_a",
+     "where": null,
+     "limit": "-inf .. 6e-06",
+     "n": 20,
+     "reasons": [],
+     "worst": 1.2485148529263286e-15,
+     "worst_run": "ss_125c_3v00__vin0.05",
+     "margin": 5.9999999987514854e-06,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 20,
+   "actual_runs": 20,
+   "status_counts": {
+    "ok": 20
+   },
+   "results_file": "sim/tb9_input/results/tb9_input/results.json",
+   "results_sha256": "21eded1fe433e26af8d5152808d23985757ff36a3f838a13b55e6458c93156df",
+   "cpu_s": 82.0
   },
   "TB10": {
    "id": "TB10",
    "title": "three lanes: skew and crosstalk",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb10_lanes/tb10_lanes.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "skew_s",
+     "where": {
+      "mc3s": 0
+     },
+     "limit": "-inf .. 1e-09",
+     "n": 5,
+     "reasons": [],
+     "worst": 4.4033758451099444e-11,
+     "worst_run": "fs_27c_3v30__mc3s0",
+     "margin": 9.559662415489006e-10,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "xtalk_jitter_ui",
+     "where": null,
+     "limit": "-inf .. 0.05",
+     "n": 10,
+     "reasons": [],
+     "worst": 0.0008148405800372563,
+     "worst_run": "sf_27c_3v30__mc3s1",
+     "margin": 0.049185159419962744,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "skew_3sigma_s",
+     "where": {
+      "mc3s": 1
+     },
+     "limit": "-inf .. 5e-10",
+     "n": 5,
+     "reasons": [],
+     "worst": 2.1546224706091356e-10,
+     "worst_run": "fs_27c_3v30__mc3s1",
+     "margin": 2.845377529390865e-10,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 10,
+   "actual_runs": 10,
+   "status_counts": {
+    "ok": 10
+   },
+   "results_file": "sim/tb10_lanes/results/tb10_lanes/results.json",
+   "results_sha256": "d4fb73399a65ad1b4d3adcdead184fe2939c372731da3147e0fa74b7bdf6a6ea",
+   "cpu_s": 6389.2
   },
   "TB11": {
    "id": "TB11",
@@ -1141,8 +1437,8 @@
     "ok": 40
    },
    "results_file": "sim/tb12_pkg/results/tb12_pkg/results.json",
-   "results_sha256": "e193df32c8d5ea37f5831609057706df486a907304988e3f775032f554c748cf",
-   "cpu_s": 2342.6
+   "results_sha256": "04961fdd89e61f4af57a9f299d0af0e350b2edd9eb743fc00181c5f072160637",
+   "cpu_s": 2158.5
   }
  }
 }

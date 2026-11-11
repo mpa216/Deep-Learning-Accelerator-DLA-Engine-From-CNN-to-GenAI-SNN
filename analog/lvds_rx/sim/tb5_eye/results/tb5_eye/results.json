@@ -32,9 +32,9 @@
     "vid_pin_pp_v": 0.20638093590999998
    },
    "errors": [],
-   "elapsed": 67.403,
-   "cached": true,
-   "hash": "cb46fa613b3ce37fd260745042321bd65b54ef101dbc63c2440f9fbf7f13ff1a",
+   "elapsed": 69.631,
+   "cached": false,
+   "hash": "d42d669dc3ae016d13f27e6fa91836a29dc48a27acd5b3029a475e8c596795b8",
    "run_dir": "work/tt_27c_3v30__vic0.05_vid0.1_rate100000000.0"
   },
   {
@@ -67,9 +67,9 @@
     "vid_pin_pp_v": 0.21282279342
    },
    "errors": [],
-   "elapsed": 37.089,
-   "cached": true,
-   "hash": "45ef1deea166d24f9ea67fe62b4da2c4a33a62a8c118ce6e7f6887da665195aa",
+   "elapsed": 39.163,
+   "cached": false,
+   "hash": "ae88fd10a858c8ee70b2c7b5f5a29fcc72f1da9005635779feacbe5c0f3bd38b",
    "run_dir": "work/tt_27c_3v30__vic0.05_vid0.1_rate200000000.0"
   },
   {
@@ -102,9 +102,9 @@
     "vid_pin_pp_v": 0.7458767985000001
    },
    "errors": [],
-   "elapsed": 57.979,
+   "elapsed": 68.809,
    "cached": false,
-   "hash": "c862c855d86b89b94319bc29b41b3e962690485efb78490b7bb003509077da62",
+   "hash": "18608b72f3aeb2ca381630ea4647f04f66c779d4145531828bab8e7850de1e7b",
    "run_dir": "work/tt_27c_3v30__vic0.05_vid0.35_rate100000000.0"
   },
   {
@@ -137,9 +137,9 @@
     "vid_pin_pp_v": 0.7858054347000001
    },
    "errors": [],
-   "elapsed": 36.344,
+   "elapsed": 40.198,
    "cached": false,
-   "hash": "0bf5b3eefa825aacd5aa6b0178f72e8cf737b0c9c35a88222751a50345dba374",
+   "hash": "2bf6513cda5255024e1278cd6fe9c608bdfc6ad5dd995aca3c7995c37c1ad989",
    "run_dir": "work/tt_27c_3v30__vic0.05_vid0.35_rate200000000.0"
   },
   {
@@ -172,9 +172,9 @@
     "vid_pin_pp_v": 0.20646461999999977
    },
    "errors": [],
-   "elapsed": 66.796,
-   "cached": true,
-   "hash": "104ed92653f676419b9441195db0adeb5a6960ed872833b367381bc8aa5f37b3",
+   "elapsed": 67.632,
+   "cached": false,
+   "hash": "02e0490fd4285b9266da1a47f679b8ddcdf73a6c22db436938bf74ff7f2a110d",
    "run_dir": "work/tt_27c_3v30__vic1.2_vid0.1_rate100000000.0"
   },
   {
@@ -207,9 +207,9 @@
     "vid_pin_pp_v": 0.21307275000000003
    },
    "errors": [],
-   "elapsed": 34.952,
-   "cached": true,
-   "hash": "8ed766c9b490034bd68836b7f860127b71914db9b32b652207736b5a9ab679ee",
+   "elapsed": 38.449,
+   "cached": false,
+   "hash": "ee04b3ac6d526c3a88aa2e58bdda0ccaaf81a83780eda29e33527d6ddd458e58",
    "run_dir": "work/tt_27c_3v30__vic1.2_vid0.1_rate200000000.0"
   },
   {
@@ -242,9 +242,9 @@
     "vid_pin_pp_v": 0.74683945
    },
    "errors": [],
-   "elapsed": 65.72,
-   "cached": true,
-   "hash": "667983d8d043ae9694f1aee246a0d839b81120d62a28d6aa906bebeac5931d68",
+   "elapsed": 70.328,
+   "cached": false,
+   "hash": "3405cd1066d5ab51095eba6fdeda68b2136af6657ba079e8569842220c2b2d73",
    "run_dir": "work/tt_27c_3v30__vic1.2_vid0.35_rate100000000.0"
   },
   {
@@ -277,9 +277,9 @@
     "vid_pin_pp_v": 0.7865946799999999
    },
    "errors": [],
-   "elapsed": 42.237,
-   "cached": true,
-   "hash": "6cc966315daa27742fa9178cc96e2f25148f4b3d7a59af125df59215881e10f2",
+   "elapsed": 39.637,
+   "cached": false,
+   "hash": "99124d77236e1dd1513a35bfcef2bd191551ceccf51f464b7b74780fed10545c",
    "run_dir": "work/tt_27c_3v30__vic1.2_vid0.35_rate200000000.0"
   },
   {
@@ -312,9 +312,9 @@
     "vid_pin_pp_v": 0.20657514999999993
    },
    "errors": [],
-   "elapsed": 73.442,
-   "cached": true,
-   "hash": "3ccda8b934dcc3a988a94afe88c6df5fac4b711ddb6dc36f6446ceaff34ba5d0",
+   "elapsed": 72.278,
+   "cached": false,
+   "hash": "08112dad0ce645dbfaa26eff1c4d55d5771464a5e729de25fe198651212380f2",
    "run_dir": "work/tt_27c_3v30__vic2.35_vid0.1_rate100000000.0"
   },
   {
@@ -347,9 +347,9 @@
     "vid_pin_pp_v": 0.21330186000000007
    },
    "errors": [],
-   "elapsed": 37.43,
-   "cached": true,
-   "hash": "eda4da1bbc800bbeaf622cd273feb9ecb7b19de827d3c3994db28ab97a73ea52",
+   "elapsed": 39.055,
+   "cached": false,
+   "hash": "f0142db974a184ddf78ffbfc6975b8222084494d9beec02a588a82c1a84efd57",
    "run_dir": "work/tt_27c_3v30__vic2.35_vid0.1_rate200000000.0"
   },
   {
@@ -382,9 +382,9 @@
     "vid_pin_pp_v": 0.74803167
    },
    "errors": [],
-   "elapsed": 64.329,
+   "elapsed": 69.195,
    "cached": false,
-   "hash": "f791839887d270ba167891caed7e6344c7ea81231a771529d751f5ca64053930",
+   "hash": "e3b6044f0fce89f8122f5cc5cad4f55490b7287bc53d0e28eefe76d4c33ade78",
    "run_dir": "work/tt_27c_3v30__vic2.35_vid0.35_rate100000000.0"
   },
   {
@@ -417,9 +417,9 @@
     "vid_pin_pp_v": 0.7879865500000003
    },
    "errors": [],
-   "elapsed": 34.287,
+   "elapsed": 41.702,
    "cached": false,
-   "hash": "f8a3ee6da9c2cfc753bd4bfdb9ee72bca5d00f5a0b670cc8bcc5ac27f8ab3cc7",
+   "hash": "3529884cc8b58e545ee73aa39237646df46fc51a91b3a5ef529462dc0e62bce6",
    "run_dir": "work/tt_27c_3v30__vic2.35_vid0.35_rate200000000.0"
   },
   {
@@ -452,9 +452,9 @@
     "vid_pin_pp_v": 0.20632282787
    },
    "errors": [],
-   "elapsed": 64.07,
+   "elapsed": 67.978,
    "cached": false,
-   "hash": "b4eddd79836acd8140fab98a6d53ab4ce777606162ed31435a5c3bbaa1c7b5c9",
+   "hash": "7220e707ef7de04547c10d3a83243dff33d1e0e30ba754f9bde3d9e5d55a5ace",
    "run_dir": "work/ss_125c_3v00__vic0.05_vid0.1_rate100000000.0"
   },
   {
@@ -487,9 +487,9 @@
     "vid_pin_pp_v": 0.21308836289
    },
    "errors": [],
-   "elapsed": 36.23,
+   "elapsed": 37.094,
    "cached": false,
-   "hash": "8dfa22c314f1d8dadbaa146e02bc9787fccb222c91a937b2dde88380bc13aa9a",
+   "hash": "770a1fdc4d1923daef81e3561bfc3eb19aa3690a686b5e9b1f849f3d714f95d9",
    "run_dir": "work/ss_125c_3v00__vic0.05_vid0.1_rate200000000.0"
   },
   {
@@ -522,9 +522,9 @@
     "vid_pin_pp_v": 0.7468986443000001
    },
    "errors": [],
-   "elapsed": 62.434,
+   "elapsed": 69.455,
    "cached": false,
-   "hash": "b1e3947e45d5a1bbf7b73830c66b108b3f7fc059f6580675b9340dc282b0bb54",
+   "hash": "eac73f9d62912348511b42b66c86894e3abd831a16fba25dcbadfaa0c20d6880",
    "run_dir": "work/ss_125c_3v00__vic0.05_vid0.35_rate100000000.0"
   },
   {
@@ -557,9 +557,9 @@
     "vid_pin_pp_v": 0.7848777089000001
    },
    "errors": [],
-   "elapsed": 33.977,
+   "elapsed": 39.462,
    "cached": false,
-   "hash": "235d6ece60f40d264a1a325fa4b5e9baa415451451c7aa2fecb19a7573b54320",
+   "hash": "098389d6dd0b2c605a15d3bb5af52e26a16fc7b7d16a14d4a788ea6f2177fcf4",
    "run_dir": "work/ss_125c_3v00__vic0.05_vid0.35_rate200000000.0"
   },
   {
@@ -592,9 +592,9 @@
     "vid_pin_pp_v": 0.20638705999999996
    },
    "errors": [],
-   "elapsed": 60.873,
+   "elapsed": 67.895,
    "cached": false,
-   "hash": "8c1c8dfb1f7e3eaa5e6db6d78f93366be92e4dbe70e72189f38a765a45a91bc6",
+   "hash": "586e308594a7017082d06fea21e464b06a6ebd3d945660f9ec4f053f6f671a15",
    "run_dir": "work/ss_125c_3v00__vic1.2_vid0.1_rate100000000.0"
   },
   {
@@ -627,9 +627,9 @@
     "vid_pin_pp_v": 0.21300587000000015
    },
    "errors": [],
-   "elapsed": 36.973,
+   "elapsed": 36.494,
    "cached": false,
-   "hash": "046ad977e680289d6e0f9c8375a90af10f4c70ac7fa49fdc69bb7b567685f75d",
+   "hash": "4f5f2a55085d2cd312b44237a7425c2c47479aafffc44e458c79108f15bbc417",
    "run_dir": "work/ss_125c_3v00__vic1.2_vid0.1_rate200000000.0"
   },
   {
@@ -662,9 +662,9 @@
     "vid_pin_pp_v": 0.7455337299999998
    },
    "errors": [],
-   "elapsed": 56.121,
+   "elapsed": 69.463,
    "cached": false,
-   "hash": "5e4888f48023c323dc65119e5a777cd63da2425a503eb6f579b488226d0cfda8",
+   "hash": "c270d9cd3785198d5153fac86639776a23b915abecd127ec956fcb564e04a0f9",
    "run_dir": "work/ss_125c_3v00__vic1.2_vid0.35_rate100000000.0"
   },
   {
@@ -697,9 +697,9 @@
     "vid_pin_pp_v": 0.7826387399999997
    },
    "errors": [],
-   "elapsed": 35.274,
+   "elapsed": 39.758,
    "cached": false,
-   "hash": "60eebd65afdb7a00f72d772034160713579e8c31193d62f03b6034b9acad94fe",
+   "hash": "115770f36d5d257b81a0776fe4ab4e2e9945382dd71d7935fe578a538503d5a5",
    "run_dir": "work/ss_125c_3v00__vic1.2_vid0.35_rate200000000.0"
   },
   {
@@ -732,9 +732,9 @@
     "vid_pin_pp_v": 0.2064302300000005
    },
    "errors": [],
-   "elapsed": 52.81,
+   "elapsed": 68.314,
    "cached": false,
-   "hash": "64ef37a64c138d1c0c32dcb256c2b3a7c929e55d8cf999d919e9bfc699ad6274",
+   "hash": "3f1903446de602c59b6fe0f81166d625ae1ca251261039ad5ac383b1aec4cdb2",
    "run_dir": "work/ss_125c_3v00__vic2.35_vid0.1_rate100000000.0"
   },
   {
@@ -767,9 +767,9 @@
     "vid_pin_pp_v": 0.2129056600000001
    },
    "errors": [],
-   "elapsed": 36.099,
+   "elapsed": 37.526,
    "cached": false,
-   "hash": "9d61c9e2af103b02b428eefb1bd5d4750506488d5d2bf558241a25c70afc1d20",
+   "hash": "7ef88a21699b5d359f4d6e6814d3daf174d5b1d1cdad54faae35c7c1894c326c",
    "run_dir": "work/ss_125c_3v00__vic2.35_vid0.1_rate200000000.0"
   },
   {
@@ -802,9 +802,9 @@
     "vid_pin_pp_v": 0.7463876199999997
    },
    "errors": [],
-   "elapsed": 59.034,
+   "elapsed": 67.74,
    "cached": false,
-   "hash": "0074bfc32989914cfefcf1c0e79e969cd013a522591844deabea3d9f77bd1dc4",
+   "hash": "10856f8282c87bc6959474e96490c4ae634283fda552b7b1e11d1548db164d27",
    "run_dir": "work/ss_125c_3v00__vic2.35_vid0.35_rate100000000.0"
   },
   {
@@ -837,9 +837,9 @@
     "vid_pin_pp_v": 0.7827451299999999
    },
    "errors": [],
-   "elapsed": 37.953,
+   "elapsed": 37.61,
    "cached": false,
-   "hash": "78988b4cd7a17f56d71a8a69d492a2900388ed91517e3249903f089ba7ff6f00",
+   "hash": "0a55138e7a9d57b2342a76007c33a85afe2fea702bcd4765ab105344bfaabe21",
    "run_dir": "work/ss_125c_3v00__vic2.35_vid0.35_rate200000000.0"
   },
   {
@@ -872,9 +872,9 @@
     "vid_pin_pp_v": 0.20646379681
    },
    "errors": [],
-   "elapsed": 65.847,
+   "elapsed": 70.046,
    "cached": false,
-   "hash": "8145981a9701c4d08639c749032d1f0c22fccac581dad7979e760ffbe783129c",
+   "hash": "64c7521f49c8047f5d3529ada1a8387c54118091d72c29131d5c4fcd44b33982",
    "run_dir": "work/ff_m40c_3v60__vic0.05_vid0.1_rate100000000.0"
   },
   {
@@ -907,9 +907,9 @@
     "vid_pin_pp_v": 0.21304745295
    },
    "errors": [],
-   "elapsed": 29.174,
+   "elapsed": 40.787,
    "cached": false,
-   "hash": "fe684cd66dc1b01e583cd1875097121581930bf82afbab2940568dffde0e01fa",
+   "hash": "ec3d4cf5d33c1ea899e25180f70d764acf33d31fc1a870aece6719cc418e09fe",
    "run_dir": "work/ff_m40c_3v60__vic0.05_vid0.1_rate200000000.0"
   },
   {
@@ -942,9 +942,9 @@
     "vid_pin_pp_v": 0.7448594818000001
    },
    "errors": [],
-   "elapsed": 50.664,
+   "elapsed": 68.93,
    "cached": false,
-   "hash": "faa71d91acacad2233e204b248e8fffa2ad1925a3a254c03eb5e13067604bc22",
+   "hash": "81a544726aede480bd246d91a6d79a9574ecdea12ddfb3803d5f97fcf3858512",
    "run_dir": "work/ff_m40c_3v60__vic0.05_vid0.35_rate100000000.0"
   },
   {
@@ -977,9 +977,9 @@
     "vid_pin_pp_v": 0.7879345173000001
    },
    "errors": [],
-   "elapsed": 38.162,
+   "elapsed": 41.695,
    "cached": false,
-   "hash": "591efcedfe74993a85b953173031023c972d5fee211e7d6fa5bdd048cbdefe6b",
+   "hash": "d4b0a52389972b45e74c0077fa6bc5c37968d411a21326d37a85888ebc5a0aee",
    "run_dir": "work/ff_m40c_3v60__vic0.05_vid0.35_rate200000000.0"
   },
   {
@@ -1012,9 +1012,9 @@
     "vid_pin_pp_v": 0.2064786500000002
    },
    "errors": [],
-   "elapsed": 64.574,
+   "elapsed": 70.023,
    "cached": false,
-   "hash": "86fb6292f1f07b5fbf619b39962e5dc23f8f00687ee1673757c9f393dbca84f1",
+   "hash": "7140599163a44cf8cd8db96def42a88407e899fe1430828e8844940745cf45cd",
    "run_dir": "work/ff_m40c_3v60__vic1.2_vid0.1_rate100000000.0"
   },
   {
@@ -1047,9 +1047,9 @@
     "vid_pin_pp_v": 0.21313473000000016
    },
    "errors": [],
-   "elapsed": 33.29,
+   "elapsed": 39.676,
    "cached": false,
-   "hash": "b3da8bfaaa9b6ba0cd8c459d988db412f8ef4accfedb74f279365b51c491b162",
+   "hash": "355f7bd61e3c61a1ac0f93ba314229d11daf1d0826373f67b706fe359462e4ad",
    "run_dir": "work/ff_m40c_3v60__vic1.2_vid0.1_rate200000000.0"
   },
   {
@@ -1082,9 +1082,9 @@
     "vid_pin_pp_v": 0.74751715
    },
    "errors": [],
-   "elapsed": 58.031,
+   "elapsed": 70.702,
    "cached": false,
-   "hash": "a563236e8c02014bd612e7054d1163c6c29d942962bb69e43f4ced9158534a46",
+   "hash": "04c77d56026250a2065225c075ef27c674afeb1270e04893709886248956c46c",
    "run_dir": "work/ff_m40c_3v60__vic1.2_vid0.35_rate100000000.0"
   },
   {
@@ -1117,9 +1117,9 @@
     "vid_pin_pp_v": 0.7905689200000001
    },
    "errors": [],
-   "elapsed": 37.607,
+   "elapsed": 41.397,
    "cached": false,
-   "hash": "a2faaaf7ba35cbda87fe9062962ccc2994f1892ee37774f3f5453011ae414cb6",
+   "hash": "739cf8841d877b25323372e7e40f877d1f1a97c97289b580a97d73f7a03ed890",
    "run_dir": "work/ff_m40c_3v60__vic1.2_vid0.35_rate200000000.0"
   },
   {
@@ -1152,9 +1152,9 @@
     "vid_pin_pp_v": 0.20661668000000022
    },
    "errors": [],
-   "elapsed": 64.082,
+   "elapsed": 74.106,
    "cached": false,
-   "hash": "f93b620308e7e15578372062863b8dbeb83c7f097746e5703c24ce1deade31f4",
+   "hash": "b7f7903c1153da65b13e9b54c4f203ffe8279fde505eb56264aad1fa8d41a2f8",
    "run_dir": "work/ff_m40c_3v60__vic2.35_vid0.1_rate100000000.0"
   },
   {
@@ -1187,9 +1187,9 @@
     "vid_pin_pp_v": 0.21345870999999983
    },
    "errors": [],
-   "elapsed": 36.997,
+   "elapsed": 38.938,
    "cached": false,
-   "hash": "b8d8501d85a81f244d09c98cb296c9027b227c6a3825b77d964ddfafbd0aae98",
+   "hash": "b5d9d9fbc8e47f1fe1201a9cc81265fe54b55a58d3cf74efbe8c33f17202d97a",
    "run_dir": "work/ff_m40c_3v60__vic2.35_vid0.1_rate200000000.0"
   },
   {
@@ -1222,9 +1222,9 @@
     "vid_pin_pp_v": 0.7485254799999996
    },
    "errors": [],
-   "elapsed": 63.517,
+   "elapsed": 70.718,
    "cached": false,
-   "hash": "afbf3d4b5161e60580c0d451bab15067d86caf909a736833c7427e95d7bccb07",
+   "hash": "85af033dc18501832515d877c694e082649209f09d2e1106c86fd2ae8e116ea6",
    "run_dir": "work/ff_m40c_3v60__vic2.35_vid0.35_rate100000000.0"
   },
   {
@@ -1257,9 +1257,9 @@
     "vid_pin_pp_v": 0.7936636799999999
    },
    "errors": [],
-   "elapsed": 37.167,
+   "elapsed": 41.664,
    "cached": false,
-   "hash": "511561df7f1b0102ccf2f85321ebfb9c455fc105b92abef192eb4b071aee162c",
+   "hash": "a0dcc57614202457f3b3556fe7d25c5879410ccb2211057b857c177b5f1ef296",
    "run_dir": "work/ff_m40c_3v60__vic2.35_vid0.35_rate200000000.0"
   },
   {
@@ -1292,9 +1292,9 @@
     "vid_pin_pp_v": 0.2064040594
    },
    "errors": [],
-   "elapsed": 61.867,
+   "elapsed": 67.771,
    "cached": false,
-   "hash": "d5ddc86492e9aa54815651d9752a7a697966669d52c6eeed25918b5e5d1a3240",
+   "hash": "23a29ee9f3b3f5e337dd94ffa37c3ee10102ce4df39f2eb7e57e4b893206c1bb",
    "run_dir": "work/fs_27c_3v30__vic0.05_vid0.1_rate100000000.0"
   },
   {
@@ -1327,9 +1327,9 @@
     "vid_pin_pp_v": 0.21285362837
    },
    "errors": [],
-   "elapsed": 36.041,
+   "elapsed": 38.788,
    "cached": false,
-   "hash": "d1dc38a7bae8b7cc16c4a49282bc1708db8cd8923c46a4e726e38ae226153794",
+   "hash": "fec6db23bd4e7a507ead18125d4ad5089b666f1b7efd414bb784d5d564782706",
    "run_dir": "work/fs_27c_3v30__vic0.05_vid0.1_rate200000000.0"
   },
   {
@@ -1362,9 +1362,9 @@
     "vid_pin_pp_v": 0.7459036944999999
    },
    "errors": [],
-   "elapsed": 60.808,
+   "elapsed": 69.533,
    "cached": false,
-   "hash": "7d88dfcf423e955d8109e3a62725c57f6465961233c1905136cda2b5023debeb",
+   "hash": "bfb53ed4b92f304628f434b663b0e0bd87b83d743fd40646daa748599555caf2",
    "run_dir": "work/fs_27c_3v30__vic0.05_vid0.35_rate100000000.0"
   },
   {
@@ -1397,9 +1397,9 @@
     "vid_pin_pp_v": 0.7858137506
    },
    "errors": [],
-   "elapsed": 37.762,
+   "elapsed": 39.478,
    "cached": false,
-   "hash": "4f9faaec379451f73149e30ad87a2d88016ad57ac69d63172f75364e9e1c48a1",
+   "hash": "6fafcffef32de930e86f00f5494f632c3e62bd8d13e5d8df28323a845c02d70e",
    "run_dir": "work/fs_27c_3v30__vic0.05_vid0.35_rate200000000.0"
   },
   {
@@ -1432,9 +1432,9 @@
     "vid_pin_pp_v": 0.20648296
    },
    "errors": [],
-   "elapsed": 62.63,
+   "elapsed": 69.329,
    "cached": false,
-   "hash": "3b4cb8dfb5b14500ef34154b56b47cd9e76508c4101474af3bb9ce66efc1b5a0",
+   "hash": "eceed1e0fd17c83ab306f288eadb440c1515e4bc5b089fe9ae7e341b657222b9",
    "run_dir": "work/fs_27c_3v30__vic1.2_vid0.1_rate100000000.0"
   },
   {
@@ -1467,9 +1467,9 @@
     "vid_pin_pp_v": 0.2130964500000001
    },
    "errors": [],
-   "elapsed": 36.171,
+   "elapsed": 38.084,
    "cached": false,
-   "hash": "5759ee4da392072fc8cd25f8a057108f44d750990e78c0451346d286110c323d",
+   "hash": "c6738159d3cda57c843c22a400523de456bc4e224c546f7ac473bd2ab6cb483b",
    "run_dir": "work/fs_27c_3v30__vic1.2_vid0.1_rate200000000.0"
   },
   {
@@ -1502,9 +1502,9 @@
     "vid_pin_pp_v": 0.7468369400000001
    },
    "errors": [],
-   "elapsed": 65.486,
+   "elapsed": 68.838,
    "cached": false,
-   "hash": "9c567af2d131920ae8d50b7feccd839e7cd6a15498fc5a6a895379fc65426ee7",
+   "hash": "7c053354ddbf33d3bd33e78efb77a2bffe91776dcf2319516dea23991e6f676e",
    "run_dir": "work/fs_27c_3v30__vic1.2_vid0.35_rate100000000.0"
   },
   {
@@ -1537,9 +1537,9 @@
     "vid_pin_pp_v": 0.78656883
    },
    "errors": [],
-   "elapsed": 37.584,
+   "elapsed": 40.581,
    "cached": false,
-   "hash": "4d45cad0a3c37eed80f4f12c5cb5506c2caf0df4dbced72cbfa293413928c9b3",
+   "hash": "7684127d40b786cc2112a9c49c4df17f37d752554ddd669884e815b42a20a450",
    "run_dir": "work/fs_27c_3v30__vic1.2_vid0.35_rate200000000.0"
   },
   {
@@ -1572,9 +1572,9 @@
     "vid_pin_pp_v": 0.20658723000000023
    },
    "errors": [],
-   "elapsed": 56.324,
+   "elapsed": 69.115,
    "cached": false,
-   "hash": "aef5ca682d77ce805fb44d1d82b29653b14472770d9392d454a7631a9a41d47d",
+   "hash": "729adf78f6a49ceb13eb736af4c9540dd58e5ca5ed21434d40bf39dc8de9133d",
    "run_dir": "work/fs_27c_3v30__vic2.35_vid0.1_rate100000000.0"
   },
   {
@@ -1607,9 +1607,9 @@
     "vid_pin_pp_v": 0.21331903000000008
    },
    "errors": [],
-   "elapsed": 30.332,
+   "elapsed": 39.734,
    "cached": false,
-   "hash": "b5fbf89de26bd88cbcd0400b0d33802d22856057ece5bd330f8347d63992332c",
+   "hash": "8dfb3ea4c0cd8fc1276be6bb05e75a290d384dfd4aaca3e44034128ac74f0037",
    "run_dir": "work/fs_27c_3v30__vic2.35_vid0.1_rate200000000.0"
   },
   {
@@ -1642,9 +1642,9 @@
     "vid_pin_pp_v": 0.7480604500000001
    },
    "errors": [],
-   "elapsed": 57.35,
+   "elapsed": 68.558,
    "cached": false,
-   "hash": "875ee6a8d9bc78d6973b9974484c38dfc307becb428a050558e764a6229f5628",
+   "hash": "1a4521b0a1529fc2db8dc9d8c5817143138aa25caa1778f3136b79a37eef3896",
    "run_dir": "work/fs_27c_3v30__vic2.35_vid0.35_rate100000000.0"
   },
   {
@@ -1677,9 +1677,9 @@
     "vid_pin_pp_v": 0.7881011199999994
    },
    "errors": [],
-   "elapsed": 35.869,
+   "elapsed": 41.499,
    "cached": false,
-   "hash": "81817eb27418c917f20c74d9efb7bf882840503b5f4ffb95f62ae2b21600f6f6",
+   "hash": "e7349e259376539835b12904cdd4fd7090992ab689d05170cafd9cd924e24b3e",
    "run_dir": "work/fs_27c_3v30__vic2.35_vid0.35_rate200000000.0"
   },
   {
@@ -1712,9 +1712,9 @@
     "vid_pin_pp_v": 0.20635596097
    },
    "errors": [],
-   "elapsed": 63.912,
+   "elapsed": 69.025,
    "cached": false,
-   "hash": "eb745e0332778543c1b3e402c333bfa97934dbcde5e35686cb07a1bd6ddabc6f",
+   "hash": "008b7a6a7776bc599484766adfa361547dd30672c26614945185cc4355f63d6c",
    "run_dir": "work/sf_27c_3v30__vic0.05_vid0.1_rate100000000.0"
   },
   {
@@ -1747,9 +1747,9 @@
     "vid_pin_pp_v": 0.21279039155
    },
    "errors": [],
-   "elapsed": 37.712,
+   "elapsed": 39.725,
    "cached": false,
-   "hash": "238a320504452a1009030e097f9c91c8483719d3f317adb6297997b92be89c4d",
+   "hash": "400d6b850532e19f22799c26e388847b26baa2d05176340ce7c4f890473eefd5",
    "run_dir": "work/sf_27c_3v30__vic0.05_vid0.1_rate200000000.0"
   },
   {
@@ -1782,9 +1782,9 @@
     "vid_pin_pp_v": 0.7458370744999999
    },
    "errors": [],
-   "elapsed": 61.172,
+   "elapsed": 68.995,
    "cached": false,
-   "hash": "f543cd919a17c054023ef7c7d8861e57ac7523d26364d3c4cd5bf8291b736c8e",
+   "hash": "e3409b9b2341ec57af2acdc28c08fcdd0abd4bc0fedf95c654dc6600b24a5587",
    "run_dir": "work/sf_27c_3v30__vic0.05_vid0.35_rate100000000.0"
   },
   {
@@ -1817,9 +1817,9 @@
     "vid_pin_pp_v": 0.7858017176000001
    },
    "errors": [],
-   "elapsed": 37.828,
+   "elapsed": 40.543,
    "cached": false,
-   "hash": "9109ca6630f4d112827ee0c25921678c9442bac00460ef2aed517d3adcf62acd",
+   "hash": "ba278277d846554b3b296e023d4e94188559b01962710dfa2547e62102d88259",
    "run_dir": "work/sf_27c_3v30__vic0.05_vid0.35_rate200000000.0"
   },
   {
@@ -1852,9 +1852,9 @@
     "vid_pin_pp_v": 0.2064477600000001
    },
    "errors": [],
-   "elapsed": 56.167,
+   "elapsed": 68.544,
    "cached": false,
-   "hash": "6b171c8d38c069fdddf8803ce86a81aeabd76b5d3579fbbb5a19e7f2fe63aec8",
+   "hash": "22f3203084f0891cc432f475324a1b22504a0744a904cd491fd0389f31a51f2e",
    "run_dir": "work/sf_27c_3v30__vic1.2_vid0.1_rate100000000.0"
   },
   {
@@ -1887,9 +1887,9 @@
     "vid_pin_pp_v": 0.21305202000000012
    },
    "errors": [],
-   "elapsed": 32.633,
+   "elapsed": 38.339,
    "cached": false,
-   "hash": "408f54d91551820d36ef77937725cf8c632bfff0df68e131e23f3df05a7416ae",
+   "hash": "cdf1aaafcbaac1bcbff060117b06bf7074b2b8c3e3056348bc1aa64f4b7fb6b6",
    "run_dir": "work/sf_27c_3v30__vic1.2_vid0.1_rate200000000.0"
   },
   {
@@ -1922,9 +1922,9 @@
     "vid_pin_pp_v": 0.7468465799999999
    },
    "errors": [],
-   "elapsed": 61.852,
+   "elapsed": 67.409,
    "cached": false,
-   "hash": "cb8ee9e2bbfd15e072c98d92dddbd79ce2620623dcb7125cba3ebcc805bf229f",
+   "hash": "171f08798e843a2684c977294d3047bb3d1aa7d6cc6c98e76b1ed8bab2b40753",
    "run_dir": "work/sf_27c_3v30__vic1.2_vid0.35_rate100000000.0"
   },
   {
@@ -1957,9 +1957,9 @@
     "vid_pin_pp_v": 0.7866533000000002
    },
    "errors": [],
-   "elapsed": 35.623,
+   "elapsed": 39.818,
    "cached": false,
-   "hash": "e9e42935296ec19078bfe616beea7694019a9a0ebb9f09827f1a13ef2251bc86",
+   "hash": "19815b18422817790908d9ce0321badb095a3073cd9059432d8bb1caed0ff7bd",
    "run_dir": "work/sf_27c_3v30__vic1.2_vid0.35_rate200000000.0"
   },
   {
@@ -1992,9 +1992,9 @@
     "vid_pin_pp_v": 0.20656583999999967
    },
    "errors": [],
-   "elapsed": 52.85,
+   "elapsed": 62.207,
    "cached": false,
-   "hash": "3c46d07f388c3a717594e11f37ae1420c9037f08ef286d8cfa5b54b59e2ca4ca",
+   "hash": "8ace65b635eeb5ccee90dd2c3f52bd7bd4d07c9f5259e572b35da169b0871b3e",
    "run_dir": "work/sf_27c_3v30__vic2.35_vid0.1_rate100000000.0"
   },
   {
@@ -2027,9 +2027,9 @@
     "vid_pin_pp_v": 0.21328924999999987
    },
    "errors": [],
-   "elapsed": 27.727,
+   "elapsed": 33.064,
    "cached": false,
-   "hash": "d8e730652ea0c058a2a6212353f8b8d1a4de331a59358db1d210e3770311d8c6",
+   "hash": "073ea632da38e5936ae9021496eedec234bc5128103939a3580e0df2ad2e45bc",
    "run_dir": "work/sf_27c_3v30__vic2.35_vid0.1_rate200000000.0"
   },
   {
@@ -2062,9 +2062,9 @@
     "vid_pin_pp_v": 0.7480031199999999
    },
    "errors": [],
-   "elapsed": 45.306,
+   "elapsed": 47.824,
    "cached": false,
-   "hash": "97b8922a9ec1f22000ce7b2cd39bafb001d262611a0dfa6fb81c8128243e8799",
+   "hash": "5ec40f4aad08770dff43c3c216cad53dab14e4d1035a13607d3fd89f3eac62c9",
    "run_dir": "work/sf_27c_3v30__vic2.35_vid0.35_rate100000000.0"
   },
   {
@@ -2097,9 +2097,9 @@
     "vid_pin_pp_v": 0.7878761400000003
    },
    "errors": [],
-   "elapsed": 24.038,
+   "elapsed": 30.715,
    "cached": false,
-   "hash": "2ab1abb95bcca64d3deaf90e45f90e6a6c5ad6adfb0beae716b6e0b3fca7a346",
+   "hash": "a5b69a919494e22f480133297bc6fd506b8cbf53b7e09ed21b7d00abe3f8a1d0",
    "run_dir": "work/sf_27c_3v30__vic2.35_vid0.35_rate200000000.0"
   }
  ]

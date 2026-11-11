@@ -1,0 +1,17 @@
+{
+ "name": "tb7_idle_mc",
+ "description": "TB7 Monte Carlo: terminated idle inputs (VID = 0) on three lanes with device mismatch (each lane draws its own offset), VIC 0.05 / 1.2 / 2.35 V; the output must hold a stable state (no oscillation, no pulse < 2 ns); the fraction of lanes held HIGH shows where the random offset puts the idle state. Deck, prep and post are those of tb7_idle (drift off).",
+ "deck": "../tb7_idle/tb7_idle.spice",
+ "corners": "worst5",
+ "grid": {"vic": [0.05, 1.2, 2.35]},
+ "vars": {"term": 1, "drift": 0},
+ "mc": {"n": 100, "mode": "mismatch", "seed": 20261113, "k": 3},
+ "prep": "../tb7_idle/hooks.py:prep",
+ "post": "../tb7_idle/hooks.py:post",
+ "limits": {
+  "osc_flag": {"max": 0},
+  "min_pulse_s": {"min": 2e-9, "scale": 1e9, "unit": "ns"}
+ },
+ "timeout": 600,
+ "jobs": 6
+}

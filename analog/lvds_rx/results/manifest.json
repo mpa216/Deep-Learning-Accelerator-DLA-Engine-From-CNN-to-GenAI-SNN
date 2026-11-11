@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-11 15:02:33",
+ "generated": "2026-11-11 19:28:37",
  "tier": "smoke",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "ef2e65a",
+  "commit": "409c31d",
   "dirty": null
  },
  "harness_version": "1.2",
@@ -19,7 +19,7 @@
    "spec/gates.yaml": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
    "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
    "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
-   "spec/decisions.yaml": "0ca5e8b0900ce37df162170e29b1151474eacbca7e8d18d73aaddbb2665f90a4"
+   "spec/decisions.yaml": "2ec124ba0495d85555bee22859b94b87e40b9eeccb82d35b8a8577c45b3596a8"
   }
  },
  "netlists": {
@@ -117,7 +117,7 @@
    "gate": "TB1",
    "expected": 147,
    "spec_exists": true,
-   "wall_s": 14.9
+   "wall_s": 21.3
   },
   {
    "gate": "TB2",
@@ -129,73 +129,73 @@
    "gate": "TB3_trip",
    "expected": 30,
    "spec_exists": true,
-   "wall_s": 0.3
+   "wall_s": 97.3
   },
   {
    "gate": "TB3_off",
    "expected": 450,
    "spec_exists": true,
-   "wall_s": 3.7
+   "wall_s": 226.4
   },
   {
    "gate": "TB3_hmc",
    "expected": 180,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 385.5
   },
   {
    "gate": "TB4",
    "expected": 70,
    "spec_exists": true,
-   "wall_s": 215.1
+   "wall_s": 240.2
   },
   {
    "gate": "TB4b",
    "expected": 70,
    "spec_exists": true,
-   "wall_s": 213.4
+   "wall_s": 238.5
   },
   {
    "gate": "TB5",
    "expected": 60,
    "spec_exists": true,
-   "wall_s": 424.7
+   "wall_s": 555.7
   },
   {
    "gate": "TB6",
    "expected": 20,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 443.8
   },
   {
    "gate": "TB7",
    "expected": 105,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 213.8
   },
   {
    "gate": "TB7_mc",
    "expected": 450,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 628.1
   },
   {
    "gate": "TB8",
    "expected": 30,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 51.9
   },
   {
    "gate": "TB9",
    "expected": 20,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 0.2
   },
   {
    "gate": "TB10",
    "expected": 10,
-   "spec_exists": false,
-   "wall_s": null
+   "spec_exists": true,
+   "wall_s": 1130.3
   },
   {
    "gate": "TB11",
@@ -207,8 +207,8 @@
    "gate": "TB12",
    "expected": 40,
    "spec_exists": true,
-   "wall_s": 410.9
+   "wall_s": 384.2
   }
  ],
- "wall_s": 1283.8
+ "wall_s": 4618.3
 }

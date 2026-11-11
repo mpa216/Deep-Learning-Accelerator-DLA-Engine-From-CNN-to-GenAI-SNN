@@ -1,0 +1,15 @@
+{
+ "name": "tb10_lanes",
+ "description": "TB10: lvds_rx_x3 with CLK (1010), D0 (PRBS7), D1 (PRBS7 shifted) at 100 Mb/s, VID 100 mV, full input network per lane; mc3s = 0: nominal lane skew and crosstalk jitter (lane k active alone as reference); mc3s = 1: additionally 4 mismatch copies (12 lane samples) for the 3-sigma lane-to-lane delay spread",
+ "deck": "tb10_lanes.spice",
+ "corners": "worst5",
+ "grid": {"mc3s": [0, 1]},
+ "vars": {"tstop": 8.3e-7},
+ "prep": "hooks.py:prep",
+ "post": "hooks.py:post",
+ "limits": {
+  "xtalk_jitter_ui": {"max": 0.05, "scale": 100, "unit": "% UI"}
+ },
+ "timeout": 1800,
+ "jobs": 6
+}

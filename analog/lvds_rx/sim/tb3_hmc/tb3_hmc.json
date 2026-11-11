@@ -1,0 +1,16 @@
+{
+ "name": "tb3_hmc",
+ "description": "TB3_hmc: hysteresis V_H spread and functional check at VID = +-100 mV under device mismatch (Monte Carlo), extreme corners (ss/125C/3.0 V, ff/-40C/3.6 V), VIC 0.05 / 1.2 / 2.35 V. Uses the DC-sweep deck of tb3_trip (PLAN_V2 C5: the DC method is the one used inside Monte Carlo), up-first sweep",
+ "deck": "../tb3_trip/tb3_trip.spice",
+ "corners": "extreme2",
+ "grid": {"vic": [0.05, 1.2, 2.35]},
+ "vars": {"wmax": 0.051, "sweep": 0},
+ "mc": {"n": 100, "mode": "mismatch", "seed": 20261114, "k": 3},
+ "post": "hooks.py:post",
+ "limits": {
+  "vh_v": {"min": 0.008, "max": 0.025, "scale": 1000, "unit": "mV"},
+  "ok_pm100": {"min": 1}
+ },
+ "timeout": 300,
+ "jobs": 6
+}

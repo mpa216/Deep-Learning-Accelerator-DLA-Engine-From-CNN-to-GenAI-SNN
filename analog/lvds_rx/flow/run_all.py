@@ -42,7 +42,8 @@ def plan(tier, phases, only=None):
 
 
 # helper specs that a gate's post hook reads (not gated themselves, no run-count check); run BEFORE the gate's own spec
-HELPERS = {"TB1": ["sim/tb1_op/tb1_np.json"]}
+# an entry may be (path, "own"): the helper keeps the corners of its own spec file instead of the gate's corner set
+HELPERS = {"TB1": ["sim/tb1_op/tb1_np.json"], "TB9": [("sim/tb9_input/tb9_input_hot.json", "own")]}
 
 
 def run_sims(rows, tier, jobs):
@@ -52,7 +53,9 @@ def run_sims(rows, tier, jobs):
             continue
         t0 = time.time()
         for h in HELPERS.get(r["gate"], []):
-            hrecs, _ = runner.run_spec(C.path(h), jobs=jobs, only_corners=r["corners"], verbose=False)
+            own = isinstance(h, tuple)
+            h = h[0] if own else h
+            hrecs, _ = runner.run_spec(C.path(h), jobs=jobs, only_corners=None if own else r["corners"], verbose=False)
             print("SIM %-9s helper %s: %d runs, %d not ok" % (r["gate"], os.path.basename(h), len(hrecs),
                                                              sum(1 for x in hrecs if x["status"] != "ok")))
         recs, summ = runner.run_spec(C.path(r["spec"]), jobs=jobs, only_corners=r["corners"], n_mc=r.get("n_mc"),

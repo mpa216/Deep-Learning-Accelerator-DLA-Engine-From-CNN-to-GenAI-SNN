@@ -1,6 +1,6 @@
 # LVDS RX macro: verification report (generated)
 
-Generated 2026-11-11 15:02:33 by flow/report.py from results/gates.json. Tier **smoke**, phases env, prelayout, commit `ef2e65a` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
+Generated 2026-11-11 19:28:37 by flow/report.py from results/gates.json. Tier **smoke**, phases env, prelayout, commit `409c31d` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
 
 ## Waivers and fallback-ladder rungs
 
@@ -10,10 +10,11 @@ Generated 2026-11-11 15:02:33 by flow/report.py from results/gates.json. Tier **
 | D-002 | 2026-11-11 | note |   | T1 stage-1 spike (PLAN_V2 S0, C4): is the hybrid input stage with dump devices viable over VIC 0.05-2.35 V? Answer measured: yes, no ladder rung taken (R5 stays at rung 0). | results/spike_stage1.json, 8 corners x 47 VIC x 3 variants (1128 runs, all ok). H1 (hybrid + dump): CM span 12-31 mV (limit +-150 mV), A1 at VIC 0.05/2.35 V >= 4.26, A1 spread <= 1.27x (limit 2.2x), min saturation margin 88 mV (limit 50 mV), f3dB >= 170 MHz. H0 (no dump): CM fails at 7 of 8 corners (span up to 1.20 V), A1 0.08 at ss/125C/2.35 V. Iterations 2 of 8 (results/iterations.jsonl). | none (gates.yaml untouched, sha unchanged) |
 | D-003 | 2026-11-11 | note |   | T2 part 1 (sizing script + netlist): design choices the plan left open or that the first numbers forced; no frozen file changed, no ladder rung taken | sizing/sizing_report.md (127 assertions, 0 failed), sim/t2_op/results/op_table.md (60 runs worst5 x VIC 0.05/1.2/2.35 V x EN x VID, all ok; min saturation margin 109 mV), results/iterations.jsonl phase T2 | none (gates.yaml / spec.yaml sha unchanged) |
 | D-004 | 2026-11-11 | note |   | T2 part 2: TB1/TB2 benches, LUT-vs-SPICE table, S1 shake-down (PMOS-only stage 1) | results/gates.json (TB1 147/147, TB2 35/35 PASS at smoke), results/shakedown_s1.md, sim/tb1_op/results/lut_vs_spice.md, results/iterations.jsonl phase T2 block stage3_pole | none (gates.yaml / spec.yaml unchanged); no ladder rung taken |
+| D-005 | 2026-11-11 | note |   | T3: benches TB3 (trip, offset), TB4 (+TB4b), TB5, TB12 written and run at the smoke tier; bench-definition choices the plan left open; no ladder rung taken, no limit changed | results/gates.json (smoke): TB3_trip 30/30, TB3_off 450/450, TB4 70/70, TB4b 70/70, TB5 60/60, TB12 40/40, all PASS; sim/tb*/results/*/summary.md | none (gates.yaml / spec.yaml unchanged); the sizing script was not touched in T3 (no design iteration was needed) |
 
 ## Summary
 
-**NOT GREEN**: 1 NOT_APPLICABLE, 7 NOT_RUN, 12 PASS
+**NOT GREEN**: 2 FAIL, 1 NOT_APPLICABLE, 17 PASS
 
 | gate | phase | status | runs (found/expected) | worst margin | note |
 |---|---|---|---|---|---|
@@ -25,16 +26,16 @@ Generated 2026-11-11 15:02:33 by flow/report.py from results/gates.json. Tier **
 | TB2 | prelayout | PASS | 35/35 | 0.03564 |  |
 | TB3_trip | prelayout | PASS | 30/30 | 0.0025 |  |
 | TB3_off | prelayout | PASS | 450/450 | 0.05775 |  |
-| TB3_hmc | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_hmc/tb3_hmc.json not written yet |
+| TB3_hmc | prelayout | PASS | 180/180 | 0 |  |
 | TB4 | prelayout | PASS | 70/70 | 3.871e-10 |  |
 | TB4b | prelayout | PASS | 70/70 | 6.71e-10 |  |
 | TB5 | prelayout | PASS | 60/60 | 0 |  |
-| TB6 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb6_cm_supply/tb6_cm_supply.json not written yet |
-| TB7 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb7_idle/tb7_idle.json not written yet |
-| TB7_mc | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb7_idle_mc/tb7_idle_mc.json not written yet |
-| TB8 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb8_en/tb8_en.json not written yet |
-| TB9 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb9_input/tb9_input.json not written yet |
-| TB10 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb10_lanes/tb10_lanes.json not written yet |
+| TB6 | prelayout | FAIL | 20/20 | -0.1466 | LIMIT: added_jitter_ui: 5 of 20 runs outside -inf .. 0.1 (first tt_27c_3v30__case0 = 0.1659702227541856) |
+| TB7 | prelayout | PASS | 105/105 | 0 |  |
+| TB7_mc | prelayout | PASS | 450/450 | 0 |  |
+| TB8 | prelayout | FAIL | 30/30 | -1.68 | LIMIT: vout_off_v: 5 of 10 runs outside -inf .. 0.33 (first tt_27c_3v30__case1 = 1.90327508) |
+| TB9 | prelayout | PASS | 20/20 | 6e-06 |  |
+| TB10 | prelayout | PASS | 10/10 | 2.845e-10 |  |
 | TB11 | prelayout | NOT_APPLICABLE | -/- | - | CONDITION: needs ladder R6 rung >= 1 (not taken) |
 | TB12 | prelayout | PASS | 40/40 | 0 |  |
 
@@ -123,7 +124,7 @@ Status **PASS**. Runs 35 of 35 expected; run status counts {'ok': 35}; results `
 
 ### TB3_trip: hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)
 
-Status **PASS**. Runs 30 of 30 expected; run status counts {'ok': 30}; results `sim/tb3_trip/results/tb3_trip/results.json` (sha256 `ac7f9630f407...`).
+Status **PASS**. Runs 30 of 30 expected; run status counts {'ok': 30}; results `sim/tb3_trip/results/tb3_trip/results.json` (sha256 `c3d873beb6b1...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -133,7 +134,7 @@ Status **PASS**. Runs 30 of 30 expected; run status counts {'ok': 30}; results `
 
 ### TB3_off: DC input-referred offset Monte Carlo, hysteresis off (N = 1000)
 
-Status **PASS**. Runs 450 of 450 expected; run status counts {'ok': 450}; results `sim/tb3_off/results/tb3_off/results.json` (sha256 `8b9154a8c840...`).
+Status **PASS**. Runs 450 of 450 expected; run status counts {'ok': 450}; results `sim/tb3_off/results/tb3_off/results.json` (sha256 `e97bece28150...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -142,13 +143,16 @@ Status **PASS**. Runs 450 of 450 expected; run status counts {'ok': 450}; result
 
 ### TB3_hmc: transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 180 of 180 expected; run status counts {'ok': 180}; results `sim/tb3_hmc/results/tb3_hmc/results.json` (sha256 `75cf3fd8d70c...`).
 
-- MISSING: testbench spec sim/tb3_hmc/tb3_hmc.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| vh_v | per_run | all | 0.008 .. 0.025 | 180 | 0.0085 | PASS |
+| ok_pm100 | per_run | all | 1 .. +inf | 180 | 1 | PASS |
 
 ### TB4: propagation delay, pulse skew, DCD, output edge
 
-Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `sim/tb4_pd/results/tb4_pd/results.json` (sha256 `6a7d346c43c3...`).
+Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `sim/tb4_pd/results/tb4_pd/results.json` (sha256 `95f71d24a255...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -161,7 +165,7 @@ Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `
 
 ### TB4b: delta tPD over VID 200-450 mV at fixed VIC (the VID set of TB4 cannot show it)
 
-Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json` (sha256 `ba56c17c016d...`).
+Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json` (sha256 `27468c1b0993...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -169,7 +173,7 @@ Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `
 
 ### TB5: eye at 100 and 200 Mb/s through the full input network
 
-Status **PASS**. Runs 60 of 60 expected; run status counts {'ok': 60}; results `sim/tb5_eye/results/tb5_eye/results.json` (sha256 `48a95cb185ed...`).
+Status **PASS**. Runs 60 of 60 expected; run status counts {'ok': 60}; results `sim/tb5_eye/results/tb5_eye/results.json` (sha256 `f898d49551fb...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -182,39 +186,66 @@ Status **PASS**. Runs 60 of 60 expected; run status counts {'ok': 60}; results `
 
 ### TB6: CM step, supply ripple, current spikes
 
-Status **NOT_RUN**. 
+Status **FAIL**. Runs 20 of 20 expected; run status counts {'ok': 20}; results `sim/tb6_cm_supply/results/tb6_cm_supply/results.json` (sha256 `9007e9ca350f...`).
 
-- MISSING: testbench spec sim/tb6_cm_supply/tb6_cm_supply.json not written yet
+- LIMIT: added_jitter_ui: 5 of 20 runs outside -inf .. 0.1 (first tt_27c_3v30__case0 = 0.1659702227541856)
+
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| false_toggles | per_run | all | -inf .. 0 | 20 | 0 | PASS |
+| added_jitter_ui | per_run | all | -inf .. 0.1 | 20 | 0.2466 | FAIL |
 
 ### TB7: idle inputs: stable held state, no oscillation, no pulse < 2 ns (v0)
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 105 of 105 expected; run status counts {'ok': 105}; results `sim/tb7_idle/results/tb7_idle/results.json` (sha256 `a241f5dc2eaa...`).
 
-- MISSING: testbench spec sim/tb7_idle/tb7_idle.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| osc_flag | per_run | all | -inf .. 0 | 105 | 0 | PASS |
+| min_pulse_s | per_run | all | 2e-09 .. +inf | 105 | 5e-07 | PASS |
+| held_state | report | all | reported | 105 | - | PASS |
 
 ### TB7_mc: idle inputs under mismatch (N = 100)
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 450 of 450 expected; run status counts {'ok': 450}; results `sim/tb7_idle_mc/results/tb7_idle_mc/results.json` (sha256 `6732b0084db5...`).
 
-- MISSING: testbench spec sim/tb7_idle_mc/tb7_idle_mc.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| osc_flag | per_run | all | -inf .. 0 | 450 | 0 | PASS |
+| min_pulse_s | per_run | all | 2e-09 .. +inf | 450 | 1 | PASS |
 
 ### TB8: EN and supply ramps
 
-Status **NOT_RUN**. 
+Status **FAIL**. Runs 30 of 30 expected; run status counts {'ok': 30}; results `sim/tb8_en/results/tb8_en/results.json` (sha256 `011fdf6828e7...`).
 
-- MISSING: testbench spec sim/tb8_en/tb8_en.json not written yet
+- LIMIT: vout_off_v: 5 of 10 runs outside -inf .. 0.33 (first tt_27c_3v30__case1 = 1.90327508)
+
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| vout_off_v | per_run | case=[0, 1] | -inf .. 0.33 | 10 | 2.01 | FAIL |
+| idd_en0_a | per_run | case=0, temp=[-40, 27] | -inf .. 1e-06 | 4 | 1.83e-08 | PASS |
+| idd_en0_a | per_run | case=0, temp=125 | -inf .. 5e-06 | 1 | 3.11e-08 | PASS |
+| valid_time_s | per_run | case=2 | -inf .. 1e-06 | 5 | 2.958e-08 | PASS |
+| min_pulse_s | per_run | all | 2e-09 .. +inf | 30 | 3.034e-09 | PASS |
 
 ### TB9: input leakage and balance
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 20 of 20 expected; run status counts {'ok': 20}; results `sim/tb9_input/results/tb9_input/results.json` (sha256 `21eded1fe433...`).
 
-- MISSING: testbench spec sim/tb9_input/tb9_input.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| iin_a | per_run | all | -inf .. 2e-05 | 20 | 3.878e-09 | PASS |
+| iin_balance_a | per_run | all | -inf .. 6e-06 | 20 | 1.249e-15 | PASS |
 
 ### TB10: three lanes: skew and crosstalk
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 10 of 10 expected; run status counts {'ok': 10}; results `sim/tb10_lanes/results/tb10_lanes/results.json` (sha256 `d4fb73399a65...`).
 
-- MISSING: testbench spec sim/tb10_lanes/tb10_lanes.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| skew_s | per_run | mc3s=0 | -inf .. 1e-09 | 5 | 4.403e-11 | PASS |
+| xtalk_jitter_ui | per_run | all | -inf .. 0.05 | 10 | 0.0008148 | PASS |
+| skew_3sigma_s | per_run | mc3s=1 | -inf .. 5e-10 | 5 | 2.155e-10 | PASS |
 
 ### TB11: bias loop stability (only if a constant-gm loop exists)
 
@@ -224,7 +255,7 @@ Status **NOT_APPLICABLE**.
 
 ### TB12: package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners
 
-Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `sim/tb12_pkg/results/tb12_pkg/results.json` (sha256 `e193df32c8d5...`).
+Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `sim/tb12_pkg/results/tb12_pkg/results.json` (sha256 `04961fdd89e6...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -267,4 +298,4 @@ Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `
 
 ## Manifest
 
-Wall time 1371 s; sizes.spice sha256 `96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6`; LUT hash `58dac49d5f90...`.
+Wall time 1284 s; sizes.spice sha256 `96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6`; LUT hash `58dac49d5f90...`.

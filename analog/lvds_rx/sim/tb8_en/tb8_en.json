@@ -1,0 +1,14 @@
+{
+ "name": "tb8_en",
+ "description": "TB8: EN 0 -> 1 -> 0, EN = 0 supply current, VDD held below 2.0 V, supply ramps of 1 us and 100 us, EN rising mid-ramp, three lanes on one bias (two copies: inputs HIGH / LOW)",
+ "deck": "tb8_en.spice",
+ "corners": "full45",
+ "grid": {"case": [0, 1, 2, 3, 4, 5]},
+ "prep": "hooks.py:prep",
+ "post": "hooks.py:post",
+ "limits": {
+  "min_pulse_s": {"min": 2e-9, "scale": 1e9, "unit": "ns"}
+ },
+ "timeout": 1800,
+ "jobs": 6
+}

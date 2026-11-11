@@ -30,8 +30,8 @@
     "dvtrip_dvdd": 1.2765830059713323e-13
    },
    "errors": [],
-   "elapsed": 16.301,
-   "cached": true,
+   "elapsed": 15.644,
+   "cached": false,
    "hash": "fc6d45bae4a38a1351b44c0841290cb312fe1e72b9c7aab5bc64048d7084e80e",
    "run_dir": "work/tt_27c_3v30__vic0.05_sweep0"
   },
@@ -63,8 +63,8 @@
     "dvtrip_dvdd": 1.2765830059713323e-13
    },
    "errors": [],
-   "elapsed": 16.859,
-   "cached": true,
+   "elapsed": 16.404,
+   "cached": false,
    "hash": "ccf207d32196a5d2994fd300a9607ec566a75615235a1a38d1d9ae1d59a231e5",
    "run_dir": "work/tt_27c_3v30__vic0.05_sweep1"
   },
@@ -96,8 +96,8 @@
     "dvtrip_dvdd": 6.402567365171308e-10
    },
    "errors": [],
-   "elapsed": 15.168,
-   "cached": true,
+   "elapsed": 13.841,
+   "cached": false,
    "hash": "3291ab048b984e8cbaa4d01665e8cf86edeb23615330faa371562c223c319dc8",
    "run_dir": "work/tt_27c_3v30__vic1.2_sweep0"
   },
@@ -129,8 +129,8 @@
     "dvtrip_dvdd": 1.27675647831893e-13
    },
    "errors": [],
-   "elapsed": 15.742,
-   "cached": true,
+   "elapsed": 13.081,
+   "cached": false,
    "hash": "47ebb606115cfb42c1a3c5dad5aba2ef41876aa9c99b696ae1b1464e7c4f1914",
    "run_dir": "work/tt_27c_3v30__vic1.2_sweep1"
   },
@@ -162,8 +162,8 @@
     "dvtrip_dvdd": 1.27675647831893e-13
    },
    "errors": [],
-   "elapsed": 16.164,
-   "cached": true,
+   "elapsed": 14.462,
+   "cached": false,
    "hash": "ee8f665d2669c8cea24bd6a84fa2996ef673744e11254d3919bc448fb3697c1c",
    "run_dir": "work/tt_27c_3v30__vic2.35_sweep0"
   },
@@ -195,8 +195,8 @@
     "dvtrip_dvdd": 1.27675647831893e-13
    },
    "errors": [],
-   "elapsed": 15.825,
-   "cached": true,
+   "elapsed": 13.893,
+   "cached": false,
    "hash": "4d55b7fc216d43b4136639e266327ebd654f7e62596e0309a35cb1779abae4e0",
    "run_dir": "work/tt_27c_3v30__vic2.35_sweep1"
   },
@@ -228,8 +228,8 @@
     "dvtrip_dvdd": 9.569312934646727e-14
    },
    "errors": [],
-   "elapsed": 15.71,
-   "cached": true,
+   "elapsed": 12.894,
+   "cached": false,
    "hash": "ae696b6c23790ee380c6caeb48c40dd25b2ac45136ab4be5f47acdf847277463",
    "run_dir": "work/ss_125c_3v00__vic0.05_sweep0"
   },
@@ -261,8 +261,8 @@
     "dvtrip_dvdd": -2.218081042911398e-12
    },
    "errors": [],
-   "elapsed": 15.414,
-   "cached": true,
+   "elapsed": 14.208,
+   "cached": false,
    "hash": "eddb3fc854c12b75638e62cfa7639474cdd7b7f96bab2c5631ae47035381aa5d",
    "run_dir": "work/ss_125c_3v00__vic0.05_sweep1"
   },
@@ -294,8 +294,8 @@
     "dvtrip_dvdd": 9.568734693488068e-14
    },
    "errors": [],
-   "elapsed": 15.682,
-   "cached": true,
+   "elapsed": 14.449,
+   "cached": false,
    "hash": "949a7f95ca4b35d378f3bccd29848de15d40e4db43837aa131606eee27eee6e4",
    "run_dir": "work/ss_125c_3v00__vic1.2_sweep0"
   },
@@ -327,8 +327,8 @@
     "dvtrip_dvdd": 9.568734693488068e-14
    },
    "errors": [],
-   "elapsed": 15.58,
-   "cached": true,
+   "elapsed": 14.632,
+   "cached": false,
    "hash": "e9e800dc9e062d7963432ae860607639f598d1f8bba11dd75e744a92a16cadb0",
    "run_dir": "work/ss_125c_3v00__vic1.2_sweep1"
   },
@@ -360,8 +360,8 @@
     "dvtrip_dvdd": -2.857378685513131e-12
    },
    "errors": [],
-   "elapsed": 15.773,
-   "cached": true,
+   "elapsed": 14.154,
+   "cached": false,
    "hash": "8d8cfdacd0cf1df2b96076ef084be6859d3a4e48c8d31eef44365ce20ae71714",
    "run_dir": "work/ss_125c_3v00__vic2.35_sweep0"
   },
@@ -393,8 +393,8 @@
     "dvtrip_dvdd": 9.56757821117075e-14
    },
    "errors": [],
-   "elapsed": 16.916,
-   "cached": true,
+   "elapsed": 14.094,
+   "cached": false,
    "hash": "0eae4cc85e5de4c506e5ff5cddb1e87094dace3b2b4c07c82e4fee82e64013b2",
    "run_dir": "work/ss_125c_3v00__vic2.35_sweep1"
   },
@@ -426,8 +426,8 @@
     "dvtrip_dvdd": -1.0821205043143323e-13
    },
    "errors": [],
-   "elapsed": 17.228,
-   "cached": true,
+   "elapsed": 14.896,
+   "cached": false,
    "hash": "5320244337f866b6efa42138209687a73a45abe66561c2f92551c0588ab21dcb",
    "run_dir": "work/ff_m40c_3v60__vic0.05_sweep0"
   },
@@ -459,8 +459,8 @@
     "dvtrip_dvdd": -1.0821205043143323e-13
    },
    "errors": [],
-   "elapsed": 17.975,
-   "cached": true,
+   "elapsed": 14.47,
+   "cached": false,
    "hash": "c3d76fd732d2c243eb0103182fb38808e6656344cbb769025fdab562155fe080",
    "run_dir": "work/ff_m40c_3v60__vic0.05_sweep1"
   },
@@ -492,8 +492,8 @@
     "dvtrip_dvdd": -1.0831613383999183e-13
    },
    "errors": [],
-   "elapsed": 19.599,
-   "cached": true,
+   "elapsed": 16.099,
+   "cached": false,
    "hash": "35a5a0b19b8a1d621e35a3e320bcf91a82eb6476713279e0df3de990a4ec4a78",
    "run_dir": "work/ff_m40c_3v60__vic1.2_sweep0"
   },
@@ -525,8 +525,8 @@
     "dvtrip_dvdd": -1.0832769866316502e-13
    },
    "errors": [],
-   "elapsed": 19.768,
-   "cached": true,
+   "elapsed": 17.555,
+   "cached": false,
    "hash": "1e156b2c8047f09c45afa14ff1edcb69d4d81857ce540f080473f10ce041a52b",
    "run_dir": "work/ff_m40c_3v60__vic1.2_sweep1"
   },
@@ -558,8 +558,8 @@
     "dvtrip_dvdd": 3.144822365482488e-13
    },
    "errors": [],
-   "elapsed": 17.066,
-   "cached": true,
+   "elapsed": 14.498,
+   "cached": false,
    "hash": "52cc5b734281eb659f9c9c61d2fea76c403297c3b831ec7f155c9daf814f94c8",
    "run_dir": "work/ff_m40c_3v60__vic2.35_sweep0"
   },
@@ -591,8 +591,8 @@
     "dvtrip_dvdd": -1.0823518007777959e-13
    },
    "errors": [],
-   "elapsed": 17.036,
-   "cached": true,
+   "elapsed": 14.214,
+   "cached": false,
    "hash": "e1ca8bcebf2aafd2a30a65942edea6f97a25aef78fb38b034e20600802b046df",
    "run_dir": "work/ff_m40c_3v60__vic2.35_sweep1"
   },
@@ -624,8 +624,8 @@
     "dvtrip_dvdd": -1.9341010274824083e-13
    },
    "errors": [],
-   "elapsed": 18.309,
-   "cached": true,
+   "elapsed": 16.303,
+   "cached": false,
    "hash": "b86630ceaa61f14745e605a9475c91b8d654e53016ea6591416eb049e77c660b",
    "run_dir": "work/fs_27c_3v30__vic0.05_sweep0"
   },
@@ -657,8 +657,8 @@
     "dvtrip_dvdd": 2.2119438225498556e-10
    },
    "errors": [],
-   "elapsed": 18.55,
-   "cached": true,
+   "elapsed": 16.95,
+   "cached": false,
    "hash": "eb83e72b4a001abd3bfaee1d4b502036e6c1aa2459551b0290624a58728b9d99",
    "run_dir": "work/fs_27c_3v30__vic0.05_sweep1"
   },
@@ -690,8 +690,8 @@
     "dvtrip_dvdd": -1.9334071380920176e-13
    },
    "errors": [],
-   "elapsed": 16.224,
-   "cached": true,
+   "elapsed": 15.248,
+   "cached": false,
    "hash": "f8d658e38711546912a100ac6deb2e32a63d947676973af0f7bd3824bde46fc5",
    "run_dir": "work/fs_27c_3v30__vic1.2_sweep0"
   },
@@ -723,8 +723,8 @@
     "dvtrip_dvdd": -1.9334071380920176e-13
    },
    "errors": [],
-   "elapsed": 16.846,
-   "cached": true,
+   "elapsed": 14.949,
+   "cached": false,
    "hash": "680dd533135c2dcf00b538b3ddb2bd11d65553156576858afac162b770efbacd",
    "run_dir": "work/fs_27c_3v30__vic1.2_sweep1"
   },
@@ -756,8 +756,8 @@
     "dvtrip_dvdd": -1.9335227863237492e-13
    },
    "errors": [],
-   "elapsed": 15.712,
-   "cached": true,
+   "elapsed": 14.743,
+   "cached": false,
    "hash": "80db26a438b4736e8e3591bec30d995bc2a6074b2bf4b18842dd454fc599bb59",
    "run_dir": "work/fs_27c_3v30__vic2.35_sweep0"
   },
@@ -789,8 +789,8 @@
     "dvtrip_dvdd": -1.9335227863237492e-13
    },
    "errors": [],
-   "elapsed": 15.819,
-   "cached": true,
+   "elapsed": 14.748,
+   "cached": false,
    "hash": "d030c34d8b6cd9151d63f989435a153e8eab812373eeccb90e55cafeff2aed9c",
    "run_dir": "work/fs_27c_3v30__vic2.35_sweep1"
   },
@@ -822,8 +822,8 @@
     "dvtrip_dvdd": -4.954726154822916e-10
    },
    "errors": [],
-   "elapsed": 33.787,
-   "cached": true,
+   "elapsed": 33.665,
+   "cached": false,
    "hash": "7c35d9b6e03fdf2c598f26b90f8ca4a1e7c8d693bd6733cd15a3ea6006373846",
    "run_dir": "work/sf_27c_3v30__vic0.05_sweep0"
   },
@@ -855,8 +855,8 @@
     "dvtrip_dvdd": 8.033909186059656e-13
    },
    "errors": [],
-   "elapsed": 38.158,
-   "cached": true,
+   "elapsed": 37.623,
+   "cached": false,
    "hash": "8de7afdf267550134c3c0b6b5187b4f411228349a3968b9d088dee6ad4520429",
    "run_dir": "work/sf_27c_3v30__vic0.05_sweep1"
   },
@@ -888,8 +888,8 @@
     "dvtrip_dvdd": 2.999799482890827e-13
    },
    "errors": [],
-   "elapsed": 30.983,
-   "cached": true,
+   "elapsed": 31.503,
+   "cached": false,
    "hash": "f23d36ca5867e7d56f28e0d1126f33a46eb8a90c7ad2e415d34da6a09b904780",
    "run_dir": "work/sf_27c_3v30__vic1.2_sweep0"
   },
@@ -921,8 +921,8 @@
     "dvtrip_dvdd": -1.0815422631556734e-13
    },
    "errors": [],
-   "elapsed": 33.332,
-   "cached": true,
+   "elapsed": 32.689,
+   "cached": false,
    "hash": "994e24ffe10ee12f47d9da369a345a9e162d5b47b82c5b3c366c9dafa5a6f4d8",
    "run_dir": "work/sf_27c_3v30__vic1.2_sweep1"
   },
@@ -954,8 +954,8 @@
     "dvtrip_dvdd": -1.0811374943446121e-13
    },
    "errors": [],
-   "elapsed": 32.604,
-   "cached": true,
+   "elapsed": 32.001,
+   "cached": false,
    "hash": "16bb0e6dad69136ed0e008c1d2cbfc8f4c4d3eaa58e6ba39f8ee45eab789d359",
    "run_dir": "work/sf_27c_3v30__vic2.35_sweep0"
   },
@@ -987,8 +987,8 @@
     "dvtrip_dvdd": -1.0811374943446121e-13
    },
    "errors": [],
-   "elapsed": 32.543,
-   "cached": true,
+   "elapsed": 31.452,
+   "cached": false,
    "hash": "412d811c5dbd0a58b4d081d5b0aa7d46a9dde298b1f75351578792683bb0496b",
    "run_dir": "work/sf_27c_3v30__vic2.35_sweep1"
   }

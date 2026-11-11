@@ -1,0 +1,14 @@
+{
+ "name": "tb9_input",
+ "description": "TB9: TIA/EIA-644-A 4.2.1 input current (one pin swept 0.05 .. 2.4 V, the other at 1.25 V) and balance (both pins at the same level) of lane 0 incl. the primary ESD pad, powered with EN = 1",
+ "deck": "tb9_input.spice",
+ "corners": "full45",
+ "grid": {"vin": [0.05, 1.2, 2.35, 2.4]},
+ "post": "hooks.py:post",
+ "limits": {
+  "iin_a": {"max": 20e-6, "scale": 1e6, "unit": "uA"},
+  "iin_balance_a": {"max": 6e-6, "scale": 1e6, "unit": "uA"}
+ },
+ "timeout": 300,
+ "jobs": 6
+}

@@ -1,0 +1,16 @@
+{
+ "name": "tb7_idle",
+ "description": "TB7: idle inputs on all three lanes: open (driver removed, 1 Mohm to the common mode), terminated (VID = 0, 50 ohm source + 100 ohm termination), shorted (P = N), 7 VIC; terminated runs also drift the source +-100 mV slowly. v0: no failsafe guarantee, the held state is reported",
+ "deck": "tb7_idle.spice",
+ "corners": "full45",
+ "grid": {"vic": [0.05, 0.3, 0.6, 1.2, 1.8, 2.1, 2.35], "term": [0, 1, 2]},
+ "vars": {"drift": 1},
+ "prep": "hooks.py:prep",
+ "post": "hooks.py:post",
+ "limits": {
+  "osc_flag": {"max": 0},
+  "min_pulse_s": {"min": 2e-9, "scale": 1e9, "unit": "ns"}
+ },
+ "timeout": 600,
+ "jobs": 6
+}

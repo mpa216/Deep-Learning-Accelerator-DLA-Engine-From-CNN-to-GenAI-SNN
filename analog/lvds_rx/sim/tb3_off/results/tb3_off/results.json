@@ -22,8 +22,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.999,
-   "cached": true,
+   "elapsed": 2.783,
+   "cached": false,
    "hash": "b6d5dbd1c304d6f8630d7d3113f2184486a7c470dc16663ae3ec1aae32c27d7c",
    "run_dir": "work/tt_27c_3v30__vic0.05__s452483223"
   },
@@ -47,8 +47,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.991,
-   "cached": true,
+   "elapsed": 2.587,
+   "cached": false,
    "hash": "1e256ea836cb1bb15be6ad4aa25a115cf29dd4f6e7e4a9f268050b85843149d1",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1695653105"
   },
@@ -72,8 +72,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.784,
-   "cached": true,
+   "elapsed": 2.594,
+   "cached": false,
    "hash": "5ddc1158a2509fc57a646d8168e37e1bd64646194b5fe5e8e40f9c874504c56e",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1085084613"
   },
@@ -97,8 +97,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.04,
-   "cached": true,
+   "elapsed": 3.086,
+   "cached": false,
    "hash": "1981c2f860f2bd075492b05db8018588fabc88a689de9f72af8f60dc2ff9e482",
    "run_dir": "work/tt_27c_3v30__vic0.05__s441224510"
   },
@@ -122,8 +122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.788,
-   "cached": true,
+   "elapsed": 3.236,
+   "cached": false,
    "hash": "b5f6cfe60e604b7d17a56006d99a829d8784db15e266f0be7c013b4a7d893830",
    "run_dir": "work/tt_27c_3v30__vic0.05__s821422349"
   },
@@ -147,8 +147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.987,
-   "cached": true,
+   "elapsed": 2.935,
+   "cached": false,
    "hash": "4b54ebbd07c4a8926ce3f1dce0772abe8c5aa1005bdf831a496ce5555fbbefe1",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1758734097"
   },
@@ -172,8 +172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.179,
-   "cached": true,
+   "elapsed": 2.591,
+   "cached": false,
    "hash": "94f61454498b10ae5aaadc28a88f76f0422ec2adea62ce61ea7696c11ba87393",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1576893678"
   },
@@ -197,8 +197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.233,
-   "cached": true,
+   "elapsed": 3.087,
+   "cached": false,
    "hash": "d42810810ad7252058d4e56a654226e9aca2a19670ed6677806633d1e79a1cd9",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1902659721"
   },
@@ -222,8 +222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.487,
-   "cached": true,
+   "elapsed": 3.04,
+   "cached": false,
    "hash": "7d9d7efee297b5109183fe17e943a52743512953a2e4fd0632bf5266af57c6f3",
    "run_dir": "work/tt_27c_3v30__vic0.05__s536475717"
   },
@@ -247,8 +247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.731,
-   "cached": true,
+   "elapsed": 3.086,
+   "cached": false,
    "hash": "d2dc48b4e1f96f566b1fba05dbf322ddd52d54cbf5113ce4f4430a90d740c7b9",
    "run_dir": "work/tt_27c_3v30__vic0.05__s2055609293"
   },
@@ -272,8 +272,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.534,
-   "cached": true,
+   "elapsed": 2.848,
+   "cached": false,
    "hash": "9d10b945f8b424e354ba1824b52b245229548e1b70a3aa751d5a60ac7b011c19",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1297200436"
   },
@@ -297,8 +297,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.782,
-   "cached": true,
+   "elapsed": 2.986,
+   "cached": false,
    "hash": "7c47c072e822ca766c1b69e319ddec27ab870748067e5c2c82c7ae4f4515f770",
    "run_dir": "work/tt_27c_3v30__vic0.05__s2099741074"
   },
@@ -322,8 +322,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.432,
-   "cached": true,
+   "elapsed": 2.984,
+   "cached": false,
    "hash": "6095158ff2c5d40aa56ab6ece81cfb5bb858f287aae13b00667b746818e9e19e",
    "run_dir": "work/tt_27c_3v30__vic0.05__s248750689"
   },
@@ -347,8 +347,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.711,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "6e91ffd441349735d672c2b3c612cfc677ebe735535a74cbd250e228cf109c4f",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1900119910"
   },
@@ -372,8 +372,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.041,
-   "cached": true,
+   "elapsed": 2.894,
+   "cached": false,
    "hash": "15f2a6e96d948d16db555ba7b977d630dbfcde57b605cb53e72366ca38ce7403",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1632811357"
   },
@@ -397,8 +397,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.445,
-   "cached": true,
+   "elapsed": 3.189,
+   "cached": false,
    "hash": "57f5b61a8dcda3136057f2276ba9345169ab110b42d520d1e977345db1400d3f",
    "run_dir": "work/tt_27c_3v30__vic0.05__s522860322"
   },
@@ -422,8 +422,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.743,
-   "cached": true,
+   "elapsed": 2.89,
+   "cached": false,
    "hash": "f181a96de2ecb1eefda0f14d4fb83d5c2b85dd82e5754521180b2ff383281878",
    "run_dir": "work/tt_27c_3v30__vic0.05__s934946355"
   },
@@ -447,8 +447,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.591,
-   "cached": true,
+   "elapsed": 2.792,
+   "cached": false,
    "hash": "aec7f2fe1f9d019fcd96fa0a372004124c814452d070530b0fdf8921b2d53edc",
    "run_dir": "work/tt_27c_3v30__vic0.05__s760461626"
   },
@@ -472,8 +472,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.441,
-   "cached": true,
+   "elapsed": 2.637,
+   "cached": false,
    "hash": "7e7e8b1be97e555d72459558926c8ae14b1c849670eab68fe96d93b47dd41280",
    "run_dir": "work/tt_27c_3v30__vic0.05__s377745768"
   },
@@ -497,8 +497,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.583,
-   "cached": true,
+   "elapsed": 2.943,
+   "cached": false,
    "hash": "5c3e8efe9939ed258b2c68d004364047f7c2ffd82c1d3e22550be1a38077079e",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1704488278"
   },
@@ -522,8 +522,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.832,
-   "cached": true,
+   "elapsed": 2.788,
+   "cached": false,
    "hash": "5461ba8c057b9e00ef722cc0e8f869ad7222614612674ea6a91bd76d2bc2a047",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1018508522"
   },
@@ -547,8 +547,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.34,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "84aeafdea7aa04e519cb0ad841803acf723866690181bed87bea940cb368d207",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1165914485"
   },
@@ -572,8 +572,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.492,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "59cf4a890a4d0af21779cf2fe32faaf98dc06a904adcf045605518a03878ed2b",
    "run_dir": "work/tt_27c_3v30__vic0.05__s445637946"
   },
@@ -597,8 +597,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.596,
-   "cached": true,
+   "elapsed": 2.838,
+   "cached": false,
    "hash": "844ade318c3f03c37b319e5e348f28d54471f1964fba09175f88a69ee47d46d9",
    "run_dir": "work/tt_27c_3v30__vic0.05__s2073008015"
   },
@@ -622,8 +622,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.534,
-   "cached": true,
+   "elapsed": 3.04,
+   "cached": false,
    "hash": "f145b4b1cdcd098b1e0489cfd4aed9e1159b9e188827abb84ba53fa6df10acf9",
    "run_dir": "work/tt_27c_3v30__vic0.05__s497066084"
   },
@@ -647,8 +647,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.788,
-   "cached": true,
+   "elapsed": 2.588,
+   "cached": false,
    "hash": "d9025a35faba97abde172a881f8b75a802fe54cc2669099d6210cb926fbd657b",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1060142202"
   },
@@ -672,8 +672,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.835,
-   "cached": true,
+   "elapsed": 2.936,
+   "cached": false,
    "hash": "e639b2da572078a4c9cad37cd565e4912eec6024fa8212ba47b1133c350f76b6",
    "run_dir": "work/tt_27c_3v30__vic0.05__s925444075"
   },
@@ -697,8 +697,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.738,
-   "cached": true,
+   "elapsed": 3.193,
+   "cached": false,
    "hash": "1431cdc382496a97852cda9f6d053111ab5b5fb783e9746b11bbf05e128e72ba",
    "run_dir": "work/tt_27c_3v30__vic0.05__s939365680"
   },
@@ -722,8 +722,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.799,
-   "cached": true,
+   "elapsed": 2.586,
+   "cached": false,
    "hash": "30ebce2e2e9880fefb8f016ab29fdaded0220e9de2a734b414e858b032c35673",
    "run_dir": "work/tt_27c_3v30__vic0.05__s54427389"
   },
@@ -747,8 +747,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.99,
-   "cached": true,
+   "elapsed": 3.137,
+   "cached": false,
    "hash": "99cc5e74e2e4e44a5e28a4c4a61ca16ebeb9b3416b5fc486af0c26d1dd17f020",
    "run_dir": "work/tt_27c_3v30__vic0.05__s1115975472"
   },
@@ -772,8 +772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.792,
-   "cached": true,
+   "elapsed": 2.635,
+   "cached": false,
    "hash": "f11af947f59b761f27b703aebc2ed5116fa8f929c3bad0b675059a8f09f8dadb",
    "run_dir": "work/tt_27c_3v30__vic1.2__s452483223"
   },
@@ -797,8 +797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.688,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "2cebf51125903d599fc879a42c551bf407c60ed486261b990dd5f7d51f949cc0",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1695653105"
   },
@@ -822,8 +822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 1.981,
-   "cached": true,
+   "elapsed": 2.593,
+   "cached": false,
    "hash": "e98e493f05cea8b57a4166a7d59172516c1ddbde7dbcc440ca7f56728bf2df2e",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1085084613"
   },
@@ -847,8 +847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.837,
-   "cached": true,
+   "elapsed": 2.737,
+   "cached": false,
    "hash": "fefb8b13a73422b1a7a3d08db41dd1260f80533079d6a8af4e9b83ba7462b6dc",
    "run_dir": "work/tt_27c_3v30__vic1.2__s441224510"
   },
@@ -872,8 +872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.229,
-   "cached": true,
+   "elapsed": 3.285,
+   "cached": false,
    "hash": "8e3eeb77897658feece1ab900c35fd2ee1679b53ccea8273d874c87e01e2d458",
    "run_dir": "work/tt_27c_3v30__vic1.2__s821422349"
   },
@@ -897,8 +897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.831,
-   "cached": true,
+   "elapsed": 3.149,
+   "cached": false,
    "hash": "c71f2e2c09e58b0d20cac207817f4047b792e42471f2e0d414d1c2829892aac0",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1758734097"
   },
@@ -922,8 +922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.483,
-   "cached": true,
+   "elapsed": 2.886,
+   "cached": false,
    "hash": "f2dca6888ec7314cba24b76aa83a6c1c4b30d5e4aa6c53d7fdc72320c9208cd4",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1576893678"
   },
@@ -947,8 +947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.185,
-   "cached": true,
+   "elapsed": 2.842,
+   "cached": false,
    "hash": "169ddadabd747991f08112222f83194a5a459e6376f7796b6b1d8eaf8eb3fcec",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1902659721"
   },
@@ -972,8 +972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.781,
-   "cached": true,
+   "elapsed": 2.739,
+   "cached": false,
    "hash": "dd88495dc4035ffe137ff75b078e4ff5e9cbf0e49bded5065fae32737f47e1df",
    "run_dir": "work/tt_27c_3v30__vic1.2__s536475717"
   },
@@ -997,8 +997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.687,
-   "cached": true,
+   "elapsed": 2.785,
+   "cached": false,
    "hash": "21ab38d179d909b30884795d9cbc9f0d8911e3c6e7ec6f5fe9a7b46fd18b03ed",
    "run_dir": "work/tt_27c_3v30__vic1.2__s2055609293"
   },
@@ -1022,8 +1022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.733,
-   "cached": true,
+   "elapsed": 2.987,
+   "cached": false,
    "hash": "600e55b4da5eb0fbaa585fe454b4051e7d127b07cc56ce0ee93512a280f68074",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1297200436"
   },
@@ -1047,8 +1047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.887,
-   "cached": true,
+   "elapsed": 2.739,
+   "cached": false,
    "hash": "e63987165ff76d9b9c455d3341c637bbe69a71176d6f3b26702a5d398f656474",
    "run_dir": "work/tt_27c_3v30__vic1.2__s2099741074"
   },
@@ -1072,8 +1072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.184,
-   "cached": true,
+   "elapsed": 2.889,
+   "cached": false,
    "hash": "acbc07900743b9b344917604ebd26d5ffdd0fc62bea3dbe01dd048d2afc7371c",
    "run_dir": "work/tt_27c_3v30__vic1.2__s248750689"
   },
@@ -1097,8 +1097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.236,
-   "cached": true,
+   "elapsed": 2.987,
+   "cached": false,
    "hash": "0b20bcad1b944a357260ab9a17d2c53e0e6a180e02bf0cab3ecc52145e4389c3",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1900119910"
   },
@@ -1122,8 +1122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.783,
-   "cached": true,
+   "elapsed": 2.789,
+   "cached": false,
    "hash": "b0a190a86d225a6cb6b8571abb2c5a725b4ff19d58a7daf7d5d0e49320789eba",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1632811357"
   },
@@ -1147,8 +1147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.835,
-   "cached": true,
+   "elapsed": 2.94,
+   "cached": false,
    "hash": "57626d204fc8252da2d1b2c2f275c3189d942f5384c8a04567dbd5717c8e661b",
    "run_dir": "work/tt_27c_3v30__vic1.2__s522860322"
   },
@@ -1172,8 +1172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.781,
-   "cached": true,
+   "elapsed": 3.041,
+   "cached": false,
    "hash": "d0e903ef10dc418c6ccc36118519d582faa41089298f79375c63c6a11e0c43b3",
    "run_dir": "work/tt_27c_3v30__vic1.2__s934946355"
   },
@@ -1197,8 +1197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.537,
-   "cached": true,
+   "elapsed": 2.939,
+   "cached": false,
    "hash": "eb14828d5f3f98c8ba0c94e0f70ce0b9b455182bb03702f4f607586c294e64ec",
    "run_dir": "work/tt_27c_3v30__vic1.2__s760461626"
   },
@@ -1222,8 +1222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.884,
-   "cached": true,
+   "elapsed": 3.338,
+   "cached": false,
    "hash": "c31e2d455c3dd6db7076daf949e111e2b661333053c069d8b51388bf5f3c68c9",
    "run_dir": "work/tt_27c_3v30__vic1.2__s377745768"
   },
@@ -1247,8 +1247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.492,
-   "cached": true,
+   "elapsed": 2.945,
+   "cached": false,
    "hash": "1ecf1464d56c88ce7bf433b8952eb0eff7167b2106dd673387889da7ea2cd039",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1704488278"
   },
@@ -1272,8 +1272,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.585,
-   "cached": true,
+   "elapsed": 2.789,
+   "cached": false,
    "hash": "afb291166e19889cbb1e838c05cf6a55155902831e5f1d7979eb0867d81788d0",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1018508522"
   },
@@ -1297,8 +1297,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.581,
-   "cached": true,
+   "elapsed": 2.69,
+   "cached": false,
    "hash": "f8c10def52fefcd9df97c57a8f909159c9ad5b4db62c650c6290cbd93df2534a",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1165914485"
   },
@@ -1322,8 +1322,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.789,
-   "cached": true,
+   "elapsed": 2.834,
+   "cached": false,
    "hash": "b5032a83cd8f7d6adce5df135f7cbe364db9520489fd5921e396436cf1af206d",
    "run_dir": "work/tt_27c_3v30__vic1.2__s445637946"
   },
@@ -1347,8 +1347,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.685,
-   "cached": true,
+   "elapsed": 3.088,
+   "cached": false,
    "hash": "d485983db0dec97b15365b94e5fb3b8ee1c71b47de6cc65fbff5c563c995dfb8",
    "run_dir": "work/tt_27c_3v30__vic1.2__s2073008015"
   },
@@ -1372,8 +1372,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.236,
-   "cached": true,
+   "elapsed": 3.137,
+   "cached": false,
    "hash": "3100565aeba38e617d40576976447e88f8f44d157c928f4704c4ce5c4c6b3e04",
    "run_dir": "work/tt_27c_3v30__vic1.2__s497066084"
   },
@@ -1397,8 +1397,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.733,
-   "cached": true,
+   "elapsed": 2.886,
+   "cached": false,
    "hash": "7c08a5a5ecd582da2db6ac6d3ff7f29f4231a2ce420f7fcf4e2dfaed0443b0c2",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1060142202"
   },
@@ -1422,8 +1422,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.783,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "e80adbf3791efc559170489fc613d8ad28eb00173b7fb1c2b32284928084df93",
    "run_dir": "work/tt_27c_3v30__vic1.2__s925444075"
   },
@@ -1447,8 +1447,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.688,
-   "cached": true,
+   "elapsed": 3.222,
+   "cached": false,
    "hash": "df1bcf7850c37ac3f549b1f974e7756d9919bf79d698df401197826b061ba639",
    "run_dir": "work/tt_27c_3v30__vic1.2__s939365680"
   },
@@ -1472,8 +1472,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.89,
-   "cached": true,
+   "elapsed": 2.844,
+   "cached": false,
    "hash": "3743b6891b008462c09f0532ee5765b3d3bc7e10ea435536300e8d91417a5f19",
    "run_dir": "work/tt_27c_3v30__vic1.2__s54427389"
   },
@@ -1497,8 +1497,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.096,
-   "cached": true,
+   "elapsed": 2.799,
+   "cached": false,
    "hash": "19864a24a1bd168d46cf4915a6f0b92ea71ecc42b4447c648b15c9d7e696c4ad",
    "run_dir": "work/tt_27c_3v30__vic1.2__s1115975472"
   },
@@ -1522,8 +1522,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.84,
-   "cached": true,
+   "elapsed": 2.995,
+   "cached": false,
    "hash": "50e2a289e5c960a12bbee0363070b94080fccaf51886b78b631d110abc2ec0b6",
    "run_dir": "work/tt_27c_3v30__vic2.35__s452483223"
   },
@@ -1547,8 +1547,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.111,
-   "cached": true,
+   "elapsed": 2.647,
+   "cached": false,
    "hash": "0ca6ab7fcaf9aebd01523ffb57e51800ca8efaacfcb66c5e136e1be6e1640929",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1695653105"
   },
@@ -1572,8 +1572,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.044,
-   "cached": true,
+   "elapsed": 3.091,
+   "cached": false,
    "hash": "9bb963263d65795bef8665a230d8866aed953b452f753f2930ad027fffb9a4f9",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1085084613"
   },
@@ -1597,8 +1597,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.173,
-   "cached": true,
+   "elapsed": 3.142,
+   "cached": false,
    "hash": "78eb0a8374c638af29a8647536391a7948decc12c45f7a671c964976c248a11a",
    "run_dir": "work/tt_27c_3v30__vic2.35__s441224510"
   },
@@ -1622,8 +1622,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.255,
-   "cached": true,
+   "elapsed": 3.086,
+   "cached": false,
    "hash": "11cf8da9baffb8146ea61b8efbe62ce73f899c726c84b762c16fb37f47aba86e",
    "run_dir": "work/tt_27c_3v30__vic2.35__s821422349"
   },
@@ -1647,8 +1647,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.117,
-   "cached": true,
+   "elapsed": 3.088,
+   "cached": false,
    "hash": "24a09de448de78673c5607e8bdabecdbdf40c0e44a28829596f015b4bbc3e0b5",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1758734097"
   },
@@ -1672,8 +1672,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.078,
-   "cached": true,
+   "elapsed": 2.89,
+   "cached": false,
    "hash": "37f624f6083eb693ee4532895c6dc525ce4979076de2eac628b245ac91c2b48e",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1576893678"
   },
@@ -1697,8 +1697,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.111,
-   "cached": true,
+   "elapsed": 2.74,
+   "cached": false,
    "hash": "607ade663c318ec4df345eb19a381b40803f5700c03a1bdec24210f86606a05a",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1902659721"
   },
@@ -1722,8 +1722,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.431,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "97702438c40e3245f902008cc68568f74ab09d233a3806c27633386febed5167",
    "run_dir": "work/tt_27c_3v30__vic2.35__s536475717"
   },
@@ -1747,8 +1747,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.507,
-   "cached": true,
+   "elapsed": 2.795,
+   "cached": false,
    "hash": "bc94180f8eccd4995d2969fe1f8f807b5920292873d817cd0c1eb972876aaff4",
    "run_dir": "work/tt_27c_3v30__vic2.35__s2055609293"
   },
@@ -1772,8 +1772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.633,
-   "cached": true,
+   "elapsed": 2.94,
+   "cached": false,
    "hash": "58fd09597087dc37671445d9bef806a2bcb98e622404481648f578fb086679dd",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1297200436"
   },
@@ -1797,8 +1797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.455,
-   "cached": true,
+   "elapsed": 2.953,
+   "cached": false,
    "hash": "699397c61f616723017ddd2297faa289ec3f3094685d7e4f22368ce7458feac9",
    "run_dir": "work/tt_27c_3v30__vic2.35__s2099741074"
   },
@@ -1822,8 +1822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.338,
-   "cached": true,
+   "elapsed": 2.786,
+   "cached": false,
    "hash": "651f4e224cb0263650f66f64cb59571e9fe1e0e5a7eab2821e089f3b539dadc1",
    "run_dir": "work/tt_27c_3v30__vic2.35__s248750689"
   },
@@ -1847,8 +1847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.595,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "ee33dc4aa6eabab783e0ea5cf0cf7641cadfee8e057003d66c0a8f3a6269d2a3",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1900119910"
   },
@@ -1872,8 +1872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.4,
-   "cached": true,
+   "elapsed": 2.885,
+   "cached": false,
    "hash": "850b3ee451aa4102b996781244e916551e06ce5b3117dfdb518e91d2281d487a",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1632811357"
   },
@@ -1897,8 +1897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.538,
-   "cached": true,
+   "elapsed": 2.688,
+   "cached": false,
    "hash": "f024cd7eed22b3f580570694abebbefe3d293ce84590c5089571f3980585e83d",
    "run_dir": "work/tt_27c_3v30__vic2.35__s522860322"
   },
@@ -1922,8 +1922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.619,
-   "cached": true,
+   "elapsed": 2.739,
+   "cached": false,
    "hash": "7a74d16db872463ac298498d88f587adc08fbd78f820f157250f3062d7274b34",
    "run_dir": "work/tt_27c_3v30__vic2.35__s934946355"
   },
@@ -1947,8 +1947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.884,
-   "cached": true,
+   "elapsed": 3.089,
+   "cached": false,
    "hash": "6e2a0b8ca23118032ce09e47478529ee0a36ea376672ec76e2b2e8394cb11acf",
    "run_dir": "work/tt_27c_3v30__vic2.35__s760461626"
   },
@@ -1972,8 +1972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.031,
-   "cached": true,
+   "elapsed": 3.175,
+   "cached": false,
    "hash": "291daacb1dfe2a105bf527d34d4e3cd1952c347296c8276f9b0d808e98dcd59a",
    "run_dir": "work/tt_27c_3v30__vic2.35__s377745768"
   },
@@ -1997,8 +1997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.172,
-   "cached": true,
+   "elapsed": 2.951,
+   "cached": false,
    "hash": "6074010330fe5c94c3a12b6d382057f34bcd9c363af5f3ba57f893e4b0fe681e",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1704488278"
   },
@@ -2022,8 +2022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.545,
-   "cached": true,
+   "elapsed": 2.955,
+   "cached": false,
    "hash": "c44ee7fbdd497c91b5256eae62603f98b188113601423fbdd25aa266c303be92",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1018508522"
   },
@@ -2047,8 +2047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.194,
-   "cached": true,
+   "elapsed": 2.741,
+   "cached": false,
    "hash": "67e879f1127ad13fee53ec6bc068ba6974d5883dd93f24a41318e1a6dfb3022c",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1165914485"
   },
@@ -2072,8 +2072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.255,
-   "cached": true,
+   "elapsed": 3.019,
+   "cached": false,
    "hash": "fab086c73e087a5cfa679df496f73d2823c0c910f1baf0e7966f20ce67c4a324",
    "run_dir": "work/tt_27c_3v30__vic2.35__s445637946"
   },
@@ -2097,8 +2097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.133,
-   "cached": true,
+   "elapsed": 2.684,
+   "cached": false,
    "hash": "4a7ea19b668f688f1c1e7c484400033592297421d131fb00cc1c57e21f8ee78e",
    "run_dir": "work/tt_27c_3v30__vic2.35__s2073008015"
   },
@@ -2122,8 +2122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.985,
-   "cached": true,
+   "elapsed": 2.688,
+   "cached": false,
    "hash": "7caa2a720565fe3d4195616bcc851a90970bc9217c296783c548f99cfca2e4c7",
    "run_dir": "work/tt_27c_3v30__vic2.35__s497066084"
   },
@@ -2147,8 +2147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.558,
-   "cached": true,
+   "elapsed": 2.938,
+   "cached": false,
    "hash": "bb4b2acbccfdf7850fe4b97bea451ee882ebd445d65d60eaf7c0595eae0591b5",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1060142202"
   },
@@ -2172,8 +2172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.284,
-   "cached": true,
+   "elapsed": 2.985,
+   "cached": false,
    "hash": "739e3aed1bdda5f6be391fb71332f663f348fb0ae2cdf097f286053ed5bd879b",
    "run_dir": "work/tt_27c_3v30__vic2.35__s925444075"
   },
@@ -2197,8 +2197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.434,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "a1a52bfa9db3aa16c4b1a8468c82bda18ae2d8359e0e9807ee336ff4f4f98790",
    "run_dir": "work/tt_27c_3v30__vic2.35__s939365680"
   },
@@ -2222,8 +2222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.276,
-   "cached": true,
+   "elapsed": 2.993,
+   "cached": false,
    "hash": "38fe14034d77d269b8f30cb1a9420e455055d31edc6a867bf881bdf23a42497e",
    "run_dir": "work/tt_27c_3v30__vic2.35__s54427389"
   },
@@ -2247,8 +2247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.234,
-   "cached": true,
+   "elapsed": 3.187,
+   "cached": false,
    "hash": "236dc39faa8e4db20d081707c9b250bd69c577e91d4863de4738697ca12c8ad9",
    "run_dir": "work/tt_27c_3v30__vic2.35__s1115975472"
   },
@@ -2272,8 +2272,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.125,
-   "cached": true,
+   "elapsed": 3.047,
+   "cached": false,
    "hash": "724944714ddada785dc846f03c65badf3691791dbe1ec73a680a23545a9d6176",
    "run_dir": "work/ss_125c_3v00__vic0.05__s452483223"
   },
@@ -2297,8 +2297,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.997,
-   "cached": true,
+   "elapsed": 3.149,
+   "cached": false,
    "hash": "88ecac7394d09b7c633b4544a640631e8daa89c464d0303bf38782f943f73213",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1695653105"
   },
@@ -2322,8 +2322,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.729,
-   "cached": true,
+   "elapsed": 3.041,
+   "cached": false,
    "hash": "dd5e3325519b9f8ff557369acb91240b809a6bd544880e46cba5f406a77f3907",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1085084613"
   },
@@ -2347,8 +2347,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.084,
-   "cached": true,
+   "elapsed": 3.293,
+   "cached": false,
    "hash": "1edc98bff1acd7f475a3237fb400a8451db3ab06b0818c3334e037e0998c1116",
    "run_dir": "work/ss_125c_3v00__vic0.05__s441224510"
   },
@@ -2372,8 +2372,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.234,
-   "cached": true,
+   "elapsed": 3.249,
+   "cached": false,
    "hash": "681d39784ef1e43a115bad1906919fde66792a0e43f40a3ea35e3d3c06b09bd7",
    "run_dir": "work/ss_125c_3v00__vic0.05__s821422349"
   },
@@ -2397,8 +2397,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.121,
-   "cached": true,
+   "elapsed": 2.792,
+   "cached": false,
    "hash": "884756c2e68ed7ed588a6282003cfc4bcff21f5aa8866158383fe302e8f1ac32",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1758734097"
   },
@@ -2422,8 +2422,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.013,
-   "cached": true,
+   "elapsed": 2.937,
+   "cached": false,
    "hash": "05974dc52fff3b25c1784559e1d23e1181bbdb0ef3dc76a40ca70abbef5ee361",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1576893678"
   },
@@ -2447,8 +2447,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.975,
-   "cached": true,
+   "elapsed": 3.087,
+   "cached": false,
    "hash": "a3809821a753ec3eebb8ace6abe336ed7ab615ca62caa326482acb43640d4d58",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1902659721"
   },
@@ -2472,8 +2472,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.923,
-   "cached": true,
+   "elapsed": 2.739,
+   "cached": false,
    "hash": "39d4875d44f6940c297b7ae517b124c97b7d1dce8f535be7f54b62e7e3957da8",
    "run_dir": "work/ss_125c_3v00__vic0.05__s536475717"
   },
@@ -2497,8 +2497,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.747,
-   "cached": true,
+   "elapsed": 2.638,
+   "cached": false,
    "hash": "a1c04323fbc31a6bc6fdeaa18b32b3d67704bd7828c60d1e33a0c6a3f419edc8",
    "run_dir": "work/ss_125c_3v00__vic0.05__s2055609293"
   },
@@ -2522,8 +2522,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.55,
-   "cached": true,
+   "elapsed": 2.735,
+   "cached": false,
    "hash": "b13f33e561b96778ce95b2abd3ae01631d3c2834a26700df770796d740d814a5",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1297200436"
   },
@@ -2547,8 +2547,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.767,
-   "cached": true,
+   "elapsed": 3.137,
+   "cached": false,
    "hash": "9df4263c7b69d58684559ca8bb73a11bbbc72035e0b8a9950bba50e2edc56c9d",
    "run_dir": "work/ss_125c_3v00__vic0.05__s2099741074"
   },
@@ -2572,8 +2572,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.847,
-   "cached": true,
+   "elapsed": 3.04,
+   "cached": false,
    "hash": "0eacbd5190f29cb7b21e558190f74b0e04f9675356bc42b9e463b49d7f8f58e1",
    "run_dir": "work/ss_125c_3v00__vic0.05__s248750689"
   },
@@ -2597,8 +2597,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.661,
-   "cached": true,
+   "elapsed": 2.985,
+   "cached": false,
    "hash": "2e9454c2ec77510d6d8eb918e76b01ce48a1ed8417ef78686171b3e5f5f44968",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1900119910"
   },
@@ -2622,8 +2622,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.626,
-   "cached": true,
+   "elapsed": 2.938,
+   "cached": false,
    "hash": "62908f9309aa2d21f6fb3997463b9b3bd0afa8229a3d599bb9e216c64e676a49",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1632811357"
   },
@@ -2647,8 +2647,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.674,
-   "cached": true,
+   "elapsed": 3.094,
+   "cached": false,
    "hash": "08e7f29b5c3c25a53c405777b52af60c631dfce9a9d12e01d774b1afaba760a3",
    "run_dir": "work/ss_125c_3v00__vic0.05__s522860322"
   },
@@ -2672,8 +2672,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.524,
-   "cached": true,
+   "elapsed": 2.886,
+   "cached": false,
    "hash": "5f4400ba7c305b5756f1ee2d618f52d159df137045b58813781582cfcdfb31f4",
    "run_dir": "work/ss_125c_3v00__vic0.05__s934946355"
   },
@@ -2697,8 +2697,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.814,
-   "cached": true,
+   "elapsed": 3.389,
+   "cached": false,
    "hash": "2be4c3b759f44fbaca6ea9e276beb748e50389ad75af557bb1b067531bb7c46f",
    "run_dir": "work/ss_125c_3v00__vic0.05__s760461626"
   },
@@ -2722,8 +2722,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.88,
-   "cached": true,
+   "elapsed": 3.241,
+   "cached": false,
    "hash": "7153194c601ee2363ae2f85262def2cc975fcde9b1b240cdbbbe4f0e2de64dd4",
    "run_dir": "work/ss_125c_3v00__vic0.05__s377745768"
   },
@@ -2747,8 +2747,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.917,
-   "cached": true,
+   "elapsed": 2.992,
+   "cached": false,
    "hash": "eccc8a43ddd37e11d733b85f20bc87a613228baa01d6a59d1eefdb14b32e6a0e",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1704488278"
   },
@@ -2772,8 +2772,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.557,
-   "cached": true,
+   "elapsed": 2.841,
+   "cached": false,
    "hash": "8c1a894ab67ddcef149d611df9c6026f3a751d1634040612dcf79e122e71e286",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1018508522"
   },
@@ -2797,8 +2797,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.559,
-   "cached": true,
+   "elapsed": 2.787,
+   "cached": false,
    "hash": "f4c9bd31a5bd546406c6c770c09274872d11514d291f76afd36f596e1ed8ff5c",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1165914485"
   },
@@ -2822,8 +2822,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.265,
-   "cached": true,
+   "elapsed": 2.737,
+   "cached": false,
    "hash": "6a6a73e3a7301e09a02d3a0a0f8c5d6a8ec9f62e604d057ba28e62b733af3f5b",
    "run_dir": "work/ss_125c_3v00__vic0.05__s445637946"
   },
@@ -2847,8 +2847,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.589,
-   "cached": true,
+   "elapsed": 2.938,
+   "cached": false,
    "hash": "02194af0d2b6b20d9d00ad326aaba3bdd63232928bb6892b6a593ff414aed458",
    "run_dir": "work/ss_125c_3v00__vic0.05__s2073008015"
   },
@@ -2872,8 +2872,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.575,
-   "cached": true,
+   "elapsed": 3.046,
+   "cached": false,
    "hash": "a53b77c990215172393916c82f58a3a28dcdee149ca3ee2fd7819e05f852c307",
    "run_dir": "work/ss_125c_3v00__vic0.05__s497066084"
   },
@@ -2897,8 +2897,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.403,
-   "cached": true,
+   "elapsed": 2.889,
+   "cached": false,
    "hash": "2eb625adaa3017b3f8efd06500a1fb234572ed57383a5611239cbe4cc12fe033",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1060142202"
   },
@@ -2922,8 +2922,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.255,
-   "cached": true,
+   "elapsed": 2.89,
+   "cached": false,
    "hash": "b7d736587bac6b7af1896548ea771a387781e4fa292f5e0b567153dae841e604",
    "run_dir": "work/ss_125c_3v00__vic0.05__s925444075"
   },
@@ -2947,8 +2947,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.151,
-   "cached": true,
+   "elapsed": 3.141,
+   "cached": false,
    "hash": "cdf8594264026579e33c14b556a3fa1eb5c27325fb30976adfb97144b8626938",
    "run_dir": "work/ss_125c_3v00__vic0.05__s939365680"
   },
@@ -2972,8 +2972,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.846,
-   "cached": true,
+   "elapsed": 2.892,
+   "cached": false,
    "hash": "5b1a45b25f3ab87cfd222d4323aa6c4a3ab61f86fda98eb8f149828d1d389155",
    "run_dir": "work/ss_125c_3v00__vic0.05__s54427389"
   },
@@ -2997,8 +2997,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.8,
-   "cached": true,
+   "elapsed": 2.737,
+   "cached": false,
    "hash": "73e6bd6823784d5c6126a81008cbd2075bbeb928a1cd1f0e24f1e95949b73d98",
    "run_dir": "work/ss_125c_3v00__vic0.05__s1115975472"
   },
@@ -3022,8 +3022,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.147,
-   "cached": true,
+   "elapsed": 2.893,
+   "cached": false,
    "hash": "25bff89dd0eecfcc07eb4d60fe354b018005f4c4eea206e3f074f995b325131f",
    "run_dir": "work/ss_125c_3v00__vic1.2__s452483223"
   },
@@ -3047,8 +3047,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.845,
-   "cached": true,
+   "elapsed": 3.143,
+   "cached": false,
    "hash": "4bc5da224fa10eabe62d2114153a84d8024992a8a4b80278d0de31a7a23cbd7f",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1695653105"
   },
@@ -3072,8 +3072,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.044,
-   "cached": true,
+   "elapsed": 2.885,
+   "cached": false,
    "hash": "946c882bfabc82b76976248b4f45eb2bf3f472b87926db6eaed99a7317159435",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1085084613"
   },
@@ -3097,8 +3097,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.847,
-   "cached": true,
+   "elapsed": 2.94,
+   "cached": false,
    "hash": "175ea073e29f9c778428fe66d7fef0e35a5cc06974de330229a09219358c0812",
    "run_dir": "work/ss_125c_3v00__vic1.2__s441224510"
   },
@@ -3122,8 +3122,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.988,
-   "cached": true,
+   "elapsed": 2.935,
+   "cached": false,
    "hash": "71144723c0cc9d8be3860b0bc812f7d6194d0e0188b3901cad9b47bf31306191",
    "run_dir": "work/ss_125c_3v00__vic1.2__s821422349"
   },
@@ -3147,8 +3147,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.792,
-   "cached": true,
+   "elapsed": 2.986,
+   "cached": false,
    "hash": "c996beac1c905aa61d9ff27885f68a03a75438e90ec744497aa7f16560f479bc",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1758734097"
   },
@@ -3172,8 +3172,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.894,
-   "cached": true,
+   "elapsed": 3.088,
+   "cached": false,
    "hash": "deb13dc6a7e3be363f7607d07a29b5c1829355b92c0b7340bd7b958a2c3b1691",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1576893678"
   },
@@ -3197,8 +3197,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.992,
-   "cached": true,
+   "elapsed": 2.534,
+   "cached": false,
    "hash": "33d8c74e5f14caa8042b105fcdb007545d3909fbdf4e904d03841a3a481b3de2",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1902659721"
   },
@@ -3222,8 +3222,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.895,
-   "cached": true,
+   "elapsed": 2.839,
+   "cached": false,
    "hash": "a292c648516d553289015bea02adf660b5932267ccc15dfa52059c5812cd9669",
    "run_dir": "work/ss_125c_3v00__vic1.2__s536475717"
   },
@@ -3247,8 +3247,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.121,
-   "cached": true,
+   "elapsed": 2.885,
+   "cached": false,
    "hash": "e2bf942984139686bca08d848bdb6f131c8df5dfd7ed68c981bc7be68046b376",
    "run_dir": "work/ss_125c_3v00__vic1.2__s2055609293"
   },
@@ -3272,8 +3272,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.206,
-   "cached": true,
+   "elapsed": 2.987,
+   "cached": false,
    "hash": "dfae8f158b762c4640820ed8ff99839507ec10f9a63dc8d0fc91ad1130ddc85c",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1297200436"
   },
@@ -3297,8 +3297,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.459,
-   "cached": true,
+   "elapsed": 3.287,
+   "cached": false,
    "hash": "b9b2993a177a8fe23e02ee8927cd98f5f6719050ddef4c99285eb4f09fa38427",
    "run_dir": "work/ss_125c_3v00__vic1.2__s2099741074"
   },
@@ -3322,8 +3322,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.477,
-   "cached": true,
+   "elapsed": 3.191,
+   "cached": false,
    "hash": "4698e6abe0a6f72740e2861c6a62e3ee1f509d42bc944f002f65ddc020462bc3",
    "run_dir": "work/ss_125c_3v00__vic1.2__s248750689"
   },
@@ -3347,8 +3347,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.272,
-   "cached": true,
+   "elapsed": 2.739,
+   "cached": false,
    "hash": "bc5a9cf717259c8dc1ae69c8cc9eac321731239111845e0f56e3db0f9e69d1e1",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1900119910"
   },
@@ -3372,8 +3372,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.579,
-   "cached": true,
+   "elapsed": 2.838,
+   "cached": false,
    "hash": "3248fe31029b20bd467b51a629c5e8e69d9ac80059b68fcde68e07f9ad6708ca",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1632811357"
   },
@@ -3397,8 +3397,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.655,
-   "cached": true,
+   "elapsed": 2.79,
+   "cached": false,
    "hash": "56d54906592136e525504b2c1ce8fd4d0c4cda1d9c908cd5c7e2f1bf78bdbbc7",
    "run_dir": "work/ss_125c_3v00__vic1.2__s522860322"
   },
@@ -3422,8 +3422,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.562,
-   "cached": true,
+   "elapsed": 2.735,
+   "cached": false,
    "hash": "d217c28e82dccb90325d8907e2405ccfed906dbefae26aeec41b73a0b761a96b",
    "run_dir": "work/ss_125c_3v00__vic1.2__s934946355"
   },
@@ -3447,8 +3447,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.906,
-   "cached": true,
+   "elapsed": 3.192,
+   "cached": false,
    "hash": "4fe5eb45c3af116600eea5177d168448b59f1fea3fb2d03452588bf039580065",
    "run_dir": "work/ss_125c_3v00__vic1.2__s760461626"
   },
@@ -3472,8 +3472,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.557,
-   "cached": true,
+   "elapsed": 3.149,
+   "cached": false,
    "hash": "081bf074c866235fd49f4d135209f302160640d01838b55cd5c310017d51dc59",
    "run_dir": "work/ss_125c_3v00__vic1.2__s377745768"
   },
@@ -3497,8 +3497,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.452,
-   "cached": true,
+   "elapsed": 2.84,
+   "cached": false,
    "hash": "3fcf5c1f699fd002e285d7e15962317ff8c47ac68b9f64a8df35406c533e0997",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1704488278"
   },
@@ -3522,8 +3522,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.53,
-   "cached": true,
+   "elapsed": 2.892,
+   "cached": false,
    "hash": "4519fd954573f82807693ebbb8067c2404343b504de1093091fc18fe423501e2",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1018508522"
   },
@@ -3547,8 +3547,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.961,
-   "cached": true,
+   "elapsed": 2.887,
+   "cached": false,
    "hash": "64597d01b0b4da94182a6ef56d5704d22d5f9e72a71d5e78cddbda6d462dffb3",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1165914485"
   },
@@ -3572,8 +3572,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.61,
-   "cached": true,
+   "elapsed": 2.791,
+   "cached": false,
    "hash": "22e04f880938102607e94c61407a28ad05ee57ddd380ea28c009914fbe4d69c1",
    "run_dir": "work/ss_125c_3v00__vic1.2__s445637946"
   },
@@ -3597,8 +3597,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.006,
-   "cached": true,
+   "elapsed": 2.887,
+   "cached": false,
    "hash": "89d8d16620cde6ffbdf6b8ae808e27c1035852f31d1184ef805950bb93bf9fb9",
    "run_dir": "work/ss_125c_3v00__vic1.2__s2073008015"
   },
@@ -3622,8 +3622,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.865,
-   "cached": true,
+   "elapsed": 2.69,
+   "cached": false,
    "hash": "83d1e9acfa18d61a7fc125be183691ce22b473f8a5e4f09bce8b56a4bb85c4b5",
    "run_dir": "work/ss_125c_3v00__vic1.2__s497066084"
   },
@@ -3647,8 +3647,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.718,
-   "cached": true,
+   "elapsed": 2.945,
+   "cached": false,
    "hash": "eaaaa9acd0e8c6b9ee5d41c933bdb23544739c3018d427c41cc0c1b022bf187d",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1060142202"
   },
@@ -3672,8 +3672,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.201,
-   "cached": true,
+   "elapsed": 2.89,
+   "cached": false,
    "hash": "1627109cc5527fe3e1aa5d3eeb7076fa451bef3bd0c757b5639007f8d5e741e9",
    "run_dir": "work/ss_125c_3v00__vic1.2__s925444075"
   },
@@ -3697,8 +3697,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.837,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "76c925a2a9a2deffd7b9e16ee7e60644874f6c9bc26d690d345b27a1f265f9c4",
    "run_dir": "work/ss_125c_3v00__vic1.2__s939365680"
   },
@@ -3722,8 +3722,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.046,
-   "cached": true,
+   "elapsed": 2.944,
+   "cached": false,
    "hash": "9c5015bb7a7980ea9510058b2ca2b3d99ccd92604bf47649e29792bfec8e88e8",
    "run_dir": "work/ss_125c_3v00__vic1.2__s54427389"
   },
@@ -3747,8 +3747,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.427,
-   "cached": true,
+   "elapsed": 2.785,
+   "cached": false,
    "hash": "3fe1814517cf15006fc1d63cdb6f68f146653cca3c2b0ad5e0cd872aea36c6ad",
    "run_dir": "work/ss_125c_3v00__vic1.2__s1115975472"
   },
@@ -3772,8 +3772,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.599,
-   "cached": true,
+   "elapsed": 2.886,
+   "cached": false,
    "hash": "4c9c5882a88738a514ff754e6fcba55e6148d28995276e09d42795acdd6d0e36",
    "run_dir": "work/ss_125c_3v00__vic2.35__s452483223"
   },
@@ -3797,8 +3797,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.522,
-   "cached": true,
+   "elapsed": 2.74,
+   "cached": false,
    "hash": "9e183cd72a2fcd8ba850cadb6103f07ea69cab07c0cd6b369c975da575ae008b",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1695653105"
   },
@@ -3822,8 +3822,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.441,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "34f5b2c79ea56a7aa762ada5b60a73ecc16cf9f3f81a5c6b112f98c1528ccb96",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1085084613"
   },
@@ -3847,8 +3847,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.659,
-   "cached": true,
+   "elapsed": 3.143,
+   "cached": false,
    "hash": "2a8a91be75c0f3027b7d88bfe03fe319b557f80e95efcf61baa3313e97fb7165",
    "run_dir": "work/ss_125c_3v00__vic2.35__s441224510"
   },
@@ -3872,8 +3872,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.611,
-   "cached": true,
+   "elapsed": 2.945,
+   "cached": false,
    "hash": "ab58a6a39aaa2e3405cf4b63c4ffd40ee541521d3b4e7005e2fd31764e29baa7",
    "run_dir": "work/ss_125c_3v00__vic2.35__s821422349"
   },
@@ -3897,8 +3897,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.582,
-   "cached": true,
+   "elapsed": 2.732,
+   "cached": false,
    "hash": "fc229404cf3e849d671698819f735aea38ee1a95f95b69e1dbd219bc9256eaa1",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1758734097"
   },
@@ -3922,8 +3922,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.253,
-   "cached": true,
+   "elapsed": 2.886,
+   "cached": false,
    "hash": "1491c09cc03cd084193cf46d89e2e48c0ee77b55e198edf11ec8dd74ad7a83b7",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1576893678"
   },
@@ -3947,8 +3947,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.157,
-   "cached": true,
+   "elapsed": 2.686,
+   "cached": false,
    "hash": "81e2e34611997c0f4b1db4999e40a5114649e7fa4993a8ac8f878dfaf10e613f",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1902659721"
   },
@@ -3972,8 +3972,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 4.048,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "8be80194e670d7cbb39fc7e84f34a6d08bde637a3c4723a5257361bfd7399e24",
    "run_dir": "work/ss_125c_3v00__vic2.35__s536475717"
   },
@@ -3997,8 +3997,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.788,
-   "cached": true,
+   "elapsed": 2.786,
+   "cached": false,
    "hash": "1de769996e086ea856ade3ba64d5811c3355bbc6932f1213a04d036e4fd91d38",
    "run_dir": "work/ss_125c_3v00__vic2.35__s2055609293"
   },
@@ -4022,8 +4022,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.99,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "8f5c07b9af1b73f941f5e2fc1a422927b46627fd9275110a28a8ae6bd3a3c186",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1297200436"
   },
@@ -4047,8 +4047,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.199,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "71e5b07fd4a38324e7038f0aa251fe291b48111ea6f72226942204070175f4c7",
    "run_dir": "work/ss_125c_3v00__vic2.35__s2099741074"
   },
@@ -4072,8 +4072,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.329,
-   "cached": true,
+   "elapsed": 3.038,
+   "cached": false,
    "hash": "2876c641ddb512270135877bc4ed3cd670d67ff0a25e21bf4d3c5635d9b36e45",
    "run_dir": "work/ss_125c_3v00__vic2.35__s248750689"
   },
@@ -4097,8 +4097,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.291,
-   "cached": true,
+   "elapsed": 3.039,
+   "cached": false,
    "hash": "5d02ed5ef96aea57e05ed12f8bef3a030136d58e97cdfa65a48f1b0346c91d84",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1900119910"
   },
@@ -4122,8 +4122,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.137,
-   "cached": true,
+   "elapsed": 2.99,
+   "cached": false,
    "hash": "1655ca13416e3fbfa7def612727e39f844221e40483ad120459efd9c923f566b",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1632811357"
   },
@@ -4147,8 +4147,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.055,
-   "cached": true,
+   "elapsed": 2.883,
+   "cached": false,
    "hash": "cac9cc5831f7c3344060e59d56c28022ec4a1a6745e89fa42f8c2ed77dc4336c",
    "run_dir": "work/ss_125c_3v00__vic2.35__s522860322"
   },
@@ -4172,8 +4172,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.309,
-   "cached": true,
+   "elapsed": 2.798,
+   "cached": false,
    "hash": "07e5673d088a88cd379cc479d590e3d8acc0d143640d3d3b4bcef103e0d18d3d",
    "run_dir": "work/ss_125c_3v00__vic2.35__s934946355"
   },
@@ -4197,8 +4197,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.317,
-   "cached": true,
+   "elapsed": 3.046,
+   "cached": false,
    "hash": "a8837541440d37972a24bb504a218ab5795a9047d9ba27c806170485b85ebefa",
    "run_dir": "work/ss_125c_3v00__vic2.35__s760461626"
   },
@@ -4222,8 +4222,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.126,
-   "cached": true,
+   "elapsed": 2.79,
+   "cached": false,
    "hash": "9e01786286eb26a6955cc0e5b6853548bd4f8f6304bd850f8c8238474e4095c6",
    "run_dir": "work/ss_125c_3v00__vic2.35__s377745768"
   },
@@ -4247,8 +4247,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 2.951,
-   "cached": true,
+   "elapsed": 2.896,
+   "cached": false,
    "hash": "d893ae872aa2509a7db96f4bd6371313a66f8dc450d737808b0d0e8870d180e0",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1704488278"
   },
@@ -4272,8 +4272,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.153,
-   "cached": true,
+   "elapsed": 3.141,
+   "cached": false,
    "hash": "8f4e1347d8c502a6a941ba54d826c845e8f9f638e0e646d79ef69a5f3f0dc31c",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1018508522"
   },
@@ -4297,8 +4297,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.067,
-   "cached": true,
+   "elapsed": 2.85,
+   "cached": false,
    "hash": "14d48d3603f7c554e7ac163c4ec66d8baa1f8cbb5d9dd259ea9042df504714ce",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1165914485"
   },
@@ -4322,8 +4322,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.168,
-   "cached": true,
+   "elapsed": 3.142,
+   "cached": false,
    "hash": "fe86e22f7076e7c52a25bfbd85fac540c486d5ea68e259d8b906310e4af0e631",
    "run_dir": "work/ss_125c_3v00__vic2.35__s445637946"
   },
@@ -4347,8 +4347,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.151,
-   "cached": true,
+   "elapsed": 2.843,
+   "cached": false,
    "hash": "a8fe0d28d84bffb570364f530bbfea0aa808f92c33ad09b2a710c3ae78c64a1a",
    "run_dir": "work/ss_125c_3v00__vic2.35__s2073008015"
   },
@@ -4372,8 +4372,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.412,
-   "cached": true,
+   "elapsed": 2.842,
+   "cached": false,
    "hash": "bfb5fb7a33e82333eaca87c1176dc3d0df873be36353e6d53e7ce8ad2a107741",
    "run_dir": "work/ss_125c_3v00__vic2.35__s497066084"
   },
@@ -4397,8 +4397,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.401,
-   "cached": true,
+   "elapsed": 2.743,
+   "cached": false,
    "hash": "a0b9fbc7a7ea6fd680f880e339f70aa09e4d9f0042a0440db62c3c5c2ef2f6c0",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1060142202"
   },
@@ -4422,8 +4422,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.288,
-   "cached": true,
+   "elapsed": 2.59,
+   "cached": false,
    "hash": "1255de6b88921d25e075f10b0b18a85518818543a96f49fcd566863a01a652f0",
    "run_dir": "work/ss_125c_3v00__vic2.35__s925444075"
   },
@@ -4447,8 +4447,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.635,
-   "cached": true,
+   "elapsed": 2.892,
+   "cached": false,
    "hash": "beebe592eeb1dfe545532df6ff33f2e661354a644ca8d07cc9c52812fd00926d",
    "run_dir": "work/ss_125c_3v00__vic2.35__s939365680"
   },
@@ -4472,8 +4472,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.523,
-   "cached": true,
+   "elapsed": 3.048,
+   "cached": false,
    "hash": "34e7d75f07d456c8ab21f02f83b935b451c099100da168baaa60596eee770381",
    "run_dir": "work/ss_125c_3v00__vic2.35__s54427389"
   },
@@ -4497,8 +4497,8 @@
     "vid_end_v": 0.0635
    },
    "errors": [],
-   "elapsed": 3.583,
-   "cached": true,
+   "elapsed": 3.14,
+   "cached": false,
    "hash": "18c6adc2eca30ff2ecd1b4da675e373548730a9834da112dbc246cd8018a4e76",
    "run_dir": "work/ss_125c_3v00__vic2.35__s1115975472"
   },
@@ -4522,8 +4522,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.781,
-   "cached": true,
+   "elapsed": 3.089,
+   "cached": false,
    "hash": "dc5ae9e8496a96f240258d760cc922baedf2ffcc9c334f6cd32ac53f6991e92e",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s452483223"
   },
@@ -4547,8 +4547,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.529,
-   "cached": true,
+   "elapsed": 3.039,
+   "cached": false,
    "hash": "ed88eb43db7ab2750f0495c9051ec1545f1d5909ae8a90bdf459aa86e145ba33",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1695653105"
   },
@@ -4572,8 +4572,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.429,
-   "cached": true,
+   "elapsed": 2.99,
+   "cached": false,
    "hash": "7a4614119cfa097e11b0943775a308227770ad304da2b5df6475d8ffc96b8c44",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1085084613"
   },
@@ -4597,8 +4597,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.427,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "009be7994e8291aac798f19e9b821769fcd9347c86902ef2b667d440bd362eae",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s441224510"
   },
@@ -4622,8 +4622,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.307,
-   "cached": true,
+   "elapsed": 2.637,
+   "cached": false,
    "hash": "b743bb704ea77618d68f9075321b89c3c5d6940a0936608ac9fe20e11707ce4e",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s821422349"
   },
@@ -4647,8 +4647,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.651,
-   "cached": true,
+   "elapsed": 2.737,
+   "cached": false,
    "hash": "7f9c308decc52a2016a8e206a76cf2dc3dac858ba39687e7a7c2c0a279d52c54",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1758734097"
   },
@@ -4672,8 +4672,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.591,
-   "cached": true,
+   "elapsed": 2.987,
+   "cached": false,
    "hash": "bbf82dcb5ec7c653d5a4f50bfdb7cfa2552753fb6f312e47ef25071b99fbcb62",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1576893678"
   },
@@ -4697,8 +4697,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.454,
-   "cached": true,
+   "elapsed": 3.139,
+   "cached": false,
    "hash": "f862a9d2dec5cf16947958b1ddd2c6586fc0eb32a6bacdcf77412041df7764c9",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1902659721"
   },
@@ -4722,8 +4722,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.442,
-   "cached": true,
+   "elapsed": 2.892,
+   "cached": false,
    "hash": "a9ed0d66feae74475423005848938732811e13a5c3dab4b27f9c15709ff12fb8",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s536475717"
   },
@@ -4747,8 +4747,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.479,
-   "cached": true,
+   "elapsed": 3.041,
+   "cached": false,
    "hash": "f7abfb86a8d68939b1fdc9f5625e2cc71b0a0b5383215d98bc86d6ed765347c5",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s2055609293"
   },
@@ -4772,8 +4772,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.223,
-   "cached": true,
+   "elapsed": 3.244,
+   "cached": false,
    "hash": "2197b71a0f8c74df4c913bffa4844e8cbed0ee59e2096dededc3fdf43c4d42f3",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1297200436"
   },
@@ -4797,8 +4797,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.07,
-   "cached": true,
+   "elapsed": 2.799,
+   "cached": false,
    "hash": "8cda31a8a57f22670f6cf5998709d52e1696f63cbe5308b07eb4ada661a87cd4",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s2099741074"
   },
@@ -4822,8 +4822,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.192,
-   "cached": true,
+   "elapsed": 3.155,
+   "cached": false,
    "hash": "6692bf77e23cc61b34cc63eee48acbef3e646897c1f3f7a83d7ce6e4aeb4cb23",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s248750689"
   },
@@ -4847,8 +4847,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.149,
-   "cached": true,
+   "elapsed": 2.838,
+   "cached": false,
    "hash": "c746c8fc7d8e61d269dcac24b1e1894f9fe63ce8629eed417f48bd9b9bbaa63b",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1900119910"
   },
@@ -4872,8 +4872,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.766,
-   "cached": true,
+   "elapsed": 3.038,
+   "cached": false,
    "hash": "0faffab68035461d8bdfbee561936691423efcee43e88cc4a7418ad122eacbe0",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1632811357"
   },
@@ -4897,8 +4897,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.789,
-   "cached": true,
+   "elapsed": 3.144,
+   "cached": false,
    "hash": "2c5702ddf2fd111c5422efd76ac08489de993e611791a6e15763aafb16a3bc6e",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s522860322"
   },
@@ -4922,8 +4922,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.194,
-   "cached": true,
+   "elapsed": 3.088,
+   "cached": false,
    "hash": "f9bcdadbcab3226d9d76ab4d791417c7d4dd1734e55e78cd3073d55aec7ae453",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s934946355"
   },
@@ -4947,8 +4947,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.094,
-   "cached": true,
+   "elapsed": 3.036,
+   "cached": false,
    "hash": "c0ee537e3a8b4bf1f655111cb6547f0ac484882451ca3032d730514b15aa525c",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s760461626"
   },
@@ -4972,8 +4972,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.844,
-   "cached": true,
+   "elapsed": 2.738,
+   "cached": false,
    "hash": "d251664f8b38af6173810843951e4d105865ded7b11613d3bcdd865f6edf8659",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s377745768"
   },
@@ -4997,8 +4997,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.094,
-   "cached": true,
+   "elapsed": 3.194,
+   "cached": false,
    "hash": "861e2014e0c833d133daeafebfc3a6722197ba8fb1e717c76bf2268c80b343aa",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1704488278"
   },
@@ -5022,8 +5022,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.841,
-   "cached": true,
+   "elapsed": 2.943,
+   "cached": false,
    "hash": "48c6363ac8e77c5a6a1188816009349e6ccf93189a347764189ed71a4fa0c36b",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1018508522"
   },
@@ -5047,8 +5047,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.905,
-   "cached": true,
+   "elapsed": 2.841,
+   "cached": false,
    "hash": "4315c3703eb0f86c32c51476eeb8ad340a55e8c6b7c6ecd53cb718c9cb6873b7",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1165914485"
   },
@@ -5072,8 +5072,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.997,
-   "cached": true,
+   "elapsed": 3.089,
+   "cached": false,
    "hash": "f9f62c997f0058ede753bbf3087f42a3e72307f9510bc8298162350f5f92c92b",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s445637946"
   },
@@ -5097,8 +5097,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.102,
-   "cached": true,
+   "elapsed": 3.146,
+   "cached": false,
    "hash": "2ef6ee02869ecd005cac97bbfdc31c1eeb1a55e926d734cdafa547f32c8f72da",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s2073008015"
   },
@@ -5122,8 +5122,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.255,
-   "cached": true,
+   "elapsed": 2.899,
+   "cached": false,
    "hash": "68961aa04f100e38a7ea62fa5387d97e956a16978daeeaa896fabf7a2f306a41",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s497066084"
   },
@@ -5147,8 +5147,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.745,
-   "cached": true,
+   "elapsed": 2.895,
+   "cached": false,
    "hash": "7618edc7f4529f1dd2f561e6d3bd06be35b786266944f033571e8c8effe35759",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1060142202"
   },
@@ -5172,8 +5172,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.057,
-   "cached": true,
+   "elapsed": 3.142,
+   "cached": false,
    "hash": "692504a67fec4e56b625ebf2a6443eebfa0344b76d8032d9ffdecf5209f527d3",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s925444075"
   },
@@ -5197,8 +5197,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.191,
-   "cached": true,
+   "elapsed": 2.687,
+   "cached": false,
    "hash": "173953de7f586988b874089adac16c837efba61df9277ef6ee89b1421bf2b78f",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s939365680"
   },
@@ -5222,8 +5222,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.04,
-   "cached": true,
+   "elapsed": 2.941,
+   "cached": false,
    "hash": "41ba5599b831829896e7ef00a83aa0bb824522e43a433737abed0de23a82b9f4",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s54427389"
   },
@@ -5247,8 +5247,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.056,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "dfb0bbfd7041aaf7d88832c6445d066ec510591b7cf844ae0ab58539b807f4de",
    "run_dir": "work/ff_m40c_3v60__vic0.05__s1115975472"
   },
@@ -5272,8 +5272,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.84,
-   "cached": true,
+   "elapsed": 2.99,
+   "cached": false,
    "hash": "eb8cdf9979f7dd5645c59f3d2418f3cd83a223106599bbb94a24982801407be6",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s452483223"
   },
@@ -5297,8 +5297,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.068,
-   "cached": true,
+   "elapsed": 2.588,
+   "cached": false,
    "hash": "f83c1645540e7a325cc91b2b58a7bb809fa5d0e0bb6503232f890c96c2c5798a",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1695653105"
   },
@@ -5322,8 +5322,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.897,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "a6d58da01ad301c5ee96e302cf02a42493fe12b9ff5a79fc4098c557825c6f4f",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1085084613"
   },
@@ -5347,8 +5347,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.233,
-   "cached": true,
+   "elapsed": 3.243,
+   "cached": false,
    "hash": "36c3877fe86e227d2586939c6e43fffbf35f4fc588c1a10e8fe55ee946ed6149",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s441224510"
   },
@@ -5372,8 +5372,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.377,
-   "cached": true,
+   "elapsed": 2.97,
+   "cached": false,
    "hash": "7738ac3ba8eb5826d61dcfda5efb0d2d5d4a81f75329123c022722f1b2648c46",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s821422349"
   },
@@ -5397,8 +5397,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.95,
-   "cached": true,
+   "elapsed": 3.29,
+   "cached": false,
    "hash": "536b96d70510ee2afa1b55bb2d8040bb8f693dd28de66c868c2fb8a3cd993238",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1758734097"
   },
@@ -5422,8 +5422,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.971,
-   "cached": true,
+   "elapsed": 3.0,
+   "cached": false,
    "hash": "67fca7a4929528a3c428eec08abf017083479bcb4f2f9ce664f47c3ed744b007",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1576893678"
   },
@@ -5447,8 +5447,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.803,
-   "cached": true,
+   "elapsed": 3.29,
+   "cached": false,
    "hash": "193785ca6b2f6fb3a7025a8a36aa8e3d37955d30896c4f25f94a2684f4f4bedd",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1902659721"
   },
@@ -5472,8 +5472,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 4.072,
-   "cached": true,
+   "elapsed": 2.991,
+   "cached": false,
    "hash": "9d6c8f3fd1280ca1f5f2376a75ffd995d1dfc649216ab9dbdb05b8022daeebcf",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s536475717"
   },
@@ -5497,8 +5497,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 4.701,
-   "cached": true,
+   "elapsed": 3.095,
+   "cached": false,
    "hash": "8d72ef8ae82c20a34f234b094b8aca84940a405ab9bba6ed113e0247d9422644",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s2055609293"
   },
@@ -5522,8 +5522,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 4.447,
-   "cached": true,
+   "elapsed": 2.942,
+   "cached": false,
    "hash": "b14fddaeff217f4c74092d47a6150f6c91a54b57351511ffedb2f0d4267d002e",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1297200436"
   },
@@ -5547,8 +5547,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 4.447,
-   "cached": true,
+   "elapsed": 2.994,
+   "cached": false,
    "hash": "1f4f3f284c476c7bd6c2ec7d791869fb84c00dfa192a1a19a0521f4e9de2c196",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s2099741074"
   },
@@ -5572,8 +5572,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 4.133,
-   "cached": true,
+   "elapsed": 2.993,
+   "cached": false,
    "hash": "2b1d4943f184387a080fb43e34dcf9a824aa45980b8353f8359fb32105895fb9",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s248750689"
   },
@@ -5597,8 +5597,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.964,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "367cb789aab5ad0e1848f63e17b5c7330403b63cb37a4024ab4597762e773ef9",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1900119910"
   },
@@ -5622,8 +5622,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.844,
-   "cached": true,
+   "elapsed": 2.588,
+   "cached": false,
    "hash": "bb8ae5d2dacb824f2ef1eef8a8d8d5e808ee20a508ebb81d6ae161963e66b7ff",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1632811357"
   },
@@ -5647,8 +5647,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.802,
-   "cached": true,
+   "elapsed": 3.091,
+   "cached": false,
    "hash": "8389a0c861b0c5d17da51585274f04ed45bf0b85ec1bfb563bc245e92f37c2a7",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s522860322"
   },
@@ -5672,8 +5672,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.604,
-   "cached": true,
+   "elapsed": 2.841,
+   "cached": false,
    "hash": "a7b5f38f26afdc1aeaeaf11d789fa4540668df4b16f9080c1c9a44b6339a05c6",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s934946355"
   },
@@ -5697,8 +5697,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.742,
-   "cached": true,
+   "elapsed": 2.887,
+   "cached": false,
    "hash": "6b547835128f89e051efa1fd62dfceef2509efed7730322085ff452909a0e8f0",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s760461626"
   },
@@ -5722,8 +5722,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.832,
-   "cached": true,
+   "elapsed": 2.987,
+   "cached": false,
    "hash": "0c1b785cb92e7deab46a3642116815f1eb2273948b87b1cf581cedbe96f5a424",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s377745768"
   },
@@ -5747,8 +5747,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 4.109,
-   "cached": true,
+   "elapsed": 2.885,
+   "cached": false,
    "hash": "f32ab70643f314612a291c66201b14bf6bffc63b930ba23cf250882828a9b4cd",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1704488278"
   },
@@ -5772,8 +5772,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.909,
-   "cached": true,
+   "elapsed": 2.986,
+   "cached": false,
    "hash": "5f03e688aa311206fb7caa60e1346d091e78a54782647f29ac216c50ca8f322c",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1018508522"
   },
@@ -5797,8 +5797,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.583,
-   "cached": true,
+   "elapsed": 3.194,
+   "cached": false,
    "hash": "bc0779699033fa022170b90a464b128ecff9bcb4a0c8e98da8741b2fea2c4fe9",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1165914485"
   },
@@ -5822,8 +5822,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.376,
-   "cached": true,
+   "elapsed": 2.941,
+   "cached": false,
    "hash": "bded9229c18d4fefb7c34985446012b4a2eab074cdb6234ac044daa710b0548c",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s445637946"
   },
@@ -5847,8 +5847,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.249,
-   "cached": true,
+   "elapsed": 2.747,
+   "cached": false,
    "hash": "ad83191f1a33ac99498f75347405de83652caea8ef5e33da1cefecbb0c776821",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s2073008015"
   },
@@ -5872,8 +5872,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.176,
-   "cached": true,
+   "elapsed": 2.792,
+   "cached": false,
    "hash": "7a88f3e843ac091bb8e6ec63c923230041e73fc9cb4f9310e8939e36bb983bbb",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s497066084"
   },
@@ -5897,8 +5897,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.953,
-   "cached": true,
+   "elapsed": 2.948,
+   "cached": false,
    "hash": "a2421f42cb934164d016ff513235338fbbd031496f294e43d322fe0182874e78",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1060142202"
   },
@@ -5922,8 +5922,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.243,
-   "cached": true,
+   "elapsed": 3.043,
+   "cached": false,
    "hash": "411510fc8a8011f644dd38d7e732db510a4258f9f3aa762b70a11be3a4059b3a",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s925444075"
   },
@@ -5947,8 +5947,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.998,
-   "cached": true,
+   "elapsed": 2.939,
+   "cached": false,
    "hash": "4d9519cda4a5c8d066ec0241904c6f319f3ad98724b0c608dfe4fe867ae5d66c",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s939365680"
   },
@@ -5972,8 +5972,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.948,
-   "cached": true,
+   "elapsed": 2.938,
+   "cached": false,
    "hash": "89169d6917d6f5b0590fb1f258766b1be52ba0bf6689d6c0facf9bb61d3edfb3",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s54427389"
   },
@@ -5997,8 +5997,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.062,
-   "cached": true,
+   "elapsed": 3.247,
+   "cached": false,
    "hash": "ce69450744b7ff1c05929a4b8ce51a19c6a8b86c6608fb7e2d6a35a489f6744e",
    "run_dir": "work/ff_m40c_3v60__vic1.2__s1115975472"
   },
@@ -6022,8 +6022,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.143,
-   "cached": true,
+   "elapsed": 2.806,
+   "cached": false,
    "hash": "042f8a9bdb4fd103f299bfdbdf910295ca045eb35bcc450a809b68f241e0e547",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s452483223"
   },
@@ -6047,8 +6047,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.179,
-   "cached": true,
+   "elapsed": 2.651,
+   "cached": false,
    "hash": "df9a66f6d1b4589dade5167597dae9c258ed96beff63794a484f0d9f38928ab8",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1695653105"
   },
@@ -6072,8 +6072,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.145,
-   "cached": true,
+   "elapsed": 2.89,
+   "cached": false,
    "hash": "2de45250276be5c0dcaaf2d3fdc44645056227a99f81b319631b5ae89487e16b",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1085084613"
   },
@@ -6097,8 +6097,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.398,
-   "cached": true,
+   "elapsed": 2.94,
+   "cached": false,
    "hash": "842833a8f720bcf6f26e79e18c1746ddceddf90db7041808f0349d0719820200",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s441224510"
   },
@@ -6122,8 +6122,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 2.998,
-   "cached": true,
+   "elapsed": 3.137,
+   "cached": false,
    "hash": "22d4a076bb55f0695654fa4a6f9839041cf7360fa5b8b52e549d9d7a4a4b9352",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s821422349"
   },
@@ -6147,8 +6147,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.225,
-   "cached": true,
+   "elapsed": 3.246,
+   "cached": false,
    "hash": "ba8265c14187fff40c55976b7ff7380deb6ffad8a9f0911bd2bef158e616c33a",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1758734097"
   },
@@ -6172,8 +6172,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.3,
-   "cached": true,
+   "elapsed": 2.983,
+   "cached": false,
    "hash": "e87ec98fb99f31a4d4511af4f402518dfe2f00c396952df0138572f091a351bc",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1576893678"
   },
@@ -6197,8 +6197,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.256,
-   "cached": true,
+   "elapsed": 3.138,
+   "cached": false,
    "hash": "3a19139a6ea7d5d336aea9641830fd85cd305368b71c00a00f0a64c60a9809c4",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1902659721"
   },
@@ -6222,8 +6222,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.211,
-   "cached": true,
+   "elapsed": 2.788,
+   "cached": false,
    "hash": "056f14cf6d6080468bdd4e90bd17fb882bc62a3066a4f6832e1fe5438f51a9dc",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s536475717"
   },
@@ -6247,8 +6247,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.206,
-   "cached": true,
+   "elapsed": 2.841,
+   "cached": false,
    "hash": "f36d388bda869264ac9a5104feac7d006af8e562fd354454885129f7735a9ba1",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s2055609293"
   },
@@ -6272,8 +6272,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.068,
-   "cached": true,
+   "elapsed": 2.687,
+   "cached": false,
    "hash": "a6d5bedf898f5456a4c3200455ee8106612dde43b52ca911903188acfb814122",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1297200436"
   },
@@ -6297,8 +6297,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.004,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "53f01fecf8792449e3e702e2da4219d34453d2a40a5f9fe27f35b14e0bfc6172",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s2099741074"
   },
@@ -6322,8 +6322,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.329,
-   "cached": true,
+   "elapsed": 3.139,
+   "cached": false,
    "hash": "95f1bd2c717425bae77e89bffb8156e5db0e09daac64c2193943db6ed6e05adc",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s248750689"
   },
@@ -6347,8 +6347,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.069,
-   "cached": true,
+   "elapsed": 3.188,
+   "cached": false,
    "hash": "a0e07f4b33ffc393cde054383fbea40e9bbc8d395449a537912dbb48fd88bfea",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1900119910"
   },
@@ -6372,8 +6372,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.253,
-   "cached": true,
+   "elapsed": 2.837,
+   "cached": false,
    "hash": "2a2a9f507666e239daf87c93d9485e368a5ee4d99c4bca9a432e4f3a1e3bba61",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1632811357"
   },
@@ -6397,8 +6397,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.321,
-   "cached": true,
+   "elapsed": 2.941,
+   "cached": false,
    "hash": "1ffec5cb2ecc337dcf37df87fbb5c3f5ca62a9ecf9bd55e1bffa64f53c52037b",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s522860322"
   },
@@ -6422,8 +6422,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.14,
-   "cached": true,
+   "elapsed": 3.017,
+   "cached": false,
    "hash": "0b99778f9661b25c667964412b82be7b104d523a0074597ba466f806d0f64030",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s934946355"
   },
@@ -6447,8 +6447,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.495,
-   "cached": true,
+   "elapsed": 2.79,
+   "cached": false,
    "hash": "dd1d7b598518f93e7cba9e305374196395b8ad3fdcbb1ec5bb78afe0bcd502e4",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s760461626"
   },
@@ -6472,8 +6472,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.475,
-   "cached": true,
+   "elapsed": 2.849,
+   "cached": false,
    "hash": "4c6fb6b725d5fb40ac42062a4b1f8e28cff3c47e412841a3e85454d6f854fd49",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s377745768"
   },
@@ -6497,8 +6497,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.423,
-   "cached": true,
+   "elapsed": 3.037,
+   "cached": false,
    "hash": "86c3362567349d8fe2fcd88dccfb342d088b2cb27921b6fe8eb9cae16bcef543",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1704488278"
   },
@@ -6522,8 +6522,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.461,
-   "cached": true,
+   "elapsed": 2.735,
+   "cached": false,
    "hash": "aab20c47ec481b74c1b723cbcc8679e85d7a1b3e211c545815ea36e972756726",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1018508522"
   },
@@ -6547,8 +6547,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.055,
-   "cached": true,
+   "elapsed": 3.091,
+   "cached": false,
    "hash": "1b88a2f90d314faff0a831f456fca9cfa1c3a6b7262ed3c3305ad1624c961558",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1165914485"
   },
@@ -6572,8 +6572,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.336,
-   "cached": true,
+   "elapsed": 2.848,
+   "cached": false,
    "hash": "70874c1916a25e94acbb0be5621211bd76663e62d8c467721f94858101ae3878",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s445637946"
   },
@@ -6597,8 +6597,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.345,
-   "cached": true,
+   "elapsed": 2.991,
+   "cached": false,
    "hash": "00b05e63e1fd95d821cd7fb62d6476420c0430b8543641d2bf2f1b49a97edc70",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s2073008015"
   },
@@ -6622,8 +6622,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.246,
-   "cached": true,
+   "elapsed": 2.786,
+   "cached": false,
    "hash": "3472a699b779c7486b61bfaf0898684abaeb3891f5f6ffbc09de021505a3f445",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s497066084"
   },
@@ -6647,8 +6647,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.419,
-   "cached": true,
+   "elapsed": 3.091,
+   "cached": false,
    "hash": "252f4557d688f46b7ab8b2a6dc0485f5fee64c02b068f69699fffacb35807282",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1060142202"
   },
@@ -6672,8 +6672,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.359,
-   "cached": true,
+   "elapsed": 3.091,
+   "cached": false,
    "hash": "dbaf403d7fe51330922c3d7f879c0734688b7adcea2d734dfe397d4eb4fdcf0f",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s925444075"
   },
@@ -6697,8 +6697,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.255,
-   "cached": true,
+   "elapsed": 2.936,
+   "cached": false,
    "hash": "e7050325d5a1f582cb15dfb26bb58e6e1ab737551db254d1f6f3708c65972b46",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s939365680"
   },
@@ -6722,8 +6722,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.213,
-   "cached": true,
+   "elapsed": 3.041,
+   "cached": false,
    "hash": "e66571962c2c3f89437326c3c164bf3a4ad0b6ccea84a4f60687f6d91b605d03",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s54427389"
   },
@@ -6747,8 +6747,8 @@
     "vid_end_v": 0.0605
    },
    "errors": [],
-   "elapsed": 3.23,
-   "cached": true,
+   "elapsed": 2.972,
+   "cached": false,
    "hash": "222a6544c3cba8530cb0f25b30b700c6bdc8b4d3438f283d0d4cdd6668a85070",
    "run_dir": "work/ff_m40c_3v60__vic2.35__s1115975472"
   },
@@ -6772,8 +6772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.122,
-   "cached": true,
+   "elapsed": 2.949,
+   "cached": false,
    "hash": "075d275f921d9721ed905f09983702d6911d2d9b78cb626d870cfd714ddba66d",
    "run_dir": "work/fs_27c_3v30__vic0.05__s452483223"
   },
@@ -6797,8 +6797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.051,
-   "cached": true,
+   "elapsed": 2.906,
+   "cached": false,
    "hash": "28c37404364df2f3cc182cea9664fd0c2d99954c70bf3e658d41f16e85e3c8b8",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1695653105"
   },
@@ -6822,8 +6822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.496,
-   "cached": true,
+   "elapsed": 3.341,
+   "cached": false,
    "hash": "399ce86c7af3f3ad443b2ad6e9599404b97625aaf8358c4d9b07371e772a9c54",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1085084613"
   },
@@ -6847,8 +6847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.845,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "22301818c15737858ce41d5bd570909c3c50464afdb7e44e01713c1557661fbf",
    "run_dir": "work/fs_27c_3v30__vic0.05__s441224510"
   },
@@ -6872,8 +6872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.326,
-   "cached": true,
+   "elapsed": 3.09,
+   "cached": false,
    "hash": "85805857eea24c0ef3568e683847a284111ebc5cc6acfb5ede1edd5c75f38c66",
    "run_dir": "work/fs_27c_3v30__vic0.05__s821422349"
   },
@@ -6897,8 +6897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.379,
-   "cached": true,
+   "elapsed": 2.884,
+   "cached": false,
    "hash": "200a224f343cb50243d4cfee26f2193798ea4dcf2bf3b992f89d98637b4b9cc9",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1758734097"
   },
@@ -6922,8 +6922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.094,
-   "cached": true,
+   "elapsed": 3.287,
+   "cached": false,
    "hash": "b0f31fa49be28310a21617980a50578f3541d5391b452a37cf00975a82d403ee",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1576893678"
   },
@@ -6947,8 +6947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.414,
-   "cached": true,
+   "elapsed": 2.842,
+   "cached": false,
    "hash": "d80c42d0edda1ed4c8b1614b561118b7604ceae490e2ade2434df414d48efe6d",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1902659721"
   },
@@ -6972,8 +6972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.463,
-   "cached": true,
+   "elapsed": 2.703,
+   "cached": false,
    "hash": "f860405dc7b3105f89a93521ca6d204aee0902699b3b8c328ba7140835451708",
    "run_dir": "work/fs_27c_3v30__vic0.05__s536475717"
   },
@@ -6997,8 +6997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.885,
-   "cached": true,
+   "elapsed": 2.738,
+   "cached": false,
    "hash": "56114f74cac68393ca51e99472cbf6f78b0feb99d41d3818f79091600a56e40e",
    "run_dir": "work/fs_27c_3v30__vic0.05__s2055609293"
   },
@@ -7022,8 +7022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.032,
-   "cached": true,
+   "elapsed": 2.889,
+   "cached": false,
    "hash": "699825b0bb997b3be434cc4dca274c806355cbab8f1098f6e42f61b1c123f87d",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1297200436"
   },
@@ -7047,8 +7047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.298,
-   "cached": true,
+   "elapsed": 3.09,
+   "cached": false,
    "hash": "97601c24374282cdef4fec6e17551beaffcdbc4d8b4df56f059b9a4ef75b6b9c",
    "run_dir": "work/fs_27c_3v30__vic0.05__s2099741074"
   },
@@ -7072,8 +7072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 5.461,
-   "cached": true,
+   "elapsed": 3.193,
+   "cached": false,
    "hash": "3c56b640b8abe4fe0177fbea0fbc80235ae3ff6c3807463eda30875068ce9f46",
    "run_dir": "work/fs_27c_3v30__vic0.05__s248750689"
   },
@@ -7097,8 +7097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.904,
-   "cached": true,
+   "elapsed": 2.791,
+   "cached": false,
    "hash": "60c0d13d69d238a9dfddc7507b5c9efc9e017cb3ee091888b7ff4036b2defde5",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1900119910"
   },
@@ -7122,8 +7122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.565,
-   "cached": true,
+   "elapsed": 2.742,
+   "cached": false,
    "hash": "8795c91bcb65735f9c3219a20bebb9b8e2ca353b7c8f3075894f0c7216f5c2ca",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1632811357"
   },
@@ -7147,8 +7147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 5.015,
-   "cached": true,
+   "elapsed": 3.048,
+   "cached": false,
    "hash": "a41824a77463eb28b3b04841b9a8845110f556eb6a83068ea7c661399c20fa62",
    "run_dir": "work/fs_27c_3v30__vic0.05__s522860322"
   },
@@ -7172,8 +7172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.777,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "9146beac9e3eef66d021fce2bb56326a76682a60b12ae8601108fec0139d94ce",
    "run_dir": "work/fs_27c_3v30__vic0.05__s934946355"
   },
@@ -7197,8 +7197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.649,
-   "cached": true,
+   "elapsed": 2.944,
+   "cached": false,
    "hash": "cc616808e14de3b2582716f5eabba562655ddcef106b48fe8eead56d2f298702",
    "run_dir": "work/fs_27c_3v30__vic0.05__s760461626"
   },
@@ -7222,8 +7222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.599,
-   "cached": true,
+   "elapsed": 2.891,
+   "cached": false,
    "hash": "d9d504f05af110e81a54f6c4badcf71985082e5772682dc2d1cedd54703995a3",
    "run_dir": "work/fs_27c_3v30__vic0.05__s377745768"
   },
@@ -7247,8 +7247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.162,
-   "cached": true,
+   "elapsed": 2.837,
+   "cached": false,
    "hash": "60c4e62c01989ab6994ce34b202c371db8c2827d3cf86904abf4ee38a869c0c9",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1704488278"
   },
@@ -7272,8 +7272,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.635,
-   "cached": true,
+   "elapsed": 2.939,
+   "cached": false,
    "hash": "edbf6ce7cb5e31e18ce30d953bbff19eef2f4c278e568ba3fef4d90f2fecbad9",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1018508522"
   },
@@ -7297,8 +7297,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.207,
-   "cached": true,
+   "elapsed": 2.937,
+   "cached": false,
    "hash": "8da1c7a579d1945ef2d85e702d0d35c56936b3ecdc51ce5ceb05528eacf37de6",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1165914485"
   },
@@ -7322,8 +7322,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.957,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "3f6d083922e50c68df3d9f733d3d76cbdb96384c08dc9e87cf9d7c44d3df8ff3",
    "run_dir": "work/fs_27c_3v30__vic0.05__s445637946"
   },
@@ -7347,8 +7347,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.044,
-   "cached": true,
+   "elapsed": 2.94,
+   "cached": false,
    "hash": "00fe167df1a2cb2b2d976169d0b298ab80fa959f8666d1802527dec7fe458d2a",
    "run_dir": "work/fs_27c_3v30__vic0.05__s2073008015"
   },
@@ -7372,8 +7372,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.918,
-   "cached": true,
+   "elapsed": 3.094,
+   "cached": false,
    "hash": "e4796c99dbe8dc96a81e4f2c40e8e77f668b966ae6e598987d60552e495417cf",
    "run_dir": "work/fs_27c_3v30__vic0.05__s497066084"
   },
@@ -7397,8 +7397,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.843,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "fdf7ea1db7c5b4a77d894de57d1c99513d3041711821aa8c9a7db449569d79ea",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1060142202"
   },
@@ -7422,8 +7422,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.998,
-   "cached": true,
+   "elapsed": 2.94,
+   "cached": false,
    "hash": "34877d7a27f93dbab24d19576317e54356b1e5288378e2e01cdedf3727e97126",
    "run_dir": "work/fs_27c_3v30__vic0.05__s925444075"
   },
@@ -7447,8 +7447,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.061,
-   "cached": true,
+   "elapsed": 2.788,
+   "cached": false,
    "hash": "c41c0408606475ba0ce7fb4eda89d1a04f4e1be3c43d4e482aa49d1c401c92c4",
    "run_dir": "work/fs_27c_3v30__vic0.05__s939365680"
   },
@@ -7472,8 +7472,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.904,
-   "cached": true,
+   "elapsed": 2.792,
+   "cached": false,
    "hash": "1eadce36d8ae7c4f20ab70d76f8ecad3d3b332682a18a17d592cbf4bf7508af4",
    "run_dir": "work/fs_27c_3v30__vic0.05__s54427389"
   },
@@ -7497,8 +7497,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.759,
-   "cached": true,
+   "elapsed": 3.144,
+   "cached": false,
    "hash": "667eb4ac0e7400970c2784e13f522c26d30cf3444f7ada17207117672cbe9715",
    "run_dir": "work/fs_27c_3v30__vic0.05__s1115975472"
   },
@@ -7522,8 +7522,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.994,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "43c53e801ca699a8bb109b82b15ff27c1a288c38d5bc2edc716299d28f63b722",
    "run_dir": "work/fs_27c_3v30__vic1.2__s452483223"
   },
@@ -7547,8 +7547,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.913,
-   "cached": true,
+   "elapsed": 2.796,
+   "cached": false,
    "hash": "5c6dc6eb83f564e6b50edc3cdcb702b710ecd92c4e6a92612d0b501d97ea1694",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1695653105"
   },
@@ -7572,8 +7572,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.867,
-   "cached": true,
+   "elapsed": 2.937,
+   "cached": false,
    "hash": "e5b59b8342fd2f8500bee4b1f878d16df4c99a17b71ed5c05234b7b41d41377c",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1085084613"
   },
@@ -7597,8 +7597,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.782,
-   "cached": true,
+   "elapsed": 2.747,
+   "cached": false,
    "hash": "e5e720427f8af4ca5173401f4cdd054e4d665ce592c1a48e9caa9bf830c5eb9e",
    "run_dir": "work/fs_27c_3v30__vic1.2__s441224510"
   },
@@ -7622,8 +7622,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.872,
-   "cached": true,
+   "elapsed": 2.591,
+   "cached": false,
    "hash": "86488b05b45d205e2ba1a48899fc19c1515a7e3e5d26d4ba24bc26609485bb33",
    "run_dir": "work/fs_27c_3v30__vic1.2__s821422349"
   },
@@ -7647,8 +7647,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.941,
-   "cached": true,
+   "elapsed": 3.147,
+   "cached": false,
    "hash": "ab12f453bf6d75dd050b7637cb3eecbc327aba8397625e14b4ce6c9bb92bdcd9",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1758734097"
   },
@@ -7672,8 +7672,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.427,
-   "cached": true,
+   "elapsed": 3.078,
+   "cached": false,
    "hash": "6b1bbe967d637fa2811f8f468447bdad1ab921194124d95d828886473ddcaf55",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1576893678"
   },
@@ -7697,8 +7697,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.364,
-   "cached": true,
+   "elapsed": 2.954,
+   "cached": false,
    "hash": "984bbaa27fa20b1bc0f65eea5ed4fa669470a945249daa1a59de8c98f1444d7b",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1902659721"
   },
@@ -7722,8 +7722,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.914,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "1223fed054669d90dc64ea7361c397edd118e93353c907d74ebbfe8a14c56589",
    "run_dir": "work/fs_27c_3v30__vic1.2__s536475717"
   },
@@ -7747,8 +7747,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.512,
-   "cached": true,
+   "elapsed": 2.945,
+   "cached": false,
    "hash": "7556268206705a097e8672641064fe784797bb3976a78e652dab0a75f91c3da7",
    "run_dir": "work/fs_27c_3v30__vic1.2__s2055609293"
   },
@@ -7772,8 +7772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.721,
-   "cached": true,
+   "elapsed": 3.092,
+   "cached": false,
    "hash": "8e50703b5abc3c98d44fb0d765a094421f9b7b92fa4f5027eb9d6a1f8c868be1",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1297200436"
   },
@@ -7797,8 +7797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.084,
-   "cached": true,
+   "elapsed": 3.189,
+   "cached": false,
    "hash": "799e6549612a261cb597c073c38842526fc74272f53b15098a2c38dafdd3a657",
    "run_dir": "work/fs_27c_3v30__vic1.2__s2099741074"
   },
@@ -7822,8 +7822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.713,
-   "cached": true,
+   "elapsed": 2.534,
+   "cached": false,
    "hash": "10775a09072240fe2f525556b05a766f58a81ca76e53d184c7f5787747a97b6d",
    "run_dir": "work/fs_27c_3v30__vic1.2__s248750689"
   },
@@ -7847,8 +7847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.859,
-   "cached": true,
+   "elapsed": 2.939,
+   "cached": false,
    "hash": "4579a16456807cd14aeb45c1a47487b2fcdc1f4f050c17264b303bfcb28d469d",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1900119910"
   },
@@ -7872,8 +7872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.791,
-   "cached": true,
+   "elapsed": 2.945,
+   "cached": false,
    "hash": "688d2be3012441952033a37927ee569cbf00e9d4c248436d2dde5aa5d7189320",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1632811357"
   },
@@ -7897,8 +7897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.795,
-   "cached": true,
+   "elapsed": 2.642,
+   "cached": false,
    "hash": "5bf8f9864f46a279abd5411f045b11410764c38b52f2ad57710ca9b13e63bc1b",
    "run_dir": "work/fs_27c_3v30__vic1.2__s522860322"
   },
@@ -7922,8 +7922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.725,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "95d9c13acd2f14c99b934dac7461ab46a1613b38bf7f8b1233d52ca6e70a1665",
    "run_dir": "work/fs_27c_3v30__vic1.2__s934946355"
   },
@@ -7947,8 +7947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.766,
-   "cached": true,
+   "elapsed": 3.14,
+   "cached": false,
    "hash": "dff2a4857a36784abc50fbfe5c8e3a006c7639c1ff49b4514e446644cfa15e5f",
    "run_dir": "work/fs_27c_3v30__vic1.2__s760461626"
   },
@@ -7972,8 +7972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.759,
-   "cached": true,
+   "elapsed": 3.0,
+   "cached": false,
    "hash": "ecce7568f1ec6145e52a6a84f343c21f3ec4023b1e4e92e023461194b740c149",
    "run_dir": "work/fs_27c_3v30__vic1.2__s377745768"
   },
@@ -7997,8 +7997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.705,
-   "cached": true,
+   "elapsed": 3.013,
+   "cached": false,
    "hash": "4f05fa759956b49a388325c8a83c7b232335ed88727ceeb3e6b145edfe02a36b",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1704488278"
   },
@@ -8022,8 +8022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.647,
-   "cached": true,
+   "elapsed": 2.964,
+   "cached": false,
    "hash": "f990645e1cfd633db60b78ceba180e887faa9404d56187f3a9c9fc42547a3612",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1018508522"
   },
@@ -8047,8 +8047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.877,
-   "cached": true,
+   "elapsed": 3.201,
+   "cached": false,
    "hash": "bb6dbc84558a65e96882f35e5d45f28964be4df5c3b31b8329a01ffe2b4ea4ab",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1165914485"
   },
@@ -8072,8 +8072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.858,
-   "cached": true,
+   "elapsed": 2.891,
+   "cached": false,
    "hash": "384c683dc1199c96ac83cf7d71d4a3a151866c7bbf1e183f88393efb790f3663",
    "run_dir": "work/fs_27c_3v30__vic1.2__s445637946"
   },
@@ -8097,8 +8097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.716,
-   "cached": true,
+   "elapsed": 2.946,
+   "cached": false,
    "hash": "4a2ac3367eae9d28d136cc84232d379315c01940f446eb231328da57041b1ab7",
    "run_dir": "work/fs_27c_3v30__vic1.2__s2073008015"
   },
@@ -8122,8 +8122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 5.096,
-   "cached": true,
+   "elapsed": 3.142,
+   "cached": false,
    "hash": "e9054f0819f3fe929096ac43c37e6051d76a46e5d91a8a2584d00f41bd33b86a",
    "run_dir": "work/fs_27c_3v30__vic1.2__s497066084"
   },
@@ -8147,8 +8147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.068,
-   "cached": true,
+   "elapsed": 2.892,
+   "cached": false,
    "hash": "841ffe9555ffcf7c680dbe822d800495c30f268991d9a3f7439ea5289b83e9ae",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1060142202"
   },
@@ -8172,8 +8172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.628,
-   "cached": true,
+   "elapsed": 3.09,
+   "cached": false,
    "hash": "0f20d3abff61875fefbb90af310dd5019087b3fc47c2ca372fe6d5a545aa5103",
    "run_dir": "work/fs_27c_3v30__vic1.2__s925444075"
   },
@@ -8197,8 +8197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.727,
-   "cached": true,
+   "elapsed": 2.84,
+   "cached": false,
    "hash": "5f28ee57c3fda06ba5270b8beaa2bde7c1d1663e93e4169e56b60f3141503138",
    "run_dir": "work/fs_27c_3v30__vic1.2__s939365680"
   },
@@ -8222,8 +8222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 5.069,
-   "cached": true,
+   "elapsed": 3.244,
+   "cached": false,
    "hash": "75bf26a651ac164f7fc6effe6db3bd4bb5f509e537ef35b3a9778cc2428144aa",
    "run_dir": "work/fs_27c_3v30__vic1.2__s54427389"
   },
@@ -8247,8 +8247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.18,
-   "cached": true,
+   "elapsed": 3.043,
+   "cached": false,
    "hash": "67cd0f10ef3fb8df6218e7bdc5b2f67bd459d014e5daea72eebb9f1a427d8154",
    "run_dir": "work/fs_27c_3v30__vic1.2__s1115975472"
   },
@@ -8272,8 +8272,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.704,
-   "cached": true,
+   "elapsed": 3.24,
+   "cached": false,
    "hash": "bdc2b26655b57c29d7b3de98a25a4567096b8c9f880782ef4ddf7cc4a7d946ff",
    "run_dir": "work/fs_27c_3v30__vic2.35__s452483223"
   },
@@ -8297,8 +8297,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.694,
-   "cached": true,
+   "elapsed": 3.09,
+   "cached": false,
    "hash": "0c5b5dd6924d40598b4344cf48a4170512095c69e230d8f53c0717f60b1615f9",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1695653105"
   },
@@ -8322,8 +8322,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.272,
-   "cached": true,
+   "elapsed": 3.042,
+   "cached": false,
    "hash": "cba7291d6482ee7b612d8dbf84644022c76b29d7c3913ab994d252da82397552",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1085084613"
   },
@@ -8347,8 +8347,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.993,
-   "cached": true,
+   "elapsed": 2.792,
+   "cached": false,
    "hash": "4b5de89437cdf583da24d1c7a9bb015eab638ac1244ec90d9edaaecf90c789a9",
    "run_dir": "work/fs_27c_3v30__vic2.35__s441224510"
   },
@@ -8372,8 +8372,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.021,
-   "cached": true,
+   "elapsed": 3.294,
+   "cached": false,
    "hash": "9a01a67437341c87b618064adda0c4f94c91e4e9b3be9bc967bc73723c38b95a",
    "run_dir": "work/fs_27c_3v30__vic2.35__s821422349"
   },
@@ -8397,8 +8397,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.401,
-   "cached": true,
+   "elapsed": 3.196,
+   "cached": false,
    "hash": "c71b9fd4e9aacded2a21c5418fe831bafc12c5a7750bed9f1d974ab5117acb04",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1758734097"
   },
@@ -8422,8 +8422,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.329,
-   "cached": true,
+   "elapsed": 3.342,
+   "cached": false,
    "hash": "8076bf825bcc6ae7242c89852e6bb45718ac5166b123034f2fd3e1e2579912f7",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1576893678"
   },
@@ -8447,8 +8447,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.568,
-   "cached": true,
+   "elapsed": 3.184,
+   "cached": false,
    "hash": "16f70e83b4f7ef4a363962ba8210b5fbdbdb30733aa7687182abd7bbd9b55bc3",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1902659721"
   },
@@ -8472,8 +8472,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.493,
-   "cached": true,
+   "elapsed": 2.891,
+   "cached": false,
    "hash": "8cc9912879ba66b55449a4797537f56d0891a097459351c9b0f997b6ebe336a8",
    "run_dir": "work/fs_27c_3v30__vic2.35__s536475717"
   },
@@ -8497,8 +8497,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.937,
-   "cached": true,
+   "elapsed": 3.294,
+   "cached": false,
    "hash": "a6d3b56d877d32f465f1b892d2b35c960ec5b25e6eb4d5f0daccbd103a7433dc",
    "run_dir": "work/fs_27c_3v30__vic2.35__s2055609293"
   },
@@ -8522,8 +8522,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.921,
-   "cached": true,
+   "elapsed": 2.987,
+   "cached": false,
    "hash": "40d98cc55af8d1d880000dddd176e4bb018391ad837c63bb03053e6d41e87b97",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1297200436"
   },
@@ -8547,8 +8547,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.872,
-   "cached": true,
+   "elapsed": 3.147,
+   "cached": false,
    "hash": "dc3c3e25738c04ad852e58a1d2c501e1014f3d2b9b58e79c024afe8efda09298",
    "run_dir": "work/fs_27c_3v30__vic2.35__s2099741074"
   },
@@ -8572,8 +8572,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.584,
-   "cached": true,
+   "elapsed": 3.292,
+   "cached": false,
    "hash": "9dd7f0d5a3233896a0ea1efd3d942f6019391ba4d44bfc5d6a8930a413fae528",
    "run_dir": "work/fs_27c_3v30__vic2.35__s248750689"
   },
@@ -8597,8 +8597,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.494,
-   "cached": true,
+   "elapsed": 3.14,
+   "cached": false,
    "hash": "0e942a2748ac341e2f60594ea0c0bac4a6e6adfa1a9a9713a9c9365d26cb0c04",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1900119910"
   },
@@ -8622,8 +8622,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.549,
-   "cached": true,
+   "elapsed": 3.088,
+   "cached": false,
    "hash": "4d1b019305c23803331d8636a772c0f6cb8a155c2517fd1dba2409917d27292c",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1632811357"
   },
@@ -8647,8 +8647,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.526,
-   "cached": true,
+   "elapsed": 2.837,
+   "cached": false,
    "hash": "8be065c1dc4c1fcc5ee0c54f7766125dd6cc3b4a2add2fe57ab0657dba5506f1",
    "run_dir": "work/fs_27c_3v30__vic2.35__s522860322"
   },
@@ -8672,8 +8672,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.032,
-   "cached": true,
+   "elapsed": 2.993,
+   "cached": false,
    "hash": "c9dc47fbcf0118d5394581815035a88b5d4d47ad65c37b4dd2354dd707cc50e7",
    "run_dir": "work/fs_27c_3v30__vic2.35__s934946355"
   },
@@ -8697,8 +8697,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.212,
-   "cached": true,
+   "elapsed": 2.738,
+   "cached": false,
    "hash": "eb6487a80a2dced090b5729c1233e1802457fbf389fd8107ae3aa1ac95accf35",
    "run_dir": "work/fs_27c_3v30__vic2.35__s760461626"
   },
@@ -8722,8 +8722,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.705,
-   "cached": true,
+   "elapsed": 3.089,
+   "cached": false,
    "hash": "93b091353d6afb60a64162f4b86b080b9c09fd010702d998eb49f4910848084c",
    "run_dir": "work/fs_27c_3v30__vic2.35__s377745768"
   },
@@ -8747,8 +8747,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.205,
-   "cached": true,
+   "elapsed": 2.835,
+   "cached": false,
    "hash": "81a7b6c8c48926b898abcae0133ba2a8dea503ddd8d892f5038c5dd27ac6ee21",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1704488278"
   },
@@ -8772,8 +8772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.912,
-   "cached": true,
+   "elapsed": 3.29,
+   "cached": false,
    "hash": "39421d8e2fed3999192700df79df0c5db3df047773f7a7a861dbad4cbdd424dd",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1018508522"
   },
@@ -8797,8 +8797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.136,
-   "cached": true,
+   "elapsed": 3.086,
+   "cached": false,
    "hash": "cfcca336c0759ab1739cf35e963f4b1fc623b3be2d006e3e274179229e501671",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1165914485"
   },
@@ -8822,8 +8822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.893,
-   "cached": true,
+   "elapsed": 2.936,
+   "cached": false,
    "hash": "e24452c38ee5a098a341b7fd74eb52825bea957fdaaf903943afa8239f9c52f2",
    "run_dir": "work/fs_27c_3v30__vic2.35__s445637946"
   },
@@ -8847,8 +8847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.926,
-   "cached": true,
+   "elapsed": 2.791,
+   "cached": false,
    "hash": "1fc5aeb2420668eceeab0f524b26e1d4832ad5819f54ea81b954ed0a5f863927",
    "run_dir": "work/fs_27c_3v30__vic2.35__s2073008015"
   },
@@ -8872,8 +8872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.652,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "f756890c19bb38edc01b2ce4cee216172eca1bab96d22f4c07134320f23316ca",
    "run_dir": "work/fs_27c_3v30__vic2.35__s497066084"
   },
@@ -8897,8 +8897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.411,
-   "cached": true,
+   "elapsed": 2.887,
+   "cached": false,
    "hash": "5b32bb33fe0fcbb7a2f4d9eac6fdefc68ff9cb57c784a3d84c77a8ca64866485",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1060142202"
   },
@@ -8922,8 +8922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.593,
-   "cached": true,
+   "elapsed": 2.689,
+   "cached": false,
    "hash": "55d67be8b4ec8ab7d227f7494d8193fa3ca8ad9b721b3e576010599484778a5c",
    "run_dir": "work/fs_27c_3v30__vic2.35__s925444075"
   },
@@ -8947,8 +8947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.63,
-   "cached": true,
+   "elapsed": 3.042,
+   "cached": false,
    "hash": "a296507188bd41c32d64d3b3eac5f32bc0659e1181d7cb81976e228ccbca8792",
    "run_dir": "work/fs_27c_3v30__vic2.35__s939365680"
   },
@@ -8972,8 +8972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.267,
-   "cached": true,
+   "elapsed": 2.848,
+   "cached": false,
    "hash": "8268eca3648674b5c56a773397179f13e922dc1121f82079a316eb1a876028d8",
    "run_dir": "work/fs_27c_3v30__vic2.35__s54427389"
   },
@@ -8997,8 +8997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.052,
-   "cached": true,
+   "elapsed": 3.046,
+   "cached": false,
    "hash": "f31b5d38dba131f799fed6187d9158667b0c198bd3af5eeb25e9d383309b0505",
    "run_dir": "work/fs_27c_3v30__vic2.35__s1115975472"
   },
@@ -9022,8 +9022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.823,
-   "cached": true,
+   "elapsed": 3.239,
+   "cached": false,
    "hash": "f594b8aa93c74367bccd97f475b054d8e04b38cde0f8ad9dfdb5ab96119bcc46",
    "run_dir": "work/sf_27c_3v30__vic0.05__s452483223"
   },
@@ -9047,8 +9047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.862,
-   "cached": true,
+   "elapsed": 2.935,
+   "cached": false,
    "hash": "cdaddcd766e6d7df9526f0f5261994e8de8d3d4dbc89bf452aa0bcf98a9195dd",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1695653105"
   },
@@ -9072,8 +9072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.525,
-   "cached": true,
+   "elapsed": 2.84,
+   "cached": false,
    "hash": "09c3b32fe5977fc8eb723e927044e46a28acebc5a55ee708f490ae62749ba33e",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1085084613"
   },
@@ -9097,8 +9097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.574,
-   "cached": true,
+   "elapsed": 2.586,
+   "cached": false,
    "hash": "ce3540cbb672ad2f632c31edda48db01256c9efb4fc5bc9fa59ceb3740eae38d",
    "run_dir": "work/sf_27c_3v30__vic0.05__s441224510"
   },
@@ -9122,8 +9122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.792,
-   "cached": true,
+   "elapsed": 3.087,
+   "cached": false,
    "hash": "cf9ed8d29b4f67790d727346e235de10582b83c15081625466b11f76f1e1832e",
    "run_dir": "work/sf_27c_3v30__vic0.05__s821422349"
   },
@@ -9147,8 +9147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.441,
-   "cached": true,
+   "elapsed": 2.638,
+   "cached": false,
    "hash": "2da743e5585b9df4ae882c55f23e90716a47488a4ef558c71dba0fa7697b049d",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1758734097"
   },
@@ -9172,8 +9172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.738,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "1b8c3ebb5fb9b272ea5130b8c3027b49fae8edc16857043bea0e1f53edbf5ae1",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1576893678"
   },
@@ -9197,8 +9197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.389,
-   "cached": true,
+   "elapsed": 2.934,
+   "cached": false,
    "hash": "fb8463741ea27154bc879153f5344f7a62c4f6cc882ed31d5dc635c48aa02e7d",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1902659721"
   },
@@ -9222,8 +9222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.58,
-   "cached": true,
+   "elapsed": 3.189,
+   "cached": false,
    "hash": "e2c0bb8d94a20dca6902194047c9f11d6cc135768534d70af11735f67857f192",
    "run_dir": "work/sf_27c_3v30__vic0.05__s536475717"
   },
@@ -9247,8 +9247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.602,
-   "cached": true,
+   "elapsed": 3.039,
+   "cached": false,
    "hash": "ca69685a29b0281ebd466c40b58fe27089b902f8d5e60ed1d84080df2556fcd8",
    "run_dir": "work/sf_27c_3v30__vic0.05__s2055609293"
   },
@@ -9272,8 +9272,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.667,
-   "cached": true,
+   "elapsed": 2.588,
+   "cached": false,
    "hash": "d1df5eb3345683061d73321973c4766206f9ac88a4d74dae0c12d01338c0855e",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1297200436"
   },
@@ -9297,8 +9297,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.49,
-   "cached": true,
+   "elapsed": 3.142,
+   "cached": false,
    "hash": "e1fe4cc60ee3d93763ca870e952ad8d8bc27b569a49917c47b7651b0ee2a8ed6",
    "run_dir": "work/sf_27c_3v30__vic0.05__s2099741074"
   },
@@ -9322,8 +9322,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.367,
-   "cached": true,
+   "elapsed": 2.789,
+   "cached": false,
    "hash": "fc5584c3394b311855896cfe726c9b3b43a94dd463dd907a1b5a79a91805510d",
    "run_dir": "work/sf_27c_3v30__vic0.05__s248750689"
   },
@@ -9347,8 +9347,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.75,
-   "cached": true,
+   "elapsed": 2.738,
+   "cached": false,
    "hash": "cd77be29cc5e39be4bd251348a5df2b26bf85af5366be158ac67a378fca772f0",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1900119910"
   },
@@ -9372,8 +9372,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.544,
-   "cached": true,
+   "elapsed": 3.085,
+   "cached": false,
    "hash": "bd847cacebc62e49b2f6e87190d99524f65562626f66e6dcaa0f613e2ed59b0b",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1632811357"
   },
@@ -9397,8 +9397,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.25,
-   "cached": true,
+   "elapsed": 2.689,
+   "cached": false,
    "hash": "1371169fc3a8e88ed2944e3e3c370c65967130152d04bc44d0c96621749e66d7",
    "run_dir": "work/sf_27c_3v30__vic0.05__s522860322"
   },
@@ -9422,8 +9422,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.563,
-   "cached": true,
+   "elapsed": 2.735,
+   "cached": false,
    "hash": "bf147ae54067bc9319d5b7af70f8de2e0698a1de6934417abc54b6d0c77fff3c",
    "run_dir": "work/sf_27c_3v30__vic0.05__s934946355"
   },
@@ -9447,8 +9447,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.563,
-   "cached": true,
+   "elapsed": 2.79,
+   "cached": false,
    "hash": "ad52f11052f3b92ec3330dd11d95b67048262b01ff58f3a4d579328e1f2ec008",
    "run_dir": "work/sf_27c_3v30__vic0.05__s760461626"
   },
@@ -9472,8 +9472,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.482,
-   "cached": true,
+   "elapsed": 2.89,
+   "cached": false,
    "hash": "bc794b258fad6e2d71f7bf4b5aba46d46d6e00c1505d80a5ab5f7fee9be6ae42",
    "run_dir": "work/sf_27c_3v30__vic0.05__s377745768"
   },
@@ -9497,8 +9497,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.603,
-   "cached": true,
+   "elapsed": 3.141,
+   "cached": false,
    "hash": "f77c662949193fc734d1549df728268c176a414bcef28b2cf68e8f44d76a140b",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1704488278"
   },
@@ -9522,8 +9522,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.819,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "2adf5fae4c8e8f1c8d645e8e14dfe4854fb7355da41af1f6061e9d35a13ac4a0",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1018508522"
   },
@@ -9547,8 +9547,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.818,
-   "cached": true,
+   "elapsed": 3.09,
+   "cached": false,
    "hash": "53ee51785ac5e88df895cc7b13af8941ebf93ccf259964925cc76cf030345740",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1165914485"
   },
@@ -9572,8 +9572,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.684,
-   "cached": true,
+   "elapsed": 2.892,
+   "cached": false,
    "hash": "bdba766ba849e4e5343a6776973677793019d4a589c97a187029e3e070e561c1",
    "run_dir": "work/sf_27c_3v30__vic0.05__s445637946"
   },
@@ -9597,8 +9597,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.304,
-   "cached": true,
+   "elapsed": 2.99,
+   "cached": false,
    "hash": "6ed5a406c6f31f9ef4a0f6951bb48c62e0c563ee49da7abe4d288516639de7e1",
    "run_dir": "work/sf_27c_3v30__vic0.05__s2073008015"
   },
@@ -9622,8 +9622,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.37,
-   "cached": true,
+   "elapsed": 3.04,
+   "cached": false,
    "hash": "f94ae84f029de28e266e39579f49998717a97e19ad7db46fb5ca8eceabf2c5af",
    "run_dir": "work/sf_27c_3v30__vic0.05__s497066084"
   },
@@ -9647,8 +9647,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.51,
-   "cached": true,
+   "elapsed": 2.686,
+   "cached": false,
    "hash": "c9f9c956d802d110cfbf10c06b69a263270681a4c70f067a7481408d6ed55222",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1060142202"
   },
@@ -9672,8 +9672,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.067,
-   "cached": true,
+   "elapsed": 3.043,
+   "cached": false,
    "hash": "a378ddb5386b1fe0eb5b61f7dbc2888aa7acaf2670ed5321dfd84450423c1df6",
    "run_dir": "work/sf_27c_3v30__vic0.05__s925444075"
   },
@@ -9697,8 +9697,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.17,
-   "cached": true,
+   "elapsed": 2.888,
+   "cached": false,
    "hash": "b072991e9bb6b9ad9439079dcb796c4970ef2cd8a2449636e8759fc5f3762b84",
    "run_dir": "work/sf_27c_3v30__vic0.05__s939365680"
   },
@@ -9722,8 +9722,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.878,
-   "cached": true,
+   "elapsed": 3.196,
+   "cached": false,
    "hash": "dbade0f185138408d963815cecd9eecafe425f25a02b3fd20cfd7824df5754eb",
    "run_dir": "work/sf_27c_3v30__vic0.05__s54427389"
   },
@@ -9747,8 +9747,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.656,
-   "cached": true,
+   "elapsed": 2.989,
+   "cached": false,
    "hash": "c70da86d9da98cdc733b83ed903937da7d081666f724960c57fced64d854fb18",
    "run_dir": "work/sf_27c_3v30__vic0.05__s1115975472"
   },
@@ -9772,8 +9772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.409,
-   "cached": true,
+   "elapsed": 2.938,
+   "cached": false,
    "hash": "17d9ce64c161bbce561bfb8d428a028fef30fa9e1a5b9783601d491e7d7d3b03",
    "run_dir": "work/sf_27c_3v30__vic1.2__s452483223"
   },
@@ -9797,8 +9797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.973,
-   "cached": true,
+   "elapsed": 3.089,
+   "cached": false,
    "hash": "2e6153da5a58141d90512a7a83ccc41216531946706276022ec78c670da74b2c",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1695653105"
   },
@@ -9822,8 +9822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.718,
-   "cached": true,
+   "elapsed": 2.537,
+   "cached": false,
    "hash": "6a468baa4e52743271cef3232b96c81398f238a85192adf9e061243c8609408a",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1085084613"
   },
@@ -9847,8 +9847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.946,
-   "cached": true,
+   "elapsed": 2.945,
+   "cached": false,
    "hash": "0c2f975edcf853328da9588f3c24a800a91a87e65af608c0c1b2a4ba5e5416f2",
    "run_dir": "work/sf_27c_3v30__vic1.2__s441224510"
   },
@@ -9872,8 +9872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.426,
-   "cached": true,
+   "elapsed": 3.041,
+   "cached": false,
    "hash": "cbbc8e0ab68ea1c20aec5a845c36ab8619baa736be4fcd6b74ddae2e7c2b421f",
    "run_dir": "work/sf_27c_3v30__vic1.2__s821422349"
   },
@@ -9897,8 +9897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.634,
-   "cached": true,
+   "elapsed": 3.188,
+   "cached": false,
    "hash": "ab66d4885bd25c8c45329275bac27636ea704466a4ffbb11e49d651b2b91b510",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1758734097"
   },
@@ -9922,8 +9922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.705,
-   "cached": true,
+   "elapsed": 3.144,
+   "cached": false,
    "hash": "586654080f2dbc4deb53bb220685b5190c758b3cef89e9ad6548e1a6e29eb5ee",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1576893678"
   },
@@ -9947,8 +9947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.821,
-   "cached": true,
+   "elapsed": 2.894,
+   "cached": false,
    "hash": "aaac7d9b4667dbbf6f6a724d4be586a8c6c7fd9117edd56c88208880f760fd07",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1902659721"
   },
@@ -9972,8 +9972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.132,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "3adfd81cd8542a2d590a852649506cb9d0d1be1c1734bb021796fb91f551cdb3",
    "run_dir": "work/sf_27c_3v30__vic1.2__s536475717"
   },
@@ -9997,8 +9997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.802,
-   "cached": true,
+   "elapsed": 2.939,
+   "cached": false,
    "hash": "24e804c9e393fbd51c450435192b7a3000639de0b49f451bb345e4024582d2c9",
    "run_dir": "work/sf_27c_3v30__vic1.2__s2055609293"
   },
@@ -10022,8 +10022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.727,
-   "cached": true,
+   "elapsed": 2.793,
+   "cached": false,
    "hash": "8eca92fb0b78a2913e951b758fe2b732819e9f6a757a5534766fe6d74555f814",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1297200436"
   },
@@ -10047,8 +10047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.64,
-   "cached": true,
+   "elapsed": 2.895,
+   "cached": false,
    "hash": "9c8c9d1829bdc7cce7f878c104944b91d9ac88bcde768a280e7ba5a5f294fa96",
    "run_dir": "work/sf_27c_3v30__vic1.2__s2099741074"
   },
@@ -10072,8 +10072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.552,
-   "cached": true,
+   "elapsed": 2.79,
+   "cached": false,
    "hash": "803d1ae0d3a92013ad4639ec9470fbbc8e820ac8c99e27132c3e9aca42792735",
    "run_dir": "work/sf_27c_3v30__vic1.2__s248750689"
   },
@@ -10097,8 +10097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.885,
-   "cached": true,
+   "elapsed": 3.191,
+   "cached": false,
    "hash": "6c9c0ce5e357bd7842a75cbcb56567d8582c182782ba1393d4ce4986cc2051ed",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1900119910"
   },
@@ -10122,8 +10122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.474,
-   "cached": true,
+   "elapsed": 3.148,
+   "cached": false,
    "hash": "80355ec2d733ff3365d7f932973c70f0d253276bdf4259042897db2aecd0d7c0",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1632811357"
   },
@@ -10147,8 +10147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.642,
-   "cached": true,
+   "elapsed": 2.991,
+   "cached": false,
    "hash": "cc07e36dcb62a321738489e48f45b00c1be5d8373ed227734b8d4612ff28aba5",
    "run_dir": "work/sf_27c_3v30__vic1.2__s522860322"
   },
@@ -10172,8 +10172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.76,
-   "cached": true,
+   "elapsed": 2.893,
+   "cached": false,
    "hash": "1460ceabfd3ef8bfff1495e5213360955c9cf9649b99afdf5be74de723861131",
    "run_dir": "work/sf_27c_3v30__vic1.2__s934946355"
   },
@@ -10197,8 +10197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.816,
-   "cached": true,
+   "elapsed": 2.838,
+   "cached": false,
    "hash": "78db47ed60c1b34d5379b0356d5477ecea4267d1ce8843377c36c3d0e344fc08",
    "run_dir": "work/sf_27c_3v30__vic1.2__s760461626"
   },
@@ -10222,8 +10222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.533,
-   "cached": true,
+   "elapsed": 2.991,
+   "cached": false,
    "hash": "f56b2996389ca231a2a814c8a3fa1cdccbf7c79c8f704fd87180e8f975b6489f",
    "run_dir": "work/sf_27c_3v30__vic1.2__s377745768"
   },
@@ -10247,8 +10247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.562,
-   "cached": true,
+   "elapsed": 2.943,
+   "cached": false,
    "hash": "23606ae5d7cef3517504411c7616deed8e157b26fd0748b439385dd757461bee",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1704488278"
   },
@@ -10272,8 +10272,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.575,
-   "cached": true,
+   "elapsed": 2.839,
+   "cached": false,
    "hash": "3fa809a82f1ac96a95eac2d744525dbe3bbaa1595f1509181017e4754e7d0bc7",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1018508522"
   },
@@ -10297,8 +10297,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.733,
-   "cached": true,
+   "elapsed": 2.736,
+   "cached": false,
    "hash": "4a282bd1a4e10ce017219bd74eadcfe2e4802692256506af234cd3e16d2cdb64",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1165914485"
   },
@@ -10322,8 +10322,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.317,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "bc37c77172225e2481be1d468e0c9a8f9c36aaf54d43d1d90e9d75788a002315",
    "run_dir": "work/sf_27c_3v30__vic1.2__s445637946"
   },
@@ -10347,8 +10347,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.494,
-   "cached": true,
+   "elapsed": 3.188,
+   "cached": false,
    "hash": "53c7ec2a54d0caa6740cf8055c8edfdff7fb7fd2efce9f7babacd9c429638286",
    "run_dir": "work/sf_27c_3v30__vic1.2__s2073008015"
   },
@@ -10372,8 +10372,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.397,
-   "cached": true,
+   "elapsed": 3.197,
+   "cached": false,
    "hash": "03b023370987fa9cf82226195b3316a08b50de345d5143f58fe0f5049ae3d0eb",
    "run_dir": "work/sf_27c_3v30__vic1.2__s497066084"
   },
@@ -10397,8 +10397,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.341,
-   "cached": true,
+   "elapsed": 3.088,
+   "cached": false,
    "hash": "d5204d1700946bcd8d7d732d06e276c4e6f5b08de9ec24724ddae67a70b99f0c",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1060142202"
   },
@@ -10422,8 +10422,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.595,
-   "cached": true,
+   "elapsed": 3.398,
+   "cached": false,
    "hash": "857ad4f253744c096b1007676cffab2b56baea1e056c9154a1e86b3cd9d90bc1",
    "run_dir": "work/sf_27c_3v30__vic1.2__s925444075"
   },
@@ -10447,8 +10447,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.517,
-   "cached": true,
+   "elapsed": 2.889,
+   "cached": false,
    "hash": "ae8ed5841a0583e119b81f92f467627021e4f6a11a2b6fc3aac783383783e536",
    "run_dir": "work/sf_27c_3v30__vic1.2__s939365680"
   },
@@ -10472,8 +10472,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.44,
-   "cached": true,
+   "elapsed": 3.045,
+   "cached": false,
    "hash": "3506fec2d22261d19fc2ccf969d0a0a6ee0db1a6b5f4c1005c2b2da1869401dc",
    "run_dir": "work/sf_27c_3v30__vic1.2__s54427389"
   },
@@ -10497,8 +10497,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.568,
-   "cached": true,
+   "elapsed": 3.266,
+   "cached": false,
    "hash": "2cf4ed221b27718bf861e2b32e0126668df87ce726bfa11fb6a85b510db9b5ae",
    "run_dir": "work/sf_27c_3v30__vic1.2__s1115975472"
   },
@@ -10522,8 +10522,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.538,
-   "cached": true,
+   "elapsed": 3.24,
+   "cached": false,
    "hash": "6966126a35a8f4a8ebff71183e198188e2cf452dcc14148c66154572b3ef8c04",
    "run_dir": "work/sf_27c_3v30__vic2.35__s452483223"
   },
@@ -10547,8 +10547,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.388,
-   "cached": true,
+   "elapsed": 3.056,
+   "cached": false,
    "hash": "7da3310c9d7447af4976d2aa6b0b31d5bd7de2f00696e9384c6f1f8f8e595cf2",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1695653105"
   },
@@ -10572,8 +10572,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.345,
-   "cached": true,
+   "elapsed": 3.101,
+   "cached": false,
    "hash": "d10d37380b7a5474632da40dfcfdcb25ac756920d8b185e45e760765d6369f79",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1085084613"
   },
@@ -10597,8 +10597,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.741,
-   "cached": true,
+   "elapsed": 3.246,
+   "cached": false,
    "hash": "03b94bfb7da4d7b67f5593bab1243f3a79dc47d3d78bda53637fcf08658bf7ec",
    "run_dir": "work/sf_27c_3v30__vic2.35__s441224510"
   },
@@ -10622,8 +10622,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.954,
-   "cached": true,
+   "elapsed": 3.252,
+   "cached": false,
    "hash": "6ddc1901d4852390409f12939e425febed77cb9f1a70a3cd2b221085376871d1",
    "run_dir": "work/sf_27c_3v30__vic2.35__s821422349"
   },
@@ -10647,8 +10647,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.375,
-   "cached": true,
+   "elapsed": 2.844,
+   "cached": false,
    "hash": "e1f90852e635a3cfbf93cea86dcda3ad5355506dbdb83f694d4fbd82b71b376b",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1758734097"
   },
@@ -10672,8 +10672,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.809,
-   "cached": true,
+   "elapsed": 3.037,
+   "cached": false,
    "hash": "cb91461cd1206ae58e0bfdd2479a9891b64dfc4df3968ca4814fa11f28707701",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1576893678"
   },
@@ -10697,8 +10697,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.796,
-   "cached": true,
+   "elapsed": 2.841,
+   "cached": false,
    "hash": "9055be291c965ffb5601037788802862451b880fc9eba42133f4fe34eb7a9016",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1902659721"
   },
@@ -10722,8 +10722,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.972,
-   "cached": true,
+   "elapsed": 2.937,
+   "cached": false,
    "hash": "5ec39c7f184eaf4d5af8135530acb0c392a360a8fa0290d34db61bf470c6c201",
    "run_dir": "work/sf_27c_3v30__vic2.35__s536475717"
   },
@@ -10747,8 +10747,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 4.0,
-   "cached": true,
+   "elapsed": 2.787,
+   "cached": false,
    "hash": "3269b55ceae0e7d9b8af9b970b0c622f08dbeab9317893a1768083eae3d3012c",
    "run_dir": "work/sf_27c_3v30__vic2.35__s2055609293"
   },
@@ -10772,8 +10772,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.874,
-   "cached": true,
+   "elapsed": 3.094,
+   "cached": false,
    "hash": "d76e876d7525506fe3e031b29cce7508819b257779628befb8b2375480e2ef59",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1297200436"
   },
@@ -10797,8 +10797,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.873,
-   "cached": true,
+   "elapsed": 2.789,
+   "cached": false,
    "hash": "c06c82a7eeb5f6a5509de94739fe4ac39dc01db6cf347a55f03eed65d374746a",
    "run_dir": "work/sf_27c_3v30__vic2.35__s2099741074"
   },
@@ -10822,8 +10822,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.705,
-   "cached": true,
+   "elapsed": 3.053,
+   "cached": false,
    "hash": "0ad11e01844cc37da980229f671c636ba2c9c8c74357c8f094b54c21479883a5",
    "run_dir": "work/sf_27c_3v30__vic2.35__s248750689"
   },
@@ -10847,8 +10847,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.496,
-   "cached": true,
+   "elapsed": 3.039,
+   "cached": false,
    "hash": "e5845ce475f7e4876a2d06d06b67ba7ae95ca4b4629d7c5fe2236ff676454a56",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1900119910"
   },
@@ -10872,8 +10872,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.802,
-   "cached": true,
+   "elapsed": 3.141,
+   "cached": false,
    "hash": "01d304ce370bbf0b049a45a55df377c7bee2e6cac63abd3c7599de988182abb2",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1632811357"
   },
@@ -10897,8 +10897,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.493,
-   "cached": true,
+   "elapsed": 2.928,
+   "cached": false,
    "hash": "157ae42bb8bad52082859ae07707e25ba741845fd38167158e3b6d59d7788e51",
    "run_dir": "work/sf_27c_3v30__vic2.35__s522860322"
   },
@@ -10922,8 +10922,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.594,
-   "cached": true,
+   "elapsed": 2.691,
+   "cached": false,
    "hash": "395af4f2f668c319577e2686000a56ef4606ce36e0bbe479077a75b421891fb5",
    "run_dir": "work/sf_27c_3v30__vic2.35__s934946355"
   },
@@ -10947,8 +10947,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.721,
-   "cached": true,
+   "elapsed": 3.093,
+   "cached": false,
    "hash": "be0cd46689529914d037f9b70aec59113f1db057304967bf2f098abb6652d1cf",
    "run_dir": "work/sf_27c_3v30__vic2.35__s760461626"
   },
@@ -10972,8 +10972,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.758,
-   "cached": true,
+   "elapsed": 3.297,
+   "cached": false,
    "hash": "12e4711c23bc54a349b34caa5baf2f49f57a6bbcfd96bcef2f29cc7b6f261b71",
    "run_dir": "work/sf_27c_3v30__vic2.35__s377745768"
   },
@@ -10997,8 +10997,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.618,
-   "cached": true,
+   "elapsed": 2.988,
+   "cached": false,
    "hash": "1c2563a3d9d9a0f0c7afcce099c2be300f34e381b6593f817fac638a94888e70",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1704488278"
   },
@@ -11022,8 +11022,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.895,
-   "cached": true,
+   "elapsed": 2.695,
+   "cached": false,
    "hash": "c0cefd3e2a02cc74c681c32a15930d7e6fbbf91c98e21f8d77bd530162fcba84",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1018508522"
   },
@@ -11047,8 +11047,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.955,
-   "cached": true,
+   "elapsed": 2.845,
+   "cached": false,
    "hash": "75b0c9a9be4b3c2cc588c98d081013c2c7299e1d178336178bb7ca6fe395d82f",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1165914485"
   },
@@ -11072,8 +11072,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.607,
-   "cached": true,
+   "elapsed": 2.842,
+   "cached": false,
    "hash": "44756d5c4a4677f24703b9582948d896e26b4041408078b831b2988f8d2d956a",
    "run_dir": "work/sf_27c_3v30__vic2.35__s445637946"
   },
@@ -11097,8 +11097,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.918,
-   "cached": true,
+   "elapsed": 3.203,
+   "cached": false,
    "hash": "f8a292c8357fff7c5e85750fb1530626405f41ba21ba90422eb28279510b1293",
    "run_dir": "work/sf_27c_3v30__vic2.35__s2073008015"
   },
@@ -11122,8 +11122,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.555,
-   "cached": true,
+   "elapsed": 2.897,
+   "cached": false,
    "hash": "c92ba851839bcd7ef44d8105e2e6ab770ffa57e9a96213af7154daebbb208817",
    "run_dir": "work/sf_27c_3v30__vic2.35__s497066084"
   },
@@ -11147,8 +11147,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.671,
-   "cached": true,
+   "elapsed": 3.049,
+   "cached": false,
    "hash": "42a672bb917c30931999d9d89edfea641402343ed67e55f72e25075d426fb4dc",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1060142202"
   },
@@ -11172,8 +11172,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.775,
-   "cached": true,
+   "elapsed": 3.049,
+   "cached": false,
    "hash": "3cba2d07a87ecebb4fde83cba302430f100dc1af74650bb517fe8a2ed5bae1fa",
    "run_dir": "work/sf_27c_3v30__vic2.35__s925444075"
   },
@@ -11197,8 +11197,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 3.37,
-   "cached": true,
+   "elapsed": 2.994,
+   "cached": false,
    "hash": "6cc4a026d76f1880f73c2210289723685beddb8b41cb6c388e48b62f0f2dcff3",
    "run_dir": "work/sf_27c_3v30__vic2.35__s939365680"
   },
@@ -11222,8 +11222,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.8,
-   "cached": true,
+   "elapsed": 2.65,
+   "cached": false,
    "hash": "f1d142a704d4c880256105ba2d4046994a3f7236d6232991228ef365e18278b0",
    "run_dir": "work/sf_27c_3v30__vic2.35__s54427389"
   },
@@ -11247,8 +11247,8 @@
     "vid_end_v": 0.062
    },
    "errors": [],
-   "elapsed": 2.54,
-   "cached": true,
+   "elapsed": 1.738,
+   "cached": false,
    "hash": "05132a818f0149adc83513a46611348893e861b16fad6f5781895c62b357a56d",
    "run_dir": "work/sf_27c_3v30__vic2.35__s1115975472"
   }
