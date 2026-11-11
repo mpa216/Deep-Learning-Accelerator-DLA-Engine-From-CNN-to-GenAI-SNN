@@ -1,0 +1,178 @@
+{
+ "cell": "t_mirror",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 39.68,
+    "m2": 0.4,
+    "m3": 35.36
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 23,
+   "mos": {
+    "nfet_03v3 w=2.5 l=1.0": 23
+   },
+   "n_res": 0,
+   "want_fingers": 23
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 0,
+    "rules": []
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": []
+   }
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_mirror/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    5,
+    5
+   ],
+   "nets": [
+    4,
+    4
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "mir",
+     "ok": true,
+     "symbols": "(dL)RTTRRUUTTTTUUTTUURRTT(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 23,
+     "n_expected": 23,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "TN",
+    "at": [
+     6.84,
+     3.49,
+     34.6,
+     3.77
+    ],
+    "why": [
+     "nfet_03v3 (23->6)                          |nfet_03v3 (5) **Mismatch**",
+     "Number of devices: 6 **Mismatch**          |Number of devices: 5 **Mismatch**",
+     "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: TN.2                                  |(no matching net)"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-11 14:19:48",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 42.8
+}

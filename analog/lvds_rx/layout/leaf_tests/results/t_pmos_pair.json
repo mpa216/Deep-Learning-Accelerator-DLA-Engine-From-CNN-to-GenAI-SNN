@@ -1,0 +1,224 @@
+{
+ "cell": "t_pmos_pair",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 47.66,
+    "m2": 0.4,
+    "m3": 42.72
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 46,
+   "mos": {
+    "pfet_03v3 w=4.8 l=0.4": 46
+   },
+   "n_res": 0,
+   "want_fingers": 46
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 0,
+    "rules": []
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": []
+   }
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_pmos_pair/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    3,
+    3
+   ],
+   "nets": [
+    5,
+    5
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "mp1",
+     "ok": true,
+     "symbols": "(dL)ABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBA(dR)",
+     "read_gate_order": [
+      "TP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "TP"
+     ],
+     "expected_gate_order": [
+      "TP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "TP"
+     ],
+     "n_read": 46,
+     "n_expected": 46,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "FA",
+    "at": [
+     23.95,
+     3.68,
+     44.39,
+     3.96
+    ],
+    "why": [
+     "pfet_03v3 (46->5)                          |pfet_03v3 (4->3) **Mismatch**",
+     "Number of devices: 5 **Mismatch**          |Number of devices: 3 **Mismatch**",
+     "Number of nets: 6 **Mismatch**             |Number of nets: 5 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: FA.8                                  |(no matching net)"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-11 14:18:59",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 49.5
+}

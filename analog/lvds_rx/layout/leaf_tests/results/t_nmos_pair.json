@@ -1,0 +1,176 @@
+{
+ "cell": "t_nmos_pair",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 27.16,
+    "m2": 0.4,
+    "m3": 20.8
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 22,
+   "mos": {
+    "nfet_03v3 w=4.75 l=0.5": 22
+   },
+   "n_res": 0,
+   "want_fingers": 22
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 0,
+    "rules": []
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": []
+   }
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_nmos_pair/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    3,
+    3
+   ],
+   "nets": [
+    6,
+    6
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "mn1",
+     "ok": true,
+     "symbols": "(dL)ABBAABBAABBAABBAABBA(dR)",
+     "read_gate_order": [
+      "VSS",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "VSS"
+     ],
+     "n_read": 22,
+     "n_expected": 22,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "TAIL",
+    "at": [
+     4.32,
+     4.29,
+     23.08,
+     4.58
+    ],
+    "why": [
+     "nfet_03v3 (22->5)                          |nfet_03v3 (4->3) **Mismatch**",
+     "Number of devices: 5 **Mismatch**          |Number of devices: 3 **Mismatch**",
+     "Number of nets: 7 **Mismatch**             |Number of nets: 6 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: TAIL.4                                |(no matching net)"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-11 14:18:05",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 53.7
+}

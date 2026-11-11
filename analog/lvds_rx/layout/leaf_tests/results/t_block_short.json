@@ -1,0 +1,94 @@
+{
+ "cell": "t_block_short",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": []
+  },
+  "lvs_fails": {
+   "ok": true,
+   "clean": false,
+   "why": [
+    "Number of nets: 7 **Mismatch**             |Number of nets: 8 **Mismatch**",
+    "NET mismatches: Class fragments follow (with fanout counts):",
+    "(no matching net)                          |Net: TAIL",
+    "Netlists do not match."
+   ]
+  },
+  "locator": {
+   "ok": true,
+   "distance_to_fault_um": 0.0,
+   "found": [
+    {
+     "kind": "SHORT",
+     "nets": [
+      "OB",
+      "TAIL"
+     ],
+     "labels": [
+      "OB.2",
+      "TAIL.17"
+     ],
+     "where": [
+      39.9,
+      4.75
+     ],
+     "label_distance_um": 0.64,
+     "unexplained_metal": [
+      {
+       "layer": "m3",
+       "bbox": [
+        31.6,
+        4.577,
+        31.88,
+        4.873
+       ]
+      }
+     ],
+     "where_metal": [
+      31.74,
+      4.72
+     ]
+    }
+   ],
+   "report": "Netgen mismatch lines:\n    Number of nets: 7 **Mismatch**             |Number of nets: 8 **Mismatch**\n    (no matching net)                          |Net: TAIL\n    OB                                         |(no pin, node is TAIL)\n    (no pin, node is OB)                       |OB\nSHORT  OB <-> TAIL  near (39.9, 4.75) um; labels OB.2 / TAIL.17; unintended metal m3 [31.6, 4.577, 31.88, 4.873]"
+  }
+ },
+ "started": "2026-11-11 14:24:05",
+ "expect": {
+  "kind": "SHORT",
+  "nets": [
+   "OB",
+   "TAIL"
+  ],
+  "at": [
+   31.74,
+   4.725
+  ],
+  "tol": 2.5
+ },
+ "faults": [
+  {
+   "kind": "short",
+   "nets": [
+    "OB",
+    "TAIL"
+   ],
+   "at": [
+    31.74,
+    4.725
+   ],
+   "bbox": [
+    31.6,
+    4.525,
+    31.88,
+    4.925
+   ],
+   "gap_um": 0.3,
+   "note": "unregistered m3 bridge"
+  }
+ ],
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 1.8
+}

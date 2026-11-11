@@ -1,0 +1,102 @@
+{
+ "cell": "t_block_open",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": []
+  },
+  "lvs_fails": {
+   "ok": true,
+   "clean": false,
+   "why": [
+    "Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**",
+    "NET mismatches: Class fragments follow (with fanout counts):",
+    "Net: OB.6                                  |(no matching net)",
+    "Netlists do not match.",
+    "Final result: Netlists do not match."
+   ]
+  },
+  "locator": {
+   "ok": true,
+   "distance_to_fault_um": 0.78,
+   "found": [
+    {
+     "kind": "OPEN",
+     "nets": [
+      "OB"
+     ],
+     "fragments": [
+      {
+       "labels": 9,
+       "has_pin": true,
+       "device_terminals": 10,
+       "bbox": [
+        21.33,
+        5.08,
+        48.06,
+        14.48
+       ],
+       "sample": [
+        "OB",
+        "OB.0",
+        "OB.1"
+       ]
+      },
+      {
+       "labels": 6,
+       "has_pin": false,
+       "device_terminals": 8,
+       "bbox": [
+        22.46,
+        14.93,
+        33.03,
+        14.93
+       ],
+       "sample": [
+        "OB.10",
+        "OB.12",
+        "OB.6"
+       ]
+      }
+     ],
+     "where": [
+      21.89,
+      14.71
+     ],
+     "nearest_labels": [
+      "OB",
+      "OB.12"
+     ],
+     "gap_um": 1.58
+    }
+   ],
+   "report": "Netgen mismatch lines:\n    Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**\n    Net: OB.6                                  |(no matching net)\nOPEN   OB in 2 pieces, apart near (21.89, 14.71) um; nearest labels ['OB', 'OB.12']\n         fragment: 9 labels, pin=True, device terminals=10, label bbox [21.33, 5.08, 48.06, 14.48]\n         fragment: 6 labels, pin=False, device terminals=8, label bbox [22.46, 14.93, 33.03, 14.93]"
+  }
+ },
+ "started": "2026-11-11 14:24:07",
+ "expect": {
+  "kind": "OPEN",
+  "nets": [
+   "OB"
+  ],
+  "at": [
+   21.33,
+   14.93
+  ],
+  "tol": 2.5
+ },
+ "faults": [
+  {
+   "kind": "open",
+   "net": "OB",
+   "at": [
+    21.33,
+    14.93
+   ],
+   "note": "via2 of port 1 at the column omitted"
+  }
+ ],
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 1.8
+}

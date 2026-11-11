@@ -1,0 +1,254 @@
+{
+ "cell": "t_block",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 27.16,
+    "m2": 12.18,
+    "m3": 30.79
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 48,
+   "mos": {
+    "nfet_03v3 w=4.75 l=0.5": 22,
+    "nfet_03v3 w=2.5 l=1.0": 12,
+    "pfet_03v3 w=2.0 l=0.4": 14
+   },
+   "n_res": 0,
+   "want_fingers": 48
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 0,
+    "rules": []
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": []
+   }
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_block/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    8,
+    8
+   ],
+   "nets": [
+    8,
+    8
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "mnt",
+     "ok": true,
+     "symbols": "(dL)MMMMMMMMMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 12,
+     "n_expected": 12,
+     "mismatch": null
+    },
+    {
+     "row": "mn1",
+     "ok": true,
+     "symbols": "(dL)ABBAABBAABBAABBAABBA(dR)",
+     "read_gate_order": [
+      "VSS",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "INP",
+      "INN",
+      "INN",
+      "INP",
+      "VSS"
+     ],
+     "n_read": 22,
+     "n_expected": 22,
+     "mismatch": null
+    },
+    {
+     "row": "mld",
+     "ok": true,
+     "symbols": "(dL)OORROOOORROO(dR)",
+     "read_gate_order": [
+      "VDD",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "OA",
+      "VDD"
+     ],
+     "n_read": 14,
+     "n_expected": 14,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "TAIL",
+    "at": [
+     30.52,
+     4.29,
+     49.28,
+     4.58
+    ],
+    "why": [
+     "nfet_03v3 (34->7)                          |nfet_03v3 (7->5) **Mismatch**",
+     "Number of devices: 10 **Mismatch**         |Number of devices: 8 **Mismatch**",
+     "Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: TAIL.12                               |(no matching net)"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-11 14:20:31",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 59.3
+}

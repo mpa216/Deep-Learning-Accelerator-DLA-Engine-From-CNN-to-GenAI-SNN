@@ -1,0 +1,14 @@
+{
+ "overlap_other_net": "m3 shape of net B (2.000 0.100 3.000 0.400) overlaps net A (0.000 0.000 5.000 0.280) ()",
+ "spacing_0.10": "m3 shape of net B (0.000 0.380 5.000 0.660) is 0.100 um from net A (0.000 0.000 5.000 0.280) (), min 0.28",
+ "spacing_ok_0.30": true,
+ "same_net_gap_0.1": "m3 shape of net A (5.100 0.000 6.000 0.280) is 0.100 um from another shape of the same net (0.000 0.000 5.000 0.280), mi",
+ "plate_30x30": "m3 plate 30.0 x 30.0 um exceeds the 29.0 um cap in both dimensions",
+ "long_wire_70um_pieces": [
+  23.34,
+  23.34,
+  23.33
+ ],
+ "route_no_legal_column": "route(X): neither a single column nor a two-column + channel route is legal",
+ "all_ok": true
+}
