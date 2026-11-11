@@ -277,3 +277,63 @@ data-dependent delay of a few tens of ps. The hysteresis is in the middle of its
 **What it does not prove.** Smoke tier only (5 corners, N = 30); no 45-corner sweep, no N = 1000 offset statistics or normality check yet, no transient hysteresis Monte Carlo (TB3_hmc), no lane-to-lane skew (TB10), no supply/CM disturbance (TB6), no idle behaviour (TB7). The package, pad and source values are the plan's assumptions. The eye is judged at the logic output of a hysteretic comparator, which is by construction nearly rectangular: it proves no missed or doubled edges and bounded jitter, not analog margin; the margin lives in TB3 (offset, hysteresis) and TB2 (bandwidth).
 
 **Where.** `sim/tb3_trip/`, `sim/tb3_off/` (also `xcheck_trip_mc.json`, `xcheck_compare.py`), `sim/tb4_pd/`, `sim/tb4b_pd_vid/`, `sim/tb5_eye/` (`selftest_hooks.py`), `sim/tb12_pkg/`, each with `results/<name>/summary.md`; `results/gates.json`, `results/REPORT.md`, decision D-005 in `spec/decisions.yaml`, `log/T3_report.md`.
+## 2026-11-11 - T8 part 1: leaf generators, routing allocator, short/open locator
+
+**What.** A Python library (`layout/lib/`) that writes Magic Tcl: it builds transistor rows (ABBA pair, interdigitated mirror, pair with dump twins,
+cascode stack, resistor) from the sizes in `layout/device_table.json`, routes between them on Metal2 columns and Metal3 tracks, and checks every cell
+(self-check, Magic DRC, KLayout foundry deck, strict Netgen LVS, finger order read back, negative controls, picture, JSON).
+
+**Why.** The pathfinder proved Magic can do the job but routing and debugging by hand would not scale to ~200 devices (PLAN_V2 L2). Three pieces were
+missing: a router that refuses shorts and spacing violations before painting, a way to name the net of every wire so a failed LVS says where, and checks at the real sizes.
+
+**Numbers (layout/leaf_tests/results/*.json).** 7 cells and 2 faulty variants, all as required: KLayout main 0 and antenna 0 on a GDS with 0.001 um unit,
+Magic DRC 0, strict LVS clean (e.g. NMOS pair 22 fingers = 3 devices after Netgen merges parallel fingers, 6 nets both sides), finger order read back from the
+extraction equals the generator's pattern (NMOS pair: `VSS INP INN INN INP INP INN ...`), wrong W / cut wire / DRC sliver all detected. The deliberately shorted block
+is reported as `SHORT OB <-> TAIL` with the unintended metal found 0.0 um from where the bridge was injected; the open block as `OPEN OB in 2 pieces`, 0.78 um from the removed via.
+One cell takes about 50 s (the KLayout deck is ~20 s of it).
+
+**What it means / what surprised me.**
+- Labelling every wire with its net name *hides opens*: Magic merges separate pieces that carry the same label text, so a cut wire still "matched". Fix: unique labels `NET.k` per segment,
+  plain names only on pins. Netgen then prints real net names, and the locator can say which piece is cut off.
+- A repeated ABBA has three nets that all interleave along the row (source, drain A, drain B). The toy's "one Metal2 track per net" scheme needs a third level for that, so each net now gets one Metal3 bar
+  across the row and each region lands on it with a via stack. No Metal2 inside the row at all.
+- The foundry rule that the plan reads as "no Metal wider than 30 um" (MSLOT.1) only fires on big 2-D plates. Long thin wires (48 um here) are legal; the 29 um cap is kept as a bookkeeping rule.
+- Cutting only the Metal2 pad of a via stack does not open the net in Magic's eyes: the via cut itself counts as metal on both layers.
+
+**Pictures.** `layout/leaf_tests/results/t_block.png` (two-row routed block), `t_pmos_pair.png`, `t_tail_dump.png`, `t_mirror.png`, `t_nmos_pair.png`, `t_stacked.png`, `t_res.png`.
+
+**Open.** Power-strap planner, res_array/ESD/diode/nmoscap leaves (T8 part 2), small digital-size devices, via-array check. Details in `log/T8a_report.md`.
+## 2026-11-11 T8 part 2: poly resistors, ESD cell, the rest of the transistors, and a floorplan for one lane
+
+**What was done.** Part 1 gave us generators for transistor rows. Part 2 adds the passives (resistor arrays, the secondary-ESD sub-cell, the Vref capacitor), a leaf for every
+remaining device group in `layout/device_table.json` (35 transistors, 7 resistors, 2 diodes, 1 cap: all covered) and the recipe for placing them as one lane. One command,
+`python3 layout/leaf_tests/run_all.py` inside the container, rebuilds and re-checks all 29 leaves in about 12 minutes; the last line is `ALL GREEN` and the table is
+`layout/leaf_tests/results/summary.md`. After the sizing freeze just run it again.
+
+**Why each leaf is checked so hard.** A layout can be DRC-clean and still be the wrong circuit. Each leaf is built from the device table, extracted back from the GDS and compared with
+what was asked for (W, L, fingers, resistor length, diode area), run through the foundry DRC deck and the antenna deck (KLayout, 0 / 0 everywhere), compared with the schematic by
+Netgen (unique match, no property or port errors) and finally attacked: wrong width, a cut wire, a sliver. Every attack is caught.
+
+**New things learned (the useful part).**
+
+* *Resistors are drawn as snakes.* A long resistor (rb is 90 um) is built from several equal series pieces. Netgen adds series pieces up and compares the total length with the schematic's single
+  resistor (1 % tolerance), so the unmodified reference netlist still matches. We choose the piece length so that the RESISTANCE is right (every piece has 85 ohm of end contacts), which
+  makes the summed length 0.4 - 0.9 % short: harmless, but RL (0.85 %) is close to the limit. Dummy resistors at both ends are real devices to Netgen, so they are listed in the schematic.
+  The divider rdt / rdb is interleaved (`rdt rdb rdb rdt rdt rdb rdb rdt`) and read back from the extraction in that order.
+* *The antenna rule sees the ESD diodes.* A 1 um2 gate on a 700 um Metal3 run fails ANT.16_i_ANT.4 by itself and is clean when the nd2ps / pd2nw diodes of the ESD cell hang on the same net.
+  Nothing about ESD robustness follows from that: the cell is **UNQUALIFIED**.
+* *The PDK's MOS capacitor gencell is a trap.* `nmoscap_3p3` draws a varactor (`cap_nmos_03v3_b`), vanishes when Magic reads the GDS back (the marker layer is not mapped) and fails
+  two KLayout rules. The Vref cap is drawn as what it is in silicon, an NMOS with source = drain = VSS (20 x 25.13 um, 2 pF). Consequence: the LVS reference line for XCVREF has to
+  become an `nfet_03v3`; the simulation can stay as it is.
+* *The 0.28 um digital devices are tight.* The generator's gate-pad corner sits 0.209 um from the next contact bar (rule: 0.23). We trim 0.04 um off the contact-bar ends, which works when the
+  contacts leave at least 0.105 um of margin (Wf 3.7 does not, so inv1_p is laid out as two fingers). Magic's own CO.6 over-complains about the trimmed bars; the foundry deck does not.
+* *Pairs with different sources cannot be ABBA.* The stage-2 pair (source degeneration) and the fold cascodes are two identical rows side by side instead.
+* *The router (alloc) got three fixes:* stubs of one net 0.15 um apart are now rejected before painting, a pin on a short column sits at the port height, and rails are routed stage by stage.
+
+**Numbers.** PMOS input quad row 131.7 x 10.3 um (112 fingers), NMOS quad + tail 72.0 x 10.0, resistor array of the bias block 53.7 x 35.6 (16 resistors), ESD cell 32.6 x 10.1, output
+inverter chain 61.5 x 22.3. Estimated lane: leaf boxes 6 150 um2, 8 300 um2 with routing, 140 x 100 um after row packing against the 150 x 130 budget.
+
+**Pictures.** `layout/leaf_tests/results/`: `t_res_bias.png` (the resistor row), `t_esd.png` (ESD cell: resistor in its n-well, then the two diodes), `t_out_chain.png`, `t_pmos_tail_dump.png`,
+`t_ant_bare.png` / `t_ant_esd.png` (antenna with and without ESD), `t_cap.png`.
+
+**Open.** Ring merging between leaves, the bias block position in the strip, `check_via_arrays.py`, PEX. The floorplan and the pitfalls are in `layout/lib/LANE_RECIPE.md`.
