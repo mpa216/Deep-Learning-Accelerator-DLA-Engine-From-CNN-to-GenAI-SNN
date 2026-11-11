@@ -1,0 +1,15 @@
+{
+ "name": "tb3_off",
+ "description": "TB3 offset: input-referred DC offset of lane 0 with hysteresis disabled (stage-2 cross-coupled loads scaled to m = 0.001), Monte Carlo mismatch, 3 VIC; the gate evaluates |mean| + 6 sigma + V_Hmax/2 + 3 mV <= 95 mV per (corner, VIC). Smoke tier N = 30, full tier N = 1000 (the runner passes --n-mc).",
+ "deck": "tb3_off.spice",
+ "corners": "worst5",
+ "grid": {"vic": [0.05, 1.2, 2.35]},
+ "vars": {"w": 0.06, "smax": 0.137},
+ "mc": {"n": 1000, "mode": "mismatch", "seed": 20261112, "k": 6},
+ "post": "hooks.py:post_tb3off",
+ "limits": {
+  "vos_v": {"min": -0.095, "max": 0.095, "scale": 1000, "unit": "mV"}
+ },
+ "timeout": 300,
+ "jobs": 6
+}

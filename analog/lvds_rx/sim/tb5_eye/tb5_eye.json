@@ -1,0 +1,16 @@
+{
+ "name": "tb5_eye",
+ "description": "TB5: PRBS7 eye, BER at the delayed mid-UI and toggle count of lane 0 at 100 and 200 Mb/s, VID 100 and 350 mV, VIC {0.05, 1.2, 2.35}, through the full input network (50 ohm source, package L 3 nH / C 0.7 pF, asig_5p0 pad, 100 ohm termination), output load 30 fF",
+ "deck": "tb5_eye.spice",
+ "corners": "eye15",
+ "grid": {"vic": [0.05, 1.2, 2.35], "vid": [0.1, 0.35], "rate": [100e6, 200e6]},
+ "prep": "hooks.py:prep_eye",
+ "post": "hooks.py:post_eye",
+ "limits": {
+  "ber_errors": {"max": 0},
+  "toggle_diff": {"min": 0, "max": 0},
+  "eye_open_ui": {"min": 0.5}
+ },
+ "timeout": 600,
+ "jobs": 6
+}

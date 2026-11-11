@@ -1,0 +1,13 @@
+{
+ "name": "xcheck_trip_mc",
+ "description": "Cross-check of the offset definition: the hysteresis-ON trip-window centre of tb3_trip under the same mismatch seeds as tb3_off",
+ "deck": "../tb3_trip/tb3_trip.spice",
+ "corners": "tt",
+ "grid": {"vic": [0.05, 1.2, 2.35], "sweep": [0]},
+ "vars": {"wmax": 0.051},
+ "mc": {"n": 6, "mode": "mismatch", "seed": 20261112, "k": 6},
+ "post": "../tb3_trip/hooks.py:post_tb3",
+ "limits": {},
+ "timeout": 300,
+ "jobs": 6
+}

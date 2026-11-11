@@ -1,0 +1,29 @@
+* tb4_pd: propagation delay, pulse skew, output edge and DCD of lane 0 (task T3, PLAN_V2 TB4, finding C2).
+* The differential stimulus is applied DIRECTLY at the RX pins (no input network: this bench measures the circuit, not the package; TB5/TB12 use the network).
+* One transient, two phases (stim.inc is written by hooks.py:prep_tb4):
+*   power-up 0-100 ns (supply ramps over 50 ns, EN and the common mode follow), then
+*   phase A  alternating 1010... at 100 Mb/s, edges tr = 0.4 ns (the circuit's own delay: tpd_s, skew_s, edge_10_90_s)
+*   phase B  the same with the NAMED edge time of the spec (1 ns at VID 350 mV, 2 ns at VID 100 mV): dcd_ui is judged here.
+* The stimulus ramps from 0 to its idle level together with the supply (a static +-VID/2 at VDD = 0 hung ngspice at ss/125C: 7 timeouts of 300 s).
+* VID is +-{vid} V at the pins; at VID = 0.1 V an input-offset source of +10 mV is added (levels -90 / +110 mV; the circuit is symmetric, so the sign does not matter).
+* Grid: vic, vid.  Vars: ui.  Hooks: hooks.py:prep_tb4, hooks.py:post_tb4.
+{header}
+{seed_line}
+.option rshunt=1e11
+.include {deck_dir}/../../sizing/sizes.spice
+.include {deck_dir}/../../netlist/lvds_rx_core.spice
+Vdd vdd 0 PWL(0 0 50n {vdd})
+Ben en 0 V=1*v(vdd)
+Bcm cm 0 V={vic}*v(vdd)/{vdd}
+.include {run_dir}/stim.inc
+Vp1 rx1_p cm dc 0
+Vn1 rx1_n cm dc 0
+Vp2 rx2_p cm dc 0
+Vn2 rx2_n cm dc 0
+Xdut vdd 0 rx0_p rx0_n rx1_p rx1_n rx2_p rx2_n en rx0_o rx1_o rx2_o lvds_rx_x3
+cl rx0_o 0 30f
+.control
+tran 25p 450n 0 50p
+wrdata tb4.txt v(rx0_o) v(rx0_p) v(rx0_n)
+.endc
+.end

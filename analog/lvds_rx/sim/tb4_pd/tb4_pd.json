@@ -1,0 +1,18 @@
+{
+ "name": "tb4_pd",
+ "description": "TB4: propagation delay, pulse skew, 10-90 % output edge (tr = 0.4 ns stimulus) and DCD at the named edge times (1 ns at VID 350 mV, 2 ns at VID 100 mV) of lane 0, stimulus at the RX pins, 7 VIC x VID {0.1, 0.35} (VID 0.1 with a +10 mV input-offset source)",
+ "deck": "tb4_pd.spice",
+ "corners": "full45",
+ "grid": {"vic": [0.05, 0.3, 0.6, 1.2, 1.8, 2.1, 2.35], "vid": [0.1, 0.35]},
+ "vars": {"ui": 1e-8},
+ "prep": "hooks.py:prep_tb4",
+ "post": "hooks.py:post_tb4",
+ "limits": {
+  "tpd_s": {"max": 8e-9, "scale": 1e9, "unit": "ns"},
+  "dcd_ui": {"max": 0.10, "scale": 100, "unit": "% UI"},
+  "edge_10_90_s": {"max": 1e-9, "scale": 1e9, "unit": "ns"},
+  "n_missed": {"max": 0}
+ },
+ "timeout": 300,
+ "jobs": 6
+}

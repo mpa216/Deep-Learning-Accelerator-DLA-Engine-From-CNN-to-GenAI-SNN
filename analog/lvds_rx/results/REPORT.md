@@ -1,6 +1,6 @@
 # LVDS RX macro: verification report (generated)
 
-Generated 2026-11-11 13:42:14 by flow/report.py from results/gates.json. Tier **smoke**, phases env, prelayout, commit `eb571bf` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
+Generated 2026-11-11 15:02:33 by flow/report.py from results/gates.json. Tier **smoke**, phases env, prelayout, commit `ef2e65a` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
 
 ## Waivers and fallback-ladder rungs
 
@@ -13,7 +13,7 @@ Generated 2026-11-11 13:42:14 by flow/report.py from results/gates.json. Tier **
 
 ## Summary
 
-**NOT GREEN**: 1 NOT_APPLICABLE, 13 NOT_RUN, 6 PASS
+**NOT GREEN**: 1 NOT_APPLICABLE, 7 NOT_RUN, 12 PASS
 
 | gate | phase | status | runs (found/expected) | worst margin | note |
 |---|---|---|---|---|---|
@@ -23,12 +23,12 @@ Generated 2026-11-11 13:42:14 by flow/report.py from results/gates.json. Tier **
 | TB0 | prelayout | PASS | -/- | - |  |
 | TB1 | prelayout | PASS | 147/147 | 0 |  |
 | TB2 | prelayout | PASS | 35/35 | 0.03564 |  |
-| TB3_trip | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_trip/tb3_trip.json not written yet |
-| TB3_off | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_off/tb3_off.json not written yet |
+| TB3_trip | prelayout | PASS | 30/30 | 0.0025 |  |
+| TB3_off | prelayout | PASS | 450/450 | 0.05775 |  |
 | TB3_hmc | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_hmc/tb3_hmc.json not written yet |
-| TB4 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb4_pd/tb4_pd.json not written yet |
-| TB4b | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb4b_pd_vid/tb4b_pd_vid.json not written yet |
-| TB5 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb5_eye/tb5_eye.json not written yet |
+| TB4 | prelayout | PASS | 70/70 | 3.871e-10 |  |
+| TB4b | prelayout | PASS | 70/70 | 6.71e-10 |  |
+| TB5 | prelayout | PASS | 60/60 | 0 |  |
 | TB6 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb6_cm_supply/tb6_cm_supply.json not written yet |
 | TB7 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb7_idle/tb7_idle.json not written yet |
 | TB7_mc | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb7_idle_mc/tb7_idle_mc.json not written yet |
@@ -36,7 +36,7 @@ Generated 2026-11-11 13:42:14 by flow/report.py from results/gates.json. Tier **
 | TB9 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb9_input/tb9_input.json not written yet |
 | TB10 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb10_lanes/tb10_lanes.json not written yet |
 | TB11 | prelayout | NOT_APPLICABLE | -/- | - | CONDITION: needs ladder R6 rung >= 1 (not taken) |
-| TB12 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb12_pkg/tb12_pkg.json not written yet |
+| TB12 | prelayout | PASS | 40/40 | 0 |  |
 
 ## Gates
 
@@ -123,15 +123,22 @@ Status **PASS**. Runs 35 of 35 expected; run status counts {'ok': 35}; results `
 
 ### TB3_trip: hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 30 of 30 expected; run status counts {'ok': 30}; results `sim/tb3_trip/results/tb3_trip/results.json` (sha256 `ac7f9630f407...`).
 
-- MISSING: testbench spec sim/tb3_trip/tb3_trip.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| vh_v | per_run | all | 0.008 .. 0.025 | 30 | 0.0105 | PASS |
+| dvh_dvdd | report | all | reported | 30 | - | PASS |
+| dvtrip_dvdd | report | all | reported | 30 | - | PASS |
 
 ### TB3_off: DC input-referred offset Monte Carlo, hysteresis off (N = 1000)
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 450 of 450 expected; run status counts {'ok': 450}; results `sim/tb3_off/results/tb3_off/results.json` (sha256 `8b9154a8c840...`).
 
-- MISSING: testbench spec sim/tb3_off/tb3_off.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| vos_v | mc_offset_window | all | <= 0.095 (k=6, extra=0.0155) | 15 | 0.03725 | PASS |
+| vos_v | report | all | reported | 450 | - | PASS |
 
 ### TB3_hmc: transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)
 
@@ -141,21 +148,37 @@ Status **NOT_RUN**.
 
 ### TB4: propagation delay, pulse skew, DCD, output edge
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `sim/tb4_pd/results/tb4_pd/results.json` (sha256 `6a7d346c43c3...`).
 
-- MISSING: testbench spec sim/tb4_pd/tb4_pd.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| tpd_s | per_run | vid=0.35 | -inf .. 5e-09 | 35 | 4.613e-09 | PASS |
+| tpd_s | per_run | vid=0.1 | -inf .. 8e-09 | 35 | 5.596e-09 | PASS |
+| dcd_ui | per_run | vid=0.35 | -inf .. 0.05 | 35 | 0.009889 | PASS |
+| dcd_ui | per_run | vid=0.1 | -inf .. 0.1 | 35 | 0.06296 | PASS |
+| edge_10_90_s | per_run | all | -inf .. 1e-09 | 70 | 1.164e-10 | PASS |
+| tpd_s | spread | vid=0.35 | -inf .. 1e-09 | 5 | 3.753e-10 | PASS |
 
 ### TB4b: delta tPD over VID 200-450 mV at fixed VIC (the VID set of TB4 cannot show it)
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 70 of 70 expected; run status counts {'ok': 70}; results `sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json` (sha256 `ba56c17c016d...`).
 
-- MISSING: testbench spec sim/tb4b_pd_vid/tb4b_pd_vid.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| tpd_s | spread | all | -inf .. 1e-09 | 35 | 3.29e-10 | PASS |
 
 ### TB5: eye at 100 and 200 Mb/s through the full input network
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 60 of 60 expected; run status counts {'ok': 60}; results `sim/tb5_eye/results/tb5_eye/results.json` (sha256 `48a95cb185ed...`).
 
-- MISSING: testbench spec sim/tb5_eye/tb5_eye.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| ber_errors | per_run | all | -inf .. 0 | 60 | 0 | PASS |
+| toggle_diff | per_run | all | -inf .. 0 | 60 | 0 | PASS |
+| eye_open_ui | per_run | rate=100000000.0 | 0.6 .. +inf | 30 | 0.9736 | PASS |
+| eye_open_ui | per_run | rate=100000000.0, vid=0.1, corner=tt_27c_3v30 | 0.7 .. +inf | 3 | 0.995 | PASS |
+| eye_open_ui | per_run | rate=200000000.0, vid=0.35, corner=['tt_27c_3v30', 'ss_125c_3v00'] | 0.5 .. +inf | 6 | 0.9284 | PASS |
+| dcd_ui | report | all | reported | 60 | - | PASS |
 
 ### TB6: CM step, supply ripple, current spikes
 
@@ -201,9 +224,12 @@ Status **NOT_APPLICABLE**.
 
 ### TB12: package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners
 
-Status **NOT_RUN**. 
+Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `sim/tb12_pkg/results/tb12_pkg/results.json` (sha256 `e193df32c8d5...`).
 
-- MISSING: testbench spec sim/tb12_pkg/tb12_pkg.json not written yet
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| ber_errors | per_run | all | -inf .. 0 | 40 | 0 | PASS |
+| eye_open_ui | per_run | all | 0.5 .. +inf | 40 | 0.9268 | PASS |
 
 ## Environment (results/env.json)
 
@@ -241,4 +267,4 @@ Status **NOT_RUN**.
 
 ## Manifest
 
-Wall time 0.1 s; sizes.spice sha256 `96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6`; LUT hash `58dac49d5f90...`.
+Wall time 1371 s; sizes.spice sha256 `96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6`; LUT hash `58dac49d5f90...`.

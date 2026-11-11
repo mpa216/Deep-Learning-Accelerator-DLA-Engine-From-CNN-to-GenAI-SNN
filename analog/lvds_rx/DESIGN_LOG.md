@@ -248,3 +248,32 @@ and the headroom of the sinks at the ss/125 C + resistors-fast cross corner (2 m
 PMOS-only variant not tuned; CMRR is the nominal half-circuit value (mismatch-induced CMRR needs Monte Carlo).
 
 **Where.** `sim/tb1_op/` (make_deck.py, hooks.py, lut_table.py, tb1_op*.json/.spice, results/lut_vs_spice.md), `sim/tb2_ac/` (tb2_ac*.json/.spice, hooks.py, ac_table.py, results/ac_table.md), `flow/run_all.py`, `flow/shakedown.py`, `results/shakedown_s1.{md,json}`, `results/gates.json`, `results/iterations.jsonl`, decision D-004, `log/T2b_report.md`.
+
+---
+
+## 2026-11-11 — T3: trip-point, delay, eye and package benches (smoke tier)
+
+**Why.** Until now the receiver was only checked at DC and in small-signal AC. T3 adds the first benches that actually switch it: where does it trip and how wide is the hysteresis
+window (TB3), how long does it take (TB4), does a real PRBS7 bit stream survive the pad, package and 100 ohm termination (TB5), and does that still hold for other package inductances and
+capacitances (TB12). All of them are frozen-gate benches run by `make smoke`; no limit was changed and the sizing script was not touched (the design met every limit first time).
+
+**What was built.** Each bench is a deck + a JSON spec + a small hook file under `sim/`:
+- `tb3_trip` (hysteresis ON): one continuous DC sweep per run (the supply ramps inside the same sweep, because plain `op` does not converge on this latch), VID goes -150 -> +150 -> -150 mV (or mirrored), 0.1 mV steps near the trip points. Gives VTH+, VTH-, V_H, centre; repeated at VDD 3.0 and 3.6 V for supply sensitivity.
+- `tb3_off` (hysteresis OFF by scaling the cross-coupled loads to m = 0.001, Monte Carlo, one ngspice process per seed): input-referred offset. Smoke N = 30; the spec already carries N = 1000 for the full tier.
+- `tb4_pd` (+ `tb4b_pd_vid`): alternating 1010 at the RX pins, 0.4 ns edges for tPD / skew / 10-90 % edge, and the spec's named edge time (1 ns at 350 mV, 2 ns at 100 mV with a +10 mV offset source) for DCD.
+- `tb5_eye` / `tb12_pkg`: PRBS7 through `netlist/input_network.spice`; BER at the delayed mid-UI, output toggle count versus input toggle count, eye opening from the VDD/2 crossings, PNG eyes for VIC 1.2 V. The hook was tested on synthetic waveforms first (clean, inverted, glitch, jittery).
+
+**Numbers (smoke: tt + worst5 = tt, ss/125C/3.0 V, ff/-40C/3.6 V, fs, sf; all runs ok, run counts equal the expected ones).**
+- TB3 trip 30/30: hysteresis V_H 10.5 mV (ff/-40C) to 16.7 mV (ss/125C) against the 8-25 mV window, centre 0 (nominal circuit is symmetric), no chatter (exactly one up and one down crossing per sweep); supply sensitivity of V_H at most 0.7 mV per V.
+- TB3 offset 450/450: sigma 2.7-3.6 mV in every (corner, VIC) group (design target 5 mV, hard limit 8), mean below 0.4 mV; the window formula |mean| + 6 sigma + V_Hmax/2 + 3 mV is at worst 37.3 mV against 95 mV (ss/125C, VIC 0.05 V). N = 30 only fixes sigma to about 13 %, so this is a smoke number; N = 1000 is the full tier.
+- TB4 70/70 + TB4b 70/70: tPD 2.0-4.6 ns at VID 350 mV (limit 5, goal 2-3), 2.4-5.6 ns at VID 100 mV with the 10 mV offset (limit 8); skew up to 0.11 ns (350 mV) and 0.62 ns (100 mV); DCD 0.001-1.0 % UI at 350 mV (limit 5) and 2.5-6.3 % UI at 100 mV (limit 10, thinnest margin); tPD changes at most 0.38 ns over VIC (limit 1) and 0.33 ns over VID 200-450 mV (limit 1); output 10-90 % edge 0.06-0.12 ns (limit 1.0, 30 fF load).
+- TB5 60/60: BER 0 and toggle difference 0 in every run; eye opening 0.928-0.9995 UI (limits 0.5-0.7); worst at ss/125C, 200 Mb/s, VID 350 mV, VIC 1.2 V. TB12 40/40: BER 0 everywhere, eye 0.927 UI worst (ss/125C, 5 nH, 1.5 pF, 200 Mb/s), 0.98 UI at 100 Mb/s.
+
+**What it means.** The comparator is fast and clean through the whole input network: the output eye is almost fully open because the circuit regenerates every edge to the rail, and what remains is
+data-dependent delay of a few tens of ps. The hysteresis is in the middle of its window with a safe 2.5 mV margin to the low edge at ff/-40C. The thinnest margins are DCD at VID 100 mV (6.3 vs 10 % UI, mostly the deliberate 10 mV offset source) and tPD at VID 100 mV hot-slow (5.6 vs 8 ns).
+
+**What went wrong on the way (kept for the next agent).** (1) First TB4 run: static VID +-175 mV at VDD = 0 hung ngspice in all seven ss/125C VID 350 mV runs (timeouts); fix: stimulus ramps from 0 with the supply. (2) The output-crossing offset definition was biased +5.5 mV (sd 3.1) relative to the hysteresis-ON trip centre because the diode-loaded stage 2 is weak; measured with identical mismatch seeds on both benches and changed to the stage-2 balance point (+0.06 mV, sd 0.81). (3) TB5 at VIC 0.05 V, VID 350 mV, ss/125C: `Timestep too small` (N pin at -0.125 V); solver options and a slower ramp did not help, so both pins are now kept inside 0..2.4 V (effective VIC 0.175 / 2.225 V at VID 350 mV; unchanged for VID 100 mV). This is a stimulus interpretation, recorded in D-005, not a limit change. (4) Runs were slow while another agent used the same machine (TB5 about 65 s per run at 6 jobs).
+
+**What it does not prove.** Smoke tier only (5 corners, N = 30); no 45-corner sweep, no N = 1000 offset statistics or normality check yet, no transient hysteresis Monte Carlo (TB3_hmc), no lane-to-lane skew (TB10), no supply/CM disturbance (TB6), no idle behaviour (TB7). The package, pad and source values are the plan's assumptions. The eye is judged at the logic output of a hysteretic comparator, which is by construction nearly rectangular: it proves no missed or doubled edges and bounded jitter, not analog margin; the margin lives in TB3 (offset, hysteresis) and TB2 (bandwidth).
+
+**Where.** `sim/tb3_trip/`, `sim/tb3_off/` (also `xcheck_trip_mc.json`, `xcheck_compare.py`), `sim/tb4_pd/`, `sim/tb4b_pd_vid/`, `sim/tb5_eye/` (`selftest_hooks.py`), `sim/tb12_pkg/`, each with `results/<name>/summary.md`; `results/gates.json`, `results/REPORT.md`, decision D-005 in `spec/decisions.yaml`, `log/T3_report.md`.

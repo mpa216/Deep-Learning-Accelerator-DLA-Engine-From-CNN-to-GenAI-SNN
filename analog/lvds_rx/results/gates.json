@@ -1,22 +1,22 @@
 {
- "generated": "2026-11-11 13:42:14",
+ "generated": "2026-11-11 15:02:33",
  "tier": "smoke",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "eb571bf",
+  "commit": "ef2e65a",
   "dirty": null
  },
  "gates_sha256": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
  "spec_sha256": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
  "summary": {
-  "PASS": 6,
-  "NOT_RUN": 13,
+  "PASS": 12,
+  "NOT_RUN": 7,
   "NOT_APPLICABLE": 1
  },
- "cpu_min": 1.5,
+ "cpu_min": 166.8,
  "flags": [],
  "green": false,
  "waivers": [
@@ -644,33 +644,101 @@
    "id": "TB3_trip",
    "title": "hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb3_trip/tb3_trip.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "vh_v",
+     "where": null,
+     "limit": "0.008 .. 0.025",
+     "n": 30,
+     "reasons": [],
+     "worst": 0.010499999999999978,
+     "worst_run": "ff_m40c_3v60__vic1.2_sweep0",
+     "margin": 0.002499999999999978,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "dvh_dvdd",
+     "where": null,
+     "limit": "reported",
+     "n": 30,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": -0.0003333333333333313,
+     "max": 0.0006666666666666916,
+     "mean": 0.00015555558020069165
+    },
+    {
+     "kind": "report",
+     "metric": "dvtrip_dvdd",
+     "where": null,
+     "limit": "reported",
+     "n": 30,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": -4.954726154822916e-10,
+     "max": 6.402567365171308e-10,
+     "mean": 1.205031676295339e-11
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 30,
+   "actual_runs": 30,
+   "status_counts": {
+    "ok": 30
+   },
+   "results_file": "sim/tb3_trip/results/tb3_trip/results.json",
+   "results_sha256": "ac7f9630f407aa6b575e785491a66849509ef04f0c970b9ed1a94197ee523aba",
+   "cpu_s": 602.7
   },
   "TB3_off": {
    "id": "TB3_off",
    "title": "DC input-referred offset Monte Carlo, hysteresis off (N = 1000)",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb3_off/tb3_off.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "mc_offset_window",
+     "metric": "vos_v",
+     "limit": "<= 0.095 (k=6, extra=0.0155)",
+     "n": 15,
+     "reasons": [],
+     "normality_p_min": 0.05234805368154867,
+     "worst": 0.037252213879983315,
+     "worst_run": "('ss_125c_3v00', ('vic', '0.05'))",
+     "margin": 0.057747786120016686,
+     "mean": 0.00010765821795477741,
+     "sigma": 0.003607425943671423,
+     "samples": 30,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "vos_v",
+     "where": null,
+     "limit": "reported",
+     "n": 450,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": -0.010031371073436508,
+     "max": 0.007005275379879183,
+     "mean": 0.0002143281910252474
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 450,
+   "actual_runs": 450,
+   "status_counts": {
+    "ok": 450
+   },
+   "results_file": "sim/tb3_off/results/tb3_off/results.json",
+   "results_sha256": "8b9154a8c84029820e856b8f0dd085ce9f128fb21459742b04786694851b8aed",
+   "cpu_s": 1575.2
   },
   "TB3_hmc": {
    "id": "TB3_hmc",
@@ -692,49 +760,236 @@
    "id": "TB4",
    "title": "propagation delay, pulse skew, DCD, output edge",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb4_pd/tb4_pd.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "tpd_s",
+     "where": {
+      "vid": 0.35
+     },
+     "limit": "-inf .. 5e-09",
+     "n": 35,
+     "reasons": [],
+     "worst": 4.6128664389587114e-09,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.35",
+     "margin": 3.871335610412887e-10,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "tpd_s",
+     "where": {
+      "vid": 0.1
+     },
+     "limit": "-inf .. 8e-09",
+     "n": 35,
+     "reasons": [],
+     "worst": 5.596164553754015e-09,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
+     "margin": 2.4038354462459856e-09,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "dcd_ui",
+     "where": {
+      "vid": 0.35
+     },
+     "limit": "-inf .. 0.05",
+     "n": 35,
+     "reasons": [],
+     "worst": 0.009889482806561132,
+     "worst_run": "ss_125c_3v00__vic0.6_vid0.35",
+     "margin": 0.040110517193438874,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "dcd_ui",
+     "where": {
+      "vid": 0.1
+     },
+     "limit": "-inf .. 0.1",
+     "n": 35,
+     "reasons": [],
+     "worst": 0.06296086972964973,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
+     "margin": 0.03703913027035027,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "edge_10_90_s",
+     "where": null,
+     "limit": "-inf .. 1e-09",
+     "n": 70,
+     "reasons": [],
+     "worst": 1.1635918729584503e-10,
+     "worst_run": "ss_125c_3v00__vic0.6_vid0.35",
+     "margin": 8.83640812704155e-10,
+     "status": "PASS"
+    },
+    {
+     "kind": "spread",
+     "metric": "tpd_s",
+     "over": "vic",
+     "mode": "delta",
+     "where": {
+      "vid": 0.35
+     },
+     "limit": "-inf .. 1e-09",
+     "n": 5,
+     "reasons": [],
+     "worst": 3.753280022326998e-10,
+     "worst_run": "('ss_125c_3v00', ('vid', '0.35'))",
+     "margin": 6.246719977673002e-10,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 70,
+   "actual_runs": 70,
+   "status_counts": {
+    "ok": 70
+   },
+   "results_file": "sim/tb4_pd/results/tb4_pd/results.json",
+   "results_sha256": "6a7d346c43c359b541455cb1f2b31066905721f5bd61ef550fc770953c3f57ef",
+   "cpu_s": 1257.1
   },
   "TB4b": {
    "id": "TB4b",
    "title": "delta tPD over VID 200-450 mV at fixed VIC (the VID set of TB4 cannot show it)",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb4b_pd_vid/tb4b_pd_vid.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "spread",
+     "metric": "tpd_s",
+     "over": "vid",
+     "mode": "delta",
+     "where": null,
+     "limit": "-inf .. 1e-09",
+     "n": 35,
+     "reasons": [],
+     "worst": 3.2902043743432155e-10,
+     "worst_run": "('ss_125c_3v00', ('vic', '1.2'))",
+     "margin": 6.709795625656785e-10,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 70,
+   "actual_runs": 70,
+   "status_counts": {
+    "ok": 70
+   },
+   "results_file": "sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json",
+   "results_sha256": "ba56c17c016d4c6538fe90e0dcfc17291bf606c5acb00681dac50b4fff625d54",
+   "cpu_s": 1254.8
   },
   "TB5": {
    "id": "TB5",
    "title": "eye at 100 and 200 Mb/s through the full input network",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb5_eye/tb5_eye.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "ber_errors",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 60,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05_vid0.1_rate100000000.0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "toggle_diff",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 60,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05_vid0.1_rate100000000.0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": {
+      "rate": 100000000.0
+     },
+     "limit": "0.6 .. +inf",
+     "n": 30,
+     "reasons": [],
+     "worst": 0.9736417561429279,
+     "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate100000000.0",
+     "margin": 0.37364175614292794,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": {
+      "rate": 100000000.0,
+      "vid": 0.1,
+      "corner": "tt_27c_3v30"
+     },
+     "limit": "0.7 .. +inf",
+     "n": 3,
+     "reasons": [],
+     "worst": 0.9949645324328944,
+     "worst_run": "tt_27c_3v30__vic0.05_vid0.1_rate100000000.0",
+     "margin": 0.29496453243289444,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": {
+      "rate": 200000000.0,
+      "vid": 0.35,
+      "corner": [
+       "tt_27c_3v30",
+       "ss_125c_3v00"
+      ]
+     },
+     "limit": "0.5 .. +inf",
+     "n": 6,
+     "reasons": [],
+     "worst": 0.9283691449392354,
+     "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate200000000.0",
+     "margin": 0.4283691449392354,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "dcd_ui",
+     "where": null,
+     "limit": "reported",
+     "n": 60,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 3.1441081045255975e-05,
+     "max": 0.01864769941119856,
+     "mean": 0.00577505015435647
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 60,
+   "actual_runs": 60,
+   "status_counts": {
+    "ok": 60
+   },
+   "results_file": "sim/tb5_eye/results/tb5_eye/results.json",
+   "results_sha256": "48a95cb185ede205afbfe7545414c6ece13a13cf28371f551d1bd959e0289ddf",
+   "cpu_s": 2884.0
   },
   "TB6": {
    "id": "TB6",
@@ -852,17 +1107,42 @@
    "id": "TB12",
    "title": "package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners",
    "phase": "prelayout",
-   "status": "NOT_RUN",
-   "reasons": [
-    [
-     "MISSING",
-     "testbench spec sim/tb12_pkg/tb12_pkg.json not written yet"
-    ]
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "ber_errors",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 40,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__pkg0_rate100000000.0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": null,
+     "limit": "0.5 .. +inf",
+     "n": 40,
+     "reasons": [],
+     "worst": 0.9267620689967673,
+     "worst_run": "ss_125c_3v00__pkg3_rate200000000.0",
+     "margin": 0.4267620689967673,
+     "status": "PASS"
+    }
    ],
-   "checks": [],
-   "expected_runs": null,
-   "actual_runs": null,
-   "status_counts": {}
+   "expected_runs": 40,
+   "actual_runs": 40,
+   "status_counts": {
+    "ok": 40
+   },
+   "results_file": "sim/tb12_pkg/results/tb12_pkg/results.json",
+   "results_sha256": "e193df32c8d5ea37f5831609057706df486a907304988e3f775032f554c748cf",
+   "cpu_s": 2342.6
   }
  }
 }

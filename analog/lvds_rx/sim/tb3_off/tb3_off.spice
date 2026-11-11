@@ -1,0 +1,37 @@
+* tb3_off: input-referred DC offset of lane 0, hysteresis OFF, for Monte Carlo (task T3, PLAN_V2 TB3 / finding A3).
+* Hysteresis off = the two cross-coupled loads of stage 2 are scaled to m = 0.001 with `alter` (as in TB2): stage 2 becomes a diode-loaded pair, so the
+* d2 = v(d2a) - v(d2b) is a smooth, monotonic function of VID; its ZERO crossing is the input-referred offset of stage 1 + stage 2 (`vos_v`, the gated metric).
+* Why d2 and not the output: the real circuit regenerates in the stage-2 latch before stage 3 matters, so the trip-window centre is set by the d2 balance.
+* Measured 2026-11-12 (xcheck_trip_mc.json, same seeds, tt): d2-based minus the hysteresis-ON trip centre = +0.06 mV mean, 0.81 mV sd;
+* the output VDD/2 crossing (`vos_out_v`, reported only) is biased +5.5 mV (sd 3.1) because with weak diode-loaded stage-2 gain the stage-3/inverter threshold
+* leaks into the input-referred number.  Spec: |mean| + 6 sigma + V_Hmax/2 + 3 mV <= 95 mV.
+* Method: one `dc` sweep of a dummy variable Vs (plain `op` does not converge, see tb3_trip): supply ramp 0.3 V -> VDD first (EN and the common mode
+* follow), then VID rises from -{w} V in 0.1 mV steps.  Mismatch: one ngspice process per seed ({seed_line}); matched pairs are one device with nf fingers.
+* Grid: vic.  Hooks: hooks.py:post_tb3off (VDD/2 crossing of the output = vos_v).
+{header}
+{seed_line}
+.option rshunt=1e11
+.include {deck_dir}/../../sizing/sizes.spice
+.include {deck_dir}/../../netlist/lvds_rx_core.spice
+Vs r 0 0
+Bv vdd 0 V=min(0.3+200*v(r), {vdd})
+Ben en 0 V=1*v(vdd)
+Bcm cm 0 V={vic}*min(1, v(vdd)/3.0)
+Bvid vid 0 V=-{w}+max(v(r)-({vdd}-0.3)/200, 0)
+Bp0 rx0_p cm V=v(vid)/2
+Bn0 rx0_n cm V=-v(vid)/2
+Vp1 rx1_p cm dc 0
+Vn1 rx1_n cm dc 0
+Vp2 rx2_p cm dc 0
+Vn2 rx2_n cm dc 0
+Xdut vdd 0 rx0_p rx0_n rx1_p rx1_n rx2_p rx2_n en rx0_o rx1_o rx2_o lvds_rx_x3
+cl rx0_o 0 30f
+.control
+set wr_singlescale
+alter m.xdut.xl0.xhyst.xmlc1.m0 m = 0.001
+alter m.xdut.xl0.xhyst.xmlc2.m0 m = 0.001
+dc Vs 0 {smax} 0.0001
+let d2d = v(xdut.xl0.d2a) - v(xdut.xl0.d2b)
+wrdata off.txt v(vid) v(rx0_o) v(vdd) d2d
+.endc
+.end

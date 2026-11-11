@@ -1,0 +1,17 @@
+{
+ "name": "tb12_pkg",
+ "description": "TB12: eye and BER of lane 0 over the package sweep L {1, 5} nH x C {0.5, 1.5} pF (grid index pkg 0..3) at 100 Mb/s (VID 100 mV) and 200 Mb/s (VID 350 mV), VIC 1.2 V, full input network, worst5 corners",
+ "deck": "tb12_pkg.spice",
+ "corners": "worst5",
+ "grid": {"pkg": [0, 1, 2, 3], "rate": [100e6, 200e6]},
+ "vars": {"vic": 1.2},
+ "prep": "../tb5_eye/hooks.py:prep_eye",
+ "post": "../tb5_eye/hooks.py:post_eye",
+ "limits": {
+  "ber_errors": {"max": 0},
+  "toggle_diff": {"min": 0, "max": 0},
+  "eye_open_ui": {"min": 0.5}
+ },
+ "timeout": 600,
+ "jobs": 6
+}
