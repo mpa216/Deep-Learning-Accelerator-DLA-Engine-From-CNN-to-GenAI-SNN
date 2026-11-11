@@ -133,3 +133,13 @@ entries:                    # ladder rungs and waivers taken so far (none: only 
       - "T1 variant A (PMOS only) had its M3 sinks reduced by Itn/2; the correct change is an increase by Itn/2 (RL must carry the same current as in the hybrid): fixed in sizing/lvds_rx_sizing.py (the T1 spike files are history and untouched)."
       - "Harness 1.2: ngspice prints 'Dynamic gmin stepping failed' and then often 'True gmin stepping completed' (or the transient-op fallback finishes) at the first point of a supply ramp; the run is no longer classified nonconverged when a recovery note follows the last stepping failure. Any other convergence message still is. Test added (46 tests)."
       - "DC operating points of this netlist need a supply ramp (`dc Vsup 0.3 VDD 0.1` with EN and VIC scaled by B sources) and `.option rshunt=1e11`: plain `op` fails on the regenerative stage 2 and EN = 0 leaves floating nodes. TB1 decks must do the same."
+  - id: D-004
+    date: 2026-11-11
+    kind: note
+    trigger: "T2 part 2: TB1/TB2 benches, LUT-vs-SPICE table, S1 shake-down (PMOS-only stage 1)"
+    measured: "results/gates.json (TB1 147/147, TB2 35/35 PASS at smoke), results/shakedown_s1.md, sim/tb1_op/results/lut_vs_spice.md, results/iterations.jsonl phase T2 block stage3_pole"
+    gate_relaxed: "none (gates.yaml / spec.yaml unchanged); no ladder rung taken"
+    decisions:
+      - "The PMOS-only variant (flag nmos_pair = 0) is only a shake-down vehicle of the flow (S1): its sink devices m3a have no row in the sizing script's device table and were NOT tuned. At the ss/125C + res_ff cross corner they keep only 13-34 mV of VDS - VDsat (limit 50 mV); at tt + worst5 every TB1 check passes at all 7 VIC. The baseline (hybrid input with dump) is the design; no iteration was spent on variant A."
+      - "TB1 helper spec sim/tb1_op/tb1_np.json (dump-free control for the N/P overlap, decision D-002) is run by flow/run_all.py before TB1 (HELPERS) and is not itself a gate; its VIC points are not counted in the TB1 run count."
+      - "Stage-3 converter pole was too slow (d3 node 39 MHz at ss/125C vs 80 MHz = 0.8 DR): L of the NMOS mirror 0.5 -> 0.28 um (sizing script variable L_n3), A3 falls 48 -> 19; the chain passes (66 MHz vs 50)."

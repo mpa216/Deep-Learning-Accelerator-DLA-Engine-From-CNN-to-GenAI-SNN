@@ -1,0 +1,67 @@
+{
+ "name": "tb1_op_pmos",
+ "description": "S1 shake-down (PMOS-only stage 1) TB1: operating point, headroom, LUT-vs-SPICE, stage-1 CM, currents, node range (lane 0 + bias; EN = 1)",
+ "deck": "tb1_op_pmos.spice",
+ "corners": "full47",
+ "grid": {
+  "vic": [
+   0.05,
+   0.3,
+   0.6,
+   1.2,
+   1.8,
+   2.1,
+   2.35
+  ],
+  "vid": [
+   -0.1,
+   0.0,
+   0.1
+  ]
+ },
+ "post": "hooks.py:post_tb1",
+ "vars": {
+  "variant": "pmos"
+ },
+ "limits": {
+  "min_headroom_v": {
+   "min": 0.05,
+   "scale": 1000,
+   "unit": "mV"
+  },
+  "gmid_err": {
+   "min": -0.1,
+   "max": 0.1
+  },
+  "id_err": {
+   "min": -0.1,
+   "max": 0.1
+  },
+  "vgs_err_v": {
+   "min": -0.03,
+   "max": 0.03,
+   "scale": 1000,
+   "unit": "mV"
+  },
+  "s1_cm_dev_v": {
+   "min": -0.15,
+   "max": 0.15,
+   "scale": 1000,
+   "unit": "mV"
+  },
+  "np_overlap_v": {
+   "min": 0.25
+  },
+  "vnode_min_v": {
+   "min": -0.3
+  },
+  "vnode_over_vdd_v": {
+   "max": 0.3
+  },
+  "model_warnings": {
+   "max": 0
+  }
+ },
+ "timeout": 120,
+ "jobs": 6
+}

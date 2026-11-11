@@ -37,8 +37,10 @@ Xdut vdd 0 rx0_p rx0_n rx1_p rx1_n rx2_p rx2_n en rx0_o rx1_o rx2_o lvds_rx_x3
 """
 
 
-def main():
-    flags = dict(nmos_pair=1, dump_devices=1)
+def main(variant='base'):
+    pm = variant == 'pmos'      # S1 shake-down: PMOS-only stage 1 (flag nmos_pair = 0), written next to the baseline as tb1_op_pmos.*
+    sfx = '_pmos' if pm else ''
+    flags = dict(nmos_pair=0 if pm else 1, dump_devices=1)
     devs = []
     T2.flatten('lvds_rx_x3', dict(T2.TOP), 'xdut.', flags, devs)
     keep = [d for d in devs if d['prefix'] in ('xdut.xl0.xpre.', 'xdut.xl0.xhyst.', 'xdut.xl0.xout.', 'xdut.xbias.')]
@@ -65,23 +67,26 @@ def main():
             "* grid: vic (common mode), vid (differential input of lane 0).  EN = 1.  Lanes 1 and 2 sit at VIC with VID = 0.\n"
             "* Hooks (hooks.py:post_tb1) compare every device with the sizing script / LUT and write the pass/fail metrics.\n"
             + HDR +
-            ".param vidv = {vid}\n.include {deck_dir}/../../sizing/sizes.spice\n.include {deck_dir}/../../netlist/lvds_rx_core.spice\n" + SRC +
+            ".param vidv = {vid}\n.include {deck_dir}/../../sizing/sizes.spice\n" + (".param flag_nmos_pair = 0\n" if pm else "") + ".include {deck_dir}/../../netlist/lvds_rx_core.spice\n" + SRC +
             ".control\n"
             "* DC convergence: ramp the supply (EN and VIC scale with it) from 0.3 V to VDD; the last point is the operating point (plain `op` fails, see log/T2_report.md)\n"
             "dc Vsup 0.3 {vdd} 0.1\n"
             "let n = length(v(vdd)) - 1\n"
             "let ivv = -i(Vsup)\nlet idd = ivv[n]\necho RESULT idd $&idd\n" + '\n'.join(lines) + "\n.endc\n.end\n")
-    open(os.path.join(HERE, 'tb1_op.spice'), 'w').write(deck)
+    open(os.path.join(HERE, 'tb1_op%s.spice' % sfx), 'w').write(deck)
     json.dump([dict(key=k, path=d['path'], kind=d['kind'], stem=d['stem'], d=d['d'], g=d['g'], s=d['s'], b=d['b']) for k, d in keys],
-              open(os.path.join(HERE, 'devices.json'), 'w'), indent=1)
-    spec = dict(name='tb1_op', description='TB1: operating point, headroom, LUT-vs-SPICE, stage-1 CM, currents, node range (lane 0 + bias; EN = 1)',
-                deck='tb1_op.spice', corners='full47', grid=dict(vic=VICS, vid=VIDS), post='hooks.py:post_tb1',
+              open(os.path.join(HERE, 'devices%s.json' % sfx), 'w'), indent=1)
+    spec = dict(name='tb1_op' + sfx, description=('S1 shake-down (PMOS-only stage 1) ' if pm else '') + 'TB1: operating point, headroom, LUT-vs-SPICE, stage-1 CM, currents, node range (lane 0 + bias; EN = 1)',
+                deck='tb1_op%s.spice' % sfx, corners='full47', grid=dict(vic=VICS, vid=VIDS), post='hooks.py:post_tb1', vars=dict(variant=variant),
                 limits={'min_headroom_v': {'min': 0.05, 'scale': 1000, 'unit': 'mV'}, 'gmid_err': {'min': -0.10, 'max': 0.10},
                         'id_err': {'min': -0.10, 'max': 0.10}, 'vgs_err_v': {'min': -0.03, 'max': 0.03, 'scale': 1000, 'unit': 'mV'},
                         's1_cm_dev_v': {'min': -0.15, 'max': 0.15, 'scale': 1000, 'unit': 'mV'}, 'np_overlap_v': {'min': 0.25},
                         'vnode_min_v': {'min': -0.3}, 'vnode_over_vdd_v': {'max': 0.3}, 'model_warnings': {'max': 0}},
                 timeout=120, jobs=6)
-    json.dump(spec, open(os.path.join(HERE, 'tb1_op.json'), 'w'), indent=1)
+    json.dump(spec, open(os.path.join(HERE, 'tb1_op%s.json' % sfx), 'w'), indent=1)
+    if pm:
+        print('wrote TB1 PMOS-only variant decks')
+        return
     # ---- dump-free control for the N/P overlap (D-002): same sizes, dump gates disconnected, VID = 0
     npd = ("* tb1_np: dump-free control of the stage-1 input (flag_dump_devices = 0): tail currents of the PMOS and NMOS pair vs VIC at VID = 0.  GENERATED -- do not edit.\n"
            "* np_overlap_v (decision D-002) = width of the VIC window in which BOTH tails carry >= 90 % of their plateau current, limited to 2 x the distance of Vref\n"
@@ -103,4 +108,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main('base')
+    main('pmos')

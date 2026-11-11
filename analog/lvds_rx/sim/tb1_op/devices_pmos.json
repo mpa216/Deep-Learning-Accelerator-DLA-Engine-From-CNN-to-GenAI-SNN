@@ -1,0 +1,442 @@
+[
+ {
+  "key": "xbias_xmen_p",
+  "path": "xdut.xbias.xmen_p",
+  "kind": "p",
+  "stem": "men_p",
+  "d": "xdut.xbias.enb",
+  "g": "en",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xbias_xmen_n",
+  "path": "xdut.xbias.xmen_n",
+  "kind": "n",
+  "stem": "men_n",
+  "d": "xdut.xbias.enb",
+  "g": "en",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xbias_xmsw",
+  "path": "xdut.xbias.xmsw",
+  "kind": "p",
+  "stem": "msw",
+  "d": "xdut.xbias.nrb",
+  "g": "xdut.xbias.enb",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xbias_xmbn",
+  "path": "xdut.xbias.xmbn",
+  "kind": "n",
+  "stem": "mbn",
+  "d": "xdut.vbn",
+  "g": "xdut.vbn",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xbias_xmpd_n",
+  "path": "xdut.xbias.xmpd_n",
+  "kind": "n",
+  "stem": "mpd_n",
+  "d": "xdut.vbn",
+  "g": "xdut.xbias.enb",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xbias_xmbs",
+  "path": "xdut.xbias.xmbs",
+  "kind": "n",
+  "stem": "mbs",
+  "d": "xdut.vbp",
+  "g": "xdut.vbn",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xbias_xmbp",
+  "path": "xdut.xbias.xmbp",
+  "kind": "p",
+  "stem": "mbp",
+  "d": "xdut.vbp",
+  "g": "xdut.vbp",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xbias_xmpu_p",
+  "path": "xdut.xbias.xmpu_p",
+  "kind": "p",
+  "stem": "mpu_p",
+  "d": "xdut.vbp",
+  "g": "en",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xbias_xmb2p",
+  "path": "xdut.xbias.xmb2p",
+  "kind": "p",
+  "stem": "mb2p",
+  "d": "xdut.vb2",
+  "g": "xdut.vbp",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xbias_xmb2",
+  "path": "xdut.xbias.xmb2",
+  "kind": "n",
+  "stem": "mb2",
+  "d": "xdut.vb2",
+  "g": "xdut.vb2",
+  "s": "xdut.xbias.vf",
+  "b": "0"
+ },
+ {
+  "key": "xbias_xmpd_2",
+  "path": "xdut.xbias.xmpd_2",
+  "kind": "n",
+  "stem": "mpd_2",
+  "d": "xdut.vb2",
+  "g": "xdut.xbias.enb",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xbias_xmvs",
+  "path": "xdut.xbias.xmvs",
+  "kind": "n",
+  "stem": "mvs",
+  "d": "xdut.xbias.nmid",
+  "g": "en",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xpre_xmpt",
+  "path": "xdut.xl0.xpre.xmpt",
+  "kind": "p",
+  "stem": "mpt",
+  "d": "xdut.xl0.xpre.tp",
+  "g": "xdut.vbp",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xpre_xmp1a",
+  "path": "xdut.xl0.xpre.xmp1a",
+  "kind": "p",
+  "stem": "mp1",
+  "d": "xdut.xl0.xpre.fa",
+  "g": "xdut.xl0.gp",
+  "s": "xdut.xl0.xpre.tp",
+  "b": "xdut.xl0.xpre.tp"
+ },
+ {
+  "key": "xl0_xpre_xmp1b",
+  "path": "xdut.xl0.xpre.xmp1b",
+  "kind": "p",
+  "stem": "mp1",
+  "d": "xdut.xl0.xpre.fb",
+  "g": "xdut.xl0.gn",
+  "s": "xdut.xl0.xpre.tp",
+  "b": "xdut.xl0.xpre.tp"
+ },
+ {
+  "key": "xl0_xpre_xmpda",
+  "path": "xdut.xl0.xpre.xmpda",
+  "kind": "p",
+  "stem": "mpd",
+  "d": "xdut.xl0.xpre.fa",
+  "g": "xdut.vref",
+  "s": "xdut.xl0.xpre.tp",
+  "b": "xdut.xl0.xpre.tp"
+ },
+ {
+  "key": "xl0_xpre_xmpdb",
+  "path": "xdut.xl0.xpre.xmpdb",
+  "kind": "p",
+  "stem": "mpd",
+  "d": "xdut.xl0.xpre.fb",
+  "g": "xdut.vref",
+  "s": "xdut.xl0.xpre.tp",
+  "b": "xdut.xl0.xpre.tp"
+ },
+ {
+  "key": "xl0_xpre_xm3a",
+  "path": "xdut.xl0.xpre.xm3a",
+  "kind": "n",
+  "stem": "m3a",
+  "d": "xdut.xl0.xpre.fa",
+  "g": "xdut.vbn",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xpre_xm3b",
+  "path": "xdut.xl0.xpre.xm3b",
+  "kind": "n",
+  "stem": "m3a",
+  "d": "xdut.xl0.xpre.fb",
+  "g": "xdut.vbn",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xpre_xm5a",
+  "path": "xdut.xl0.xpre.xm5a",
+  "kind": "n",
+  "stem": "m5",
+  "d": "xdut.xl0.oa",
+  "g": "xdut.vb2",
+  "s": "xdut.xl0.xpre.fa",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xpre_xm5b",
+  "path": "xdut.xl0.xpre.xm5b",
+  "kind": "n",
+  "stem": "m5",
+  "d": "xdut.xl0.ob",
+  "g": "xdut.vb2",
+  "s": "xdut.xl0.xpre.fb",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xhyst_xmt2",
+  "path": "xdut.xl0.xhyst.xmt2",
+  "kind": "n",
+  "stem": "mt2",
+  "d": "xdut.xl0.xhyst.ts",
+  "g": "xdut.vbn",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xhyst_xms1",
+  "path": "xdut.xl0.xhyst.xms1",
+  "kind": "n",
+  "stem": "ms",
+  "d": "xdut.xl0.d2a",
+  "g": "xdut.xl0.oa",
+  "s": "xdut.xl0.xhyst.sa",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xhyst_xms2",
+  "path": "xdut.xl0.xhyst.xms2",
+  "kind": "n",
+  "stem": "ms",
+  "d": "xdut.xl0.d2b",
+  "g": "xdut.xl0.ob",
+  "s": "xdut.xl0.xhyst.sb",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xhyst_xmld1",
+  "path": "xdut.xl0.xhyst.xmld1",
+  "kind": "p",
+  "stem": "mld",
+  "d": "xdut.xl0.d2a",
+  "g": "xdut.xl0.d2a",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xhyst_xmld2",
+  "path": "xdut.xl0.xhyst.xmld2",
+  "kind": "p",
+  "stem": "mld",
+  "d": "xdut.xl0.d2b",
+  "g": "xdut.xl0.d2b",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xhyst_xmlc1",
+  "path": "xdut.xl0.xhyst.xmlc1",
+  "kind": "p",
+  "stem": "mlc",
+  "d": "xdut.xl0.d2a",
+  "g": "xdut.xl0.d2b",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xhyst_xmlc2",
+  "path": "xdut.xl0.xhyst.xmlc2",
+  "kind": "p",
+  "stem": "mlc",
+  "d": "xdut.xl0.d2b",
+  "g": "xdut.xl0.d2a",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xhyst_xmpu1",
+  "path": "xdut.xl0.xhyst.xmpu1",
+  "kind": "p",
+  "stem": "mpu2",
+  "d": "xdut.xl0.d2a",
+  "g": "en",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xhyst_xmpu2",
+  "path": "xdut.xl0.xhyst.xmpu2",
+  "kind": "p",
+  "stem": "mpu2",
+  "d": "xdut.xl0.d2b",
+  "g": "en",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xmp3a",
+  "path": "xdut.xl0.xout.xmp3a",
+  "kind": "p",
+  "stem": "mp3",
+  "d": "xdut.xl0.xout.n3a",
+  "g": "xdut.xl0.d2a",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xmp3b",
+  "path": "xdut.xl0.xout.xmp3b",
+  "kind": "p",
+  "stem": "mp3",
+  "d": "xdut.xl0.xout.d3",
+  "g": "xdut.xl0.d2b",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xmn3a",
+  "path": "xdut.xl0.xout.xmn3a",
+  "kind": "n",
+  "stem": "mn3",
+  "d": "xdut.xl0.xout.n3a",
+  "g": "xdut.xl0.xout.n3a",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xout_xmn3b",
+  "path": "xdut.xl0.xout.xmn3b",
+  "kind": "n",
+  "stem": "mn3",
+  "d": "xdut.xl0.xout.d3",
+  "g": "xdut.xl0.xout.n3a",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xout_xmnandp1",
+  "path": "xdut.xl0.xout.xmnandp1",
+  "kind": "p",
+  "stem": "nand_p",
+  "d": "xdut.xl0.xout.nd",
+  "g": "xdut.xl0.xout.d3",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xmnandp2",
+  "path": "xdut.xl0.xout.xmnandp2",
+  "kind": "p",
+  "stem": "nand_p",
+  "d": "xdut.xl0.xout.nd",
+  "g": "en",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xmnandn1",
+  "path": "xdut.xl0.xout.xmnandn1",
+  "kind": "n",
+  "stem": "nand_n",
+  "d": "xdut.xl0.xout.nd",
+  "g": "xdut.xl0.xout.d3",
+  "s": "xdut.xl0.xout.nm",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xout_xmnandn2",
+  "path": "xdut.xl0.xout.xmnandn2",
+  "kind": "n",
+  "stem": "nand_n",
+  "d": "xdut.xl0.xout.nm",
+  "g": "en",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xout_xminv1p",
+  "path": "xdut.xl0.xout.xminv1p",
+  "kind": "p",
+  "stem": "inv1_p",
+  "d": "xdut.xl0.xout.i1",
+  "g": "xdut.xl0.xout.nd",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xminv1n",
+  "path": "xdut.xl0.xout.xminv1n",
+  "kind": "n",
+  "stem": "inv1_n",
+  "d": "xdut.xl0.xout.i1",
+  "g": "xdut.xl0.xout.nd",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xout_xminv2p",
+  "path": "xdut.xl0.xout.xminv2p",
+  "kind": "p",
+  "stem": "inv2_p",
+  "d": "xdut.xl0.xout.i2",
+  "g": "xdut.xl0.xout.i1",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xminv2n",
+  "path": "xdut.xl0.xout.xminv2n",
+  "kind": "n",
+  "stem": "inv2_n",
+  "d": "xdut.xl0.xout.i2",
+  "g": "xdut.xl0.xout.i1",
+  "s": "0",
+  "b": "0"
+ },
+ {
+  "key": "xl0_xout_xminv3p",
+  "path": "xdut.xl0.xout.xminv3p",
+  "kind": "p",
+  "stem": "inv3_p",
+  "d": "rx0_o",
+  "g": "xdut.xl0.xout.i2",
+  "s": "vdd",
+  "b": "vdd"
+ },
+ {
+  "key": "xl0_xout_xminv3n",
+  "path": "xdut.xl0.xout.xminv3n",
+  "kind": "n",
+  "stem": "inv3_n",
+  "d": "rx0_o",
+  "g": "xdut.xl0.xout.i2",
+  "s": "0",
+  "b": "0"
+ }
+]

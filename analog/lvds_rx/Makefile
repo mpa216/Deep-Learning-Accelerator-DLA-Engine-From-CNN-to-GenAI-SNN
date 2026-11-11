@@ -4,6 +4,7 @@
 #
 #   check    environment + self-tests -> results/env.json (tools, LUT selftest, harness tests, lint, OMP, toy layout)
 #   smoke    harness runs of every existing testbench at tt+worst5 / MC N=30 -> gates -> report   (the only tier for iteration loops)
+#   shakedown  S1 shake-down: PMOS-only stage 1 through TB1 + TB2 (worst7 / worst5) -> results/shakedown_s1.md
 #   full     check + all testbenches at the full tier + mutants -> gates -> report
 #   report   regenerate results/REPORT.md from results/gates.json
 #   mutants  gate mutation tests -> results/mutants.json
@@ -13,7 +14,7 @@
 #   clean    remove generated results and scratch (never design files)
 PY ?= python3
 
-.PHONY: check smoke full report mutants lint layout audit clean
+.PHONY: check smoke shakedown full report mutants lint layout audit clean
 
 check:
 	$(PY) flow/envcheck.py
@@ -21,6 +22,9 @@ check:
 
 smoke: lint
 	$(PY) flow/run_all.py --tier smoke --phases env,prelayout
+
+shakedown:
+	$(PY) flow/shakedown.py
 
 full: check
 	$(PY) flow/run_all.py --tier full --phases env,prelayout

@@ -13,8 +13,8 @@ sys.path.insert(0, os.path.join(ROOT, 'flow'))
 import common as C  # noqa: E402
 
 
-def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'results', 'tb2_ac', 'results.json')
+def main(path=None):
+    path = path or (sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].endswith(".json") else os.path.join(HERE, 'results', 'tb2_ac', 'results.json'))
     runs = json.load(open(path))['runs']
     bad = [r for r in runs if r['status'] != 'ok']
     spec = C.load_yaml('spec/spec.yaml')

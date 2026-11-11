@@ -30,16 +30,18 @@ for p in (os.path.join(ROOT, 'sizing'), os.path.join(ROOT, 'flow')):
 import lvds_rx_sizing as Z  # noqa: E402
 
 # mlc (cross-coupled load) is in triode by design on the conducting side of the latched stage 2: no saturation requirement, no LUT comparison there
-ANALOG = {'mbn', 'mbs', 'mbp', 'mb2p', 'mb2', 'mpt', 'mp1', 'mpd', 'mnt', 'mn1', 'mnd', 'm3', 'm5', 'mt2', 'ms', 'mld', 'mlc'}
+ANALOG = {'mbn', 'mbs', 'mbp', 'mb2p', 'mb2', 'mpt', 'mp1', 'mpd', 'mnt', 'mn1', 'mnd', 'm3', 'm5', 'mt2', 'ms', 'mld', 'mlc', 'm3a'}
 FIXED = {'mbn': 'iref', 'mbs': 'isink', 'mbp': 'isink', 'mb2p': 'ib2', 'mb2': 'ib2', 'mpt': 'itp', 'mnt': 'itn', 'm3': 'i3', 'mt2': 'it2'}
 IMIN = 1e-6            # devices below this current are off or in weak inversion: not compared
 _state = {}
 
 
-def _ctx():
-    if not _state:
+def _ctx(variant='base'):
+    if variant not in _state.setdefault('dj', {}):
+        _state['dj'][variant] = json.load(open(os.path.join(HERE, 'devices%s.json' % ('_pmos' if variant == 'pmos' else ''))))
+    if 'S' not in _state:
         _state['S'], _state['devs'] = Z.design()
-        _state['dev_json'] = json.load(open(os.path.join(HERE, 'devices.json')))
+        _state['dev_json'] = {}
         _state['table'] = {d['stem']: d for d in json.load(open(os.path.join(ROOT, 'layout', 'device_table.json')))['devices']}
     return _state
 
@@ -110,7 +112,9 @@ def np_overlap(corner_name):
 
 
 def post_tb1(ctx):
-    S = _ctx()
+    variant = ctx.get('vars', {}).get('variant', 'base')
+    S = _ctx(variant)
+    S['dev_json'] = S['dj'][variant]
     m = ctx['measures']
     c = ctx['corner']
     zc = zcorner(c)
@@ -123,6 +127,10 @@ def post_tb1(ctx):
         idv = m['id_' + k]
         if idv < IMIN:
             rows[k] = dict(stem=stem, id=idv, off=True)
+            continue
+        if stem not in S['table']:                      # m3a (PMOS-only variant sink) has no row in the sizing script's table: headroom only
+            rows[k] = dict(stem=stem, id=idv, mg=m['mg_' + k], vds=m['vds_' + k], no_lut=True)
+            heads.append(m['mg_' + k])
             continue
         row = S['table'][stem]
         W, L = row['W_um'], row['L_um']
@@ -167,7 +175,8 @@ def post_tb1(ctx):
                vnode_min_v=min(nodes), vnode_over_vdd_v=max(nodes) - vdd, model_warnings=nlines,
                i_bias_a=i_bias, i_lane_a=(idd - i_bias) / 3.0, idd_a=idd, i_bias_script_a=b['i_bias'],
                vout_v=m['v_rx0_o'])
-    out.update(np_overlap(c.name))
+    if variant != 'pmos':               # the N/P overlap is a property of the hybrid input; the PMOS-only variant has no NMOS pair
+        out.update(np_overlap(c.name))
     json.dump(dict(corner=c.name, lut_table=zc.lut_table, vic=ctx['params']['vic'], vid=ctx['params']['vid'], metrics=out, devices=rows),
               open(os.path.join(ctx['run_dir'], 'lutcmp.json'), 'w'), indent=1)
     return out

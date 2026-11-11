@@ -4,7 +4,7 @@
 
 TB1 helper: dump-free control for the N/P overlap (decision D-002); VID = 0, EN = 1, 47 VIC points
 
-Runs: **329** (ok 329); 0 reused from cache.
+Runs: **329** (ok 329); 329 reused from cache.
 
 ## All runs
 

@@ -2,7 +2,7 @@
  "generated_by": "sizing/lvds_rx_sizing.py",
  "hashes": {
   "sizing_script": "7ac3471de0fbaa938598ac3aa9101380e442cb8548ec17780cba0ff8ac6bbbe0",
-  "luts": "b6c716358b263b8d9c055343826f2d0973a6d06cdab4354400f2b570c5828774",
+  "luts": "58dac49d5f90a43fe931b205732dab21149f7c2a9b5ff4d0b77a4c9c4f3383b5",
   "spec": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2"
  },
  "flags": {
@@ -262,22 +262,22 @@
    "block": "lane",
    "model": "pfet_03v3",
    "role": "stage-2 diode load (x2)",
-   "W_um": 4.0,
+   "W_um": 8.0,
    "L_um": 0.4,
-   "nf": 2,
+   "nf": 4,
    "Wf_um": 2.0,
-   "ID_tt_uA": 12.577079812148488
+   "ID_tt_uA": 13.974533124609431
   },
   {
    "stem": "mlc",
    "block": "lane",
    "model": "pfet_03v3",
    "role": "stage-2 cross-coupled load (x2)",
-   "W_um": 6.0,
+   "W_um": 10.0,
    "L_um": 0.4,
-   "nf": 3,
+   "nf": 5,
    "Wf_um": 2.0,
-   "ID_tt_uA": 18.865619718222728
+   "ID_tt_uA": 17.46816640576179
   },
   {
    "stem": "mpu2",
@@ -295,9 +295,9 @@
    "block": "lane",
    "model": "pfet_03v3",
    "role": "stage-3 PMOS mirror copies (x2): current of the load diode x r3",
-   "W_um": 8.0,
+   "W_um": 16.0,
    "L_um": 0.4,
-   "nf": 4,
+   "nf": 8,
    "Wf_um": 2.0,
    "ID_tt_uA": null
   },
@@ -306,11 +306,11 @@
    "block": "lane",
    "model": "nfet_03v3",
    "role": "stage-3 NMOS mirror (diode + copy)",
-   "W_um": 2.33,
+   "W_um": 2.59,
    "L_um": 0.28,
    "nf": 1,
-   "Wf_um": 2.33,
-   "ID_tt_uA": 25.154159624296977
+   "Wf_um": 2.59,
+   "ID_tt_uA": 27.949066249218863
   },
   {
    "stem": "nand_n",
@@ -441,8 +441,8 @@
    "stem": "rs",
    "model": "ppolyf_u_1k",
    "r_width_um": 2.0,
-   "r_length_um": 3.258,
-   "R_tt_ohm": 1735.2294921875
+   "r_length_um": 9.315,
+   "R_tt_ohm": 4802.8564453125
   },
   {
    "stem": "resd",
@@ -478,10 +478,10 @@
   "m3_over_mbn": 2.4,
   "mt2_over_mbn": 1.2,
   "mpt_over_mbp": 2.0,
-  "alpha": 1.5,
+  "alpha": 1.25,
   "alpha_fingers": [
-   2,
-   3
+   4,
+   5
   ]
  },
  "cap_vref": {

@@ -1,0 +1,186 @@
+{
+ "tb1_op_pmos": {
+  "0.05": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0136284,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  },
+  "0.3": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0134723,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  },
+  "0.6": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0133099,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  },
+  "1.2": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0133198,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  },
+  "1.8": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0338187,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  },
+  "2.1": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0339721,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  },
+  "2.35": {
+   "n": 21,
+   "bad": 0,
+   "fails": {
+    "min_headroom_v": {
+     "worst": 0.0339726,
+     "limit": {
+      "min": 0.05,
+      "scale": 1000,
+      "unit": "mV"
+     },
+     "runs": 3
+    }
+   }
+  }
+ },
+ "tb1_op_pmos_usable_vic_worst5": [
+  0.05,
+  0.3,
+  0.6,
+  1.2,
+  1.8,
+  2.1,
+  2.35
+ ],
+ "tb1_op_pmos_usable_vic": [],
+ "tb2_ac_pmos": {
+  "0.05": {
+   "n": 5,
+   "bad": 0,
+   "fails": {}
+  },
+  "0.3": {
+   "n": 5,
+   "bad": 0,
+   "fails": {}
+  },
+  "0.6": {
+   "n": 5,
+   "bad": 0,
+   "fails": {}
+  },
+  "1.2": {
+   "n": 5,
+   "bad": 0,
+   "fails": {}
+  },
+  "1.8": {
+   "n": 5,
+   "bad": 0,
+   "fails": {
+    "a1": {
+     "worst": 0.0226869429,
+     "limit": {
+      "min": 4.0
+     },
+     "runs": 5
+    }
+   }
+  },
+  "2.1": {
+   "n": 5,
+   "bad": 0,
+   "fails": {
+    "a1": {
+     "worst": 0.000934268129,
+     "limit": {
+      "min": 4.0
+     },
+     "runs": 5
+    }
+   }
+  },
+  "2.35": {
+   "n": 5,
+   "bad": 0,
+   "fails": {
+    "a1": {
+     "worst": 0.000706229398,
+     "limit": {
+      "min": 4.0
+     },
+     "runs": 5
+    }
+   }
+  }
+ },
+ "tb2_ac_pmos_usable_vic": [
+  0.05,
+  0.3,
+  0.6,
+  1.2
+ ]
+}

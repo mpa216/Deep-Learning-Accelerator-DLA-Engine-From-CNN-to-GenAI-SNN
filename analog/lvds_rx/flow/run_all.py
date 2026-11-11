@@ -41,18 +41,43 @@ def plan(tier, phases, only=None):
     return rows, gates_y, spec
 
 
+# helper specs that a gate's post hook reads (not gated themselves, no run-count check); run BEFORE the gate's own spec
+HELPERS = {"TB1": ["sim/tb1_op/tb1_np.json"]}
+
+
 def run_sims(rows, tier, jobs):
     walls = {}
     for r in rows:
         if not r["spec"] or not r["exists"] or not r["applicable"]:
             continue
         t0 = time.time()
+        for h in HELPERS.get(r["gate"], []):
+            hrecs, _ = runner.run_spec(C.path(h), jobs=jobs, only_corners=r["corners"], verbose=False)
+            print("SIM %-9s helper %s: %d runs, %d not ok" % (r["gate"], os.path.basename(h), len(hrecs),
+                                                             sum(1 for x in hrecs if x["status"] != "ok")))
         recs, summ = runner.run_spec(C.path(r["spec"]), jobs=jobs, only_corners=r["corners"], n_mc=r.get("n_mc"),
                                      verbose=False)
         walls[r["gate"]] = round(time.time() - t0, 1)
         bad = sum(1 for x in recs if x["status"] != "ok")
         print("SIM %-9s %4d runs (expected %s), %d not ok, %.1f s" % (r["gate"], len(recs), r["expected"], bad, walls[r["gate"]]))
     return walls
+
+
+# generated tables of a gate (PLAN_V2 5.2 item 3: the LUT-vs-SPICE table comes from TB1); run after the gate's simulations
+TABLES = {"TB1": "sim/tb1_op/lut_table.py", "TB2": "sim/tb2_ac/ac_table.py"}
+
+
+def run_tables(rows):
+    import importlib.util
+    for r in rows:
+        t = TABLES.get(r["gate"])
+        if not t or not r["exists"] or not r["applicable"]:
+            continue
+        sp = importlib.util.spec_from_file_location("tbl_" + r["gate"], C.path(t))
+        mod = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(mod)
+        mod.main()
+        print("TABLE %-9s %s" % (r["gate"], t))
 
 
 def write_manifest(tier, phases, rows, walls, wall_total):
@@ -104,6 +129,7 @@ def main(argv=None):
     walls = {}
     if a.stage in ("sim", "all"):
         walls = run_sims(rows, a.tier, a.jobs)
+        run_tables(rows)
     rc = 0
     if a.stage in ("gates", "all"):
         rc = G.main(["--tier", a.tier, "--phases", ",".join(phases)])

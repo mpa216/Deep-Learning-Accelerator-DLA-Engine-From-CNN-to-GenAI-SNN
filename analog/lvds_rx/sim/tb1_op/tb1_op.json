@@ -20,6 +20,9 @@
   ]
  },
  "post": "hooks.py:post_tb1",
+ "vars": {
+  "variant": "base"
+ },
  "limits": {
   "min_headroom_v": {
    "min": 0.05,

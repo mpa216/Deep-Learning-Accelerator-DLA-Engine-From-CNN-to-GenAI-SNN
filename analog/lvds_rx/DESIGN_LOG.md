@@ -215,3 +215,36 @@ for the saturation check, the corner table of the script has no fs/sf/ss -40 C. 
 
 **Where.** `sizing/lvds_rx_sizing.py`, `sizing/sizes.spice`, `sizing/sizing_report.md`, `layout/device_table.json`, `netlist/{lvds_circuit,gen_core,gen_lvs_ref}.py`, `netlist/lvds_rx_core.spice`,
 `netlist/lvds_rx_lvs_ref*.spice`, `netlist/check_lvs_ref.sh`, `sim/t2_op/`, `results/{sizing,t2_op}.json`, decisions `D-003` in `spec/decisions.yaml`, `log/T2_report.md`.
+
+---
+
+## 2026-11-11 — T2 part 2: operating-point and AC benches, LUT-vs-SPICE table, shake-down
+
+**Why.** Part 1 sized the lane and ran it once. Part 2 turns those one-off checks into the two frozen benches TB1 (operating point) and TB2 (AC), so every later
+design change is judged by the same script. TB1 also produces the LUT-vs-SPICE table: for every transistor it compares what the sizing script (which reads the
+gm/ID lookup tables) predicted with what the simulator says. If they agree, the gm/ID method is trustworthy for this process and the rest of the design can lean on it.
+
+**What was built / done.** An earlier agent was cut off by the usage limit and left a checkpoint; this run checked it instead of redoing it.
+- Checkpoint check: the newly generated corner lookup tables (ss/125 C, ff/-40 C, fs, sf, with body bias up to 2.0 V) made `sizes.spice` stale (lint rule `sizes`), so the sizing
+  script was re-run (127 assertions, 0 failed), then `gen_core.py`, `gen_lvs_ref.py` and `sim/tb1_op/make_deck.py`. Lint 0 findings, `make check` green (296/296 LUT checks, 46 harness tests).
+- `flow/run_all.py`: runs the TB1 helper spec (`tb1_np`, the dump-free control for the N/P overlap) before TB1, and after the simulations writes the two tables
+  (`sim/tb1_op/results/lut_vs_spice.md`, `sim/tb2_ac/results/ac_table.md`). `make smoke` therefore runs TB1 and TB2 from one command.
+- `sim/tb1_op/make_deck.py` and `hooks.py` learned a variant (`pmos`) so that the same bench runs the PMOS-only stage-1 netlist; `flow/shakedown.py` (`make shakedown`) is the S1 driver.
+
+**Numbers (smoke tier: TB2 at tt + worst5; TB1 additionally the two resistor cross corners, 7 corners x 7 VIC x 3 VID = 147 runs).**
+- TB1 PASS 147/147: min VDS - VDsat 52.1 mV (limit 50; that is the ss/125 C + resistors-fast cross corner, the five normal corners keep 109-222 mV), worst |gm/ID error| 2.2 % (limit 10), worst |ID error| 3.5 % (limit 10),
+  worst |VGS error| 8.6 mV (limit 30), stage-1 output common mode moves at most 13 mV from mid-range (limit 150), N/P overlap of the dump-free control at least 0.68 V (limit 0.25), no node outside -0.3..VDD+0.3 V, 0 model warnings,
+  lane current at most 709 uA (limit 1.5 mA).
+- TB2 PASS 35/35: A1 5.49 (ss/125 C) to 11.2, spread over VIC at most 1.12x (limit 2.2), stage -3 dB frequencies at least 0.836 x data rate (limit 0.8; the slowest is stage 3 at ss/125 C, 83.6 MHz), chain at least 55.5 MHz (limit 50),
+  CMRR 46-54 dB and PSRR 14-21 dB reported (half-circuit definitions; PSRR is the weak point, 14 dB at ss/125 C).
+- S1 shake-down, PMOS-only stage 1 (`results/shakedown_s1.md`): the flow runs end to end (147 + 35 runs, none failed). At tt + worst5 every TB1 check passes at all 7 VIC (the operating point stays healthy even when the pair is cut off);
+  TB2 shows the real limit: A1 >= 4 holds up to VIC = 1.2 V and collapses at 1.8 V (A1 = 0.02), so the usable range is about 0 to 1.2-1.8 V (the plan guessed 1.6 V; points between 1.2 and 1.8 V were not simulated). At the ss/125 C + resistors-fast cross corner the untuned m3a sinks keep only 13-34 mV of headroom (limit 50): variant A was not tuned (decision D-004), it only proves the flow.
+- Iterations: one design change in this task (stage-3 converter NMOS mirror L 0.5 -> 0.28 um, block `stage3_pole`, logged by the earlier agent) plus a re-verification entry after the LUT regeneration. No ladder rung taken, no gate limit changed.
+
+**What it means.** The gm/ID method predicts this process to within 2-3 % in gm/ID and current and under 9 mV in VGS, so sizing from the tables is reliable for fixed-current devices at least. Gain and bandwidth margins are fine except two thin ones: the stage-3 pole (4.5 % above its limit)
+and the headroom of the sinks at the ss/125 C + resistors-fast cross corner (2 mV above the limit; that corner is not one of the 45 but is in TB1's scope).
+
+**What it does not prove.** No transient behaviour (tPD, hysteresis, eye), no mismatch, no check that the output is at the right logic level (TB1 reports `vout_v` only); `fs`/`sf` now use their own tables (earlier runs used the tt table as a proxy);
+PMOS-only variant not tuned; CMRR is the nominal half-circuit value (mismatch-induced CMRR needs Monte Carlo).
+
+**Where.** `sim/tb1_op/` (make_deck.py, hooks.py, lut_table.py, tb1_op*.json/.spice, results/lut_vs_spice.md), `sim/tb2_ac/` (tb2_ac*.json/.spice, hooks.py, ac_table.py, results/ac_table.md), `flow/run_all.py`, `flow/shakedown.py`, `results/shakedown_s1.{md,json}`, `results/gates.json`, `results/iterations.jsonl`, decision D-004, `log/T2b_report.md`.

@@ -1,6 +1,6 @@
 # LVDS RX macro: verification report (generated)
 
-Generated 2026-11-10 23:48:03 by flow/report.py from results/gates.json. Tier **smoke**, phases env, commit `5b9a30c` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
+Generated 2026-11-11 13:42:14 by flow/report.py from results/gates.json. Tier **smoke**, phases env, prelayout, commit `eb571bf` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `08ed08af51de...`.
 
 ## Waivers and fallback-ladder rungs
 
@@ -9,15 +9,34 @@ Generated 2026-11-10 23:48:03 by flow/report.py from results/gates.json. Tier **
 | D-001 | 2026-11-11 | note |   | T0 had to turn PLAN_V2 3.1/3.2 into countable gates; points the plan table left open were decided here (no limit changed) | n/a (design decisions, recorded in spec/gates.yaml at freeze) | none |
 | D-002 | 2026-11-11 | note |   | T1 stage-1 spike (PLAN_V2 S0, C4): is the hybrid input stage with dump devices viable over VIC 0.05-2.35 V? Answer measured: yes, no ladder rung taken (R5 stays at rung 0). | results/spike_stage1.json, 8 corners x 47 VIC x 3 variants (1128 runs, all ok). H1 (hybrid + dump): CM span 12-31 mV (limit +-150 mV), A1 at VIC 0.05/2.35 V >= 4.26, A1 spread <= 1.27x (limit 2.2x), min saturation margin 88 mV (limit 50 mV), f3dB >= 170 MHz. H0 (no dump): CM fails at 7 of 8 corners (span up to 1.20 V), A1 0.08 at ss/125C/2.35 V. Iterations 2 of 8 (results/iterations.jsonl). | none (gates.yaml untouched, sha unchanged) |
 | D-003 | 2026-11-11 | note |   | T2 part 1 (sizing script + netlist): design choices the plan left open or that the first numbers forced; no frozen file changed, no ladder rung taken | sizing/sizing_report.md (127 assertions, 0 failed), sim/t2_op/results/op_table.md (60 runs worst5 x VIC 0.05/1.2/2.35 V x EN x VID, all ok; min saturation margin 109 mV), results/iterations.jsonl phase T2 | none (gates.yaml / spec.yaml sha unchanged) |
+| D-004 | 2026-11-11 | note |   | T2 part 2: TB1/TB2 benches, LUT-vs-SPICE table, S1 shake-down (PMOS-only stage 1) | results/gates.json (TB1 147/147, TB2 35/35 PASS at smoke), results/shakedown_s1.md, sim/tb1_op/results/lut_vs_spice.md, results/iterations.jsonl phase T2 block stage3_pole | none (gates.yaml / spec.yaml unchanged); no ladder rung taken |
 
 ## Summary
 
-**GREEN**: 2 PASS
+**NOT GREEN**: 1 NOT_APPLICABLE, 13 NOT_RUN, 6 PASS
 
 | gate | phase | status | runs (found/expected) | worst margin | note |
 |---|---|---|---|---|---|
 | ENV | env | PASS | -/- | - |  |
 | SELFTEST | env | PASS | 14/14 | 48.15 |  |
+| SIZE | prelayout | PASS | -/- | - |  |
+| TB0 | prelayout | PASS | -/- | - |  |
+| TB1 | prelayout | PASS | 147/147 | 0 |  |
+| TB2 | prelayout | PASS | 35/35 | 0.03564 |  |
+| TB3_trip | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_trip/tb3_trip.json not written yet |
+| TB3_off | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_off/tb3_off.json not written yet |
+| TB3_hmc | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb3_hmc/tb3_hmc.json not written yet |
+| TB4 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb4_pd/tb4_pd.json not written yet |
+| TB4b | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb4b_pd_vid/tb4b_pd_vid.json not written yet |
+| TB5 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb5_eye/tb5_eye.json not written yet |
+| TB6 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb6_cm_supply/tb6_cm_supply.json not written yet |
+| TB7 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb7_idle/tb7_idle.json not written yet |
+| TB7_mc | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb7_idle_mc/tb7_idle_mc.json not written yet |
+| TB8 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb8_en/tb8_en.json not written yet |
+| TB9 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb9_input/tb9_input.json not written yet |
+| TB10 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb10_lanes/tb10_lanes.json not written yet |
+| TB11 | prelayout | NOT_APPLICABLE | -/- | - | CONDITION: needs ladder R6 rung >= 1 (not taken) |
+| TB12 | prelayout | NOT_RUN | -/- | - | MISSING: testbench spec sim/tb12_pkg/tb12_pkg.json not written yet |
 
 ## Gates
 
@@ -50,6 +69,141 @@ Status **PASS**. Runs 14 of 14 expected; run status counts {'ok': 14}; results `
 | r_ohm | per_run | corner=ss_125c_3v00_xrff | 820 .. 940 | 2 | 879.1 | PASS |
 | r_ohm | per_run | corner=ff_m40c_3v60_xrss | 1550 .. 1700 | 2 | 1623 | PASS |
 | idsat_a | report | all | reported | 14 | - | PASS |
+
+### SIZE: sizing script asserts, current tally, nf-not-m
+
+Status **PASS**. 
+
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| asserts_failed | json_value | all | == 0 | 1 | 0 | PASS |
+| nf_m_violations | json_value | all | == 0 | 1 | 0 | PASS |
+| tally_ok | json_value | all | == 1 | 1 | 1 | PASS |
+
+### TB0: analog pad: C_pad and pin leakage (built before T0)
+
+Status **PASS**. 
+
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| rows[*].C_100MHz_fF | json_value | all | == 15 | 15 | 15 | PASS |
+| rows[*].C_100MHz_fF | json_value | all | -inf .. 1.2e-12 | 15 | 1.15e-12 | PASS |
+| rows[*].I_leak_A | json_value | all | -inf .. 1e-06 | 15 | 4.473e-11 | PASS |
+
+### TB1: operating point: headroom, LUT-vs-SPICE, stage-1 CM, currents, node range
+
+Status **PASS**. Runs 147 of 147 expected; run status counts {'ok': 147}; results `sim/tb1_op/results/tb1_op/results.json` (sha256 `f7a00a31d667...`).
+
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| min_headroom_v | per_run | all | 0.05 .. +inf | 147 | 0.0521 | PASS |
+| gmid_err | per_run | all | -inf .. 0.1 | 147 | 0.02217 | PASS |
+| id_err | per_run | all | -inf .. 0.1 | 147 | 0.03458 | PASS |
+| vgs_err_v | per_run | all | -inf .. 0.03 | 147 | 0.008553 | PASS |
+| s1_cm_dev_v | per_run | all | -inf .. 0.15 | 147 | 0.01295 | PASS |
+| np_overlap_v | per_run | all | 0.25 .. +inf | 147 | 0.6787 | PASS |
+| vnode_min_v | per_run | all | -0.3 .. +inf | 147 | 6.78e-11 | PASS |
+| vnode_over_vdd_v | per_run | all | -inf .. 0.3 | 147 | 0 | PASS |
+| model_warnings | per_run | all | -inf .. 0 | 147 | 0 | PASS |
+| i_lane_a | per_run | all | -inf .. 0.0015 | 147 | 0.0007093 | PASS |
+| i_bias_a | per_run | all | -inf .. 0.0003 | 147 | 0.0002201 | PASS |
+
+### TB2: AC: stage-1 gain, bandwidth
+
+Status **PASS**. Runs 35 of 35 expected; run status counts {'ok': 35}; results `sim/tb2_ac/results/tb2_ac/results.json` (sha256 `5ea1a5c452d3...`).
+
+| metric | kind | where | limit | n | worst | status |
+|---|---|---|---|---|---|---|
+| a1 | per_run | vic=[0.05, 2.35] | 4 .. +inf | 10 | 5.489 | PASS |
+| a1 | spread | all | -inf .. 2.2 | 5 | 1.121 | PASS |
+| f3db_stage_over_dr | per_run | all | 0.8 .. +inf | 35 | 0.8356 | PASS |
+| f3db_chain_hz | per_run | all | 5e+07 .. +inf | 35 | 5.55e+07 | PASS |
+| cmrr_db | report | all | reported | 35 | - | PASS |
+| psrr_db | report | all | reported | 35 | - | PASS |
+
+### TB3_trip: hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb3_trip/tb3_trip.json not written yet
+
+### TB3_off: DC input-referred offset Monte Carlo, hysteresis off (N = 1000)
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb3_off/tb3_off.json not written yet
+
+### TB3_hmc: transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb3_hmc/tb3_hmc.json not written yet
+
+### TB4: propagation delay, pulse skew, DCD, output edge
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb4_pd/tb4_pd.json not written yet
+
+### TB4b: delta tPD over VID 200-450 mV at fixed VIC (the VID set of TB4 cannot show it)
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb4b_pd_vid/tb4b_pd_vid.json not written yet
+
+### TB5: eye at 100 and 200 Mb/s through the full input network
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb5_eye/tb5_eye.json not written yet
+
+### TB6: CM step, supply ripple, current spikes
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb6_cm_supply/tb6_cm_supply.json not written yet
+
+### TB7: idle inputs: stable held state, no oscillation, no pulse < 2 ns (v0)
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb7_idle/tb7_idle.json not written yet
+
+### TB7_mc: idle inputs under mismatch (N = 100)
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb7_idle_mc/tb7_idle_mc.json not written yet
+
+### TB8: EN and supply ramps
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb8_en/tb8_en.json not written yet
+
+### TB9: input leakage and balance
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb9_input/tb9_input.json not written yet
+
+### TB10: three lanes: skew and crosstalk
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb10_lanes/tb10_lanes.json not written yet
+
+### TB11: bias loop stability (only if a constant-gm loop exists)
+
+Status **NOT_APPLICABLE**. 
+
+- CONDITION: needs ladder R6 rung >= 1 (not taken)
+
+### TB12: package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners
+
+Status **NOT_RUN**. 
+
+- MISSING: testbench spec sim/tb12_pkg/tb12_pkg.json not written yet
 
 ## Environment (results/env.json)
 
@@ -87,4 +241,4 @@ Status **PASS**. Runs 14 of 14 expected; run status counts {'ok': 14}; results `
 
 ## Manifest
 
-Wall time 0.1 s; sizes.spice sha256 `5177dbd8c723c4e3885b1e2408bc03f4b3f2eade169b90b4a1c0e66c4a06ef28`; LUT hash `b6c716358b26...`.
+Wall time 0.1 s; sizes.spice sha256 `96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6`; LUT hash `58dac49d5f90...`.

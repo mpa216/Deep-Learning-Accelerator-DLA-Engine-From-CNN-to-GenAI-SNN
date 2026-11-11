@@ -30,7 +30,7 @@ luts/           gm/ID lookup tables (git-ignored, regenerate with lut_regen/rege
 lut_regen/      scripts that regenerate and validate the lookup tables
 netlist/        SPICE: pad model, input network; the receiver = lvds_circuit.py (connectivity, written once) -> gen_core.py -> lvds_rx_core.spice
                 (simulation, parameters from sizes.spice) and gen_lvs_ref.py -> lvds_rx_lvs_ref{,_flat}.spice (LVS reference, gf180mcuD names)
-sim/harness/    corner / Monte Carlo / eye-diagram automation; sim/tb*/ one directory per testbench; sim/t2_op/ = first .op of the sized lane
+sim/harness/    corner / Monte Carlo / eye-diagram automation; sim/tb*/ one directory per testbench; sim/t2_op/ = first .op of the sized lane; sim/tb1_op (operating point + LUT-vs-SPICE) and sim/tb2_ac (AC) are the first gated benches (make smoke runs them, make shakedown the PMOS-only S1 run)
                 (supply-ramp DC, build-flag run; read its results/op_table.md)
 layout/         scripted Magic layout flow (magic_flow/ is the proven pathfinder)
 xschem/         schematic export experiments
