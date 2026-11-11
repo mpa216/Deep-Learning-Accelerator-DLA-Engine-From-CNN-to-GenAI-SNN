@@ -75,7 +75,7 @@ def build(blk: Block, wd, mode="prod", tag=None):
 
 
 # ------------------------------------------------------------------------------------------------ 3 magic DRC
-def magic_drc(cell, src, wd, tag):
+def magic_drc(cell, src, wd, tag, allow=()):
     rpt = os.path.join(wd, f"drc_magic_{tag}.rpt")
     out = magic(os.path.join(LIB, "tcl", "drc_magic.tcl"), wd, {"CELL": cell, "SRC": os.path.abspath(src), "OUT": rpt},
                 f"drc_magic_{tag}.log")
@@ -83,7 +83,15 @@ def magic_drc(cell, src, wd, tag):
     rules = []
     if os.path.exists(rpt):
         rules = [l.strip() for l in open(rpt) if l.startswith("RULE")][:6]
-    return dict(total=int(m[-1]) if m else None, rules=rules)
+    total = int(m[-1]) if m else None
+    allowed = 0
+    if os.path.exists(rpt):
+        for l in open(rpt):
+            mm = re.match(r"RULE \((\d+)\) (.*)", l)
+            if mm and any(a in mm.group(2) for a in allow):
+                allowed += int(mm.group(1))
+    # `allow`: Magic rule names known to be STRICTER than the foundry deck (the KLayout deck stays the sign-off), see run_cell
+    return dict(total=total, rules=rules, allowed=allowed, effective=None if total is None else total - allowed)
 
 
 # ------------------------------------------------------------------------------------------------ 4 KLayout
@@ -213,6 +221,16 @@ def finger_readback(blk, ext_path):
     return dict(ok=all_ok, rows=rows_out)
 
 
+def res_readback(ext_path, cols):
+    """Resistor array: the extracted resistors sorted by x must carry the nets of the plan (column order, dummies included)."""
+    devs = sorted([d for d in parse_ext_devices(ext_path) if d["kind"] == "rsubckt"], key=lambda d: d["x"])
+    # ext record: "sub" "<body node>" 0 0 "<terminal 1>" w.. "<terminal 2>" w..: the two terminals are terms[2] and terms[3]
+    got = [tuple(sorted((base(d["terms"][2]), base(d["terms"][3])))) for d in devs]
+    exp = [tuple(sorted((c["bot"], c["top"]))) for c in cols]
+    names = [("d" if c.get("dummy") else c["name"] + str(c.get("seg", ""))) for c in cols]
+    return dict(ok=(got == exp), columns=names, read=[f"{a}-{b}" for a, b in got], expected=[f"{a}-{b}" for a, b in exp])
+
+
 # ------------------------------------------------------------------------------------------------ 7 negative controls
 def edit_gds(gds, out, fn):
     import klayout.db as db
@@ -225,7 +243,7 @@ def edit_gds(gds, out, fn):
 LAYER_NUM = {"m1": (34, 0), "m2": (36, 0), "m3": (42, 0), "via1": (35, 0), "via2": (38, 0)}
 
 
-def cut_wire(gds, out, shape, width=0.5):
+def cut_wire(gds, out, shape, width=0.5, at=None):
     """Remove a slice across the middle of `shape` (a Shape of the Block) on its layer, limited to the shape's y/x band."""
     import klayout.db as db
 
@@ -240,7 +258,7 @@ def cut_wire(gds, out, shape, width=0.5):
         dbu = ly.dbu
         horizontal = (shape.x2 - shape.x1) >= (shape.y2 - shape.y1)
         if horizontal:
-            xm = (shape.x1 + shape.x2) / 2
+            xm = (shape.x1 + shape.x2) / 2 if at is None else at
             cut = db.Box(int((xm - width / 2) / dbu), int((shape.y1 - 0.01) / dbu), int((xm + width / 2) / dbu), int((shape.y2 + 0.01) / dbu))
         else:
             ym = (shape.y1 + shape.y2) / 2
@@ -263,10 +281,10 @@ def add_sliver(gds, out):
     edit_gds(gds, out, fn)
 
 
-def pick_cut_shape(blk, prefer=None):
+def pick_cut_shape(blk, prefer=None, kind="bar"):
     """A long Metal3 bar (or Metal1 strap) that is the only link between two groups of devices: the longest 'bar' shape of a
     net that has >= 2 via pads along it, never a rail net."""
-    cands = [s for s in blk.shapes if s.kind == "bar" and s.layer == "m3"]
+    cands = [s for s in blk.shapes if s.kind == kind and s.layer == "m3"]
     if prefer:
         c2 = [s for s in cands if s.net == prefer]
         cands = c2 or cands
@@ -279,7 +297,7 @@ def pick_cut_shape(blk, prefer=None):
 
 
 # ------------------------------------------------------------------------------------------------ driver
-def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=None, extra=None):
+def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=None, extra=None, extract_src="gds", neg_schem=None, cut_x=None, magic_gds=True, magic_allow=(), cut_kind="bar", res_cols=None):
     """Full check of one block.  schem_text = complete SPICE text with `.subckt <blk.name> pins ... .ends`."""
     name = blk.name
     wd = os.path.join(outdir, name)
@@ -294,15 +312,17 @@ def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=
         res["verdict"] = "FAIL (no GDS)"
         return _finish(res, results_dir, name, t0)
     res["steps"]["metal_cap"] = metal_cap(blk, gds)
-    ex = extract(name, gds, wd, "lvs")
+    # extract_src="mag": the Magic GDS read does not map the 166/5 MOSCAP marker, so a varactor (nmoscap_3p3) vanishes from a
+    # GDS extraction; cells that contain one are extracted from the .mag written by the same build (DRC still runs on the GDS)
+    ex = extract(name, gds if extract_src == "gds" else wd, wd, "lvs")
     try:
         obs = selfcheck(blk, ex["ext"])
         res["steps"]["selfcheck"] = dict(ok=True, **obs)
     except (SelfCheckError, FileNotFoundError) as e:
         res["steps"]["selfcheck"] = dict(ok=False, error=str(e))
-    d1 = magic_drc(name, wd, wd, "mag")
-    d2 = magic_drc(name, gds, wd, "gds")
-    res["steps"]["magic_drc"] = dict(ok=(d1["total"] == 0 and d2["total"] == 0), mag=d1, gds_readback=d2)
+    d1 = magic_drc(name, wd, wd, "mag", magic_allow)
+    d2 = magic_drc(name, gds, wd, "gds", magic_allow)
+    res["steps"]["magic_drc"] = dict(ok=(d1["effective"] == 0 and d2["effective"] == 0), mag=d1, gds_readback=d2, allow=list(magic_allow))
     if klayout:
         k = klayout_drc(gds, name, os.path.join(wd, "klayout"))
         k["ok"] = bool(k["dbu_ok"] and k["main"] == 0 and k.get("antenna") == 0 and k["main_lyrdb_files"] > 0 and k.get("antenna_lyrdb_files", 0) > 0)
@@ -312,18 +332,24 @@ def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=
     res["steps"]["lvs"] = lv
     fb = finger_readback(blk, ex["ext"])
     res["steps"]["finger_readback"] = fb
+    if res_cols is not None:
+        res["steps"]["res_readback"] = res_readback(ex["ext"], res_cols)
     # ---- negative controls
     neg = {}
     bad = schem_text
-    m = re.search(r"^(X\S+ .* w=)([\d.]+)(u .*)$", schem_text, re.M) or re.search(r"^(X\S+ .* r_length=)([\d.]+)(u.*)$", schem_text, re.M)
+    m = (re.search(r"^(X\S+ .* w=)([\d.]+)(u .*)$", schem_text, re.M) or re.search(r"^(X\S+ .* r_length=)([\d.]+)(u.*)$", schem_text, re.M)
+         or re.search(r"^(X\S+ .* c_length=)([\d.]+)(u.*)$", schem_text, re.M))
     if m:
         bad = schem_text.replace(m.group(0), f"{m.group(1)}{float(m.group(2)) * 0.9:g}{m.group(3)}", 1)
     nl = netgen_lvs(name, ex["spice"], bad, wd, "badw")
     neg["wrong_W"] = dict(detected=not nl["clean"], why=nl.get("why"))
-    shp = pick_cut_shape(blk, cut_net)
+    for k, txt in (neg_schem or {}).items():
+        nl2 = netgen_lvs(name, ex["spice"], txt, wd, "neg_" + k)
+        neg[k] = dict(detected=not nl2["clean"], why=nl2.get("why"))
+    shp = pick_cut_shape(blk, cut_net, cut_kind) if extract_src == "gds" else None
     if shp is not None:
         cg = os.path.join(wd, "cut.gds")
-        cut_wire(gds, cg, shp)
+        cut_wire(gds, cg, shp, at=cut_x)
         exc = extract(name, cg, wd, "cut")
         lc = netgen_lvs(name, exc["spice"], schem_text, wd, "cut")
         neg["cut_wire"] = dict(detected=not lc["clean"], net=shp.net, at=[round(shp.x1, 2), round(shp.y1, 2), round(shp.x2, 2), round(shp.y2, 2)], why=lc.get("why"))

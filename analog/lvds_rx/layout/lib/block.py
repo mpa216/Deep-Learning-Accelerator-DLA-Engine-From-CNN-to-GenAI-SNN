@@ -77,6 +77,8 @@ class Block:
         self.pins = []            # (name, layer, x, y)
         self.expect_mos = []      # dict(inst, model, Wf, L, nfingers, bbox)
         self.expect_res = []      # dict(inst, model, r_width, r_length)
+        self.expect_dio = []      # dict(inst, model, w, l)   diodes: area = w*l, pj = 2*(w+l)
+        self.expect_cap = []      # dict(inst, model, c_width, c_length)
         self.rows = []            # finger read-back expectations
         self.schem = []           # schematic lines contributed by generators (dummies etc.)
         self.notes = []

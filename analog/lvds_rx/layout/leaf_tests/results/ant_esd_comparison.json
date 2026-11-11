@@ -1,0 +1,31 @@
+{
+ "t_ant_bare": {
+  "build_errors": [],
+  "wire_um": 700.0,
+  "main": 0,
+  "antenna": 1,
+  "antenna_rules": {
+   "ANT.16_i_ANT.4": 1
+  },
+  "main_rules": {},
+  "dbu_ok": true,
+  "lyrdb": [
+   1,
+   1
+  ]
+ },
+ "t_ant_esd": {
+  "build_errors": [],
+  "wire_um": 700.0,
+  "main": 0,
+  "antenna": 0,
+  "antenna_rules": {},
+  "main_rules": {},
+  "dbu_ok": true,
+  "lyrdb": [
+   1,
+   1
+  ]
+ },
+ "ok": true
+}

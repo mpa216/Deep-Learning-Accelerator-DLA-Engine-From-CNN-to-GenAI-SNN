@@ -152,7 +152,7 @@ def row_dims(kind, Wf, L, n):
 
 
 def mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(1, 1), ring_net=None, bar_order=None, wide=None,
-            tie_bars_to_ring=True, mx=MX, note=""):
+            tie_bars_to_ring=True, mx=MX, note="", m1_ring_regions=False):
     """Build one row of fingers.
 
     fingers : list of dict(sym, gate, src, drn, side ('top'|'bot'), exit ('E'|'W'|None))   (real fingers, left to right)
@@ -207,6 +207,21 @@ def mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(1, 1), ring_net=
     for j in range(n + 1):
         _register(blk, "m1", rx[j] - 0.2, ybar1, rx[j] + 0.2, ybar2, regions[j], "gencell_bar")
 
+    if L < 0.36:
+        # L = 0.28 (pitch 0.8): the corner of a used gate pad is 0.209 um (< 0.23, M1.2a) from the end of the neighbouring S/D contact
+        # bar.  The generator's bar runs from cy - Wf/2 + 0.01 to cy + Wf/2 - 0.01; its contacts (0.22, pitch 0.47, centred, CO.4 >= 0.07)
+        # leave a margin m = (Wf - span) / 2 to the diffusion edge, so the bar overshoots its first / last contact by m - 0.01.
+        # CO.6a needs 0.06 (Magic's CO.6 flags anything below ~0.13): trim up to 0.04 um off both bar ends but keep 0.065 of overshoot.
+        # Needs m >= 0.105 (corner distance sqrt((0.175 + trim)^2 + 0.115^2) >= 0.23); Wf = 3.7 (m = 0.095) cannot be fixed this way.
+        kc = int((Wf - 0.14 + 0.25) / 0.47 + 1e-9)
+        margin = (Wf - (0.22 * kc + 0.25 * (kc - 1))) / 2
+        trim = max(0.0, min(0.04, margin - 0.01 - 0.065))
+        if trim < 0.035:
+            raise Conflict(f"{inst}: Wf {Wf} at L {L}: contact margin {margin:.3f} um leaves no room for the L < 0.36 pad-corner fix (needs >= 0.105); re-finger the device (Wf 1.85 or 1.23 instead of 3.7)")
+        for j in range(n + 1):
+            blk.clear("m1", rx[j] - 0.2, cy - Wf / 2 - 0.02, rx[j] + 0.2, cy - Wf / 2 + 0.01 + trim)
+            blk.clear("m1", rx[j] - 0.2, cy + Wf / 2 - 0.01 - trim, rx[j] + 0.2, cy + Wf / 2 + 0.02)
+
     # --- gate pads, stubs, straps
     exits_used = set()
     for f in allf:
@@ -235,7 +250,9 @@ def mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(1, 1), ring_net=
             pady, keepy, d = padyb, padyt, 1
         else:
             pady, keepy, d = padyt, padyb, -1
-        blk.clear("pc,m1", fx[i] - ph - 0.02, pady - 0.12, fx[i] + ph + 0.02, pady + 0.12)
+        # the generator's unused pad is 0.48 wide: for L = 0.28 (pad pitch 0.8) a clear of L + 0.02 leaves 0.09 slivers (M1.1 / M1.3)
+        cw = max(ph + 0.02, 0.25)
+        blk.clear("pc,m1", fx[i] - cw, pady - 0.12, fx[i] + cw, pady + 0.12)
         blk.rect("poly", fx[i] - L / 2, pady - 0.12, fx[i] + L / 2, pady + 0.12)
         sy = keepy + d * STRAP_DY
         net = f["gate"]
@@ -278,6 +295,10 @@ def mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(1, 1), ring_net=
             continue
         if regions[j] not in nets:
             nets.append(regions[j])
+    if m1_ring_regions:
+        # tiny devices (Wf < 1.2: two Metal3 bars do not fit in the contact bar): the regions on the ring net get no bar, each is tied
+        # to the ring by a vertical Metal1 stub on the side that carries no gate strap
+        nets = [t for t in nets if t != ring_net]
     if bar_order:
         nets = [t for t in bar_order if t in nets] + [t for t in nets if t not in bar_order]
     wide = wide or {}
@@ -306,6 +327,18 @@ def mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(1, 1), ring_net=
         bars[t] = (yb, xa, xb)
         ports.append(Port(t, "m3", (xa, yb - widths[t] / 2, xb, yb + widths[t] / 2), "WE", "bar"))
         blk.label(t, "m3", (xa + xb) / 2, yb)
+
+    if m1_ring_regions:
+        used = {f["side"] for f in allf if not f["dummy"]}
+        if len(used) != 1:
+            raise Conflict(f"{inst}: m1_ring_regions needs all real gate straps on one side")
+        for j in range(n + 1):
+            if regions[j] != ring_net:
+                continue
+            if "top" in used:        # straps north: stubs south
+                blk.vwire("m1", rx[j], iy1 - 0.05, ybar1 + 0.05, 0.23, ring_net, "ring_stub")
+            else:
+                blk.vwire("m1", rx[j], ybar2 - 0.05, iy2 + 0.05, 0.23, ring_net, "ring_stub")
 
     # --- outer dummy regions tie to the ring on Metal1 (at the height of the ring-net bar when there is one, so that the
     #     bar's via pad and the tie wire coincide: no notch)
@@ -406,11 +439,11 @@ def mirror_interdig(blk, inst, kind, outs, S, rail, ll, Wf, L, dummies=1, src_w=
     """Interdigitated current mirror, star-connected sources.
     outs: list of dict(sym, nf (total fingers of that device), gate, drn).  All share the source net S and one Wf, L.
     Fingers sit in pairs that share a drain region (S regions between pairs); a device with an odd finger count puts its
-    single finger at the left end (only ONE odd device allowed).  Pair units are placed symmetrically (centroid balanced).
+    single finger at the left end (a second odd device puts its single finger at the right end; at most two).  Pair units are placed symmetrically (centroid balanced).
     The sources of all devices are ONE Metal3 spine tied to the ring net when S == rail (star)."""
     odd = [o for o in outs if o["nf"] % 2]
-    if len(odd) > 1:
-        raise ValueError("mirror_interdig: at most one device with an odd finger count")
+    if len(odd) > 2:
+        raise ValueError("mirror_interdig: at most two devices with an odd finger count (one single at each row end)")
     counts = {o["sym"]: o["nf"] // 2 for o in outs}
     seq = _interleave(counts)
     by = {o["sym"]: o for o in outs}
@@ -426,6 +459,8 @@ def mirror_interdig(blk, inst, kind, outs, S, rail, ll, Wf, L, dummies=1, src_w=
     for sym in seq:
         add(sym)
         add(sym)
+    if len(odd) == 2:
+        add(odd[1]["sym"])                          # second odd device: its single finger sits at the RIGHT end
     if len(sides) > 1:
         # alternate sides per gate net (at most two distinct gate nets in a row)
         nets = sorted(sides)
@@ -438,7 +473,7 @@ def mirror_interdig(blk, inst, kind, outs, S, rail, ll, Wf, L, dummies=1, src_w=
         kw["wide"] = {S: src_w}
     leaf = mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(dummies, dummies), **kw)
     leaf.info["outs"] = outs
-    leaf.info["sequence"] = ([odd[0]["sym"]] if odd else []) + [s for s in seq for _ in (0, 1)]
+    leaf.info["sequence"] = ([odd[0]["sym"]] if odd else []) + [s for s in seq for _ in (0, 1)] + ([odd[1]["sym"]] if len(odd) == 2 else [])
     return leaf
 
 
@@ -454,10 +489,11 @@ def grouped_row(blk, inst, kind, Wf, L, groups, ll, rail, dummies=1, **kw):
     return mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(dummies, dummies), **kw)
 
 
-def single(blk, inst, dev: Dev, ll, gate, drn, src, rail, dummies=1, **kw):
-    """One transistor (all nf fingers one device): sources/drains alternate, dummies at both ends."""
+def single(blk, inst, dev: Dev, ll, gate, drn, src, rail, dummies=1, gate_exit="W", **kw):
+    """One transistor (all nf fingers one device): sources/drains alternate, dummies at both ends.  The gate strap leaves the row
+    to the west (default) or east (`gate_exit`)."""
     return grouped_row(blk, inst, dev.kind, dev.Wf, dev.L,
-                       [dict(sym="M", n=dev.nf, gate=gate, src=src, drn=drn, side="top", exit="W")], ll, rail, dummies, **kw)
+                       [dict(sym="M", n=dev.nf, gate=gate, src=src, drn=drn, side="top", exit=gate_exit)], ll, rail, dummies, **kw)
 
 
 def stacked(blk, inst, lower: Dev, upper: Dev, ll, nets, rail, dummies=1, **kw):
@@ -506,14 +542,15 @@ def pair_dump(blk, inst, dev: Dev, dump: Dev, ll, A, B, S, rail, dump_gate, dumm
     return leaf
 
 
-def tail_dump(blk, inst, tail: Dev, pair: Dev, dump: Dev, ll, nets, rail, gap=3.0):
+def tail_dump(blk, inst, tail: Dev, pair: Dev, dump: Dev, ll, nets, rail, gap=3.0, rail_pair=None):
     """Tail device + input pair with dump twins: two leaves, tail row left, pair_dump row right, same y, TAIL routed by the
     allocator.  nets = dict(g_tail, tail_src, A=dict(gate, drn), B=dict(gate, drn), dump_gate, tail_net).
+    rail_pair: ring/well net of the pair row when it differs from the tail's (PMOS: tail ring = VDD, pair well = the tail node).
     Returns (tail_leaf, pair_leaf, alloc)."""
     from .alloc import Alloc
     lt = single(blk, inst + "_tail", tail, ll, gate=nets["g_tail"], drn=nets["tail_net"], src=nets["tail_src"], rail=rail)
-    lp = pair_dump(blk, inst + "_pair", pair, dump, (lt.bbox[2] + gap, ll[1]), nets["A"], nets["B"], nets["tail_net"], rail,
-                   nets["dump_gate"])
+    lp = pair_dump(blk, inst + "_pair", pair, dump, (lt.bbox[2] + gap, ll[1]), nets["A"], nets["B"], nets["tail_net"],
+                   rail_pair or rail, nets["dump_gate"])
     al = Alloc(blk)
     al.route(nets["tail_net"], [lt.port(nets["tail_net"], "m3", "bar")[0], lp.port(nets["tail_net"], "m3", "bar")[0]])
     return lt, lp, al

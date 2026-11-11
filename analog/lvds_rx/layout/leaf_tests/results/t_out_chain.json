@@ -1,0 +1,302 @@
+{
+ "cell": "t_out_chain",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 10.14,
+    "m2": 17.22,
+    "m3": 18.68
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 32,
+   "mos": {
+    "nfet_03v3 w=4.0 l=0.28": 4,
+    "nfet_03v3 w=3.0 l=0.28": 3,
+    "nfet_03v3 w=1.5 l=0.28": 3,
+    "nfet_03v3 w=2.0 l=0.28": 4,
+    "pfet_03v3 w=5.0 l=0.28": 6,
+    "pfet_03v3 w=3.75 l=0.28": 4,
+    "pfet_03v3 w=1.85 l=0.28": 4,
+    "pfet_03v3 w=3.0 l=0.28": 4
+   },
+   "n_res": 0,
+   "want_fingers": 32,
+   "n_diode": 0,
+   "n_cap": 0
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 320,
+    "rules": [
+     "RULE (320) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 320,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_out_chain/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    19,
+    19
+   ],
+   "nets": [
+    9,
+    9
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "nandn",
+     "ok": true,
+     "symbols": "(dL)YX(dR)",
+     "read_gate_order": [
+      "VSS",
+      "d3",
+      "EN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "d3",
+      "EN",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "nandp",
+     "ok": true,
+     "symbols": "(dL)(P1)(P2)(dR)",
+     "read_gate_order": [
+      "VDD",
+      "d3",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "d3",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv1n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "nd",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "nd",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv1p",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "nd",
+      "nd",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "nd",
+      "nd",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv2n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "i1",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "i1",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv2p",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "i1",
+      "i1",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "i1",
+      "i1",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv3n",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "i2",
+      "i2",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "i2",
+      "i2",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv3p",
+     "ok": true,
+     "symbols": "(dL)MMMM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "i2",
+      "i2",
+      "i2",
+      "i2",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "i2",
+      "i2",
+      "i2",
+      "i2",
+      "VDD"
+     ],
+     "n_read": 6,
+     "n_expected": 6,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "nd",
+    "at": [
+     3.39,
+     15.22,
+     5.39,
+     15.5
+    ],
+    "why": [
+     "pfet_03v3 (18->10)                         |pfet_03v3 (13->9) **Mismatch**",
+     "Number of devices: 20 **Mismatch**         |Number of devices: 19 **Mismatch**",
+     "Number of nets: 10 **Mismatch**            |Number of nets: 9 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: nd.2                                  |(no matching net)"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-11 15:56:05",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 20.5,
+ "bbox_um": [
+  61.46,
+  22.34
+ ]
+}

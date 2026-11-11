@@ -4,6 +4,7 @@ Python emits Magic Tcl on top of tcl/lf.tcl.  Modules:
   device_table  read layout/device_table.json (single source of truth for W/L/nf)
   block         shape database + Tcl emitter (every painted shape has a net; short/spacing rejected before painting)
   leaves        leaf generators: pair_abba, mirror_interdig, tail_dump, single, stacked, tap, guard_ring, via_stack, pin
+  passives      (T8 part 2) res_array / plan_series (matched poly resistors), esd_cell (UNQUALIFIED), nfet_cap
   alloc         column/track allocator (M2 vertical columns, M3 channels) and fault injection for the locator tests
   selfcheck     extract and assert device count / W / L / nf (resistors: r_width / r_length)
   label         short/open locator from unique-label extraction

@@ -38,7 +38,8 @@ def parse_ext_devices(ext_path):
                 else:
                     rest.append(t)
             d = dict(kind=kind, model=model, x=x1 * U, y=y1 * U,
-                     l=float(kv.get("l", 0)) * U, w=float(kv.get("w", 0)) * U)
+                     l=float(kv.get("l", 0)) * U, w=float(kv.get("w", 0)) * U,
+                     area=float(kv.get("a", 0)) * U * U, perim=float(kv.get("p", 0)) * U)
             q = [t.strip('"') for t in rest if t.startswith('"')]
             if kind == "msubckt":
                 d.update(sub=q[0], gate=q[1], t1=q[2], t2=q[3])
@@ -78,8 +79,23 @@ def selfcheck(blk, ext_path):
             errs.append(f"resistor {r['inst']}: requested {r['model']} r_width={r['r_width']} r_length={r['r_length']} not found")
     if blk.expect_res and len(rdevs) != len(blk.expect_res):
         errs.append(f"resistors: requested {len(blk.expect_res)}, extracted {len(rdevs)}")
+    ddevs = [d for d in devs if d["model"].startswith("diode_")]
+    for e in getattr(blk, "expect_dio", []):
+        area, pj = e["w"] * e["l"], 2 * (e["w"] + e["l"])
+        hit = [d for d in ddevs if d["model"] == e["model"] and close(d["area"], area, 0.05) and close(d["perim"], pj, 0.05)]
+        if not hit:
+            errs.append(f"diode {e['inst']}: requested {e['model']} area {area} pj {pj} not found")
+    if len(ddevs) != len(getattr(blk, "expect_dio", [])):
+        errs.append(f"diodes: requested {len(getattr(blk, 'expect_dio', []))}, extracted {len(ddevs)}")
+    cdevs = [d for d in devs if d["model"].startswith("cap_")]
+    for e in getattr(blk, "expect_cap", []):
+        hit = [d for d in cdevs if d["model"] == e["model"] and close(d["w"], e["c_width"]) and close(d["l"], e["c_length"])]
+        if not hit:
+            errs.append(f"cap {e['inst']}: requested {e['model']} c_width={e['c_width']} c_length={e['c_length']} not found")
+    if len(cdevs) != len(getattr(blk, "expect_cap", [])):
+        errs.append(f"caps: requested {len(getattr(blk, 'expect_cap', []))}, extracted {len(cdevs)}")
     obs = dict(n_mos=sum(got.values()), mos={f"{m} w={w} l={l}": c for (m, w, l), c in got.items()},
-               n_res=len(rdevs), want_fingers=sum(want.values()))
+               n_res=len(rdevs), want_fingers=sum(want.values()), n_diode=len(ddevs), n_cap=len(cdevs))
     if errs:
         raise SelfCheckError("; ".join(errs))
     return obs

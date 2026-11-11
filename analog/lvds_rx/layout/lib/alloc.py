@@ -78,6 +78,15 @@ class Alloc:
         for layer, r, kind in shapes:
             if self.blk._conflicts(layer, snap_r(r), net):
                 return False
+        # the planned shapes of ONE route must also keep the minimum spacing among themselves (two extensions from opposite sides
+        # whose heights differ by 0 < dy < 0.56 um end up side by side at the column: gap < 0.28)
+        from .block import MIN_SPACE
+        for i, (la, ra, _) in enumerate(shapes):
+            for lb, rb, _ in shapes[i + 1:]:
+                if la == lb and la in MIN_SPACE:
+                    g = gap(snap_r(ra), snap_r(rb))
+                    if 1e-9 < g < MIN_SPACE[la] - 1e-9:
+                        return False
         return True
 
     def route(self, net, ports, open_at=None, pin=None):
@@ -130,6 +139,8 @@ class Alloc:
         info = dict(net=net, x=xc, y1=y1, y2=y2, n_ports=len(ports))
         if pin:
             yp = y2 - 0.45 if pin == "top" else y1 + 0.45
+            if y2 - y1 < 0.9:                    # ports at (nearly) one height: the column is only ~0.4 um tall, keep the pin on it
+                yp = (y1 + y2) / 2
             blk.add_pin(net, "m2", xc, yp)
             info["pin"] = (xc, yp)
         self.routes[net] = info
