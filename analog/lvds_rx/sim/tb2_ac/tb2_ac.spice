@@ -1,0 +1,66 @@
+* tb2_ac: small-signal gain and bandwidth of each stage and of the chain, CMRR and PSRR (task T2 part 2, PLAN_V2 TB2).
+* One lane (lane 0 driven; lanes 1 and 2 held at VIC).  Grid: vic.  Hooks: hooks.py:post_tb2 (f3dB, gains, CMRR, PSRR).
+*
+* How the operating point is found: the supply is ramped (0.3 V -> VDD) with EN and the common mode scaled by it (plain `op` does not converge on this
+* netlist, see log/T2_report.md).  The ramp source Vr is separate from the circuit supply (Bv follows it, Vac sits in series): the B sources scale with
+* v(r), so a small-signal ripple on Vac does not leak into EN or the input common mode (PSRR would otherwise be wrong).
+*
+* Stage 2 is a hysteresis comparator: its balance point is unstable (positive feedback), so a small-signal gain there means nothing.  The two cross-coupled
+* loads are therefore scaled to m = 0.001 with `alter` (the stage becomes a diode-loaded pair = the linear regime a signal passes through before the
+* latch regenerates).  The regeneration speed itself is TB4's job (tPD).  The digital tail (NAND, three inverters) has no small-signal gain at a rail, so the
+* chain is defined as lane input -> d3 (stage 1, stage 2, stage 3 converter).
+{header}
+{seed_line}
+.option rshunt=1e11
+.include {deck_dir}/../../sizing/sizes.spice
+.include {deck_dir}/../../netlist/lvds_rx_core.spice
+Vr r 0 {vdd}
+Bv vddi 0 V=v(r)
+Vac vdd vddi dc 0 ac 0
+Ben en 0 V=1*v(r)
+Bcm cm 0 V={vic}*v(r)/{vdd}
+Vp0 rx0_p cm dc 0 ac 0.5
+Vn0 rx0_n cm dc 0 ac -0.5
+Vp1 rx1_p cm dc 0
+Vn1 rx1_n cm dc 0
+Vp2 rx2_p cm dc 0
+Vn2 rx2_n cm dc 0
+Xdut vdd 0 rx0_p rx0_n rx1_p rx1_n rx2_p rx2_n en rx0_o rx1_o rx2_o lvds_rx_x3
+.control
+alter m.xdut.xl0.xhyst.xmlc1.m0 m = 0.001
+alter m.xdut.xl0.xhyst.xmlc2.m0 m = 0.001
+dc Vr 0.3 {vdd} 0.1
+let n = length(v(vdd)) - 1
+let x = v(xdut.xl0.xout.d3)[n]
+echo RESULT dc_d3 $&x
+let x = v(xdut.xl0.d2a)[n] - v(xdut.xl0.d2b)[n]
+echo RESULT dc_d2diff $&x
+let x = v(xdut.xl0.oa)[n]
+echo RESULT dc_oa $&x
+let x = -i(Vac)[n]
+echo RESULT idd $&x
+* differential drive: Vp0 = +0.5, Vn0 = -0.5 (1 V differential)
+ac dec 20 1e6 3e9
+let g1 = mag(v(xdut.xl0.oa) - v(xdut.xl0.ob))
+let g2 = mag(v(xdut.xl0.d2a) - v(xdut.xl0.d2b))
+let g3 = mag(v(xdut.xl0.xout.d3))
+wrdata ac_dm.txt g1 g2 g3
+* common-mode drive (both inputs +1): single-ended gain to oa
+alter Vp0 ac = 1
+alter Vn0 ac = 1
+ac dec 2 1e6 1e7
+let x = mag(v(xdut.xl0.oa))[0]
+echo RESULT acm_oa $&x
+let x = mag(v(xdut.xl0.oa) - v(xdut.xl0.ob))[0]
+echo RESULT acm_dm $&x
+* supply ripple (inputs quiet): single-ended gain to oa
+alter Vp0 ac = 0
+alter Vn0 ac = 0
+alter Vac ac = 1
+ac dec 2 1e6 1e7
+let x = mag(v(xdut.xl0.oa))[0]
+echo RESULT aps_oa $&x
+let x = mag(v(xdut.xl0.oa) - v(xdut.xl0.ob))[0]
+echo RESULT aps_dm $&x
+.endc
+.end

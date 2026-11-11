@@ -29,6 +29,6 @@
    "netlist/lvds_rx_lvs_ref_flat.spice",
    "sizing/sizes.spice"
   ],
-  "ngspice_files": 16
+  "ngspice_files": 18
  }
 }

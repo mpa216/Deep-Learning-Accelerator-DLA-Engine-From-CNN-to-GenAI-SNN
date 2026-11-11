@@ -1,7 +1,7 @@
 {
  "generated_by": "sizing/lvds_rx_sizing.py",
  "hashes": {
-  "sizing_script": "f56ce0c9f84845505bb0aeb89ae92fef6883c3535bdeb44df78e892a57aaaa47",
+  "sizing_script": "7ac3471de0fbaa938598ac3aa9101380e442cb8548ec17780cba0ff8ac6bbbe0",
   "luts": "b6c716358b263b8d9c055343826f2d0973a6d06cdab4354400f2b570c5828774",
   "spec": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2"
  },
@@ -306,10 +306,10 @@
    "block": "lane",
    "model": "nfet_03v3",
    "role": "stage-3 NMOS mirror (diode + copy)",
-   "W_um": 3.56,
-   "L_um": 0.5,
+   "W_um": 2.33,
+   "L_um": 0.28,
    "nf": 1,
-   "Wf_um": 3.56,
+   "Wf_um": 2.33,
    "ID_tt_uA": 25.154159624296977
   },
   {

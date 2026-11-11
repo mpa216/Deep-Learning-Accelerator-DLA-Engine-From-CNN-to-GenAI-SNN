@@ -4,7 +4,7 @@
 #   docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx bash lut_regen/regen_all.sh [typical|corners|all]
 #
 # typical : nfet_03v3.mat + pfet_03v3.mat  (corner typical, 27 C, VSB 0..2.0 V in 0.2 V steps, 12 L values)
-# corners : nfet/pfet_03v3_ss_125C.mat and _ff_n40C.mat (7 L values, VSB 0..0.8 V)
+# corners : nfet/pfet_03v3_ss_125C, _ff_n40C, _fs_27C, _sf_27C .mat (7 L values, VSB 0..2.0 V; T2 part 2 extended the range from 0.8 V and added fs, sf)
 # all     : both (default), then validation (validate_all.sh) -> lut_regen/validation_report.txt
 # Time (measured here, one sweep per core, machine otherwise idle): ~15.5 min per typical sweep,
 # ~4.3 min per corner sweep.  Disk: the raw sweep text is ~1 GB for a typical sweep; it is deleted
@@ -28,10 +28,14 @@ if [ "$WHAT" = typical ] || [ "$WHAT" = all ]; then
          "techsweep_pfet_03v3_typical_27C_vsb2 NOM 27 pfet_03v3")
 fi
 if [ "$WHAT" = corners ] || [ "$WHAT" = all ]; then
-  JOBS+=("techsweep_nfet_03v3_ss_125C_vsb08 SS 125 nfet_03v3_ss_125C"
-         "techsweep_pfet_03v3_ss_125C_vsb08 SS 125 pfet_03v3_ss_125C"
-         "techsweep_nfet_03v3_ff_-40C_vsb08 FF -40 nfet_03v3_ff_n40C"
-         "techsweep_pfet_03v3_ff_-40C_vsb08 FF -40 pfet_03v3_ff_n40C")
+  JOBS+=("techsweep_nfet_03v3_ss_125C_vsb2 SS 125 nfet_03v3_ss_125C"
+         "techsweep_pfet_03v3_ss_125C_vsb2 SS 125 pfet_03v3_ss_125C"
+         "techsweep_nfet_03v3_ff_-40C_vsb2 FF -40 nfet_03v3_ff_n40C"
+         "techsweep_pfet_03v3_ff_-40C_vsb2 FF -40 pfet_03v3_ff_n40C"
+         "techsweep_nfet_03v3_fs_27C_vsb2 FS 27 nfet_03v3_fs_27C"
+         "techsweep_pfet_03v3_fs_27C_vsb2 FS 27 pfet_03v3_fs_27C"
+         "techsweep_nfet_03v3_sf_27C_vsb2 SF 27 nfet_03v3_sf_27C"
+         "techsweep_pfet_03v3_sf_27C_vsb2 SF 27 pfet_03v3_sf_27C")
 fi
 printf '%s\n' "${JOBS[@]}" | xargs -P 3 -L 1 bash -c 'run $0 $1 $2 $3'
 [ "$WHAT" = all ] && bash "$HERE/validate_all.sh"

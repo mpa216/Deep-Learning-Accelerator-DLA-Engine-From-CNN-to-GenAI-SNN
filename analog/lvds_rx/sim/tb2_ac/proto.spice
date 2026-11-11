@@ -1,0 +1,33 @@
+* proto: alter m of cross-coupled loads, servo VID for d3 mid
+{header}
+{seed_line}
+.option rshunt=1e11
+.include {deck_dir}/../../sizing/sizes.spice
+.include {deck_dir}/../../netlist/lvds_rx_core.spice
+Vsup vdd 0 {vdd}
+Ben en 0 V=1*v(vdd)
+Bcm cm 0 V={vic}*v(vdd)/{vdd}
+Vp0 rx0_p cm dc 0 ac 0.5
+Vn0 rx0_n cm dc 0 ac -0.5
+Vp1 rx1_p cm dc 0
+Vn1 rx1_n cm dc 0
+Vp2 rx2_p cm dc 0
+Vn2 rx2_n cm dc 0
+Xdut vdd 0 rx0_p rx0_n rx1_p rx1_n rx2_p rx2_n en rx0_o rx1_o rx2_o lvds_rx_x3
+.control
+alter m.xdut.xl0.xhyst.xmlc1.m0 m = 0.001
+alter m.xdut.xl0.xhyst.xmlc2.m0 m = 0.001
+dc Vsup 0.3 {vdd} 0.1
+let n = length(v(vdd)) - 1
+let x = v(xdut.xl0.xout.d3)[n]
+echo RESULT d3 $&x
+let x = v(xdut.xl0.d2a)[n]
+echo RESULT d2a $&x
+let x = v(xdut.xl0.d2b)[n]
+echo RESULT d2b $&x
+let x = v(xdut.xl0.oa)[n]
+echo RESULT oa $&x
+let x = v(xdut.xl0.ob)[n]
+echo RESULT ob $&x
+.endc
+.end

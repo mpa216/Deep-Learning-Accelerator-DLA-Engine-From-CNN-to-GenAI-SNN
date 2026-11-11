@@ -57,8 +57,8 @@ XXL0.XHYST.MPU1 xl0.d2a EN VDD VDD pfet_03v3 w=2u l=0.5u
 XXL0.XHYST.MPU2 xl0.d2b EN VDD VDD pfet_03v3 w=2u l=0.5u
 XXL0.XOUT.MP3A xl0.xout.n3a xl0.d2a VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL0.XOUT.MP3B xl0.xout.d3 xl0.d2b VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
-XXL0.XOUT.MN3A xl0.xout.n3a xl0.xout.n3a VSS VSS nfet_03v3 w=3.56u l=0.5u
-XXL0.XOUT.MN3B xl0.xout.d3 xl0.xout.n3a VSS VSS nfet_03v3 w=3.56u l=0.5u
+XXL0.XOUT.MN3A xl0.xout.n3a xl0.xout.n3a VSS VSS nfet_03v3 w=2.33u l=0.28u
+XXL0.XOUT.MN3B xl0.xout.d3 xl0.xout.n3a VSS VSS nfet_03v3 w=2.33u l=0.28u
 XXL0.XOUT.MNANDP1 xl0.xout.nd xl0.xout.d3 VDD VDD pfet_03v3 w=3u l=0.28u
 XXL0.XOUT.MNANDP2 xl0.xout.nd EN VDD VDD pfet_03v3 w=3u l=0.28u
 XXL0.XOUT.MNANDN1 xl0.xout.nd xl0.xout.d3 xl0.xout.nm VSS nfet_03v3 w=2u l=0.28u
@@ -104,8 +104,8 @@ XXL1.XHYST.MPU1 xl1.d2a EN VDD VDD pfet_03v3 w=2u l=0.5u
 XXL1.XHYST.MPU2 xl1.d2b EN VDD VDD pfet_03v3 w=2u l=0.5u
 XXL1.XOUT.MP3A xl1.xout.n3a xl1.d2a VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL1.XOUT.MP3B xl1.xout.d3 xl1.d2b VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
-XXL1.XOUT.MN3A xl1.xout.n3a xl1.xout.n3a VSS VSS nfet_03v3 w=3.56u l=0.5u
-XXL1.XOUT.MN3B xl1.xout.d3 xl1.xout.n3a VSS VSS nfet_03v3 w=3.56u l=0.5u
+XXL1.XOUT.MN3A xl1.xout.n3a xl1.xout.n3a VSS VSS nfet_03v3 w=2.33u l=0.28u
+XXL1.XOUT.MN3B xl1.xout.d3 xl1.xout.n3a VSS VSS nfet_03v3 w=2.33u l=0.28u
 XXL1.XOUT.MNANDP1 xl1.xout.nd xl1.xout.d3 VDD VDD pfet_03v3 w=3u l=0.28u
 XXL1.XOUT.MNANDP2 xl1.xout.nd EN VDD VDD pfet_03v3 w=3u l=0.28u
 XXL1.XOUT.MNANDN1 xl1.xout.nd xl1.xout.d3 xl1.xout.nm VSS nfet_03v3 w=2u l=0.28u
@@ -151,8 +151,8 @@ XXL2.XHYST.MPU1 xl2.d2a EN VDD VDD pfet_03v3 w=2u l=0.5u
 XXL2.XHYST.MPU2 xl2.d2b EN VDD VDD pfet_03v3 w=2u l=0.5u
 XXL2.XOUT.MP3A xl2.xout.n3a xl2.d2a VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL2.XOUT.MP3B xl2.xout.d3 xl2.d2b VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
-XXL2.XOUT.MN3A xl2.xout.n3a xl2.xout.n3a VSS VSS nfet_03v3 w=3.56u l=0.5u
-XXL2.XOUT.MN3B xl2.xout.d3 xl2.xout.n3a VSS VSS nfet_03v3 w=3.56u l=0.5u
+XXL2.XOUT.MN3A xl2.xout.n3a xl2.xout.n3a VSS VSS nfet_03v3 w=2.33u l=0.28u
+XXL2.XOUT.MN3B xl2.xout.d3 xl2.xout.n3a VSS VSS nfet_03v3 w=2.33u l=0.28u
 XXL2.XOUT.MNANDP1 xl2.xout.nd xl2.xout.d3 VDD VDD pfet_03v3 w=3u l=0.28u
 XXL2.XOUT.MNANDP2 xl2.xout.nd EN VDD VDD pfet_03v3 w=3u l=0.28u
 XXL2.XOUT.MNANDN1 xl2.xout.nd xl2.xout.d3 xl2.xout.nm VSS nfet_03v3 w=2u l=0.28u

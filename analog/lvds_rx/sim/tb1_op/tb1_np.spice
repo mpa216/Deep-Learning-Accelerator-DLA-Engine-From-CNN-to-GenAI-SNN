@@ -1,0 +1,33 @@
+* tb1_np: dump-free control of the stage-1 input (flag_dump_devices = 0): tail currents of the PMOS and NMOS pair vs VIC at VID = 0.  GENERATED -- do not edit.
+* np_overlap_v (decision D-002) = width of the VIC window in which BOTH tails carry >= 90 % of their plateau current, limited to 2 x the distance of Vref
+* from either window edge (Vref must lie >= 0.125 V inside the window); evaluated by hooks.py:np_overlap from these runs.
+{header}
+{seed_line}
+* rshunt: 100 Gohm from every node to ground (7 nA at 3.6 V): without it floating nodes break ngspice's gmin/source stepping
+.option rshunt=1e11
+.include {deck_dir}/../../sizing/sizes.spice
+.param flag_dump_devices = 0
+.include {deck_dir}/../../netlist/lvds_rx_core.spice
+Vsup vdd 0 {vdd}
+Ben en 0 V=1*v(vdd)
+Bcm cm 0 V={vic}*v(vdd)/{vdd}
+Vp0 rx0_p cm dc 0
+Vn0 rx0_n cm dc 0
+Vp1 rx1_p cm dc 0
+Vn1 rx1_n cm dc 0
+Vp2 rx2_p cm dc 0
+Vn2 rx2_n cm dc 0
+Xdut vdd 0 rx0_p rx0_n rx1_p rx1_n rx2_p rx2_n en rx0_o rx1_o rx2_o lvds_rx_x3
+.control
+dc Vsup 0.3 {vdd} 0.1
+let n = length(v(vdd)) - 1
+let x = abs(@m.xdut.xl0.xpre.xmpt.m0[id])
+echo RESULT id_mpt $&x
+let x = abs(@m.xdut.xl0.xpre.xmnt.m0[id])
+echo RESULT id_mnt $&x
+let x = v(xdut.vref)[n]
+echo RESULT v_vref $&x
+let x = v(xdut.xl0.oa)[n]
+echo RESULT v_oa $&x
+.endc
+.end

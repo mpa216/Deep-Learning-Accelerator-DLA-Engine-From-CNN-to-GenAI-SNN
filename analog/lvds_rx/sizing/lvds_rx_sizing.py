@@ -84,7 +84,7 @@ D = dict(
     alpha_cands=[(4, 5), (5, 7), (2, 3), (3, 5)],   # (nf diode, nf cross): alpha = ratio; for each, the source-degeneration Rs gives V_H,in = 14 mV at tt, the one with the smallest corner spread wins
     # ---- stage 3 + output
     r3=2.0,                              # stage-3 PMOS mirror copies the load diode x r3
-    gmid_n3=8.0, L_n3=0.5,
+    gmid_n3=8.0, L_n3=0.28,              # was 0.5: TB2 (T2 part 2) measured the d3 pole (rds of the mirror / C of d3 + NAND gate) at 39 MHz ss/125 C vs 80 MHz needed; L 0.28 gives 102 MHz (gain A3 48 -> 19, ample after A1 x A2)
     dig_L=0.28,
     # n/p widths (um) of the digital chain NAND2, INV1, INV2, INV3 (output 30 fF): FO <= 4 per stage, edge <= 1 ns checked in TB4
     dig=dict(nand=(2.0, 3.0), inv1=(1.5, 3.7), inv2=(3.0, 7.5), inv3=(8.0, 20.0)),

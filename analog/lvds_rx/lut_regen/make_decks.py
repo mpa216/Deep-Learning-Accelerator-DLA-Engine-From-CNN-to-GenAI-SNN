@@ -30,8 +30,10 @@ FULL_L = '0.28u 0.29u\n+ 0.3u 0.4u 0.5u 0.6u 0.7u 0.8u 0.9u 1u 2u 3u'
 SMALL_L = '0.28u 0.3u 0.4u 0.5u 0.7u 1u 2u'
 JOBS = {
     'typical': ('typical', 27, FULL_L, '-2.001', 'vsb2'),
-    'ss125':   ('ss', 125, SMALL_L, '-0.801', 'vsb08'),
-    'ff-40':   ('ff', -40, SMALL_L, '-0.801', 'vsb08'),
+    'ss125':   ('ss', 125, SMALL_L, '-2.001', 'vsb2'),     # T2 part 2: VSB 0..2.0 (was 0.8: TB1 found ms and the NMOS pair at VSB 1.1-1.5 V)
+    'ff-40':   ('ff', -40, SMALL_L, '-2.001', 'vsb2'),
+    'fs27':    ('fs', 27, SMALL_L, '-2.001', 'vsb2'),      # T2 part 2: skew corners for the TB1 LUT-vs-SPICE check at fs, sf
+    'sf27':    ('sf', 27, SMALL_L, '-2.001', 'vsb2'),
 }
 
 

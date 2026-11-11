@@ -1,0 +1,81 @@
+{
+ "harness": "1.2",
+ "ngspice": "46",
+ "runs": [
+  {
+   "id": "tt_27c_3v30__vic0.05",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 0.05
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "d3": 1.05653,
+    "d2a": 2.12851,
+    "d2b": 2.12851,
+    "oa": 2.09045,
+    "ob": 2.09045
+   },
+   "errors": [],
+   "elapsed": 0.221,
+   "cached": false,
+   "hash": "04ca8e26033e60f8a52fbaa3658a46982c66870c491d5382f9bb3d7f20cf0bf7",
+   "run_dir": "work/tt_27c_3v30__vic0.05"
+  },
+  {
+   "id": "tt_27c_3v30__vic1.2",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "d3": 1.05649,
+    "d2a": 2.12855,
+    "d2b": 2.12855,
+    "oa": 2.08174,
+    "ob": 2.08174
+   },
+   "errors": [],
+   "elapsed": 0.227,
+   "cached": false,
+   "hash": "400378b7556fe65287b876d80d9a5af8a01615151ce29ac98e0c950bc0d0ae04",
+   "run_dir": "work/tt_27c_3v30__vic1.2"
+  },
+  {
+   "id": "tt_27c_3v30__vic2.35",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 2.35
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "d3": 1.05643,
+    "d2a": 2.12862,
+    "d2b": 2.12862,
+    "oa": 2.06828,
+    "ob": 2.06828
+   },
+   "errors": [],
+   "elapsed": 0.226,
+   "cached": false,
+   "hash": "27bea64a3396433537885c836f06fa051cf4d0886d5d0b970d76450710f71de0",
+   "run_dir": "work/tt_27c_3v30__vic2.35"
+  }
+ ]
+}

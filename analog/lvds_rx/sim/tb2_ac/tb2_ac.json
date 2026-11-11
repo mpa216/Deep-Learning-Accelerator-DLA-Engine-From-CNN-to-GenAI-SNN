@@ -1,0 +1,16 @@
+{
+ "name": "tb2_ac",
+ "description": "TB2: stage-1 gain A1, per-stage and chain -3 dB frequency, CMRR, PSRR; one lane, VIC 7 points, EN = 1, VID = 0, stage-2 hysteresis feedback scaled to zero for the small-signal run",
+ "deck": "tb2_ac.spice",
+ "corners": "full45",
+ "grid": {"vic": [0.05, 0.3, 0.6, 1.2, 1.8, 2.1, 2.35]},
+ "vars": {"dr": 1.0e8},
+ "post": "hooks.py:post_tb2",
+ "limits": {
+  "a1": {"min": 4.0},
+  "f3db_stage_over_dr": {"min": 0.8},
+  "f3db_chain_hz": {"min": 5.0e7, "scale": 1e-6, "unit": "MHz"}
+ },
+ "timeout": 180,
+ "jobs": 6
+}
