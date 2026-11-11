@@ -12,7 +12,7 @@ The case (grid value) selects the disturbance applied to the _d copy only:
 
 Metrics (contract with spec/gates.yaml TB6):
   false_toggles    | (output 50 % crossings of the disturbed copy after data start) - (input toggles) |
-  added_jitter_ui  peak-to-peak spread of (t_out_d - t_out_ref) over all edges, UI units; for the CM step case the median of each static-CM segment (edges
+  added_jitter_ui  (gate) peak-to-peak spread of (t_out_d - t_out_ref) over all edges, UI units; for the CM step case the median of each static-CM segment (edges
                    more than 3 UI away from every step) is removed first (the static tPD shift with VIC is TB4's job, <= 1 ns); an edge that starts while a
                    step is running is judged against the PREVIOUS common-mode level
   rail_dev_v       largest excursion of the disturbed output from its rail in the settled part of every bit (reported)
@@ -50,6 +50,7 @@ STEP_PLAN = [("up", -1e-9), ("dn", -1e-9), ("up", 0.0), ("dn", 0.0), ("up", 1e-9
 STEP_FIRST_BIT = 14
 STEP_SPACING = 8
 T_STEP = 2e-9
+CLEAR_UI = 1.0      # case 0: an edge is 'clear' when its start is >= 1 UI (10 ns) from the start of every step (edges 9-10 ns after a step were measured clean)
 
 
 def steps():
@@ -167,7 +168,18 @@ def post(ctx):
     if len(dev) == 0:
         out["added_jitter_ui"] = float("nan")
     else:
-        out["added_jitter_ui"] = float((dev.max() - dev.min()) / UI)
+        out["added_jitter_all_ui"] = float((dev.max() - dev.min()) / UI)
+        if case == 0:
+            # Gate population (decision D-006): edges at least CLEAR_UI bit times away from every step.  Edges coincident with or in flight through the
+            # 2 ns step (the 16 deliberately placed ones) are REPORTED: added_jitter_all_ui (all edges) and hit_dev_max_ps; the gate there is false_toggles = 0.
+            clear = np.array([all(abs(te - ts) >= CLEAR_UI * UI - 0.01e-9 for (ts, _) in st) for te in tog])
+            hit = ~clear
+            out["n_clear_edges"] = float(clear.sum())
+            out["hit_dev_max_ps"] = float(np.max(np.abs(dev[hit])) * 1e12) if hit.any() else 0.0
+            dc = dev[clear]
+            out["added_jitter_ui"] = float((dc.max() - dc.min()) / UI) if len(dc) else float("nan")
+        else:
+            out["added_jitter_ui"] = out["added_jitter_all_ui"]
         out["delta_max_ps"] = float(np.max(np.abs(dl)) * 1e12)
     # rail deviation in the settled part of each bit (2 ns after the delayed edge ... 1 ns before the next one)
     dev_v = 0.0

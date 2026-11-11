@@ -95,7 +95,7 @@
    },
    "errors": [],
    "elapsed": 432.489,
-   "cached": false,
+   "cached": true,
    "hash": "ed6ca08236347a911825982c5a516efd895d6a539d97899010fb7c1a9bb8a565",
    "run_dir": "work/ss_125c_3v00__mc3s0"
   },
@@ -130,7 +130,7 @@
    },
    "errors": [],
    "elapsed": 832.922,
-   "cached": false,
+   "cached": true,
    "hash": "14141535a1ba77c4261cc09ff93e52be5e1f620c30c192b47302d0129b94a953",
    "run_dir": "work/ss_125c_3v00__mc3s1"
   },
@@ -161,7 +161,7 @@
    },
    "errors": [],
    "elapsed": 479.225,
-   "cached": false,
+   "cached": true,
    "hash": "9d60ba87ae131998c2fd306c8e8d0439a1fe8e4abca86949626cadd5c2a48d86",
    "run_dir": "work/ff_m40c_3v60__mc3s0"
   },
@@ -196,7 +196,7 @@
    },
    "errors": [],
    "elapsed": 905.6,
-   "cached": false,
+   "cached": true,
    "hash": "ba9825b9fa440b3894030ccd9cc36a613774e14747c84275e43059093be5f404",
    "run_dir": "work/ff_m40c_3v60__mc3s1"
   },
@@ -227,7 +227,7 @@
    },
    "errors": [],
    "elapsed": 456.038,
-   "cached": false,
+   "cached": true,
    "hash": "b44f722b2ae554b80fbc14ba28b5d8cdeec77ae78ae489e3fc3dc40ce592856f",
    "run_dir": "work/fs_27c_3v30__mc3s0"
   },
@@ -262,7 +262,7 @@
    },
    "errors": [],
    "elapsed": 863.853,
-   "cached": false,
+   "cached": true,
    "hash": "acf969a81ff05cf5685676ec8cdd971d1148e2508091165e1fcbb9ac2ce29f7a",
    "run_dir": "work/fs_27c_3v30__mc3s1"
   },
@@ -293,7 +293,7 @@
    },
    "errors": [],
    "elapsed": 409.821,
-   "cached": false,
+   "cached": true,
    "hash": "e509ad065ff72b6d49c0393dbcc4d471e18680711ce1c649ba5c85d49731537e",
    "run_dir": "work/sf_27c_3v30__mc3s0"
   },
@@ -328,7 +328,7 @@
    },
    "errors": [],
    "elapsed": 670.731,
-   "cached": false,
+   "cached": true,
    "hash": "c5f00921149e07cd5b53d3be72aae08409cd58cef37dfcc1a0dff93750878cd4",
    "run_dir": "work/sf_27c_3v30__mc3s1"
   }

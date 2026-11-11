@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-11 19:28:37",
+ "generated": "2026-11-11 22:31:44",
  "tier": "smoke",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "409c31d",
+  "commit": "90e0db7",
   "dirty": null
  },
  "harness_version": "1.2",
@@ -19,14 +19,14 @@
    "spec/gates.yaml": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
    "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
    "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
-   "spec/decisions.yaml": "2ec124ba0495d85555bee22859b94b87e40b9eeccb82d35b8a8577c45b3596a8"
+   "spec/decisions.yaml": "eef4b806f8189630a61ad9fe9bf7ed162a441cdde472d36a1bac03dafa7db2b6"
   }
  },
  "netlists": {
   "input_network.spice": "704a49b1e94d46ded6a19e4ffe781f8ec67b248ea5143635f8dc95424e72f2b5",
   "lvds_rx_core.spice": "ca22c0077896c1c83352aac4db29565814a5e849bb95e50bf86d1c9090600d5e",
-  "lvds_rx_lvs_ref.spice": "4445aa29a236ad4d3fb819a00cdef7f21937f7c5b654c7fea79e126e92cb6786",
-  "lvds_rx_lvs_ref_flat.spice": "9f2206510696dc8e9ca8740c288147d64578d5b5ca1d6bfa223e40f9bf29fd03",
+  "lvds_rx_lvs_ref.spice": "5cf511373586d4adda9a2a1962d1c09d32b0b72ad6df4a6fdf3e5d96d53c509b",
+  "lvds_rx_lvs_ref_flat.spice": "5c6148fe7fdbd78369724dd712ac9540ae81e80c7b75b2159747d22e538f9a04",
   "pad_asig_5p0.spice": "f7dec41ef2df2b36dd86fb7c48ef6a25404c5c788d71ea9a157800d6e2fd7bb2"
  },
  "sizes_spice_sha256": "96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6",
@@ -117,7 +117,7 @@
    "gate": "TB1",
    "expected": 147,
    "spec_exists": true,
-   "wall_s": 21.3
+   "wall_s": 16.3
   },
   {
    "gate": "TB2",
@@ -129,61 +129,61 @@
    "gate": "TB3_trip",
    "expected": 30,
    "spec_exists": true,
-   "wall_s": 97.3
+   "wall_s": 0.3
   },
   {
    "gate": "TB3_off",
    "expected": 450,
    "spec_exists": true,
-   "wall_s": 226.4
+   "wall_s": 3.9
   },
   {
    "gate": "TB3_hmc",
    "expected": 180,
    "spec_exists": true,
-   "wall_s": 385.5
+   "wall_s": 2.6
   },
   {
    "gate": "TB4",
    "expected": 70,
    "spec_exists": true,
-   "wall_s": 240.2
+   "wall_s": 232.4
   },
   {
    "gate": "TB4b",
    "expected": 70,
    "spec_exists": true,
-   "wall_s": 238.5
+   "wall_s": 236.2
   },
   {
    "gate": "TB5",
    "expected": 60,
    "spec_exists": true,
-   "wall_s": 555.7
+   "wall_s": 554.8
   },
   {
    "gate": "TB6",
    "expected": 20,
    "spec_exists": true,
-   "wall_s": 443.8
+   "wall_s": 3.1
   },
   {
    "gate": "TB7",
    "expected": 105,
    "spec_exists": true,
-   "wall_s": 213.8
+   "wall_s": 210.9
   },
   {
    "gate": "TB7_mc",
    "expected": 450,
    "spec_exists": true,
-   "wall_s": 628.1
+   "wall_s": 625.6
   },
   {
    "gate": "TB8",
    "expected": 30,
    "spec_exists": true,
-   "wall_s": 51.9
+   "wall_s": 64.3
   },
   {
    "gate": "TB9",
@@ -195,7 +195,7 @@
    "gate": "TB10",
    "expected": 10,
    "spec_exists": true,
-   "wall_s": 1130.3
+   "wall_s": 3.1
   },
   {
    "gate": "TB11",
@@ -207,8 +207,8 @@
    "gate": "TB12",
    "expected": 40,
    "spec_exists": true,
-   "wall_s": 384.2
+   "wall_s": 379.7
   }
  ],
- "wall_s": 4618.3
+ "wall_s": 2334.4
 }

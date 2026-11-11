@@ -4,7 +4,7 @@
 
 TB3 offset: input-referred DC offset of lane 0 with hysteresis disabled (stage-2 cross-coupled loads scaled to m = 0.001), Monte Carlo mismatch, 3 VIC; the gate evaluates |mean| + 6 sigma + V_Hmax/2 + 3 mV <= 95 mV per (corner, VIC). Smoke tier N = 30, full tier N = 1000 (the runner passes --n-mc).
 
-Runs: **450** (ok 450); 0 reused from cache.
+Runs: **450** (ok 450); 450 reused from cache.
 
 ## Monte Carlo statistics (limits applied to mean +- 6 sigma; N valid / failed shown)
 

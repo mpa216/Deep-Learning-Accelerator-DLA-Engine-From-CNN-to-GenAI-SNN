@@ -3,7 +3,10 @@ on one bias, share the same supply waveform and EN; inputs are driven directly (
 
 cases (grid `case`):
   0 en0          supply up in 50 ns, EN = 0 for 1.5 us: outputs LOW; IDD averaged over the last 300 ns (the macro, i.e. one copy's three lanes + bias)
-  1 vdd_below_2v supply up to 1.9 V (below the 2.0 V threshold), EN = 1 (EN follows the supply, i.e. logic high at that supply), 1.5 us: outputs must be LOW
+  1 vdd_below_2v supply up to 1.9 V (below the 2.0 V threshold), 1.5 us, both copies driven VID = +350 mV.  Copy b has EN = 0: its outputs must be LOW (the gate,
+                 vout_off_v).  Copy a has EN = 1 (EN follows the supply): REPORT ONLY (vout_en1_v, en1_valid_ok).  The macro has no under-voltage lockout
+                 (decision D-008): with EN = 1 it keeps decoding validly at 1.9 V, so 'VDD < 2.0 V -> LOW' holds when EN is low, which the system must
+                 guarantee until VDD >= 2.0 V.
   2 en_rise      supply at VDD from 50 ns; EN 0 -> 1 at 300 ns, 1 -> 0 at 1.5 us; valid time = EN 50 % -> all three a-outputs above 0.9 VDD
   3 ramp_1us     supply 0 -> VDD in 1 us, EN follows the supply (tied high), 2 us
   4 ramp_100us   same in 100 us, 110 us
@@ -72,13 +75,13 @@ def prep(ctx):
     txt.append(L.pwl_text("Vsb", "vddb", "0", p["sup"]))
     txt.append(L.pwl_text("Vens", "ens", "0", p["ens"]))
     txt.append("Ben en 0 V=v(vdda)*v(ens)\nBsc sc 0 V=v(vdda)/%.3f\n" % vdd)
-    for s, sg in (("a", 1), ("b", -1)):
+    for s, sg in (("a", 1), ("b", 1 if case == 1 else -1)):
         hi, lo = VIC + sg * VID / 2, VIC - sg * VID / 2
         for ln in range(3):
             txt.append("Bp%s%d rx%d_p_%s 0 V=v(sc)*%.4f\nBn%s%d rx%d_n_%s 0 V=v(sc)*%.4f\n" % (s, ln, ln, s, hi, s, ln, ln, s, lo))
             txt.append("cl%s%d rx%d_o_%s 0 30f\n" % (s, ln, ln, s))
-        txt.append("Xdut_%s vdd%s 0 rx0_p_%s rx0_n_%s rx1_p_%s rx1_n_%s rx2_p_%s rx2_n_%s en rx0_o_%s rx1_o_%s rx2_o_%s lvds_rx_x3\n"
-                   % ((s, s) + (s,) * 9))
+        txt.append("Xdut_%s vdd%s 0 rx0_p_%s rx0_n_%s rx1_p_%s rx1_n_%s rx2_p_%s rx2_n_%s %s rx0_o_%s rx1_o_%s rx2_o_%s lvds_rx_x3\n"
+                   % ((s, s) + (s,) * 6 + ("0" if (case == 1 and s == "b") else "en",) + (s,) * 3))
     return {"body.inc": "".join(txt)}
 
 
@@ -90,9 +93,17 @@ def post(ctx):
     oa, ob = cols[0:3], cols[3:6]
     ia, ib, vsup = cols[6], cols[7], cols[8]
     outs = list(oa) + list(ob)
+    if case == 1:
+        vdd = 1.9                         # the supply level of the brown-out case (the corner's vdd does not apply)
     th = vdd / 2.0
     out = {}
-    out["vout_off_v"] = float(max(o.max() for o in outs))
+    # gate metric: the highest output voltage that must be LOW.  Case 1: copy b (EN = 0, VID = +350 mV) at VDD = 1.9 V (EN = 0 or VDD < 2.0 V: LOW).
+    out["vout_off_v"] = float(max(o.max() for o in (ob if case == 1 else outs)))
+    if case == 1:
+        # reported only (decision D-008): copy a has EN = 1 (EN follows the supply) at 1.9 V; the macro has no under-voltage lockout and decodes validly
+        out["vout_en1_v"] = float(max(o.max() for o in oa))
+        k1 = t >= t[-1] - 100e-9
+        out["en1_valid_ok"] = float(all(o[k1].mean() > 0.9 * vdd for o in oa))
     if case == 0:
         w = t >= p["tstop"] - 300e-9
         out["idd_en0_a"] = float(max(-ia[w].mean(), -ib[w].mean()))
@@ -140,7 +151,9 @@ def post(ctx):
     k = t >= t[-1] - 100e-9
     ea = [o[k].mean() for o in oa]
     eb = [o[k].mean() for o in ob]
-    if case == 0 or case == 1:
+    if case == 1:
+        ok = all(x < 0.1 * vdd for x in eb)
+    elif case == 0:
         ok = all(x < 0.1 * vdd for x in ea + eb)
     elif case == 2:
         # EN has fallen at 1.5 us: all LOW again; check the HIGH plateau just before
