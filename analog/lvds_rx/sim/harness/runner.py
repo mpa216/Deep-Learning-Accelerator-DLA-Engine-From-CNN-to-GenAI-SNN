@@ -36,7 +36,7 @@ from . import corners as _corners
 from . import mc as _mc
 
 NGSPICE = os.environ.get("NGSPICE", "ngspice")
-HARNESS_VERSION = "1.2"   # 1.1: .option wnflag=1 in the header, cross corners, record carries `res`; 1.2: a gmin/source-stepping failure followed by a recovery note is not a non-convergence
+HARNESS_VERSION = "1.3"   # 1.1: .option wnflag=1 in the header, cross corners, record carries `res`; 1.3: mc seed_mode "runkey" (A3: per-run-key hashed seeds, 1 and 2 skipped); 1.2: a gmin/source-stepping failure followed by a recovery note is not a non-convergence
 
 ERR_NONCONV = [r"no convergence", r"singular matrix", r"timestep too small", r"iteration limit reached",
                r"gmin stepping failed", r"source stepping failed", r"convergence problem"]
@@ -192,7 +192,39 @@ def parse_log(text, expected):
 
 
 # ----------------------------------------------------------------------------- one run
-def _execute(run, ngspice, timeout, force):
+def _execute(run, ngspice, timeout, force, retry=None):
+    """One run; with a spec `retry` ({"timeout": s, "variants": [{"name", "sub": [[old, new], ...]}]}) a run that ends
+    `timeout` or `nonconverged` is repeated with the deck text edited by the next variant (a solver-option change only; the
+    circuit and stimulus are untouched).  The first variant that gives status ok wins; the record keeps `retry` (variant
+    name) and `first_status`, and the first attempt's errors, so the gate report can count retried runs (T5, 2026-11-12:
+    ngspice stalls/non-convergence are chaotic: the same deck converges with a slightly different option)."""
+    rec = _execute_once(run, ngspice, timeout, force)
+    if not retry or rec.get("status") not in ("timeout", "nonconverged"):
+        return rec
+    first = rec["status"]
+    notes = ["first attempt %s: %s" % (first, "; ".join(rec.get("errors", [])[:2]))]
+    for v in retry.get("variants", []):
+        deck = run["deck"]
+        for old, new in v["sub"]:
+            if old not in deck:
+                raise ValueError("retry variant %s: %r not found in the deck" % (v["name"], old))
+            deck = deck.replace(old, new, 1)
+        r2 = dict(run, deck=deck)
+        rec2 = _execute_once(r2, ngspice, float(retry.get("timeout", timeout)), True)
+        if rec2["status"] == "ok":
+            rec2["retry"], rec2["first_status"] = v["name"], first
+            rec2["errors"] = notes + rec2.get("errors", [])
+            with open(os.path.join(run["run_dir"], "result.json"), "w") as f:
+                json.dump(rec2, f, indent=1)
+            return rec2
+        notes.append("retry %s: %s" % (v["name"], rec2["status"]))
+    rec["errors"] = notes
+    with open(os.path.join(run["run_dir"], "result.json"), "w") as f:
+        json.dump(rec, f, indent=1)
+    return rec
+
+
+def _execute_once(run, ngspice, timeout, force):
     run_dir = run["run_dir"]
     os.makedirs(run_dir, exist_ok=True)
     res_path = os.path.join(run_dir, "result.json")
@@ -296,7 +328,10 @@ def build_runs(template, template_dir, work_dir, corners, grid, mc, extra_vars, 
     for c in corner_list:
         header = c.header(mc=mode)
         for params in _expand_grid(grid):
-            for seed in seeds:
+            seeds_here = seeds
+            if mc and mc.get("seed_mode") == "runkey":
+                seeds_here = _mc.runkey_seeds(int(mc.get("n", 200)), int(mc.get("seed", 1)), c.name, params)
+            for seed in seeds_here:
                 rid = c.name
                 if params:
                     rid += "__" + "_".join("%s%s" % (k, _fmt(v)) for k, v in params.items())
@@ -327,7 +362,7 @@ def build_runs(template, template_dir, work_dir, corners, grid, mc, extra_vars, 
 
 def run_testbench(template, work_dir, out_dir=None, corners="tt", grid=None, mc=None, jobs=3, timeout=300,
                   force=False, prep=None, post=None, extra_vars=None, template_dir=None, ngspice=NGSPICE,
-                  verbose=True, dry_run=False):
+                  verbose=True, dry_run=False, retry=None):
     """Run every (corner x grid point x seed).  `template` is deck text.  Returns the records."""
     template_dir = os.path.abspath(template_dir or ".")
     work_dir = os.path.abspath(work_dir)
@@ -347,7 +382,7 @@ def run_testbench(template, work_dir, out_dir=None, corners="tt", grid=None, mc=
     results = {}
     t0 = time.time()
     with cf.ThreadPoolExecutor(max_workers=max(1, jobs)) as ex:
-        futs = {ex.submit(_execute, r, ngspice, timeout, force): r for r in runs}
+        futs = {ex.submit(_execute, r, ngspice, timeout, force, retry): r for r in runs}
         done = 0
         for fu in cf.as_completed(futs):
             r = futs[fu]
@@ -378,6 +413,7 @@ def run_testbench(template, work_dir, out_dir=None, corners="tt", grid=None, mc=
                         "temp": r["corner"].temp, "vdd": r["corner"].vdd, "res": r["corner"].res, "params": r["params"],
                         "seed": r["seed"], "status": status, "metrics": metrics, "errors": errors,
                         "elapsed": rr["elapsed"], "cached": rr["cached"], "hash": rr["hash"],
+                        "retry": rr.get("retry"), "first_status": rr.get("first_status"),
                         "run_dir": os.path.relpath(r["run_dir"], out_dir or work_dir)})
     if out_dir:
         write_results(records, out_dir, ver)
@@ -447,7 +483,7 @@ def run_spec(spec_path, jobs=None, force=False, dry_run=False, only_corners=None
     corners = only_corners or spec.get("corners", "tt")
     records = run_testbench(template, os.path.join(out_dir, "work"), out_dir, corners=corners,
                             grid=spec.get("grid"), mc=mc, jobs=jobs or spec.get("jobs", 3),
-                            timeout=spec.get("timeout", 300), force=force, dry_run=dry_run,
+                            timeout=spec.get("timeout", 300), force=force, dry_run=dry_run, retry=spec.get("retry"),
                             prep=_load_hook(sd, spec.get("prep")), post=_load_hook(sd, spec.get("post")),
                             extra_vars=spec.get("vars"), template_dir=os.path.dirname(deck_path), verbose=verbose)
     if dry_run:

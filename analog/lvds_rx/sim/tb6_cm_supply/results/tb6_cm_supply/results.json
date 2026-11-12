@@ -1,5 +1,5 @@
 {
- "harness": "1.2",
+ "harness": "1.3",
  "ngspice": "46",
  "runs": [
   {
@@ -37,9 +37,9 @@
     "vrail_pp_v": 0.032188274100000136
    },
    "errors": [],
-   "elapsed": 114.875,
-   "cached": true,
-   "hash": "cf1a2be9b4c80175194e0d4603e3cf7b1128c7f12f334b746c8b69a8c74e6189",
+   "elapsed": 106.274,
+   "cached": false,
+   "hash": "20ae86b8080dc23a631c1de11167867355d8dd7669bc319976a94d8e6b0ce633",
    "run_dir": "work/tt_27c_3v30__case0"
   },
   {
@@ -67,9 +67,9 @@
     "vrail_pp_v": 0.11034438044999995
    },
    "errors": [],
-   "elapsed": 138.133,
-   "cached": true,
-   "hash": "291a14d21b40df13bb1f235a407f8c40e31d9f493f72b64b4577ef81d7e6c4f2",
+   "elapsed": 131.631,
+   "cached": false,
+   "hash": "81fd4bb8aa48714401fbb16283e0f34b0c0e2a42207dc36e761cf01e4ab5257b",
    "run_dir": "work/tt_27c_3v30__case1"
   },
   {
@@ -97,9 +97,9 @@
     "vrail_pp_v": 0.3677930215999998
    },
    "errors": [],
-   "elapsed": 114.807,
-   "cached": true,
-   "hash": "75f68072a8ea45f76d171c49c8ff7b54ee00416ee4cdf5c27f8211a8bf72c2e4",
+   "elapsed": 107.859,
+   "cached": false,
+   "hash": "808a1597fdb08314096d3da51a1f4c99b1208aa335aff00b3f6b6f394bbe46c8",
    "run_dir": "work/tt_27c_3v30__case2"
   },
   {
@@ -127,9 +127,9 @@
     "vrail_pp_v": 0.018771718490000033
    },
    "errors": [],
-   "elapsed": 115.088,
-   "cached": true,
-   "hash": "fd93b33687024f99682a12fe511d13f43acab7531ca8d87957421a80e4b7ff4d",
+   "elapsed": 106.335,
+   "cached": false,
+   "hash": "4488d511cf8c85598c60e3bdb456ec1a7b31477ce765bee94537deb28e52f820",
    "run_dir": "work/tt_27c_3v30__case3"
   },
   {
@@ -167,9 +167,9 @@
     "vrail_pp_v": 0.027796874569999908
    },
    "errors": [],
-   "elapsed": 112.48,
-   "cached": true,
-   "hash": "192500afdbb2dfda2d140d875e880fa1291a92f3089adee62677efbf0a30e6b1",
+   "elapsed": 106.135,
+   "cached": false,
+   "hash": "5ded5ed20684dd79e604cc628b43e24ac0fe0e5fa1ff63d5644b38661f56bf3c",
    "run_dir": "work/ss_125c_3v00__case0"
   },
   {
@@ -197,9 +197,9 @@
     "vrail_pp_v": 0.11042020408999997
    },
    "errors": [],
-   "elapsed": 135.429,
-   "cached": true,
-   "hash": "218dda7fc9491909335d4141b6eb467607602975717086d72b5abbc6ed4d2c99",
+   "elapsed": 127.799,
+   "cached": false,
+   "hash": "a5e28c3765e12e3ad8aabe5d1a8977bfaab7959c5e6e32234cabcf51f0784569",
    "run_dir": "work/ss_125c_3v00__case1"
   },
   {
@@ -227,9 +227,9 @@
     "vrail_pp_v": 0.33407849879999985
    },
    "errors": [],
-   "elapsed": 111.18,
-   "cached": true,
-   "hash": "08d62a2ed29e16c2c84765495e167b7e4f7f582abf0988475fbb5152893aab7e",
+   "elapsed": 106.423,
+   "cached": false,
+   "hash": "9bb64a9420d8aedd11b0c70af9bcbdcef0f517975e4d40a6a09db14de319a3ca",
    "run_dir": "work/ss_125c_3v00__case2"
   },
   {
@@ -257,9 +257,9 @@
     "vrail_pp_v": 0.014580410119999776
    },
    "errors": [],
-   "elapsed": 111.156,
-   "cached": true,
-   "hash": "89b2c0d27b1be779561acd1904ce9ca29e389249927826e763c76155001e466b",
+   "elapsed": 106.45,
+   "cached": false,
+   "hash": "c421f4b3403b7b8c046e487ab2fd7634c61ce66fa2ef57a4f9697da78cc43878",
    "run_dir": "work/ss_125c_3v00__case3"
   },
   {
@@ -297,9 +297,9 @@
     "vrail_pp_v": 0.03372170737000024
    },
    "errors": [],
-   "elapsed": 117.062,
-   "cached": true,
-   "hash": "8981ebea62edf96ba986a872b0ddf855f52b85305fc4abc30ee48eb2c8354557",
+   "elapsed": 113.858,
+   "cached": false,
+   "hash": "1c9024231fb85559f338bae8dffcae6459294c14eddf7cb2f6962798de6f6b70",
    "run_dir": "work/ff_m40c_3v60__case0"
   },
   {
@@ -327,9 +327,9 @@
     "vrail_pp_v": 0.1096481481999998
    },
    "errors": [],
-   "elapsed": 140.926,
-   "cached": true,
-   "hash": "38774e55ef5737709a9a8d630afb3a0ebc3b307d6660345a7fe3e0b30c9d91d6",
+   "elapsed": 138.436,
+   "cached": false,
+   "hash": "2ce9d88a8774155e727c820a0d788126aa4b7367274c060f1a0b2477999b5837",
    "run_dir": "work/ff_m40c_3v60__case1"
   },
   {
@@ -357,9 +357,9 @@
     "vrail_pp_v": 0.40467204999999984
    },
    "errors": [],
-   "elapsed": 118.035,
-   "cached": true,
-   "hash": "0ffd6af9d9d6cfb8831c35d2f07666726925dc9b709c1f1482d0d1f50207d31f",
+   "elapsed": 114.847,
+   "cached": false,
+   "hash": "7f9536ec3e78ed6f1fb87175120b92138c1064941722f964824f9aa73e45e32f",
    "run_dir": "work/ff_m40c_3v60__case2"
   },
   {
@@ -387,9 +387,9 @@
     "vrail_pp_v": 0.022595158499999712
    },
    "errors": [],
-   "elapsed": 116.909,
-   "cached": true,
-   "hash": "9e2214b4e560c7a5d7d2f0897440ca889ee2850c1d1c936b812ac05285e1ac7e",
+   "elapsed": 110.869,
+   "cached": false,
+   "hash": "7791ff9a215f63f9bdea82a452770500ecbd398b8a5cedb6a2d2941c2bf558a9",
    "run_dir": "work/ff_m40c_3v60__case3"
   },
   {
@@ -427,9 +427,9 @@
     "vrail_pp_v": 0.032838282130000174
    },
    "errors": [],
-   "elapsed": 118.33,
-   "cached": true,
-   "hash": "4ec82e3a18c3c0ec9b2534b035d3ba141cd6d4b7e5745d4aa0e93ca713525855",
+   "elapsed": 112.954,
+   "cached": false,
+   "hash": "9105044456caa43b89df45e9453b0387da889623a363c1c0ee5db8e70d9d9666",
    "run_dir": "work/fs_27c_3v30__case0"
   },
   {
@@ -457,9 +457,9 @@
     "vrail_pp_v": 0.1105359154400003
    },
    "errors": [],
-   "elapsed": 142.309,
-   "cached": true,
-   "hash": "8f13bf97269c72fd7481fc0e8b6d6a233082c0ba18203c9adbc4df8a6d1a7c1f",
+   "elapsed": 133.075,
+   "cached": false,
+   "hash": "c24589025fc0144ffd28262f8b15beb8bf8ecf5c3a573ea8c8827e9ba75a49dd",
    "run_dir": "work/fs_27c_3v30__case1"
   },
   {
@@ -487,9 +487,9 @@
     "vrail_pp_v": 0.3689576737999998
    },
    "errors": [],
-   "elapsed": 117.209,
-   "cached": true,
-   "hash": "b8774598ccc6f79f15cfee0e369b9784afaf6ff64235909553cad09557179a22",
+   "elapsed": 109.194,
+   "cached": false,
+   "hash": "4238a76488c7a3ec644100f7fc1021fc177c003a2de61a6d1829cad521d0451b",
    "run_dir": "work/fs_27c_3v30__case2"
   },
   {
@@ -517,9 +517,9 @@
     "vrail_pp_v": 0.018718128300000192
    },
    "errors": [],
-   "elapsed": 115.298,
-   "cached": true,
-   "hash": "a139c0464a9dda87fcb0d939e55032f24006bf7f37fbbe31766ec7c3a061157a",
+   "elapsed": 108.811,
+   "cached": false,
+   "hash": "9dfbe6743fe6090ab927f92e02093035d3fae03374f76c310928304b4456fe2d",
    "run_dir": "work/fs_27c_3v30__case3"
   },
   {
@@ -557,9 +557,9 @@
     "vrail_pp_v": 0.03162138620999988
    },
    "errors": [],
-   "elapsed": 115.907,
-   "cached": true,
-   "hash": "4a335f7c97a9adff14cffc919cacd9ca03f01a717b69e331a2eec284e47ecc7d",
+   "elapsed": 111.479,
+   "cached": false,
+   "hash": "d21017851a83146f2ec46b60acf8d0de5bf82106f59a08b36d744fc597838c2a",
    "run_dir": "work/sf_27c_3v30__case0"
   },
   {
@@ -587,9 +587,9 @@
     "vrail_pp_v": 0.11035050330999985
    },
    "errors": [],
-   "elapsed": 133.641,
-   "cached": true,
-   "hash": "65cef7286baa039da9746285ac23cb5a07df7ee84fbd53c71a6647b242159a31",
+   "elapsed": 125.017,
+   "cached": false,
+   "hash": "d8518be56935e69dd9e18a7d61e2b03a9afbf7fb101ae913dd205e27f7ffbdd3",
    "run_dir": "work/sf_27c_3v30__case1"
   },
   {
@@ -617,9 +617,9 @@
     "vrail_pp_v": 0.3667120100000001
    },
    "errors": [],
-   "elapsed": 83.603,
-   "cached": true,
-   "hash": "7c9de7801a2ac568cd5e47b57b095c65d80d9bca0b48a2b5dcd4801546f4f6f6",
+   "elapsed": 78.868,
+   "cached": false,
+   "hash": "271fcad6681ad306c41acc91b8fcbe1c477d576e2362d8b4972adb1969b02b3b",
    "run_dir": "work/sf_27c_3v30__case2"
   },
   {
@@ -647,9 +647,9 @@
     "vrail_pp_v": 0.018996380089999487
    },
    "errors": [],
-   "elapsed": 79.909,
-   "cached": true,
-   "hash": "cfed5a9d5bd314f182af1ddf2e693f74f4bdb4001a9e5658fbbfa3bf977f4b2d",
+   "elapsed": 77.611,
+   "cached": false,
+   "hash": "2234cc37d7dbd78d7afa9632c9e70c9d0f570e7c490b2b276e443ee04dbdf25b",
    "run_dir": "work/sf_27c_3v30__case3"
   }
  ]

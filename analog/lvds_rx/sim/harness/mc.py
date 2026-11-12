@@ -31,6 +31,24 @@ def make_seeds(n, base=1, max_seed=2**31 - 1):
     return out
 
 
+def runkey_seeds(n, base, corner_name, params, max_seed=2**31 - 1):
+    """PLAN_V2 A3: seeds derived from a hash of the run key (campaign seed, corner, grid point, index), so every
+    (corner, grid point) group draws its own independent mismatch sample.  Seeds 1 and 2 are skipped (they gave the
+    same offset to 0.01 mV).  Deterministic; distinct inside one group."""
+    import hashlib
+    key = "%d|%s|%s" % (base, corner_name, ",".join("%s=%r" % (k, params[k]) for k in sorted(params)))
+    out, seen, i = [], set(), 0
+    while len(out) < n:
+        h = hashlib.sha256(("%s|%d" % (key, i)).encode()).digest()
+        s = int.from_bytes(h[:8], "big") % max_seed + 1
+        i += 1
+        if s in (1, 2) or s in seen:
+            continue
+        seen.add(s)
+        out.append(s)
+    return out
+
+
 def seed_line(seed):
     """Deck line that seeds ngspice's generator before the netlist is parsed."""
     return ".option seed=%d" % int(seed)

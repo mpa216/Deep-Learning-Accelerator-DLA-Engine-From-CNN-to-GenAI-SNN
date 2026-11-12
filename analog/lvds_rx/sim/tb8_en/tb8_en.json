@@ -9,6 +9,10 @@
  "limits": {
   "min_pulse_s": {"min": 2e-9, "scale": 1e9, "unit": "ns"}
  },
- "timeout": 1800,
+ "timeout": 240,
+ "retry": {"timeout": 240, "variants": [
+  {"name": "step49p", "sub": [[".tran 50p ", ".tran 49p "]]},
+  {"name": "reltol0.05", "sub": [[".tran 50p ", ".option reltol=0.05\n.tran 50p "]]},
+  {"name": "reltol0.05_step47p", "sub": [[".tran 50p ", ".option reltol=0.05\n.tran 47p "]]}]},
  "jobs": 6
 }

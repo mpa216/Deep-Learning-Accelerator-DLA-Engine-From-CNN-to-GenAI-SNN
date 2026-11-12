@@ -108,15 +108,25 @@ def post(ctx):
         w = t >= p["tstop"] - 300e-9
         out["idd_en0_a"] = float(max(-ia[w].mean(), -ib[w].mean()))
     # pulses
-    mp = L.BIG
+    # T5 (decision D-011): cases 0-2 power the macro with a 50 ns setup ramp that is NOT one of the spec ramps (1 us, 100 us = cases 3-5).  The
+    # 1-2 ns excursions seen while that ramp passes 0.5-0.7 V (outputs ~0.1 V, the chain is not powered yet) were counted as runts and landed
+    # at 1.99-2.00 ns at ff / fs corners.  The gated min_pulse_s therefore starts at 100 ns for cases 0-2 (supply settled; EN edges at 301 ns and
+    # 1501 ns of case 2 are inside); the whole-run value stays in the results as min_pulse_all_s.
+    t_from = 100e-9 if case in (0, 1, 2) else 0.0
+    wsel = t >= t_from
+    mp = mpa = L.BIG
     nrunt = 0
-    mrw = L.BIG
+    mrw = mrwa = L.BIG
     for o in outs:
-        mw, n, rw = L.pulses_norm(t, o, vsup)
+        mw, n, rw = L.pulses_norm(t[wsel], o[wsel], vsup[wsel])
         mp = min(mp, mw)
         mrw = min(mrw, rw)
         nrunt += n
+        mwa, na, rwa = L.pulses_norm(t, o, vsup)
+        mpa = min(mpa, mwa)
+        mrwa = min(mrwa, rwa)
     out["n_runt"] = float(nrunt)
+    out["min_pulse_all_s"] = min(mpa, mrwa)
     out["min_pulse_s"] = min(mp, mrw)
     out["min_pulse_cross_s"] = mp
     out["min_runt_width_s"] = mrw

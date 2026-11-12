@@ -11,7 +11,7 @@ Metric definitions (all per run = corner x VIC x VID):
   vnode_min_v, vnode_over_vdd_v   lowest node voltage, highest node voltage minus VDD.
   model_warnings   number of 'warning' lines in ngspice.log (the 'Comments and warnings go to log-file' banner is not one).
   i_bias_a, i_lane_a   bias block current (Rb branch + VBP branch + VB2 branch + Vref divider) and (IDD - I_bias)/3.
-LUT tables exist for tt/27C, ss/125C and ff/-40C only: every other process / temperature uses the tt table (flagged in lutcmp.json: lut_table).
+LUT tables: one per process x temperature of the 45 corners (15; T5 added the 8 + 2 that were missing), lutcmp.json: lut_table names it.
 """
 import glob
 import json
@@ -48,11 +48,12 @@ def _ctx(variant='base'):
 
 def zcorner(c):
     """sizing-script Corner for a harness corner (LUT suffix by process / temperature, resistor factor by passive section)."""
-    suf = ('_ss_125C' if (c.process == 'ss' and c.temp == 125) else '_ff_n40C' if (c.process == 'ff' and c.temp == -40)
-           else '_fs_27C' if (c.process == 'fs' and c.temp == 27) else '_sf_27C' if (c.process == 'sf' and c.temp == 27) else '')
+    # one table per process x temperature (T5: all 15 exist; tt/27C is the unsuffixed typical table)
+    tn = {-40: 'n40C', 27: '27C', 125: '125C'}[int(c.temp)]
+    suf = '' if (c.process == 'tt' and c.temp == 27) else '_%s_%s' % (c.process, tn)
     res = {'res_typical': 'typ', 'res_ss': 'ss', 'res_ff': 'ff'}[c.res]
     zc = Z.Corner(c.name, suf, c.vdd, int(c.temp), res)
-    zc.lut_table = suf[1:] if suf else ('tt' if (c.process == 'tt' and c.temp == 27) else 'tt (proxy)')
+    zc.lut_table = suf[1:] if suf else 'tt_27C'
     return zc
 
 
@@ -162,7 +163,7 @@ def post_tb1(ctx):
     try:
         for ln in open(os.path.join(ctx['run_dir'], 'ngspice.log'), errors='replace'):
             low = ln.lower()
-            if 'warning' in low and 'comments and warnings go to log-file' not in low:
+            if 'warning' in low and 'comments and warnings go to log-file' not in low and 'stepping failed' not in low:   # T5 (D-013): a gmin / source stepping failure that the run recovered from (status ok) is a convergence-aid note, not a model warning
                 nlines += 1
     except OSError:
         nlines = float('nan')

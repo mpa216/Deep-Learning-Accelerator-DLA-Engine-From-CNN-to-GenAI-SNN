@@ -33,11 +33,11 @@
    "i_bias_uA": 149.3716859329792
   }
  },
- "sigma_total_mV": 3.2456807567597865,
+ "sigma_total_mV": 3.234658828681985,
  "failed_names": [],
  "hashes": {
-  "sizing_script": "7ac3471de0fbaa938598ac3aa9101380e442cb8548ec17780cba0ff8ac6bbbe0",
-  "luts": "58dac49d5f90a43fe931b205732dab21149f7c2a9b5ff4d0b77a4c9c4f3383b5",
-  "spec": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2"
+  "sizing_script": "da8e83df4f9c578bc3099cc480fa442b7b99d8b43fb68e2c1b140656b64dea8a",
+  "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
+  "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857"
  }
 }

@@ -1,25 +1,24 @@
 {
- "generated": "2026-11-11 22:31:44",
+ "generated": "2026-11-12 08:46:36",
  "tier": "smoke",
  "phases": [
-  "env",
-  "prelayout"
+  "env"
  ],
  "git": {
-  "commit": "90e0db7",
+  "commit": "532262d",
   "dirty": null
  },
- "harness_version": "1.2",
+ "harness_version": "1.3",
  "hashes": {
-  "sizing_script": "7ac3471de0fbaa938598ac3aa9101380e442cb8548ec17780cba0ff8ac6bbbe0",
-  "luts": "58dac49d5f90a43fe931b205732dab21149f7c2a9b5ff4d0b77a4c9c4f3383b5",
-  "spec": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
+  "sizing_script": "da8e83df4f9c578bc3099cc480fa442b7b99d8b43fb68e2c1b140656b64dea8a",
+  "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
+  "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
   "spec_files": {
-   "spec/spec.yaml": "997979ed8b893ad21d68786166e7614b999eadb6da24b575c0188adc0a7557c2",
-   "spec/gates.yaml": "08ed08af51ded0f729c80cbfd43e5673d440f3ecc70894abf4abaa5708fa6276",
+   "spec/spec.yaml": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
+   "spec/gates.yaml": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5",
    "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
    "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
-   "spec/decisions.yaml": "eef4b806f8189630a61ad9fe9bf7ed162a441cdde472d36a1bac03dafa7db2b6"
+   "spec/decisions.yaml": "c13b921dae6ce7c3a5f92ca792b493f2f4c67059d1dcc767d3a6d8faec1f715e"
   }
  },
  "netlists": {
@@ -29,7 +28,7 @@
   "lvds_rx_lvs_ref_flat.spice": "5c6148fe7fdbd78369724dd712ac9540ae81e80c7b75b2159747d22e538f9a04",
   "pad_asig_5p0.spice": "f7dec41ef2df2b36dd86fb7c48ef6a25404c5c788d71ea9a157800d6e2fd7bb2"
  },
- "sizes_spice_sha256": "96c2d8be8e8b95aa60f30bc4fe7317f8de2517792131e8ee0e979257a8f7b8d6",
+ "sizes_spice_sha256": "904ffecb584c3f9d14f97af497ede18c43dee2adad4a99a46a33db4ae7e904ad",
  "tools": {
   "ngspice": {
    "path": "/foss/tools/bin/ngspice",
@@ -93,122 +92,28 @@
    "gate": "ENV",
    "expected": null,
    "spec_exists": false,
-   "wall_s": null
+   "wall_s": null,
+   "actual": null,
+   "gate_status": "PASS"
   },
   {
    "gate": "SELFTEST",
    "expected": 14,
    "spec_exists": true,
-   "wall_s": 0.0
-  },
-  {
-   "gate": "SIZE",
-   "expected": null,
-   "spec_exists": false,
-   "wall_s": null
-  },
-  {
-   "gate": "TB0",
-   "expected": null,
-   "spec_exists": false,
-   "wall_s": null
-  },
-  {
-   "gate": "TB1",
-   "expected": 147,
-   "spec_exists": true,
-   "wall_s": 16.3
-  },
-  {
-   "gate": "TB2",
-   "expected": 35,
-   "spec_exists": true,
-   "wall_s": 0.1
-  },
-  {
-   "gate": "TB3_trip",
-   "expected": 30,
-   "spec_exists": true,
-   "wall_s": 0.3
-  },
-  {
-   "gate": "TB3_off",
-   "expected": 450,
-   "spec_exists": true,
-   "wall_s": 3.9
-  },
-  {
-   "gate": "TB3_hmc",
-   "expected": 180,
-   "spec_exists": true,
-   "wall_s": 2.6
-  },
-  {
-   "gate": "TB4",
-   "expected": 70,
-   "spec_exists": true,
-   "wall_s": 232.4
-  },
-  {
-   "gate": "TB4b",
-   "expected": 70,
-   "spec_exists": true,
-   "wall_s": 236.2
-  },
-  {
-   "gate": "TB5",
-   "expected": 60,
-   "spec_exists": true,
-   "wall_s": 554.8
-  },
-  {
-   "gate": "TB6",
-   "expected": 20,
-   "spec_exists": true,
-   "wall_s": 3.1
-  },
-  {
-   "gate": "TB7",
-   "expected": 105,
-   "spec_exists": true,
-   "wall_s": 210.9
-  },
-  {
-   "gate": "TB7_mc",
-   "expected": 450,
-   "spec_exists": true,
-   "wall_s": 625.6
-  },
-  {
-   "gate": "TB8",
-   "expected": 30,
-   "spec_exists": true,
-   "wall_s": 64.3
-  },
-  {
-   "gate": "TB9",
-   "expected": 20,
-   "spec_exists": true,
-   "wall_s": 0.2
-  },
-  {
-   "gate": "TB10",
-   "expected": 10,
-   "spec_exists": true,
-   "wall_s": 3.1
-  },
-  {
-   "gate": "TB11",
-   "expected": 5,
-   "spec_exists": false,
-   "wall_s": null
-  },
-  {
-   "gate": "TB12",
-   "expected": 40,
-   "spec_exists": true,
-   "wall_s": 379.7
+   "wall_s": 0.0,
+   "actual": 14,
+   "gate_status": "PASS"
   }
  ],
- "wall_s": 2334.4
+ "wall_s": 0.2,
+ "measured_vs_plan_5_3": {
+  "SELFTEST": {
+   "cpu_min_measured": 0.0,
+   "cpu_min_plan": null,
+   "wall_s": 0.0,
+   "retried_runs": 0
+  }
+ },
+ "cpu_min_total": 0.0,
+ "cpu_min_plan_total": 180
 }

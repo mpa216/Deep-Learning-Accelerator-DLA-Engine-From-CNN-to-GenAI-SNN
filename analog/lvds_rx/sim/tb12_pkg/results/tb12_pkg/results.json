@@ -1,5 +1,5 @@
 {
- "harness": "1.2",
+ "harness": "1.3",
  "ngspice": "46",
  "runs": [
   {
@@ -31,9 +31,9 @@
     "vid_pin_pp_v": 0.20125879000000024
    },
    "errors": [],
-   "elapsed": 68.996,
+   "elapsed": 61.539,
    "cached": false,
-   "hash": "2f79d4f71138ee07666c010cba05184fdfc8b3424b7e1f8757426d7bc00e3876",
+   "hash": "1f545e061b49e7a80102ba5960d94c858ce63c2f1549982a225468189f3621c9",
    "run_dir": "work/tt_27c_3v30__pkg0_rate100000000.0"
   },
   {
@@ -65,9 +65,9 @@
     "vid_pin_pp_v": 0.72135927
    },
    "errors": [],
-   "elapsed": 41.408,
+   "elapsed": 39.501,
    "cached": false,
-   "hash": "5efc889357e16e5b7378dfc4109bc54ed1c671c1dcd17344959a9f19d75192b6",
+   "hash": "c009e249d30949d5450a29bbd13f5343071c91aa7280559d120580cc0efa86a4",
    "run_dir": "work/tt_27c_3v30__pkg0_rate200000000.0"
   },
   {
@@ -99,9 +99,9 @@
     "vid_pin_pp_v": 0.2000000799999999
    },
    "errors": [],
-   "elapsed": 69.749,
+   "elapsed": 63.516,
    "cached": false,
-   "hash": "69449e6a4aae2e84b43f41815f6678ea37b4d595666e6012dc4d36dfacbb52a9",
+   "hash": "810b68984f69318c1282c633fb748b81179731fe55c3b117e528ca84517ed2c8",
    "run_dir": "work/tt_27c_3v30__pkg1_rate100000000.0"
   },
   {
@@ -133,9 +133,9 @@
     "vid_pin_pp_v": 0.7026686200000001
    },
    "errors": [],
-   "elapsed": 43.379,
+   "elapsed": 38.832,
    "cached": false,
-   "hash": "415fd0e4f9bfb3c1aa7c0399ecf5583b79a38bde0116355ec108fd1d0e364cee",
+   "hash": "ad841c4e693ca9a0caf3a189ba798f198b90a895715aa401adcb5cc54c09bf0a",
    "run_dir": "work/tt_27c_3v30__pkg1_rate200000000.0"
   },
   {
@@ -167,9 +167,9 @@
     "vid_pin_pp_v": 0.2099396600000003
    },
    "errors": [],
-   "elapsed": 67.5,
+   "elapsed": 62.012,
    "cached": false,
-   "hash": "cd8ec4e73cae510a78e7bb8132e97b472c4b68a73de76431037a1abae2fcc825",
+   "hash": "c55a24897fd9c28c4a45d3e614b65d36170152085497c6ca3892461094e48627",
    "run_dir": "work/tt_27c_3v30__pkg2_rate100000000.0"
   },
   {
@@ -201,9 +201,9 @@
     "vid_pin_pp_v": 0.8137180350000001
    },
    "errors": [],
-   "elapsed": 39.899,
+   "elapsed": 36.958,
    "cached": false,
-   "hash": "6fc6cbc25d54eb4067f1380ca3b3576b1e4cf96f592fa27e2c49318fbae9bad3",
+   "hash": "25662d6bdbea77523ab8c10ee481dfb46217938b3d3b4ff30c9f0f34a00adc06",
    "run_dir": "work/tt_27c_3v30__pkg2_rate200000000.0"
   },
   {
@@ -235,9 +235,9 @@
     "vid_pin_pp_v": 0.21031690000000003
    },
    "errors": [],
-   "elapsed": 69.025,
+   "elapsed": 64.95,
    "cached": false,
-   "hash": "feef8bec1f21fc914502d794a581a8f6d8d7ba991194b55617adb0400bc1dfc1",
+   "hash": "dc02450a50dd4ff1e165c3211d1f6b1c2f484cd645034e8858e3cabc09124583",
    "run_dir": "work/tt_27c_3v30__pkg3_rate100000000.0"
   },
   {
@@ -269,9 +269,9 @@
     "vid_pin_pp_v": 0.8469535290000001
    },
    "errors": [],
-   "elapsed": 40.131,
+   "elapsed": 38.292,
    "cached": false,
-   "hash": "1ebc1f6f6a96100d5f617224a1041e7b0c5f41bdc55de24be7375bb40f3b0125",
+   "hash": "ade96abd719dab5b0ea23a4623a1bf4ed995ad1ebb7874ded1af18d83c18ea12",
    "run_dir": "work/tt_27c_3v30__pkg3_rate200000000.0"
   },
   {
@@ -303,9 +303,9 @@
     "vid_pin_pp_v": 0.20116062
    },
    "errors": [],
-   "elapsed": 66.117,
+   "elapsed": 63.111,
    "cached": false,
-   "hash": "65ffcf8809bc42c045231ccdebae2002663019219a8371e99de507171b7dc20c",
+   "hash": "cf0e8d56c20841c8d7634bb74c1c853de07eaa8833055f72cd818a5133c82afb",
    "run_dir": "work/ss_125c_3v00__pkg0_rate100000000.0"
   },
   {
@@ -337,9 +337,9 @@
     "vid_pin_pp_v": 0.7192176699999999
    },
    "errors": [],
-   "elapsed": 41.42,
+   "elapsed": 38.097,
    "cached": false,
-   "hash": "0ecb8eb8c3d5001d865b066231f5c70b7eb339a15fb23aa258a453cbda522eea",
+   "hash": "4221ee00a10be9e766e4a51285e36e9406826a853107349a12f121b0aa6e41b2",
    "run_dir": "work/ss_125c_3v00__pkg0_rate200000000.0"
   },
   {
@@ -371,9 +371,9 @@
     "vid_pin_pp_v": 0.20000031000000007
    },
    "errors": [],
-   "elapsed": 69.333,
+   "elapsed": 63.41,
    "cached": false,
-   "hash": "6ac40c73a1f878f73fe01e25578b675c95f222aedf1b052e803809e5f131043e",
+   "hash": "0202b1cdcf9c6fb7bde2e6d2324cada3db5291bcc32b8b54fec5251239eff050",
    "run_dir": "work/ss_125c_3v00__pkg1_rate100000000.0"
   },
   {
@@ -405,9 +405,9 @@
     "vid_pin_pp_v": 0.70000223
    },
    "errors": [],
-   "elapsed": 42.227,
+   "elapsed": 38.331,
    "cached": false,
-   "hash": "8d751eb51d2c909593099921d0bf6c9972c9ac07d6e0cd0ab0b05f54625344ce",
+   "hash": "749d6f482bfd93a47b4edcca4ed3fe11f96e83cfa3cc2b724adf95b62eaf9a38",
    "run_dir": "work/ss_125c_3v00__pkg1_rate200000000.0"
   },
   {
@@ -439,9 +439,9 @@
     "vid_pin_pp_v": 0.21042258000000036
    },
    "errors": [],
-   "elapsed": 67.32,
+   "elapsed": 63.866,
    "cached": false,
-   "hash": "b5233c687bdc8ff2546203843b5a39170c2c8ef696e5719a90dfa3bef45a326f",
+   "hash": "134e7ce878dc75368f5425104a579604db35b75edc9c214afa6c34394ae6d536",
    "run_dir": "work/ss_125c_3v00__pkg2_rate100000000.0"
   },
   {
@@ -473,9 +473,9 @@
     "vid_pin_pp_v": 0.823691871
    },
    "errors": [],
-   "elapsed": 38.668,
+   "elapsed": 37.062,
    "cached": false,
-   "hash": "0c0812a43004520241ebfd56b4d25ccfe05f3666f2fb6e599931fdea4d9785f0",
+   "hash": "d521cf2c1078bf2221782186c748e302c918585bbdc22497f2472866eb747033",
    "run_dir": "work/ss_125c_3v00__pkg2_rate200000000.0"
   },
   {
@@ -507,9 +507,9 @@
     "vid_pin_pp_v": 0.2104840600000002
    },
    "errors": [],
-   "elapsed": 65.551,
+   "elapsed": 62.482,
    "cached": false,
-   "hash": "1044e4692c60914f888500e8769f765cd8ea8f6fd008943127ec1a4ed59f8142",
+   "hash": "2eeef4cf94e553966401a78abd47a5173da86b5e8770e950946fadabd7d7dddc",
    "run_dir": "work/ss_125c_3v00__pkg3_rate100000000.0"
   },
   {
@@ -541,9 +541,9 @@
     "vid_pin_pp_v": 0.8562390170000002
    },
    "errors": [],
-   "elapsed": 38.227,
+   "elapsed": 37.367,
    "cached": false,
-   "hash": "8540cf90193e09c2e1327f88ff3f0e9499ac9de9d7f8543718d06606189db1f4",
+   "hash": "bb2f7348685c49be4acfb501b3706b53908ca67299189fc68b387f39c3b64dbb",
    "run_dir": "work/ss_125c_3v00__pkg3_rate200000000.0"
   },
   {
@@ -575,9 +575,9 @@
     "vid_pin_pp_v": 0.2013523199999998
    },
    "errors": [],
-   "elapsed": 69.593,
+   "elapsed": 66.5,
    "cached": false,
-   "hash": "41881415ce146e950e9b462a46804c4d5c0f0fd7062cb0433ddb2f52786aff52",
+   "hash": "da16cc1fc25166b04d04507c26dd451f77cecc82b6187a3b34c39c0ffcd08cd5",
    "run_dir": "work/ff_m40c_3v60__pkg0_rate100000000.0"
   },
   {
@@ -609,9 +609,9 @@
     "vid_pin_pp_v": 0.72288481
    },
    "errors": [],
-   "elapsed": 44.113,
+   "elapsed": 40.986,
    "cached": false,
-   "hash": "68b51e6794213f479fdd31ef451baa5918b932a553582930f6d222c57638fbb0",
+   "hash": "355e8e3baf2e56dd98f631564bbf3cd2608eedfce73a299655d402449c192180",
    "run_dir": "work/ff_m40c_3v60__pkg0_rate200000000.0"
   },
   {
@@ -643,9 +643,9 @@
     "vid_pin_pp_v": 0.20015151999999992
    },
    "errors": [],
-   "elapsed": 69.436,
+   "elapsed": 66.084,
    "cached": false,
-   "hash": "a7a21882945d442bba509b20dc1b89191963565b541ad2927e92e04e398bd7fc",
+   "hash": "122fb195eeb022e3fc5ba35bef176a8d9390ce6c179ad839582a8e6f782f1cdb",
    "run_dir": "work/ff_m40c_3v60__pkg1_rate100000000.0"
   },
   {
@@ -677,9 +677,9 @@
     "vid_pin_pp_v": 0.7060917600000001
    },
    "errors": [],
-   "elapsed": 43.653,
+   "elapsed": 41.502,
    "cached": false,
-   "hash": "59dff173ccd8de1ff9a5b73b1b304346e62968f2d7b589b9b333d82ea13cb6ca",
+   "hash": "84f047be534155596e8a3f67eae8cd821b6c5ace24e6ef99824b4078d0bd9174",
    "run_dir": "work/ff_m40c_3v60__pkg1_rate200000000.0"
   },
   {
@@ -711,9 +711,9 @@
     "vid_pin_pp_v": 0.20945655000000007
    },
    "errors": [],
-   "elapsed": 68.926,
+   "elapsed": 65.472,
    "cached": false,
-   "hash": "c0ea2c7c1a11348a7c67ad6c62eba3c102fe8ccc42f59053e2a960b2c45024b1",
+   "hash": "8876f0c64f616cacd21f73915661928ebcc5f814e03850b78491c32e6c51cdc4",
    "run_dir": "work/ff_m40c_3v60__pkg2_rate100000000.0"
   },
   {
@@ -745,9 +745,9 @@
     "vid_pin_pp_v": 0.806097585
    },
    "errors": [],
-   "elapsed": 40.991,
+   "elapsed": 38.438,
    "cached": false,
-   "hash": "729a57f351e7168b119a34c56046c25412af19888949ae2b72c3792357ff4286",
+   "hash": "547b859e0827fd68e98312f14677ecf471a1dca67b4a61aa77a00a469135aec5",
    "run_dir": "work/ff_m40c_3v60__pkg2_rate200000000.0"
   },
   {
@@ -779,9 +779,9 @@
     "vid_pin_pp_v": 0.2103792299999998
    },
    "errors": [],
-   "elapsed": 68.769,
+   "elapsed": 64.169,
    "cached": false,
-   "hash": "37d5406506060f5d0edd602baaa4a0cd13f7f4a97d659c8f5f54c43004a39325",
+   "hash": "11084302a59789b8c9d87a98923189ad12d4963177f58d2aef40d893d3ff5821",
    "run_dir": "work/ff_m40c_3v60__pkg3_rate100000000.0"
   },
   {
@@ -813,9 +813,9 @@
     "vid_pin_pp_v": 0.8369776569999998
    },
    "errors": [],
-   "elapsed": 39.537,
+   "elapsed": 39.1,
    "cached": false,
-   "hash": "2e73763c3db5b797323e3da437e911f49b62f5876473041da39faf1ce870187e",
+   "hash": "bc0d1d291217ea3e1c444448be2cb1f1c616fdd6f9f7eb286a375bfb57223594",
    "run_dir": "work/ff_m40c_3v60__pkg3_rate200000000.0"
   },
   {
@@ -847,9 +847,9 @@
     "vid_pin_pp_v": 0.2012771
    },
    "errors": [],
-   "elapsed": 69.845,
+   "elapsed": 65.805,
    "cached": false,
-   "hash": "7ea764f1f80e60e71bef0ec4143ce22c9c3263e7ed811a336c86a4a668f8e452",
+   "hash": "20a0c7c8ad81a1b6e302532931a7130085edc5b82cda66f71144c3f7b0c3aadc",
    "run_dir": "work/fs_27c_3v30__pkg0_rate100000000.0"
   },
   {
@@ -881,9 +881,9 @@
     "vid_pin_pp_v": 0.7213247900000002
    },
    "errors": [],
-   "elapsed": 43.685,
+   "elapsed": 40.058,
    "cached": false,
-   "hash": "8c1b040b9b47fbb18d839a793136692e5fb8fc1f1b34008161a0c27c047d2661",
+   "hash": "31dab7320865be97452be22205a73c6ef72b3587daa712a6e993a9aebdcf7ed9",
    "run_dir": "work/fs_27c_3v30__pkg0_rate200000000.0"
   },
   {
@@ -915,9 +915,9 @@
     "vid_pin_pp_v": 0.20000006000000004
    },
    "errors": [],
-   "elapsed": 67.853,
+   "elapsed": 66.776,
    "cached": false,
-   "hash": "e838a5e3d9793710136d28b2983284f7e1ae011d82ae0f592585bfac489f5fef",
+   "hash": "2104be05aaf61d0d3e981ae6144bd889585fd69f9035c699c7531146bf425d41",
    "run_dir": "work/fs_27c_3v30__pkg1_rate100000000.0"
   },
   {
@@ -949,9 +949,9 @@
     "vid_pin_pp_v": 0.70263528
    },
    "errors": [],
-   "elapsed": 43.187,
+   "elapsed": 40.943,
    "cached": false,
-   "hash": "d7c5b80357a5389a16efda7256ca30afa9727f23fa3ef523622ac987dad59af1",
+   "hash": "8d5977778b330d108f0ec61c5cfe1adcd5bfe6e91fadb6ff795e192fb9c7ed7d",
    "run_dir": "work/fs_27c_3v30__pkg1_rate200000000.0"
   },
   {
@@ -983,9 +983,9 @@
     "vid_pin_pp_v": 0.20995591999999963
    },
    "errors": [],
-   "elapsed": 66.421,
+   "elapsed": 63.454,
    "cached": false,
-   "hash": "fd1bc95142263b5cb064aceeb9f686df76c14e170959c3227d1340f4c919a7ce",
+   "hash": "efdd3429c004037e3a6cc626d03b60770af84b162763e4c40e2523815e9f8935",
    "run_dir": "work/fs_27c_3v30__pkg2_rate100000000.0"
   },
   {
@@ -1017,9 +1017,9 @@
     "vid_pin_pp_v": 0.8137023229999999
    },
    "errors": [],
-   "elapsed": 39.744,
+   "elapsed": 37.87,
    "cached": false,
-   "hash": "3366ac305f3d4d51fd11f5431879f58deab0f66b07d5e3db2ee224c790cf4e37",
+   "hash": "2fe9040269666a8f3ad2b3d3039338753de2434878da8e26af3a1b3b1c5627f5",
    "run_dir": "work/fs_27c_3v30__pkg2_rate200000000.0"
   },
   {
@@ -1051,9 +1051,9 @@
     "vid_pin_pp_v": 0.21033522000000016
    },
    "errors": [],
-   "elapsed": 67.017,
+   "elapsed": 65.093,
    "cached": false,
-   "hash": "a05e80598b5a1d1d40c1717b911e4684a30a34447f7a8defe1e001ca3dcfa5e0",
+   "hash": "4da8e24b72c50961d7e024ab93769ba901787810959466b983b132efa908f6b6",
    "run_dir": "work/fs_27c_3v30__pkg3_rate100000000.0"
   },
   {
@@ -1085,9 +1085,9 @@
     "vid_pin_pp_v": 0.8469121610000001
    },
    "errors": [],
-   "elapsed": 40.177,
+   "elapsed": 38.172,
    "cached": false,
-   "hash": "e488160992397b04f3e800c9d3d662dd4eef96bdfe3fceaaa8ff1bdafae2b5d5",
+   "hash": "2dc09a171a9ff1ff9df908e7501d044cc09d98f7225780d3868f5e2246236082",
    "run_dir": "work/fs_27c_3v30__pkg3_rate200000000.0"
   },
   {
@@ -1119,9 +1119,9 @@
     "vid_pin_pp_v": 0.20124204000000034
    },
    "errors": [],
-   "elapsed": 66.955,
+   "elapsed": 64.485,
    "cached": false,
-   "hash": "f2e05a253a11e6b82ca08756912be98ea88c06295bc49801a6d133ed431ddd2c",
+   "hash": "5b827ffcde9fb2faae3c079c0d074e989cd2ad1ee5fa600e58253dcc211ab579",
    "run_dir": "work/sf_27c_3v30__pkg0_rate100000000.0"
   },
   {
@@ -1153,9 +1153,9 @@
     "vid_pin_pp_v": 0.72140169
    },
    "errors": [],
-   "elapsed": 42.706,
+   "elapsed": 39.445,
    "cached": false,
-   "hash": "e0eb8bd817e25b8de05ec2f31175e83c9ab2a8a81b611f427dbd146cc3eaeea6",
+   "hash": "7f23f1fd2bddff444acec035b60ec5a7fd39124f52176e532eb88ccb23ef25eb",
    "run_dir": "work/sf_27c_3v30__pkg0_rate200000000.0"
   },
   {
@@ -1187,9 +1187,9 @@
     "vid_pin_pp_v": 0.20000009000000007
    },
    "errors": [],
-   "elapsed": 66.461,
+   "elapsed": 60.771,
    "cached": false,
-   "hash": "aa11b6bb0b288f7f91a8eea5db282b1bc5711fa4e9535debf21a0203c4d7ed51",
+   "hash": "4acdcdbd7e867dd82e4798779ef44f8c3f48468aa16b4d864bfbf22b3fb1a0bf",
    "run_dir": "work/sf_27c_3v30__pkg1_rate100000000.0"
   },
   {
@@ -1221,9 +1221,9 @@
     "vid_pin_pp_v": 0.70271105
    },
    "errors": [],
-   "elapsed": 42.023,
+   "elapsed": 40.456,
    "cached": false,
-   "hash": "970aa0780feee0f7e38a5618674e1f3390774624abc3f50be893d3c6a0443d10",
+   "hash": "3c235c90e05c7dfff516faf5ecf33a88f4a0f936a3529461c59da121063ccf57",
    "run_dir": "work/sf_27c_3v30__pkg1_rate200000000.0"
   },
   {
@@ -1255,9 +1255,9 @@
     "vid_pin_pp_v": 0.20992451999999995
    },
    "errors": [],
-   "elapsed": 59.101,
+   "elapsed": 55.415,
    "cached": false,
-   "hash": "283a21b544d3a7876cb9c4b2d72ffd3ac9c2a9ed4ede436063a310449b61a450",
+   "hash": "a7343508380a6b11942b421cf80c893b3ce85cc85fd9cf55c602327f21adc822",
    "run_dir": "work/sf_27c_3v30__pkg2_rate100000000.0"
   },
   {
@@ -1289,9 +1289,9 @@
     "vid_pin_pp_v": 0.8137458150000001
    },
    "errors": [],
-   "elapsed": 35.252,
+   "elapsed": 28.529,
    "cached": false,
-   "hash": "aecf96c6d07d5492d26b6b1eaeb9332ee55edc788659d40e1fece36d94d9879f",
+   "hash": "d66c13da605332b6d6b1679b3b24e64611b90db99543092dc969d31f111aaf53",
    "run_dir": "work/sf_27c_3v30__pkg2_rate200000000.0"
   },
   {
@@ -1323,9 +1323,9 @@
     "vid_pin_pp_v": 0.2102999700000001
    },
    "errors": [],
-   "elapsed": 43.314,
+   "elapsed": 41.756,
    "cached": false,
-   "hash": "199da1edfebe586af2f1cb9355bca5172e4f6c69f5c896ec477a5d43bbbefbfd",
+   "hash": "35dbd65c46f1533318e74e6a240b9297c42c723dd92f705f54deed1748b49129",
    "run_dir": "work/sf_27c_3v30__pkg3_rate100000000.0"
   },
   {
@@ -1357,9 +1357,9 @@
     "vid_pin_pp_v": 0.846959929
    },
    "errors": [],
-   "elapsed": 30.133,
+   "elapsed": 28.654,
    "cached": false,
-   "hash": "72bd81db2d1e77e9b16202c85ce65bfc974cc81cfc0bf7d87ed3f0b46b6a7a20",
+   "hash": "061e060ba1d36fe78a8a302ae2ae663e42bdbf4087450a88ac1f5f292762178a",
    "run_dir": "work/sf_27c_3v30__pkg3_rate200000000.0"
   }
  ]

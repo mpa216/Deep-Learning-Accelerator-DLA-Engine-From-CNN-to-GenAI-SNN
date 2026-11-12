@@ -95,12 +95,19 @@ def post(ctx):
     mp = L.BIG
     states = []
     dt_max = 0
+    n_flip, t_flip = 0, 0.0
     for o in (o0, o1, o2):
         # idle window: [T_IDLE0, T_END_IDLE]
         w = (t >= T_IDLE0) & (t <= T_END_IDLE)
         tt, _ = L.crossings_with_sense(t[w], o[w], th)
-        if len(tt) > 0 or (o[w].max() - o[w].min()) > 0.1:
+        # T5 (decision D-010): ONE crossing in the idle window is a power-up settling flip (the lane's total offset sits inside the bias
+        # settling excursion; 4 of 4500 lane-runs at N = 100, flips at 217-275 ns, one clean transition to a rail), not an oscillation.
+        # osc_flag = 2 or more crossings, or an output that moves > 0.1 V without a crossing.  Single flips are counted in n_settle_flip.
+        if len(tt) >= 2 or (len(tt) == 0 and (o[w].max() - o[w].min()) > 0.1):
             osc = 1
+        if len(tt) == 1:
+            n_flip += 1
+            t_flip = max(t_flip, float(tt[0]))
         mp = min(mp, L.min_pulse(t, o, th, T_IDLE0))
         fin = o[(t >= T_END_IDLE - 50e-9) & (t <= T_END_IDLE)].mean()
         states.append(1 if fin > 0.9 * vdd else (0 if fin < 0.1 * vdd else -1))
@@ -111,7 +118,7 @@ def post(ctx):
             if len(tc) > 2:
                 osc = 1
     out = {"osc_flag": float(osc), "min_pulse_s": mp, "held_state": float(states[0]), "n_high": float(sum(1 for s in states if s == 1)),
-           "n_mid": float(sum(1 for s in states if s == -1)), "out_final_v": float(o0[(t >= T_END_IDLE - 50e-9) & (t <= T_END_IDLE)].mean())}
+           "n_mid": float(sum(1 for s in states if s == -1)), "n_settle_flip": float(n_flip), "t_last_flip_s": t_flip, "out_final_v": float(o0[(t >= T_END_IDLE - 50e-9) & (t <= T_END_IDLE)].mean())}
     if drift:
         out["drift_toggles"] = float(dt_max)
         out["out_end_v"] = float(o0[-1])

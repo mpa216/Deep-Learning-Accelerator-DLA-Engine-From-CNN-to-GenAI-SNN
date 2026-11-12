@@ -327,6 +327,7 @@ def evaluate_gate(gid, gate, spec, tier, root=None, results_file=None, spec_file
     res["actual_runs"] = len(runs)
     res["status_counts"] = dict(collections.Counter(r["status"] for r in runs))
     res["cpu_s"] = round(sum(float(r.get("elapsed") or 0) for r in runs), 1)
+    res["retried"] = sorted({r["id"] + " (" + str(r.get("first_status")) + " -> " + str(r["retry"]) + ")" for r in runs if r.get("retry")})
     failed = False
     if len(runs) != exp:
         failed = True

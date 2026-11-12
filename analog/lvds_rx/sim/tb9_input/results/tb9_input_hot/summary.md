@@ -4,7 +4,7 @@
 
 TB9 supplement (not gated, reported): the same input-current bench at 125 C / 3.6 V (PLAN_V2 C7: leakage at 125 C / 3.6 V at 0.05 V and 2.4 V) for tt, ss and ff, plus the mid-range points
 
-Runs: **12** (ok 12); 12 reused from cache.
+Runs: **12** (ok 12); 0 reused from cache.
 
 ## Worst case per metric
 

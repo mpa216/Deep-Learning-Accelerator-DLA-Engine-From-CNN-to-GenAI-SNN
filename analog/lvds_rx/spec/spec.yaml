@@ -30,8 +30,8 @@ input:
   leakage_report_corner: {temp_c: 125, vdd_v: 3.6, vin_v: [0.05, 2.4]}
 
 hysteresis:                 # C9: input-referred, DC sweep, every corner and every VIC
-  min_v: 0.008
-  max_v: 0.025
+  min_v: 0.006     # T5: ladder R3 rung 1 (was 0.008), decision D-009
+  max_v: 0.035     # T5: ladder R3 rung 1 (was 0.025), decision D-009
   nominal_v: 0.014
 
 offset:                     # A3 / 3.1 "Trip window"

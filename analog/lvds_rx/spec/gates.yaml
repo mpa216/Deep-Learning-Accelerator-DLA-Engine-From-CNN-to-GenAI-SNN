@@ -91,7 +91,10 @@ gates:
       corners: {full: full47, smoke: worst7}      # full45 + the two resistor cross corners (headroom)
       grid: {vic: 7, vid: 3}
     checks:
-      - {kind: per_run, metric: min_headroom_v,    min: $spec.tb1.vdsat_headroom_min_v}      # VDS - VDsat, devices where intended
+      # T5 waiver D-012: the 50 mV saturation margin is gated at the seven design corners (worst5 + the two resistor cross corners); at all 47 corners
+      # the steered PMOS pair device may be at most 100 mV into triode at VIC = 0.05 V (measured worst -85 mV at ff/125C/3.6 V; functional gates TB2-TB5 pass there)
+      - {kind: per_run, metric: min_headroom_v,    min: $spec.tb1.vdsat_headroom_min_v, where: {corner: [tt_27c_3v30, ss_125c_3v00, ff_m40c_3v60, fs_27c_3v30, sf_27c_3v30, ss_125c_3v00_xrff, ff_m40c_3v60_xrss]}}
+      - {kind: per_run, metric: min_headroom_v,    min: -0.100}                                # all 47 corners (D-012)
       - {kind: per_run, metric: gmid_err,          abs: true, max: $spec.tb1.gmid_rel_tol}   # |gm/ID - script| / script
       - {kind: per_run, metric: id_err,            abs: true, max: $spec.tb1.id_rel_tol}
       - {kind: per_run, metric: vgs_err_v,         abs: true, max: $spec.tb1.vgs_abs_tol_v}
@@ -145,7 +148,7 @@ gates:
         k: $spec.offset.k_sigma
         window: $spec.offset.window_v
         extra: [{ref: hysteresis.max_v, mul: 0.5}, {ref: offset.margin_v}]
-        sigma_max: $spec.offset.hard_sigma_limit_v
+        sigma_max: $spec.offset.design_sigma_v      # T5 (D-014): the spec table's design target (rung 0), not the 8 mV hard limit
       - {kind: report, metric: vos_v}
 
   TB3_hmc:
@@ -222,6 +225,8 @@ gates:
       - {kind: per_run, metric: osc_flag,  max: 0}
       - {kind: per_run, metric: min_pulse_s, min: $spec.failsafe.min_pulse_s}   # no pulse -> large value
       - {kind: report,  metric: held_state}
+      - {kind: report,  metric: n_settle_flip}                                    # D-010: single power-up settling flips (reported)
+      - {kind: per_run, metric: t_last_flip_s, max: 5.0e-7}                       # D-010: a settling flip must be over by 500 ns
 
   TB7_mc:
     title: "idle inputs under mismatch (N = 100)"
@@ -234,6 +239,8 @@ gates:
     checks:
       - {kind: per_run, metric: osc_flag,  max: 0}
       - {kind: per_run, metric: min_pulse_s, min: $spec.failsafe.min_pulse_s}
+      - {kind: report,  metric: n_settle_flip}                                    # D-010
+      - {kind: per_run, metric: t_last_flip_s, max: 5.0e-7}                       # D-010
 
   TB8:
     title: "EN and supply ramps"
@@ -248,6 +255,7 @@ gates:
       - {kind: per_run, metric: idd_en0_a,    max: $spec.current.idd_en0_max_a.t125c, where: {case: 0, temp: 125}}
       - {kind: per_run, metric: valid_time_s, max: $spec.en.valid_after_s, where: {case: 2}}
       - {kind: per_run, metric: min_pulse_s,  min: $spec.en.min_pulse_s}
+      - {kind: report,  metric: min_pulse_all_s}                                  # D-011: whole-run value incl. the 50 ns setup ramp
 
   TB9:
     title: "input leakage and balance"

@@ -31,6 +31,10 @@ import gates as G  # noqa: E402
 import lint as L  # noqa: E402
 from harness import runner  # noqa: E402
 
+if __name__ == "__main__":
+    # `python3 flow/mutants.py`: extra modules do `from mutants import mutant`; make that the SAME module (one MUTANTS list)
+    sys.modules["mutants"] = sys.modules[__name__]
+
 MUTANTS = []
 
 

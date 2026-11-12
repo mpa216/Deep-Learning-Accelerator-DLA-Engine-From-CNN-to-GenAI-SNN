@@ -4,7 +4,7 @@
 
 TB6: PRBS7 on lane 0 (100 Mb/s, VID 100 mV) with (0) a common-mode step 0.05 <-> 2.35 V in 2 ns, (1) 100 mVpp 25 MHz supply ripple, (2) 25 MHz 20 mA current-spike train on the local rails behind 1 ohm + 2 nH per rail, (3) nothing; disturbed copy vs a quiet reference copy of the macro
 
-Runs: **20** (ok 20); 20 reused from cache.
+Runs: **20** (ok 20); 0 reused from cache.
 
 ## Worst case per metric
 

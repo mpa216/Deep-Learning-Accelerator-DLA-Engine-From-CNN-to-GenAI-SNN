@@ -34,7 +34,16 @@ JOBS = {
     'ff-40':   ('ff', -40, SMALL_L, '-2.001', 'vsb2'),
     'fs27':    ('fs', 27, SMALL_L, '-2.001', 'vsb2'),      # T2 part 2: skew corners for the TB1 LUT-vs-SPICE check at fs, sf
     'sf27':    ('sf', 27, SMALL_L, '-2.001', 'vsb2'),
+    # T5: TB1's LUT-vs-SPICE gm/ID check was 20-28 % off at every temperature that has no table (the typical-27C table is a
+    # temperature proxy); typical-process tables at the two temperature extremes serve the other processes there.
+    'tt125':   ('typical', 125, SMALL_L, '-2.001', 'vsb2'),
+    'tt-40':   ('typical', -40, SMALL_L, '-2.001', 'vsb2'),
 }
+# T5 (second step): the VGS comparison needs the PROCESS too (VT moves 100-150 mV between ss and ff): every process x temperature of the 45 corners
+for _proc in ('ss', 'ff', 'fs', 'sf'):
+    for _t in (-40, 27, 125):
+        JOBS.setdefault('%s%d' % (_proc, _t) if _t != 27 else '%s27' % _proc, (_proc, _t, SMALL_L, '-2.001', 'vsb2'))
+
 
 
 def make(dev, key, kit, outdir):

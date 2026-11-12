@@ -101,6 +101,21 @@ def write_manifest(tier, phases, rows, walls, wall_total):
            "runs": [{"gate": r["gate"], "expected": r["expected"], "spec_exists": r["exists"],
                      "wall_s": walls.get(r["gate"])} for r in rows],
            "wall_s": round(wall_total, 1)}
+    # T5: measured cost against the PLAN_V2 5.3 estimates (CPU minutes; 8-core machine, --jobs 6)
+    plan_cpu_min = {"TB1": 3, "TB2": 3, "TB3_trip": 2, "TB3_off": 75, "TB3_hmc": 40, "TB4": 4, "TB5": 24}
+    gj = C.path("results", "gates.json")
+    if os.path.isfile(gj):
+        gates = C.load_json(gj)["gates"]
+        wall = {r["gate"]: walls.get(r["gate"]) for r in rows}
+        for ent in man["runs"]:
+            ent["actual"] = gates.get(ent["gate"], {}).get("actual_runs")
+            ent["gate_status"] = gates.get(ent["gate"], {}).get("status")
+        man["measured_vs_plan_5_3"] = {g: {"cpu_min_measured": round(gates[g].get("cpu_s", 0) / 60.0, 1) if g in gates else None,
+                                          "cpu_min_plan": plan_cpu_min.get(g), "wall_s": wall.get(g),
+                                          "retried_runs": len(gates[g].get("retried", [])) if g in gates else None}
+                                      for g in wall if wall.get(g) is not None}
+        man["cpu_min_total"] = C.load_json(gj).get("cpu_min")
+        man["cpu_min_plan_total"] = 180
     C.write_json("results/manifest.json", man)
 
 

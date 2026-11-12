@@ -79,6 +79,40 @@ class TestRunner(unittest.TestCase):
         recs = self._run(deck, timeout=1.0)
         self.assertEqual(recs[0]["status"], "timeout")
 
+    def test_retry_variant_after_timeout(self):
+        # harness 1.3: a run that times out is repeated with the next deck variant; the record says so
+        deck = "* long\nvdd a 0 1\nr1 a 0 1k\n.control\nop\nshell sleep 30\n.endc\n.end\n"
+        retry = {"timeout": 20.0, "variants": [{"name": "v1", "sub": [["shell sleep 30", "shell sleep 40"]]},
+                                                {"name": "v2", "sub": [["shell sleep 30", "echo hi"]]}]}
+        recs = self._run(deck, timeout=1.0, retry=retry)
+        # v1 still sleeps 40 s > 20 s: not enough; v2 works
+        self.assertEqual(recs[0]["status"], "ok")
+        self.assertEqual(recs[0]["retry"], "v2")
+        self.assertEqual(recs[0]["first_status"], "timeout")
+        self.assertTrue(any("retry v1" in e for e in recs[0]["errors"]))
+        recs2 = self._run(deck, timeout=1.0, retry=retry)                       # an ok retried result is cached
+        self.assertTrue(recs2[0]["cached"] and recs2[0]["status"] == "ok")
+        recs3 = self._run(deck, timeout=1.0)                                     # no retry spec, no retry: the cached ok stays
+        self.assertEqual(recs3[0]["status"], "ok")
+
+    def test_retry_exhausted_keeps_failure(self):
+        deck = "* long\nvdd a 0 1\nr1 a 0 1k\n.control\nop\nshell sleep 30\n.endc\n.end\n"
+        retry = {"timeout": 1.0, "variants": [{"name": "v1", "sub": [["shell sleep 30", "shell sleep 31"]]}]}
+        recs = self._run(deck, timeout=1.0, retry=retry)
+        self.assertEqual(recs[0]["status"], "timeout")
+        self.assertIsNone(recs[0]["retry"])
+
+    def test_runkey_seeds(self):
+        from harness import mc
+        a = mc.runkey_seeds(1000, 7, "tt_27c_3v30", {"vic": 0.05})
+        b = mc.runkey_seeds(1000, 7, "tt_27c_3v30", {"vic": 1.2})
+        c = mc.runkey_seeds(1000, 7, "ss_125c_3v00", {"vic": 0.05})
+        self.assertEqual(len(set(a)), 1000)
+        self.assertEqual(a, mc.runkey_seeds(1000, 7, "tt_27c_3v30", {"vic": 0.05}))      # deterministic
+        self.assertFalse(set(a) & set(b) or set(a) & set(c))                              # independent per (corner, grid point)
+        self.assertNotIn(1, a + b + c)
+        self.assertNotIn(2, a + b + c)
+
     def test_mc_seed_runs_and_post_hook(self):
         deck = ("* seeded\n{seed_line}\n.param a=agauss(0,1,1)\nvin in 0 1\nbx x 0 V='a'\nr1 in 0 1k\n"
                 ".dc vin 0 2 1\n.meas dc av find v(x) at=1\n.end\n")

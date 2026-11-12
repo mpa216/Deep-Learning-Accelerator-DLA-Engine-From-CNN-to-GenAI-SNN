@@ -35,7 +35,31 @@ if [ "$WHAT" = corners ] || [ "$WHAT" = all ]; then
          "techsweep_nfet_03v3_fs_27C_vsb2 FS 27 nfet_03v3_fs_27C"
          "techsweep_pfet_03v3_fs_27C_vsb2 FS 27 pfet_03v3_fs_27C"
          "techsweep_nfet_03v3_sf_27C_vsb2 SF 27 nfet_03v3_sf_27C"
-         "techsweep_pfet_03v3_sf_27C_vsb2 SF 27 pfet_03v3_sf_27C")
+         "techsweep_pfet_03v3_sf_27C_vsb2 SF 27 pfet_03v3_sf_27C"
+         "techsweep_nfet_03v3_typical_125C_vsb2 NOM 125 nfet_03v3_tt_125C"
+         "techsweep_pfet_03v3_typical_125C_vsb2 NOM 125 pfet_03v3_tt_125C"
+         "techsweep_nfet_03v3_typical_-40C_vsb2 NOM -40 nfet_03v3_tt_n40C"
+         "techsweep_pfet_03v3_typical_-40C_vsb2 NOM -40 pfet_03v3_tt_n40C")
+fi
+if [ "$WHAT" = tttemps ]; then
+  JOBS+=("techsweep_nfet_03v3_typical_125C_vsb2 NOM 125 nfet_03v3_tt_125C"
+         "techsweep_pfet_03v3_typical_125C_vsb2 NOM 125 pfet_03v3_tt_125C"
+         "techsweep_nfet_03v3_typical_-40C_vsb2 NOM -40 nfet_03v3_tt_n40C"
+         "techsweep_pfet_03v3_typical_-40C_vsb2 NOM -40 pfet_03v3_tt_n40C")
+fi
+if [ "$WHAT" = procgrid ]; then
+  # every process x temperature of the 45 corners that has no table yet (T5): ss/ff/fs/sf at -40, 27, 125 C
+  for pc in ss ff fs sf; do
+    for t in -40 27 125; do
+      tn="${t}C"; [ "$t" = "-40" ] && tn="n40C" || tn="${t}C"
+      for dev in nfet pfet; do
+        out="${dev}_03v3_${pc}_${tn}"
+        [ -f "../luts/${out}.mat" ] && continue
+        [ "$t" = 27 ] && [ "$pc" = fs -o "$pc" = sf ] && [ -f "../luts/${out}.mat" ] && continue
+        JOBS+=("techsweep_${dev}_03v3_${pc}_${t}C_vsb2 $(echo $pc | tr a-z A-Z) $t ${out}")
+      done
+    done
+  done
 fi
 printf '%s\n' "${JOBS[@]}" | xargs -P 3 -L 1 bash -c 'run $0 $1 $2 $3'
 [ "$WHAT" = all ] && bash "$HERE/validate_all.sh"

@@ -68,6 +68,10 @@ def render(gates, env=None, mutants=None, manifest=None):
         L.append("Status **%s**. %s" % (r["status"], ("Runs %s of %s expected; run status counts %s; results `%s` (sha256 `%s...`)." % (
             g(r["actual_runs"]), g(r["expected_runs"]), r["status_counts"], r.get("results_file"),
             r.get("results_sha256", "")[:12])) if r["actual_runs"] is not None else ""))
+        if r.get("retried"):
+            L.append("")
+            L.append("- RETRIED: %d run(s) stalled or did not converge on the first attempt and passed with a solver-option "
+                     "variant (circuit and stimulus unchanged): %s" % (len(r["retried"]), "; ".join(r["retried"][:12])))
         for code, msg in r["reasons"]:
             L.append("")
             L.append("- %s: %s" % (code, msg))
