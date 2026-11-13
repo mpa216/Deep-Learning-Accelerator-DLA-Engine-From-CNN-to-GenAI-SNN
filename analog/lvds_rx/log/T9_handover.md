@@ -4,7 +4,7 @@ Read this first if you are a new session continuing the LVDS receiver. It replac
 
 ## Where everything is
 
-- Git worktree: `/home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx`, branch `worktree-lvds-rx`, 17 commits ahead
+- Git worktree: `/home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx`, branch `lvds-rx` (named `worktree-lvds-rx` until 2026-11-14), 19 commits ahead
   of `main`, **local only (never pushed)**. Enter it with the EnterWorktree tool (`path`), do not create a new one.
 - All work is under `analog/lvds_rx/`. Nothing outside it is touched, except a picture gallery the owner asked for in
   `Analog/lvds_rx_gallery/` of the main checkout (a copy of `docs/figures/`).

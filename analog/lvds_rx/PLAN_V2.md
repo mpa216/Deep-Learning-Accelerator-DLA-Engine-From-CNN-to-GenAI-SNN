@@ -90,7 +90,7 @@ Severity from the reviews: B = blocker, M = major, m = minor, F = foundation fin
 |---|---|
 | `external/Book-on-gm-ID-design-main`, `$GMID_BOOK` | `/foss/designs/Analog` (read-only). Use only the GF180 kit in `starter_files_open_source_tools/gf180mcuD/`; never the closed-source `180nch/180pch` tables. |
 | venv `~/venv-gmid`, `pip install` | none: pygmid 1.2.12, numpy, scipy, matplotlib, pyyaml are system-wide in the container |
-| `docker run -v ...`, clone, `analog/lvds-rx-macro` branch | container `apic_headless` is running; worktree `/foss/designs/.claude/worktrees/lvds-rx`, branch `worktree-lvds-rx`; orchestrator commits |
+| `docker run -v ...`, clone, `analog/lvds-rx-macro` branch | container `apic_headless` is running; worktree `/foss/designs/.claude/worktrees/lvds-rx`, branch `lvds-rx` (named `worktree-lvds-rx` until 2026-11-14); orchestrator commits |
 | `.git/info/exclude` | in-tree `analog/lvds_rx/.gitignore` |
 | expects commit 6f2310f | HEAD is newer (9be761d at the start of this session); nothing to clone |
 | `DESIGN_LOG.md` as the report, `sim/plots/`, `sim/corners/summary.md` | `DESIGN_LOG.md` stays as the narrative; numbers live in generated `results/REPORT.md`; plots sit next to each spec's results (harness layout) |
@@ -157,7 +157,7 @@ Severity from the reviews: B = blocker, M = major, m = minor, F = foundation fin
 1. **Optional, one command, no downstream impact.** An early attempt overwrote one cached kit netlist. Restore it with
    `cp /home/mpa216/Desktop/APIC_Return/.claude/worktrees/lvds-rx/analog/lvds_rx/lut_regen/decks/kit_original/techsweep_nfet_03v3.spice /home/mpa216/Desktop/APIC_Return/Analog/starter_files_open_source_tools/gf180mcuD/simulation/techsweep_nfet_03v3.spice`
    (agents may not write in `/Analog`; nothing in this plan reads that file).
-2. **At the end, one yes/no each:** merge or push `worktree-lvds-rx` and tag a freeze (the orchestrator prepares the commit and a one-paragraph summary).
+2. **At the end, one yes/no each:** merge or push `lvds-rx` and tag a freeze (the orchestrator prepares the commit and a one-paragraph summary).
 3. **Only when integration is wanted (P7/P8, G6):** send the organizer email (draft in `GUIDE_FOR_YOU.md` section 8) and paste the answers back: real pad slot x-positions and pin order, LVS key semantics (`LVS_NOFLATTEN`, `LVS_SPICE_FILES`), the analog template, chip-fill rules around RES_MK, their secondary-ESD cell and package data. The macro is built so only `spec/pins.yaml` and the ESD sub-cell change with the answers.
 4. **Only if the failsafe or the full CM range matters on a real board:** name the real LVDS driver (FPGA bank, MCU or driver chip) in one sentence; otherwise the macro ships as v0 with a documented tested range.
 
