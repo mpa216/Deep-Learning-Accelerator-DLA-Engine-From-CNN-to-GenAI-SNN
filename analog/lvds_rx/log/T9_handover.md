@@ -8,6 +8,8 @@ Read this first if you are a new session continuing the LVDS receiver. It replac
   of `main`, **local only (never pushed)**. Enter it with the EnterWorktree tool (`path`), do not create a new one.
 - All work is under `analog/lvds_rx/`. Nothing outside it is touched, except a picture gallery the owner asked for in
   `Analog/lvds_rx_gallery/` of the main checkout (a copy of `docs/figures/`).
+- The owner opens the files through a visible link in the main checkout: `LVDS/lvds_rx_work` points to this
+  `analog/lvds_rx` folder (a symlink made on 2026-11-14 at the owner's request; untracked; do not remove it).
 - Not in git (lives only in this worktree's folder): `luts/` (4.3 GB, rebuild with `lut_regen/regen_all.sh`), simulation
   run directories under `sim/*/results/*/work`, `.scratch/`. Deleting the worktree loses these; committed work survives
   on the branch.
