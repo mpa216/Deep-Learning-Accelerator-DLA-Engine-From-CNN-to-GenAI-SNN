@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LVDS receiver gallery</title>
+<style>
+  :root { --ink:#1b1f24; --mute:#5a6470; --line:#d8dde3; --bg:#f6f7f9; --card:#ffffff; --accent:#0b5cad; --warn:#8a5a00; --warnbg:#fff6e0; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:1100px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:1.7rem; margin:0 0 4px; }
+  h2 { font-size:1.25rem; margin:40px 0 8px; padding-top:16px; border-top:1px solid var(--line); }
+  h3 { font-size:1.05rem; margin:24px 0 6px; }
+  p { margin:8px 0; max-width:78ch; }
+  .sub { color:var(--mute); margin-bottom:16px; }
+  figure { margin:14px 0 6px; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px; }
+  figure img { display:block; width:100%; height:auto; }
+  figcaption { color:var(--mute); font-size:0.9rem; padding:8px 4px 2px; }
+  .note { background:var(--warnbg); color:var(--warn); border:1px solid #ecd9a6; border-radius:8px; padding:10px 14px; max-width:78ch; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:760px) { .two { grid-template-columns:1fr; } }
+  table { border-collapse:collapse; margin:10px 0; font-size:0.95rem; }
+  th, td { border-bottom:1px solid var(--line); padding:6px 14px 6px 0; text-align:left; vertical-align:top; }
+  th { color:var(--mute); font-weight:600; }
+  code { background:#eceff3; padding:1px 5px; border-radius:4px; font-size:0.9em; }
+  ul { max-width:78ch; padding-left:22px; }
+</style>
+</head>
+<body>
+<main>
+<h1>LVDS receiver <code>lvds_rx_x3</code>: circuit and simulation gallery</h1>
+<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-13: schematic and pre-layout simulation only. No layout of the macro exists yet.</p>
+
+<p class="note">The schematics below were drawn by hand (by script) from the netlist <code>netlist/lvds_rx_core.spice</code>; they are not generated from it. The waveform plots are single runs at the typical corner (27 &deg;C, 3.3 V) with ideal sources, made as illustrations. The pass/fail record of the design is the regression in <code>results/</code>, not these pictures.</p>
+
+<h2>1. What the circuit does</h2>
+<p>An LVDS link sends each bit as a small voltage difference between two wires: about 0.1 to 0.35 V, sitting on a level anywhere between 0.05 and 2.35 V. The receiver looks only at which wire is higher and turns that into a normal 0 V / 3.3 V logic signal for the digital chip. The macro holds three identical receivers (lanes) that share one bias block, plus an enable pin (EN) that switches everything off.</p>
+<figure><img src="block_diagram.png" alt="Block diagram of one receiver lane">
+<figcaption>One lane. The signal passes through three stages; the bias block supplies the reference voltages to all three lanes.</figcaption></figure>
+
+<h2>2. The schematic, stage by stage</h2>
+
+<h3>Stage 1: input stage</h3>
+<p><b>Job:</b> accept the two input wires at any level from near 0 V to 2.35 V, and enlarge their difference.</p>
+<ul>
+<li><b>Two input pairs.</b> A PMOS pair (Mp1a/b) works when the inputs are near ground; an NMOS pair (Mn1a/b) works when the inputs are high. Together they cover the whole range. This is what "rail-to-rail" means.</li>
+<li><b>Dump devices</b> (Mpda/b, Mnda/b, gates on VREF = about 1.6 V). When the inputs are high, the PMOS dump devices take the current the PMOS pair cannot use; when the inputs are low, the NMOS dump devices do the same for the NMOS pair. The result is that the gain stays almost the same over the whole input range instead of doubling in the middle.</li>
+<li><b>Folded branch</b> (M3 sinks, M5 cascodes). The PMOS pair's signal current is turned around ("folded") so it lands on the same load as the NMOS pair's.</li>
+<li><b>Load resistors</b> RLa/RLb turn the summed signal current into the output voltages OA and OB.</li>
+</ul>
+<figure><img src="schematic_stage1.png" alt="Stage 1 schematic">
+<figcaption>Stage 1 (<code>lvds_pre</code>). Blue names are connections to other sheets.</figcaption></figure>
+
+<h3>Stage 2: comparator with hysteresis</h3>
+<p><b>Job:</b> make a firm decision and not change its mind on noise.</p>
+<ul>
+<li>A differential pair (Ms1/Ms2) compares OA and OB.</li>
+<li>Each side has two PMOS loads: a diode-connected one (Mld) and a cross-coupled one (Mlc) driven by the <i>other</i> side. The cross-coupled devices are a little stronger, so once the stage has decided, it holds that decision until the input moves a few millivolts past zero the other way. That gap is the hysteresis.</li>
+<li>Resistors Rs1/Rs2 make the size of that gap less dependent on the transistors.</li>
+</ul>
+<figure><img src="schematic_stage2.png" alt="Stage 2 schematic">
+<figcaption>Stage 2 (<code>lvds_hyst</code>).</figcaption></figure>
+
+<h3>Stage 3: output</h3>
+<p><b>Job:</b> turn the two-wire decision into one full-swing logic wire and drive it into the chip.</p>
+<ul>
+<li>Mp3a/b with the mirror Mn3a/b combine D2A and D2B into one node (d3) that swings from rail to rail.</li>
+<li>The NAND gate forces the output LOW when EN = 0.</li>
+<li>Three inverters, each larger than the last, give the output enough strength.</li>
+</ul>
+<figure><img src="schematic_stage3.png" alt="Stage 3 schematic">
+<figcaption>Stage 3 (<code>lvds_out</code>). The NAND and inverters are shown as gate symbols; each is one PMOS/NMOS pair (two pairs for the NAND).</figcaption></figure>
+
+<h3>Shared bias</h3>
+<p><b>Job:</b> produce the four reference voltages the lanes need.</p>
+<ul>
+<li>Resistor Rrb and the diode-connected Mbn set a reference current; mirrors turn it into VBN and VBP (which set the currents in every stage) and VB2 (for the cascodes).</li>
+<li>A resistor divider makes VREF = 0.48 &times; VDD for the dump devices; Cvref keeps it quiet.</li>
+<li>EN = 0 opens every branch, so the macro draws almost no current when off.</li>
+</ul>
+<p><b>Known weakness:</b> this simple bias lets the currents change with supply, temperature and process (up to +60 % at the fast, hot, high-supply corner). It is the cause of the saturation-margin relaxation (decision D-012) that still needs review. A constant-gm bias is the planned upgrade if it turns out to be needed.</p>
+<figure><img src="schematic_bias.png" alt="Bias schematic">
+<figcaption>Bias (<code>lvds_bias</code>), one copy for all three lanes.</figcaption></figure>
+<p>Not drawn: each input pin also passes through a small protection cell (a series resistor and two diodes). That cell is flagged <b>unqualified</b>: it has not been tested as ESD protection.</p>
+
+<h2>3. Simulation pictures</h2>
+
+<h3>A bit pattern travelling through the three stages</h3>
+<figure><img src="wave_transient.png" alt="Transient waveforms">
+<figcaption>Typical corner, 100 Mb/s, &plusmn;100 mV input (the smallest the standard allows) at 1.2 V. Delay from input crossing to output: about 3.5 ns in this run.</figcaption></figure>
+
+<h3>Hysteresis loop</h3>
+<figure><img src="wave_hysteresis.png" alt="Hysteresis loop">
+<figcaption>The output switches HIGH when the input difference rises past about +6.6 mV and back LOW when it falls past about &minus;6.6 mV: a 13 mV gap, nearly identical at the three input levels. The standard requires a decision by &plusmn;100 mV.</figcaption></figure>
+
+<h3>Stage-1 gain versus frequency</h3>
+<figure><img src="wave_stage1_gain.png" alt="Stage 1 gain">
+<figcaption>Small-signal gain about 17 dB (7.2 times) up to roughly 200 MHz, almost the same at the three input levels: the dump devices are doing their job. Typical corner only; across all corners the regression measured a minimum of 4.78.</figcaption></figure>
+
+<h3>From the regression: eye diagrams</h3>
+<div class="two">
+<figure><img src="eye_tt_200Mbps_vid100mV.png" alt="Eye diagram typical">
+<figcaption>Typical corner, 200 Mb/s, &plusmn;100 mV. All bits overlaid: the edges land in the same place (51 ps spread), so the "eye" is wide open.</figcaption></figure>
+<figure><img src="eye_ss125c_200Mbps_vid100mV.png" alt="Eye diagram slow hot">
+<figcaption>Slow transistors, 125 &deg;C, 3.0 V: the hardest corner for speed.</figcaption></figure>
+</div>
+<p class="note">These two eye diagrams come from the first full regression, which ran before the last bias adjustment (one bias voltage changed, stage-1 gain 5.10 to 4.78 minimum). They have not been re-run on the current sizing.</p>
+
+<h3>From the regression: Monte Carlo histograms (current sizing)</h3>
+<div class="two">
+<figure><img src="hist_offset_tt.png" alt="Offset histogram">
+<figcaption>Input offset of 1,000 randomly mismatched copies at the typical corner: spread (sigma) 3.1 mV. Green lines are the &plusmn;95 mV budget.</figcaption></figure>
+<figure><img src="hist_hysteresis_ff_m40c.png" alt="Hysteresis histogram">
+<figcaption>Hysteresis of 100 copies at the fast, cold, 3.6 V corner. The green lines are the original 8 to 25 mV window; a few copies fall just under 8 mV, which is why the window was widened to 6 to 35 mV (decision D-009, still to be reviewed).</figcaption></figure>
+</div>
+
+<h2>4. Where things stand</h2>
+<table>
+<tr><th>Item</th><th>State on 2026-11-13</th></tr>
+<tr><td>Schematic (netlist) and sizing</td><td>Done, not yet frozen</td></tr>
+<tr><td>Operating point, gain, trip point, offset, hysteresis</td><td>Pass at all corners and Monte Carlo on the current sizing (some limits relaxed, pending review)</td></tr>
+<tr><td>Delay, eye, supply noise, input range, lane crosstalk, package</td><td>Passed on the previous sizing; re-run deferred</td></tr>
+<tr><td>Idle and enable behaviour</td><td>Re-run in progress</td></tr>
+<tr><td>Layout</td><td>Building blocks only (29 small cells, DRC/LVS clean); the lane and macro are not drawn</td></tr>
+</table>
+<p class="sub">Files: <code>docs/figures/draw_schematic.py</code> draws the schematics, <code>docs/figures/make_waveforms.py</code> runs and plots the three illustration simulations.</p>
+</main>
+</body>
+</html>
