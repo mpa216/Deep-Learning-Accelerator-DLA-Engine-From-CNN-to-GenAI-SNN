@@ -1,0 +1,195 @@
+{
+ "tier": "full",
+ "since": 1794577136.0,
+ "benches": [
+  {
+   "bench": "TB1:helper:tb1_np.json",
+   "planned": 2209,
+   "stored": 2209,
+   "match": 2209,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB1",
+   "planned": 987,
+   "stored": 987,
+   "match": 987,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB2",
+   "planned": 315,
+   "stored": 315,
+   "match": 315,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB3_trip",
+   "planned": 270,
+   "stored": 270,
+   "match": 270,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB3_off",
+   "planned": 15000,
+   "stored": 15000,
+   "match": 15000,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB3_hmc",
+   "planned": 600,
+   "stored": 600,
+   "match": 600,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB4",
+   "planned": 630,
+   "stored": 630,
+   "match": 70,
+   "ingredients": 560,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB4b",
+   "planned": 70,
+   "stored": 70,
+   "match": 70,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB5",
+   "planned": 180,
+   "stored": 180,
+   "match": 60,
+   "ingredients": 120,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB6",
+   "planned": 20,
+   "stored": 20,
+   "match": 20,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB7",
+   "planned": 945,
+   "stored": 945,
+   "match": 0,
+   "ingredients": 945,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0,
+   "retried": 1
+  },
+  {
+   "bench": "TB7_mc",
+   "planned": 1500,
+   "stored": 1500,
+   "match": 0,
+   "ingredients": 1500,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB8",
+   "planned": 270,
+   "stored": 270,
+   "match": 270,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB9:helper:tb9_input_hot.json",
+   "planned": 12,
+   "stored": 12,
+   "match": 12,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB9",
+   "planned": 180,
+   "stored": 180,
+   "match": 180,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB10",
+   "planned": 10,
+   "stored": 10,
+   "match": 10,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  },
+  {
+   "bench": "TB12",
+   "planned": 40,
+   "stored": 40,
+   "match": 40,
+   "ingredients": 0,
+   "stale": 0,
+   "missing": 0,
+   "extra": 0,
+   "not_ok": 0
+  }
+ ],
+ "all_current": true
+}

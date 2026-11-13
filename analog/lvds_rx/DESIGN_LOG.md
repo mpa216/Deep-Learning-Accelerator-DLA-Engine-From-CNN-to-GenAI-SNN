@@ -362,3 +362,61 @@ inverter chain 61.5 x 22.3. Estimated lane: leaf boxes 6 150 um2, 8 300 um2 with
 **Also done.** The LVS reference now draws the Vref capacitor as the layout does, an `nfet_03v3` w 20 u, l 25.13 u with drain = source = bulk = VSS (T8b request); the simulation netlist still uses `cap_nmos_03v3`. Hierarchical-vs-flat Netgen check: 158 devices, 77 nets, match uniquely.
 
 **Where.** Benches `sim/tb6_cm_supply ... sim/tb10_lanes`, shared helper `sim/lib_tb.py`, decisions D-006 to D-008 in `spec/decisions.yaml`, report `results/REPORT.md`, hand-over `log/T4_report.md`.
+
+## 2026-11-14 T5 closed, T6 audit, T7 sizing freeze (done by the orchestrating session, no agents)
+
+**What happened to T5.** The T5 agent ran its first full regression on 2026-11-12 (7.8 h, 13 pass / 6 fail), changed one
+sizing value (`vr_tt` 1.25 to 1.17), built the 15 process x temperature lookup tables, upgraded the harness (retry of
+stalled runs) and wrote decisions D-009 to D-014. A PC crash killed it three hours into its final regression, before any
+report. State note: `log/T5_state.md`.
+
+**How it was finished.** The owner asked for less machine time, so the final regression was not restarted from zero.
+Results already on disk were kept where they were provably current, and only the rest was simulated (4 parallel jobs):
+
+| Step | Benches | Wall time |
+|---|---|---|
+| kept from the interrupted run | TB1, TB2, TB3_trip, TB3_off | 0 |
+| re-run, previously failing | TB7, TB7_mc, TB8 | 1 h 57 min |
+| quick tier, then full tier | TB4, TB4b, TB5, TB6, TB9, TB10, TB12 | 50 min + 67 min |
+| re-run as a reproducibility test | TB3_hmc | 7 min (415 of 600 runs came from the interrupted run) |
+
+**Result: the full tier is green on the current sizing.** 17 gates pass, TB11 is not applicable, 21,017 gated runs, none
+failed. Record in `results/full_2026-11-14/`.
+
+| Quantity | Measured (all corners unless noted) | Limit |
+|---|---|---|
+| Stage-1 gain | 4.78 to 10.7 | at least 4 |
+| Hysteresis (600 Monte Carlo runs, two extreme corners) | 6.7 to 22.4 mV | 6 to 35 mV (was 8 to 25, D-009) |
+| Input offset (15,000 Monte Carlo runs) | sigma 3.1 to 3.3 mV, extremes -14.0 / +11.9 mV | sigma 5 mV, window 95 mV |
+| Propagation delay (630 runs) | 2.0 to 5.6 ns | per `spec.yaml` timing |
+| Idle | no oscillation in 945 + 1,500 runs; 2 single settling flips over by 199 ns | none; flip over by 500 ns |
+| Enable | shortest pulse with supply up 9.9 ns; off-state output at most 0.28 V | 2 ns; 0.33 V |
+| Saturation margin | at least 52 mV at the seven design corners; worst -84.5 mV elsewhere | 50 mV; -100 mV (waiver D-012) |
+
+**Audit (T6).** `results/AUDIT_1.md`, verdict PASS with findings. It was not the clean-room re-run the plan describes;
+the note says exactly what replaced it. Main points:
+- Sizing, netlist and device table rebuild byte-identical from the scripts.
+- The LVS reference netlists were stale after the T5 sizing change (resistor lengths); regenerated. The RL and Rs layout
+  leaves must be rebuilt.
+- The harness's cache hash is unstable for benches with generated stimulus files. It cannot reuse an outdated result,
+  it only wastes a re-simulation. `tools/audit_hashes.py` checks staleness properly.
+- `run_all.py --stage gates` prints PASS for results from an older sizing. Run `tools/audit_hashes.py` before trusting
+  a gate table.
+- Mutation tests: 11 of 11 detected, after repairing one broken test (`frozen_edit`).
+- Independent decks agree with the regression (gain 7.19 / 7.25 / 7.43, hysteresis about 13 mV, delay about 3.5 ns).
+- Decisions D-007 to D-012 and D-014 accepted. D-012 (saturation margin, outside the pre-authorised ladder) is accepted
+  with conditions: re-check the fast-hot-3.6 V corner after extraction; if gain or timing fails there, take the
+  constant-gm bias instead of another waiver.
+
+**Freeze (T7).** `sizing/FROZEN.md` lists the hashes. Layout may now read `layout/device_table.json`.
+
+**New files.** `tools/run_only.sh` (detached partial regression), `tools/audit_hashes.py`, `tools/audit_compare.py`,
+`docs/figures/` (hand-drawn schematics from the netlist, illustration waveforms, gallery page `index.html`).
+
+**What surprised me.** Parallelism was never the lever for the 7.8-hour regression: the machine has four physical cores
+and was already saturated. Two thirds of the time went into 15,000 offset runs and into 19 stalled simulations waiting
+out a 30-minute timeout. Resuming from finished benches and the shorter timeout brought the remaining work to about four
+hours at a lower job count.
+
+**Next.** T9: one lane in layout (regenerate resistor leaves first, fix the inverter finger count, add the power-strap
+planner).

@@ -28,8 +28,8 @@ DXL0.XESDP.DESD_L VSS xl0.gp diode_nd2ps_03v3 area=40p pj=26u
 XXL0.XESDN.RESD RX0_N xl0.gn VDD ppolyf_u r_width=5u r_length=1.8u
 DXL0.XESDN.DESD_H xl0.gn VDD diode_pd2nw_03v3 area=40p pj=26u
 DXL0.XESDN.DESD_L VSS xl0.gn diode_nd2ps_03v3 area=40p pj=26u
-XXL0.XPRE.RLA VDD xl0.oa VSS ppolyf_u_1k r_width=2u r_length=19.664u
-XXL0.XPRE.RLB VDD xl0.ob VSS ppolyf_u_1k r_width=2u r_length=19.664u
+XXL0.XPRE.RLA VDD xl0.oa VSS ppolyf_u_1k r_width=2u r_length=18.395u
+XXL0.XPRE.RLB VDD xl0.ob VSS ppolyf_u_1k r_width=2u r_length=18.395u
 XXL0.XPRE.MPT xl0.xpre.tp vbp VDD VDD pfet_03v3 w=110u nf=22 l=1u
 XXL0.XPRE.MP1A xl0.xpre.fa xl0.gp xl0.xpre.tp xl0.xpre.tp pfet_03v3 w=105.6u nf=22 l=0.4u
 XXL0.XPRE.MP1B xl0.xpre.fb xl0.gn xl0.xpre.tp xl0.xpre.tp pfet_03v3 w=105.6u nf=22 l=0.4u
@@ -47,8 +47,8 @@ XXL0.XPRE.MNDB xl0.ob vref xl0.xpre.tn VSS nfet_03v3 w=47.5u nf=10 l=0.5u
 XXL0.XHYST.MT2 xl0.xhyst.ts vbn VSS VSS nfet_03v3 w=15u nf=6 l=1u
 XXL0.XHYST.MS1 xl0.d2a xl0.oa xl0.xhyst.sa VSS nfet_03v3 w=11.58u nf=3 l=0.5u
 XXL0.XHYST.MS2 xl0.d2b xl0.ob xl0.xhyst.sb VSS nfet_03v3 w=11.58u nf=3 l=0.5u
-XXL0.XHYST.RS1 xl0.xhyst.sa xl0.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=9.315u
-XXL0.XHYST.RS2 xl0.xhyst.sb xl0.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=9.315u
+XXL0.XHYST.RS1 xl0.xhyst.sa xl0.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=8.862u
+XXL0.XHYST.RS2 xl0.xhyst.sb xl0.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=8.862u
 XXL0.XHYST.MLD1 xl0.d2a xl0.d2a VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL0.XHYST.MLD2 xl0.d2b xl0.d2b VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL0.XHYST.MLC1 xl0.d2a xl0.d2b VDD VDD pfet_03v3 w=10u nf=5 l=0.4u
@@ -75,8 +75,8 @@ DXL1.XESDP.DESD_L VSS xl1.gp diode_nd2ps_03v3 area=40p pj=26u
 XXL1.XESDN.RESD RX1_N xl1.gn VDD ppolyf_u r_width=5u r_length=1.8u
 DXL1.XESDN.DESD_H xl1.gn VDD diode_pd2nw_03v3 area=40p pj=26u
 DXL1.XESDN.DESD_L VSS xl1.gn diode_nd2ps_03v3 area=40p pj=26u
-XXL1.XPRE.RLA VDD xl1.oa VSS ppolyf_u_1k r_width=2u r_length=19.664u
-XXL1.XPRE.RLB VDD xl1.ob VSS ppolyf_u_1k r_width=2u r_length=19.664u
+XXL1.XPRE.RLA VDD xl1.oa VSS ppolyf_u_1k r_width=2u r_length=18.395u
+XXL1.XPRE.RLB VDD xl1.ob VSS ppolyf_u_1k r_width=2u r_length=18.395u
 XXL1.XPRE.MPT xl1.xpre.tp vbp VDD VDD pfet_03v3 w=110u nf=22 l=1u
 XXL1.XPRE.MP1A xl1.xpre.fa xl1.gp xl1.xpre.tp xl1.xpre.tp pfet_03v3 w=105.6u nf=22 l=0.4u
 XXL1.XPRE.MP1B xl1.xpre.fb xl1.gn xl1.xpre.tp xl1.xpre.tp pfet_03v3 w=105.6u nf=22 l=0.4u
@@ -94,8 +94,8 @@ XXL1.XPRE.MNDB xl1.ob vref xl1.xpre.tn VSS nfet_03v3 w=47.5u nf=10 l=0.5u
 XXL1.XHYST.MT2 xl1.xhyst.ts vbn VSS VSS nfet_03v3 w=15u nf=6 l=1u
 XXL1.XHYST.MS1 xl1.d2a xl1.oa xl1.xhyst.sa VSS nfet_03v3 w=11.58u nf=3 l=0.5u
 XXL1.XHYST.MS2 xl1.d2b xl1.ob xl1.xhyst.sb VSS nfet_03v3 w=11.58u nf=3 l=0.5u
-XXL1.XHYST.RS1 xl1.xhyst.sa xl1.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=9.315u
-XXL1.XHYST.RS2 xl1.xhyst.sb xl1.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=9.315u
+XXL1.XHYST.RS1 xl1.xhyst.sa xl1.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=8.862u
+XXL1.XHYST.RS2 xl1.xhyst.sb xl1.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=8.862u
 XXL1.XHYST.MLD1 xl1.d2a xl1.d2a VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL1.XHYST.MLD2 xl1.d2b xl1.d2b VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL1.XHYST.MLC1 xl1.d2a xl1.d2b VDD VDD pfet_03v3 w=10u nf=5 l=0.4u
@@ -122,8 +122,8 @@ DXL2.XESDP.DESD_L VSS xl2.gp diode_nd2ps_03v3 area=40p pj=26u
 XXL2.XESDN.RESD RX2_N xl2.gn VDD ppolyf_u r_width=5u r_length=1.8u
 DXL2.XESDN.DESD_H xl2.gn VDD diode_pd2nw_03v3 area=40p pj=26u
 DXL2.XESDN.DESD_L VSS xl2.gn diode_nd2ps_03v3 area=40p pj=26u
-XXL2.XPRE.RLA VDD xl2.oa VSS ppolyf_u_1k r_width=2u r_length=19.664u
-XXL2.XPRE.RLB VDD xl2.ob VSS ppolyf_u_1k r_width=2u r_length=19.664u
+XXL2.XPRE.RLA VDD xl2.oa VSS ppolyf_u_1k r_width=2u r_length=18.395u
+XXL2.XPRE.RLB VDD xl2.ob VSS ppolyf_u_1k r_width=2u r_length=18.395u
 XXL2.XPRE.MPT xl2.xpre.tp vbp VDD VDD pfet_03v3 w=110u nf=22 l=1u
 XXL2.XPRE.MP1A xl2.xpre.fa xl2.gp xl2.xpre.tp xl2.xpre.tp pfet_03v3 w=105.6u nf=22 l=0.4u
 XXL2.XPRE.MP1B xl2.xpre.fb xl2.gn xl2.xpre.tp xl2.xpre.tp pfet_03v3 w=105.6u nf=22 l=0.4u
@@ -141,8 +141,8 @@ XXL2.XPRE.MNDB xl2.ob vref xl2.xpre.tn VSS nfet_03v3 w=47.5u nf=10 l=0.5u
 XXL2.XHYST.MT2 xl2.xhyst.ts vbn VSS VSS nfet_03v3 w=15u nf=6 l=1u
 XXL2.XHYST.MS1 xl2.d2a xl2.oa xl2.xhyst.sa VSS nfet_03v3 w=11.58u nf=3 l=0.5u
 XXL2.XHYST.MS2 xl2.d2b xl2.ob xl2.xhyst.sb VSS nfet_03v3 w=11.58u nf=3 l=0.5u
-XXL2.XHYST.RS1 xl2.xhyst.sa xl2.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=9.315u
-XXL2.XHYST.RS2 xl2.xhyst.sb xl2.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=9.315u
+XXL2.XHYST.RS1 xl2.xhyst.sa xl2.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=8.862u
+XXL2.XHYST.RS2 xl2.xhyst.sb xl2.xhyst.ts VSS ppolyf_u_1k r_width=2u r_length=8.862u
 XXL2.XHYST.MLD1 xl2.d2a xl2.d2a VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL2.XHYST.MLD2 xl2.d2b xl2.d2b VDD VDD pfet_03v3 w=8u nf=4 l=0.4u
 XXL2.XHYST.MLC1 xl2.d2a xl2.d2b VDD VDD pfet_03v3 w=10u nf=5 l=0.4u

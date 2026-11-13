@@ -1,20 +1,23 @@
 {
- "generated": "2026-11-12 08:46:36",
- "tier": "smoke",
+ "generated": "2026-11-13 18:44:16",
+ "tier": "full",
  "phases": [
-  "env"
+  "prelayout"
  ],
  "git": {
-  "commit": "532262d",
+  "commit": "a8d771d",
   "dirty": null
  },
  "gates_sha256": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5",
  "spec_sha256": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
  "summary": {
-  "PASS": 2
+  "PASS": 17,
+  "NOT_APPLICABLE": 1
  },
- "cpu_min": 0.0,
- "flags": [],
+ "cpu_min": 1690.0,
+ "flags": [
+  "full-tier CPU time 1690 min is over 2.0x the 180 min estimate"
+ ],
  "green": true,
  "waivers": [
   {
@@ -210,16 +213,16 @@
   }
  ],
  "gates": {
-  "ENV": {
-   "id": "ENV",
-   "title": "make check: tools, LUT load + self-test, harness tests, lint, OMP exports",
-   "phase": "env",
+  "SIZE": {
+   "id": "SIZE",
+   "title": "sizing script asserts, current tally, nf-not-m",
+   "phase": "prelayout",
    "status": "PASS",
    "reasons": [],
    "checks": [
     {
      "kind": "json_value",
-     "metric": "lut_selftest.failed",
+     "metric": "asserts_failed",
      "agg": "value",
      "reasons": [],
      "n": 1,
@@ -229,47 +232,7 @@
     },
     {
      "kind": "json_value",
-     "metric": "lut_selftest.passed",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 296.0,
-     "limit": "296 .. +inf",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "lut_load.vgs_v",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 0.8015774025430232,
-     "limit": "0.7996 .. 0.8036",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "lut_load.ft_hz",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 3297840696.4033084,
-     "limit": "3.25e+09 .. 3.35e+09",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "lut_load.id_w_a_per_um",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 2.702363910027819e-06,
-     "limit": "2.67e-06 .. 2.74e-06",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "harness_tests.failures",
+     "metric": "nf_m_violations",
      "agg": "value",
      "reasons": [],
      "n": 1,
@@ -279,37 +242,7 @@
     },
     {
      "kind": "json_value",
-     "metric": "harness_tests.run",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 49.0,
-     "limit": "45 .. +inf",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "lint.failed",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 0.0,
-     "limit": "== 0",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "omp.ok",
-     "agg": "value",
-     "reasons": [],
-     "n": 1,
-     "worst": 1.0,
-     "limit": "== 1",
-     "status": "PASS"
-    },
-    {
-     "kind": "json_value",
-     "metric": "layout_toy.ok",
+     "metric": "tally_ok",
      "agg": "value",
      "reasons": [],
      "n": 1,
@@ -321,112 +254,1182 @@
    "expected_runs": null,
    "actual_runs": null,
    "status_counts": {},
-   "results_file": "results/env.json",
-   "results_sha256": "eb76591f624e7742a03864cdd0a76ff2dc77a691955f0d4b8a37328deea4c482"
+   "results_file": "results/sizing.json",
+   "results_sha256": "ea4dda7dbcd630e1f6e698f9f40daaaad32ec9f61490781486772b137b5874aa"
   },
-  "SELFTEST": {
-   "id": "SELFTEST",
-   "title": "placeholder testbench: PDK resistor/MOS over the harness corner sets (proves resistor corners follow process, wnflag set)",
-   "phase": "env",
+  "TB0": {
+   "id": "TB0",
+   "title": "analog pad: C_pad and pin leakage (built before T0)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "json_value",
+     "metric": "rows[*].C_100MHz_fF",
+     "agg": "count",
+     "reasons": [],
+     "n": 15,
+     "worst": 15.0,
+     "limit": "== 15",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "rows[*].C_100MHz_fF",
+     "agg": "max",
+     "reasons": [],
+     "n": 15,
+     "worst": 1.1503344858763078e-12,
+     "limit": "-inf .. 1.2e-12",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "rows[*].I_leak_A",
+     "agg": "abs_max",
+     "reasons": [],
+     "n": 15,
+     "worst": 4.4726e-11,
+     "limit": "-inf .. 1e-06",
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": null,
+   "actual_runs": null,
+   "status_counts": {},
+   "results_file": "sim/tb0_pad/results/tb0_results.json",
+   "results_sha256": "48f878066c9d70bc62de5bc2b8466e793f7843ac743fdbb4fd0d63d77621a1c4"
+  },
+  "TB1": {
+   "id": "TB1",
+   "title": "operating point: headroom, LUT-vs-SPICE, stage-1 CM, currents, node range",
+   "phase": "prelayout",
    "status": "PASS",
    "reasons": [],
    "checks": [
     {
      "kind": "per_run",
-     "metric": "r_ohm",
+     "metric": "min_headroom_v",
      "where": {
       "corner": [
        "tt_27c_3v30",
+       "ss_125c_3v00",
+       "ff_m40c_3v60",
        "fs_27c_3v30",
-       "sf_27c_3v30"
+       "sf_27c_3v30",
+       "ss_125c_3v00_xrff",
+       "ff_m40c_3v60_xrss"
       ]
      },
-     "limit": "1150 .. 1250",
-     "n": 6,
+     "limit": "0.05 .. +inf",
+     "n": 147,
      "reasons": [],
-     "worst": 1201.85,
-     "worst_run": "tt_27c_3v30__vg1.2",
-     "margin": 48.15000000000009,
+     "worst": 0.0524596,
+     "worst_run": "ss_125c_3v00_xrff__vic1.2_vid-0.1",
+     "margin": 0.0024595999999999993,
      "status": "PASS"
     },
     {
      "kind": "per_run",
-     "metric": "r_ohm",
-     "where": {
-      "corner": "ss_125c_3v00"
-     },
-     "limit": "1200 .. 1330",
-     "n": 2,
+     "metric": "min_headroom_v",
+     "where": null,
+     "limit": "-0.1 .. +inf",
+     "n": 987,
      "reasons": [],
-     "worst": 1262.92,
-     "worst_run": "ss_125c_3v00__vg1.2",
-     "margin": 62.92000000000007,
+     "worst": -0.0845452,
+     "worst_run": "ff_125c_3v60__vic0.05_vid-0.1",
+     "margin": 0.015454800000000005,
      "status": "PASS"
     },
     {
      "kind": "per_run",
-     "metric": "r_ohm",
-     "where": {
-      "corner": "ff_m40c_3v60"
-     },
-     "limit": "1130 .. 1240",
-     "n": 2,
+     "metric": "gmid_err",
+     "where": null,
+     "limit": "-inf .. 0.1",
+     "n": 987,
      "reasons": [],
-     "worst": 1181.79,
-     "worst_run": "ff_m40c_3v60__vg1.2",
-     "margin": 51.789999999999964,
+     "worst": 0.029237202652705276,
+     "worst_run": "ss_m40c_3v60__vic1.8_vid-0.1",
+     "margin": 0.07076279734729474,
      "status": "PASS"
     },
     {
      "kind": "per_run",
-     "metric": "r_ohm",
-     "where": {
-      "corner": "ss_125c_3v00_xrff"
-     },
-     "limit": "820 .. 940",
-     "n": 2,
+     "metric": "id_err",
+     "where": null,
+     "limit": "-inf .. 0.1",
+     "n": 987,
      "reasons": [],
-     "worst": 879.104,
-     "worst_run": "ss_125c_3v00_xrff__vg1.2",
-     "margin": 59.10400000000004,
+     "worst": 0.03457944588140727,
+     "worst_run": "ff_m40c_3v60_xrss__vic0.05_vid-0.1",
+     "margin": 0.06542055411859274,
      "status": "PASS"
     },
     {
      "kind": "per_run",
-     "metric": "r_ohm",
-     "where": {
-      "corner": "ff_m40c_3v60_xrss"
-     },
-     "limit": "1550 .. 1700",
-     "n": 2,
+     "metric": "vgs_err_v",
+     "where": null,
+     "limit": "-inf .. 0.03",
+     "n": 987,
      "reasons": [],
-     "worst": 1623.49,
-     "worst_run": "ff_m40c_3v60_xrss__vg1.2",
-     "margin": 73.49000000000001,
+     "worst": 0.008643985595017334,
+     "worst_run": "ss_m40c_3v60__vic1.8_vid-0.1",
+     "margin": 0.021356014404982665,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "s1_cm_dev_v",
+     "where": null,
+     "limit": "-inf .. 0.15",
+     "n": 987,
+     "reasons": [],
+     "worst": 0.012210000000000054,
+     "worst_run": "fs_m40c_3v30__vic0.05_vid0.0",
+     "margin": 0.13778999999999994,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "np_overlap_v",
+     "where": null,
+     "limit": "0.25 .. +inf",
+     "n": 987,
+     "reasons": [],
+     "worst": 0.6795177000479158,
+     "worst_run": "ss_125c_3v00_xrff__vic0.05_vid-0.1",
+     "margin": 0.4295177000479158,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "vnode_min_v",
+     "where": null,
+     "limit": "-0.3 .. +inf",
+     "n": 987,
+     "reasons": [],
+     "worst": 2.82793e-14,
+     "worst_run": "ss_m40c_3v00__vic0.05_vid-0.1",
+     "margin": 0.30000000000002824,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "vnode_over_vdd_v",
+     "where": null,
+     "limit": "-inf .. 0.3",
+     "n": 987,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_m40c_3v00__vic0.05_vid-0.1",
+     "margin": 0.3,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "model_warnings",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 987,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_m40c_3v00__vic0.05_vid-0.1",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "i_lane_a",
+     "where": null,
+     "limit": "-inf .. 0.0015",
+     "n": 987,
+     "reasons": [],
+     "worst": 0.0008190954333333333,
+     "worst_run": "ff_125c_3v60__vic1.8_vid-0.1",
+     "margin": 0.0006809045666666667,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "i_bias_a",
+     "where": null,
+     "limit": "-inf .. 0.0003",
+     "n": 987,
+     "reasons": [],
+     "worst": 0.0002555837,
+     "worst_run": "ff_125c_3v60__vic0.05_vid-0.1",
+     "margin": 4.441629999999997e-05,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 987,
+   "actual_runs": 987,
+   "status_counts": {
+    "ok": 987
+   },
+   "results_file": "sim/tb1_op/results/tb1_op/results.json",
+   "results_sha256": "e6587ff276dfce8b2d8938a09a3323366acfd108f2a8e893c6f310a86f9cd7eb",
+   "cpu_s": 538.3,
+   "retried": []
+  },
+  "TB2": {
+   "id": "TB2",
+   "title": "AC: stage-1 gain, bandwidth",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "a1",
+     "where": {
+      "vic": [
+       0.05,
+       2.35
+      ]
+     },
+     "limit": "4 .. +inf",
+     "n": 90,
+     "reasons": [],
+     "worst": 4.77847431,
+     "worst_run": "ff_125c_3v60__vic0.05",
+     "margin": 0.77847431,
+     "status": "PASS"
+    },
+    {
+     "kind": "spread",
+     "metric": "a1",
+     "over": "vic",
+     "mode": "ratio",
+     "where": null,
+     "limit": "-inf .. 2.2",
+     "n": 45,
+     "reasons": [],
+     "worst": 1.5920003617221496,
+     "worst_run": "('ff_125c_3v60',)",
+     "margin": 0.6079996382778505,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "f3db_stage_over_dr",
+     "where": null,
+     "limit": "0.8 .. +inf",
+     "n": 315,
+     "reasons": [],
+     "worst": 0.8364360750916122,
+     "worst_run": "ss_125c_3v00__vic2.35",
+     "margin": 0.036436075091612175,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "f3db_chain_hz",
+     "where": null,
+     "limit": "5e+07 .. +inf",
+     "n": 315,
+     "reasons": [],
+     "worst": 56439673.9841103,
+     "worst_run": "ss_125c_3v00__vic2.35",
+     "margin": 6439673.984110303,
      "status": "PASS"
     },
     {
      "kind": "report",
-     "metric": "idsat_a",
+     "metric": "cmrr_db",
      "where": null,
      "limit": "reported",
-     "n": 14,
+     "n": 315,
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 0.000435399,
-     "max": 0.00978911,
-     "mean": 0.004129755071428571
+     "min": 46.45959489275932,
+     "max": 53.72423689064493,
+     "mean": 50.517411959750376
+    },
+    {
+     "kind": "report",
+     "metric": "psrr_db",
+     "where": null,
+     "limit": "reported",
+     "n": 315,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 12.690710725598837,
+     "max": 19.92102265344622,
+     "mean": 16.391987869889515
     }
    ],
-   "expected_runs": 14,
-   "actual_runs": 14,
+   "expected_runs": 315,
+   "actual_runs": 315,
    "status_counts": {
-    "ok": 14
+    "ok": 315
    },
-   "results_file": "sim/tb_selftest/results/tb_selftest/results.json",
-   "results_sha256": "ba68f067238dc079e78ed63e12d14116f726b45f07b165c0c435a04bc296696e",
-   "cpu_s": 1.1,
+   "results_file": "sim/tb2_ac/results/tb2_ac/results.json",
+   "results_sha256": "9788a5ecf2d4bc1d15f4c7ebc85183dca50981d0710b4c2490e3eeb3488ef212",
+   "cpu_s": 204.3,
+   "retried": []
+  },
+  "TB3_trip": {
+   "id": "TB3_trip",
+   "title": "hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "vh_v",
+     "where": null,
+     "limit": "0.006 .. 0.035",
+     "n": 270,
+     "reasons": [],
+     "worst": 0.010099999999999987,
+     "worst_run": "sf_m40c_3v00__vic0.05_sweep0",
+     "margin": 0.004099999999999987,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "dvh_dvdd",
+     "where": null,
+     "limit": "reported",
+     "n": 270,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": -0.00033333333343302013,
+     "max": 0.007999999996452008,
+     "mean": 0.0003777777751485852
+    },
+    {
+     "kind": "report",
+     "metric": "dvtrip_dvdd",
+     "where": null,
+     "limit": "reported",
+     "n": 270,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": -4.975649348556063e-10,
+     "max": 1.089889636873842e-10,
+     "mean": 1.2722278220623483e-12
+    }
+   ],
+   "expected_runs": 270,
+   "actual_runs": 270,
+   "status_counts": {
+    "ok": 270
+   },
+   "results_file": "sim/tb3_trip/results/tb3_trip/results.json",
+   "results_sha256": "7201c92f5f589d41437d5582855951b6c731fdbaddb176a23c495f309a817b34",
+   "cpu_s": 4368.7,
+   "retried": []
+  },
+  "TB3_off": {
+   "id": "TB3_off",
+   "title": "DC input-referred offset Monte Carlo, hysteresis off (N = 1000)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "mc_offset_window",
+     "metric": "vos_v",
+     "limit": "<= 0.095 (k=6, extra=0.0205)",
+     "n": 15,
+     "reasons": [],
+     "normality_p_min": 0.15164687603264995,
+     "worst": 0.04018919715902662,
+     "worst_run": "('ss_125c_3v00', ('vic', '0.05'))",
+     "margin": 0.05481080284097338,
+     "mean": 7.231364399712715e-05,
+     "sigma": 0.0032694805858382494,
+     "samples": 1000,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "vos_v",
+     "where": null,
+     "limit": "reported",
+     "n": 15000,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": -0.013983220993150728,
+     "max": 0.011862439191401085,
+     "mean": 4.2132270658669694e-05
+    }
+   ],
+   "expected_runs": 15000,
+   "actual_runs": 15000,
+   "status_counts": {
+    "ok": 15000
+   },
+   "results_file": "sim/tb3_off/results/tb3_off/results.json",
+   "results_sha256": "8fd85ec68e69e2f8536899d40cbaa9da35a73eff77801b9050ea6034ff643bab",
+   "cpu_s": 43771.4,
+   "retried": [
+    "sf_27c_3v30__vic2.35__s1170052424 (timeout -> itl_gmin1e-10)",
+    "sf_27c_3v30__vic2.35__s1336117571 (timeout -> itl_gmin1e-10)",
+    "sf_27c_3v30__vic2.35__s1463787947 (timeout -> itl_gmin1e-10)",
+    "sf_27c_3v30__vic2.35__s1572422165 (timeout -> itl_gmin1e-10)",
+    "sf_27c_3v30__vic2.35__s38642135 (timeout -> itl_gmin1e-10)"
+   ]
+  },
+  "TB3_hmc": {
+   "id": "TB3_hmc",
+   "title": "transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "vh_v",
+     "where": null,
+     "limit": "0.006 .. 0.035",
+     "n": 600,
+     "reasons": [],
+     "worst": 0.006700000000000007,
+     "worst_run": "ff_m40c_3v60__vic2.35__s578106990",
+     "margin": 0.000700000000000007,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "ok_pm100",
+     "where": null,
+     "limit": "1 .. +inf",
+     "n": 600,
+     "reasons": [],
+     "worst": 1.0,
+     "worst_run": "ss_125c_3v00__vic0.05__s518126898",
+     "margin": 0.0,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 600,
+   "actual_runs": 600,
+   "status_counts": {
+    "ok": 600
+   },
+   "results_file": "sim/tb3_hmc/results/tb3_hmc/results.json",
+   "results_sha256": "8309b32fe26c96d67858ff02e60b82447e994cb7ccb04ae294e947dc48b79143",
+   "cpu_s": 8892.5,
+   "retried": []
+  },
+  "TB4": {
+   "id": "TB4",
+   "title": "propagation delay, pulse skew, DCD, output edge",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "tpd_s",
+     "where": {
+      "vid": 0.35
+     },
+     "limit": "-inf .. 5e-09",
+     "n": 315,
+     "reasons": [],
+     "worst": 4.638192989547061e-09,
+     "worst_run": "ss_m40c_3v00__vic0.05_vid0.35",
+     "margin": 3.61807010452939e-10,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "tpd_s",
+     "where": {
+      "vid": 0.1
+     },
+     "limit": "-inf .. 8e-09",
+     "n": 315,
+     "reasons": [],
+     "worst": 5.552757777423509e-09,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
+     "margin": 2.4472422225764917e-09,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "dcd_ui",
+     "where": {
+      "vid": 0.35
+     },
+     "limit": "-inf .. 0.05",
+     "n": 315,
+     "reasons": [],
+     "worst": 0.009865959454771719,
+     "worst_run": "ss_125c_3v00__vic1.2_vid0.35",
+     "margin": 0.04013404054522828,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "dcd_ui",
+     "where": {
+      "vid": 0.1
+     },
+     "limit": "-inf .. 0.1",
+     "n": 315,
+     "reasons": [],
+     "worst": 0.06277608913303992,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
+     "margin": 0.037223910866960086,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "edge_10_90_s",
+     "where": null,
+     "limit": "-inf .. 1e-09",
+     "n": 630,
+     "reasons": [],
+     "worst": 1.1655000992364592e-10,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
+     "margin": 8.834499900763542e-10,
+     "status": "PASS"
+    },
+    {
+     "kind": "spread",
+     "metric": "tpd_s",
+     "over": "vic",
+     "mode": "delta",
+     "where": {
+      "vid": 0.35
+     },
+     "limit": "-inf .. 1e-09",
+     "n": 45,
+     "reasons": [],
+     "worst": 4.439734658504799e-10,
+     "worst_run": "('ss_125c_3v60', ('vid', '0.35'))",
+     "margin": 5.560265341495202e-10,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 630,
+   "actual_runs": 630,
+   "status_counts": {
+    "ok": 630
+   },
+   "results_file": "sim/tb4_pd/results/tb4_pd/results.json",
+   "results_sha256": "9c4687127e83a0293514881f12dc30fcbee935bcb73f69c4e08b1fbcb2675b2a",
+   "cpu_s": 8630.9,
+   "retried": []
+  },
+  "TB4b": {
+   "id": "TB4b",
+   "title": "delta tPD over VID 200-450 mV at fixed VIC (the VID set of TB4 cannot show it)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "spread",
+     "metric": "tpd_s",
+     "over": "vid",
+     "mode": "delta",
+     "where": null,
+     "limit": "-inf .. 1e-09",
+     "n": 35,
+     "reasons": [],
+     "worst": 3.241552320850298e-10,
+     "worst_run": "('ss_125c_3v00', ('vic', '1.2'))",
+     "margin": 6.758447679149703e-10,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 70,
+   "actual_runs": 70,
+   "status_counts": {
+    "ok": 70
+   },
+   "results_file": "sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json",
+   "results_sha256": "ad03ddf2c2992817a3d1ae42de8cffdc4c003269a0612fdd4a0b9e0e6cc2db91",
+   "cpu_s": 797.9,
+   "retried": []
+  },
+  "TB5": {
+   "id": "TB5",
+   "title": "eye at 100 and 200 Mb/s through the full input network",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "ber_errors",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 180,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_m40c_3v60__vic0.05_vid0.1_rate100000000.0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "toggle_diff",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 180,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_m40c_3v60__vic0.05_vid0.1_rate100000000.0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": {
+      "rate": 100000000.0
+     },
+     "limit": "0.6 .. +inf",
+     "n": 90,
+     "reasons": [],
+     "worst": 0.974047373691895,
+     "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate100000000.0",
+     "margin": 0.374047373691895,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": {
+      "rate": 100000000.0,
+      "vid": 0.1,
+      "corner": "tt_27c_3v30"
+     },
+     "limit": "0.7 .. +inf",
+     "n": 3,
+     "reasons": [],
+     "worst": 0.9949839615574548,
+     "worst_run": "tt_27c_3v30__vic0.05_vid0.1_rate100000000.0",
+     "margin": 0.2949839615574549,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": {
+      "rate": 200000000.0,
+      "vid": 0.35,
+      "corner": [
+       "tt_27c_3v30",
+       "ss_125c_3v00"
+      ]
+     },
+     "limit": "0.5 .. +inf",
+     "n": 6,
+     "reasons": [],
+     "worst": 0.9291406823073043,
+     "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate200000000.0",
+     "margin": 0.4291406823073043,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "dcd_ui",
+     "where": null,
+     "limit": "reported",
+     "n": 180,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 1.3396499527919915e-06,
+     "max": 0.018736832384180578,
+     "mean": 0.005335540270404226
+    }
+   ],
+   "expected_runs": 180,
+   "actual_runs": 180,
+   "status_counts": {
+    "ok": 180
+   },
+   "results_file": "sim/tb5_eye/results/tb5_eye/results.json",
+   "results_sha256": "70e5dff5be6e8e402d19d980ff0af4fe22904cf09d70891c9a599f02801157ce",
+   "cpu_s": 6657.9,
+   "retried": []
+  },
+  "TB6": {
+   "id": "TB6",
+   "title": "CM step, supply ripple, current spikes",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "false_toggles",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 20,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__case0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "added_jitter_ui",
+     "where": null,
+     "limit": "-inf .. 0.1",
+     "n": 20,
+     "reasons": [],
+     "worst": 0.011859502543959153,
+     "worst_run": "ff_m40c_3v60__case2",
+     "margin": 0.08814049745604086,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 20,
+   "actual_runs": 20,
+   "status_counts": {
+    "ok": 20
+   },
+   "results_file": "sim/tb6_cm_supply/results/tb6_cm_supply/results.json",
+   "results_sha256": "943ccc20402f00b32897959c9a530b20548f14c9d70de72a8bb7ee0ddf60dc62",
+   "cpu_s": 1662.3,
+   "retried": []
+  },
+  "TB7": {
+   "id": "TB7",
+   "title": "idle inputs: stable held state, no oscillation, no pulse < 2 ns (v0)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "osc_flag",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 945,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_m40c_3v00__vic0.05_term0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "min_pulse_s",
+     "where": null,
+     "limit": "2e-09 .. +inf",
+     "n": 945,
+     "reasons": [],
+     "worst": 5.000009100982886e-07,
+     "worst_run": "ff_m40c_3v60__vic1.8_term1",
+     "margin": 4.980009100982886e-07,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "held_state",
+     "where": null,
+     "limit": "reported",
+     "n": 945,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.0,
+     "max": 0.0,
+     "mean": 0.0
+    },
+    {
+     "kind": "report",
+     "metric": "n_settle_flip",
+     "where": null,
+     "limit": "reported",
+     "n": 945,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.0,
+     "max": 0.0,
+     "mean": 0.0
+    },
+    {
+     "kind": "per_run",
+     "metric": "t_last_flip_s",
+     "where": null,
+     "limit": "-inf .. 5e-07",
+     "n": 945,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_m40c_3v00__vic0.05_term0",
+     "margin": 5e-07,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 945,
+   "actual_runs": 945,
+   "status_counts": {
+    "ok": 945
+   },
+   "results_file": "sim/tb7_idle/results/tb7_idle/results.json",
+   "results_sha256": "13c1c71959556beee2f455e3d9774d29401449924c21549abad52d49632b3bcc",
+   "cpu_s": 9525.4,
+   "retried": [
+    "ff_125c_3v60__vic2.1_term2 (timeout -> step49p)"
+   ]
+  },
+  "TB7_mc": {
+   "id": "TB7_mc",
+   "title": "idle inputs under mismatch (N = 100)",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "osc_flag",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 1500,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05__s1897236530",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "min_pulse_s",
+     "where": null,
+     "limit": "2e-09 .. +inf",
+     "n": 1500,
+     "reasons": [],
+     "worst": 1.0,
+     "worst_run": "tt_27c_3v30__vic0.05__s1897236530",
+     "margin": 0.999999998,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "n_settle_flip",
+     "where": null,
+     "limit": "reported",
+     "n": 1500,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.0,
+     "max": 1.0,
+     "mean": 0.0013333333333333333
+    },
+    {
+     "kind": "per_run",
+     "metric": "t_last_flip_s",
+     "where": null,
+     "limit": "-inf .. 5e-07",
+     "n": 1500,
+     "reasons": [],
+     "worst": 1.9921498179853746e-07,
+     "worst_run": "ff_m40c_3v60__vic1.2__s844184713",
+     "margin": 3.007850182014625e-07,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 1500,
+   "actual_runs": 1500,
+   "status_counts": {
+    "ok": 1500
+   },
+   "results_file": "sim/tb7_idle_mc/results/tb7_idle_mc/results.json",
+   "results_sha256": "2b03cb5eb0cfef34574286c9a609bfa55e17b7d55fc973d1d19f54315439259b",
+   "cpu_s": 8309.2,
+   "retried": []
+  },
+  "TB8": {
+   "id": "TB8",
+   "title": "EN and supply ramps",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "vout_off_v",
+     "where": {
+      "case": [
+       0,
+       1
+      ]
+     },
+     "limit": "-inf .. 0.33",
+     "n": 90,
+     "reasons": [],
+     "worst": 0.279665806,
+     "worst_run": "ss_m40c_3v60__case0",
+     "margin": 0.050334194,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "idd_en0_a",
+     "where": {
+      "case": 0,
+      "temp": [
+       -40,
+       27
+      ]
+     },
+     "limit": "-inf .. 1e-06",
+     "n": 30,
+     "reasons": [],
+     "worst": 5.186740318604651e-08,
+     "worst_run": "ss_27c_3v00__case0",
+     "margin": 9.481325968139534e-07,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "idd_en0_a",
+     "where": {
+      "case": 0,
+      "temp": 125
+     },
+     "limit": "-inf .. 5e-06",
+     "n": 15,
+     "reasons": [],
+     "worst": 6.040552735348838e-08,
+     "worst_run": "ff_125c_3v60__case0",
+     "margin": 4.939594472646512e-06,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "valid_time_s",
+     "where": {
+      "case": 2
+     },
+     "limit": "-inf .. 1e-06",
+     "n": 45,
+     "reasons": [],
+     "worst": 3.022150339763227e-08,
+     "worst_run": "ss_m40c_3v00__case2",
+     "margin": 9.697784966023676e-07,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "min_pulse_s",
+     "where": null,
+     "limit": "2e-09 .. +inf",
+     "n": 270,
+     "reasons": [],
+     "worst": 9.907455798253743e-09,
+     "worst_run": "ff_125c_3v60__case2",
+     "margin": 7.907455798253743e-09,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "min_pulse_all_s",
+     "where": null,
+     "limit": "reported",
+     "n": 270,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 1.9859794712084506e-09,
+     "max": 1.8144904050442747e-05,
+     "mean": 1.6330844655375457e-06
+    }
+   ],
+   "expected_runs": 270,
+   "actual_runs": 270,
+   "status_counts": {
+    "ok": 270
+   },
+   "results_file": "sim/tb8_en/results/tb8_en/results.json",
+   "results_sha256": "b91f5c1517ba8d82a53d15bb20fb8a43042710dadcb7a4ccc52cbb8d6e07eb2e",
+   "cpu_s": 2191.6,
+   "retried": [
+    "fs_125c_3v30__case0 (timeout -> step49p)",
+    "fs_27c_3v60__case5 (timeout -> reltol0.05)",
+    "fs_m40c_3v00__case4 (timeout -> reltol0.05)",
+    "fs_m40c_3v60__case4 (timeout -> reltol0.05)",
+    "sf_27c_3v60__case5 (timeout -> reltol0.05)",
+    "sf_m40c_3v60__case5 (timeout -> reltol0.05)",
+    "ss_m40c_3v00__case5 (timeout -> reltol0.05)",
+    "ss_m40c_3v30__case5 (timeout -> reltol0.05)",
+    "tt_125c_3v00__case0 (timeout -> reltol0.05)",
+    "tt_125c_3v30__case0 (timeout -> reltol0.05)",
+    "tt_125c_3v60__case3 (timeout -> step49p)",
+    "tt_27c_3v30__case3 (timeout -> reltol0.05)",
+    "tt_27c_3v60__case3 (timeout -> reltol0.05)",
+    "tt_27c_3v60__case5 (timeout -> reltol0.05)",
+    "tt_m40c_3v30__case3 (timeout -> reltol0.05)"
+   ]
+  },
+  "TB9": {
+   "id": "TB9",
+   "title": "input leakage and balance",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "iin_a",
+     "where": null,
+     "limit": "-inf .. 2e-05",
+     "n": 180,
+     "reasons": [],
+     "worst": 2.537190613861385e-09,
+     "worst_run": "ss_125c_3v00__vin2.4",
+     "margin": 1.999746280938614e-05,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "iin_balance_a",
+     "where": null,
+     "limit": "-inf .. 6e-06",
+     "n": 180,
+     "reasons": [],
+     "worst": 3.175247522195901e-15,
+     "worst_run": "ss_m40c_3v60__vin0.05",
+     "margin": 5.999999996824752e-06,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 180,
+   "actual_runs": 180,
+   "status_counts": {
+    "ok": 180
+   },
+   "results_file": "sim/tb9_input/results/tb9_input/results.json",
+   "results_sha256": "1269613cdcec411463d5d9643407d1770a45c517dbbb4c0c7e17c42a69803d99",
+   "cpu_s": 553.4,
+   "retried": []
+  },
+  "TB10": {
+   "id": "TB10",
+   "title": "three lanes: skew and crosstalk",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "skew_s",
+     "where": {
+      "mc3s": 0
+     },
+     "limit": "-inf .. 1e-09",
+     "n": 5,
+     "reasons": [],
+     "worst": 4.745210954025836e-11,
+     "worst_run": "fs_27c_3v30__mc3s0",
+     "margin": 9.525478904597417e-10,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "xtalk_jitter_ui",
+     "where": null,
+     "limit": "-inf .. 0.05",
+     "n": 10,
+     "reasons": [],
+     "worst": 0.0009014569774057727,
+     "worst_run": "sf_27c_3v30__mc3s0",
+     "margin": 0.049098543022594233,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "skew_3sigma_s",
+     "where": {
+      "mc3s": 1
+     },
+     "limit": "-inf .. 5e-10",
+     "n": 5,
+     "reasons": [],
+     "worst": 2.1328102816756636e-10,
+     "worst_run": "fs_27c_3v30__mc3s1",
+     "margin": 2.8671897183243365e-10,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 10,
+   "actual_runs": 10,
+   "status_counts": {
+    "ok": 10
+   },
+   "results_file": "sim/tb10_lanes/results/tb10_lanes/results.json",
+   "results_sha256": "fb50fc02898d3ef44818dd3fe056402ff469f61101565ca14738b44ab772d0a9",
+   "cpu_s": 4132.5,
+   "retried": []
+  },
+  "TB11": {
+   "id": "TB11",
+   "title": "bias loop stability (only if a constant-gm loop exists)",
+   "phase": "prelayout",
+   "status": "NOT_APPLICABLE",
+   "reasons": [
+    [
+     "CONDITION",
+     "needs ladder R6 rung >= 1 (not taken)"
+    ]
+   ],
+   "checks": [],
+   "expected_runs": null,
+   "actual_runs": null,
+   "status_counts": {}
+  },
+  "TB12": {
+   "id": "TB12",
+   "title": "package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners",
+   "phase": "prelayout",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "ber_errors",
+     "where": null,
+     "limit": "-inf .. 0",
+     "n": 40,
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__pkg0_rate100000000.0",
+     "margin": 0.0,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "eye_open_ui",
+     "where": null,
+     "limit": "0.5 .. +inf",
+     "n": 40,
+     "reasons": [],
+     "worst": 0.9281306631839343,
+     "worst_run": "ss_125c_3v00__pkg3_rate200000000.0",
+     "margin": 0.42813066318393433,
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": 40,
+   "actual_runs": 40,
+   "status_counts": {
+    "ok": 40
+   },
+   "results_file": "sim/tb12_pkg/results/tb12_pkg/results.json",
+   "results_sha256": "8f500d6101defb06f930c37cca45c16380617dc64d29f195816a15edf3b5d8e7",
+   "cpu_s": 1165.4,
    "retried": []
   }
  }

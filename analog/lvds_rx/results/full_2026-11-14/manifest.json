@@ -1,0 +1,111 @@
+{
+ "generated": "2026-11-13 18:44:16",
+ "tier": "full",
+ "phases": [
+  "prelayout"
+ ],
+ "git": {
+  "commit": "a8d771d",
+  "dirty": null
+ },
+ "harness_version": "1.3",
+ "hashes": {
+  "sizing_script": "da8e83df4f9c578bc3099cc480fa442b7b99d8b43fb68e2c1b140656b64dea8a",
+  "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
+  "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
+  "spec_files": {
+   "spec/spec.yaml": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
+   "spec/gates.yaml": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5",
+   "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
+   "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
+   "spec/decisions.yaml": "c13b921dae6ce7c3a5f92ca792b493f2f4c67059d1dcc767d3a6d8faec1f715e"
+  }
+ },
+ "netlists": {
+  "input_network.spice": "704a49b1e94d46ded6a19e4ffe781f8ec67b248ea5143635f8dc95424e72f2b5",
+  "lvds_rx_core.spice": "ca22c0077896c1c83352aac4db29565814a5e849bb95e50bf86d1c9090600d5e",
+  "lvds_rx_lvs_ref.spice": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+  "lvds_rx_lvs_ref_flat.spice": "2a0829d3b7708e34ded75827c094ec7793133485bf8abaabf76c2c4350842d7a",
+  "pad_asig_5p0.spice": "f7dec41ef2df2b36dd86fb7c48ef6a25404c5c788d71ea9a157800d6e2fd7bb2"
+ },
+ "sizes_spice_sha256": "904ffecb584c3f9d14f97af497ede18c43dee2adad4a99a46a33db4ae7e904ad",
+ "tools": {
+  "ngspice": {
+   "path": "/foss/tools/bin/ngspice",
+   "version": "******",
+   "present": true
+  },
+  "python3": {
+   "path": "/foss/tools/bin/python3",
+   "version": "Python 3.12.3",
+   "present": true
+  },
+  "make": {
+   "path": "/usr/bin/make",
+   "version": "GNU Make 4.3",
+   "present": true
+  },
+  "magic": {
+   "path": "/foss/tools/bin/magic",
+   "version": "8.3.636",
+   "present": true
+  },
+  "netgen": {
+   "path": "/foss/tools/bin/netgen",
+   "version": null,
+   "present": true
+  },
+  "klayout": {
+   "path": "/foss/tools/klayout/klayout",
+   "version": "KLayout 0.30.8",
+   "present": true
+  },
+  "openroad": {
+   "path": "/foss/tools/bin/openroad",
+   "version": "26Q2-254-g61932e897",
+   "present": true
+  },
+  "sta": {
+   "path": "/foss/tools/bin/sta",
+   "version": "3.1.0",
+   "present": true
+  },
+  "iverilog": {
+   "path": "/foss/tools/bin/iverilog",
+   "version": "Icarus Verilog version 14.0 (devel) (s20251012-145-g9b0d46b4-dirty)",
+   "present": true
+  },
+  "yosys": {
+   "path": "/foss/tools/bin/yosys",
+   "version": "Yosys 0.64 (git sha1 6d2c445ae, g++ 13.3.0-6ubuntu2~24.04.1 -fPIC -O3)",
+   "present": true
+  },
+  "python_packages": {
+   "numpy": "2.4.4",
+   "scipy": "1.17.1",
+   "pyyaml": "6.0.3",
+   "pygmid": "1.2.12"
+  }
+ },
+ "runs": [
+  {
+   "gate": "TB3_hmc",
+   "expected": 600,
+   "spec_exists": true,
+   "wall_s": 432.3,
+   "actual": 600,
+   "gate_status": "PASS"
+  }
+ ],
+ "wall_s": 433.7,
+ "measured_vs_plan_5_3": {
+  "TB3_hmc": {
+   "cpu_min_measured": 148.2,
+   "cpu_min_plan": 40,
+   "wall_s": 432.3,
+   "retried_runs": 0
+  }
+ },
+ "cpu_min_total": 1690.0,
+ "cpu_min_plan_total": 180
+}

@@ -181,7 +181,9 @@ def _frozen_edit(ctx):
     # the legitimate path: a decisions entry carrying the new hash
     dp = os.path.join(root, "spec", "decisions.yaml")
     d = C.load_yaml("spec/decisions.yaml", root)
-    d["entries"] = [{"id": "D-test", "kind": "note", "files_after": {"spec/gates.yaml": C.sha256_file(gp)}}]
+    # APPEND the test entry: replacing the list drops the real entries whose files_after legitimise earlier changes of
+    # other frozen files (after D-009 changed spec/spec.yaml the old replace-all form made this mutant report a false survivor)
+    d["entries"] = list(d.get("entries") or []) + [{"id": "D-test", "kind": "note", "files_after": {"spec/gates.yaml": C.sha256_file(gp)}}]
     import yaml
     yaml.safe_dump(d, open(dp, "w"))
     legit = L.check_frozen(root)
