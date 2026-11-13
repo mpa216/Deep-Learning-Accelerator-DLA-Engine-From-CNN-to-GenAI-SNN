@@ -29,7 +29,7 @@
 <body>
 <main>
 <h1>LVDS receiver <code>lvds_rx_x3</code>: circuit and simulation gallery</h1>
-<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-13: schematic and pre-layout simulation only. No layout of the macro exists yet.</p>
+<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-14: schematic frozen, pre-layout simulation complete. No layout of the macro exists yet.</p>
 
 <p class="note">The schematics below were drawn by hand (by script) from the netlist <code>netlist/lvds_rx_core.spice</code>; they are not generated from it. The waveform plots are single runs at the typical corner (27 &deg;C, 3.3 V) with ideal sources, made as illustrations. The pass/fail record of the design is the regression in <code>results/</code>, not these pictures.</p>
 
@@ -78,7 +78,7 @@
 <li>A resistor divider makes VREF = 0.48 &times; VDD for the dump devices; Cvref keeps it quiet.</li>
 <li>EN = 0 opens every branch, so the macro draws almost no current when off.</li>
 </ul>
-<p><b>Known weakness:</b> this simple bias lets the currents change with supply, temperature and process (up to +60 % at the fast, hot, high-supply corner). It is the cause of the saturation-margin relaxation (decision D-012) that still needs review. A constant-gm bias is the planned upgrade if it turns out to be needed.</p>
+<p><b>Known weakness:</b> this simple bias lets the currents change with supply, temperature and process (up to +60 % at the fast, hot, high-supply corner). It is the cause of the saturation-margin relaxation (decision D-012), which the audit accepted on condition that this corner is re-checked after layout. A constant-gm bias is the planned upgrade if it turns out to be needed.</p>
 <figure><img src="schematic_bias.png" alt="Bias schematic">
 <figcaption>Bias (<code>lvds_bias</code>), one copy for all three lanes.</figcaption></figure>
 <p>Not drawn: each input pin also passes through a small protection cell (a series resistor and two diodes). That cell is flagged <b>unqualified</b>: it has not been tested as ESD protection.</p>
@@ -100,27 +100,26 @@
 <h3>From the regression: eye diagrams</h3>
 <div class="two">
 <figure><img src="eye_tt_200Mbps_vid100mV.png" alt="Eye diagram typical">
-<figcaption>Typical corner, 200 Mb/s, &plusmn;100 mV. All bits overlaid: the edges land in the same place (51 ps spread), so the "eye" is wide open.</figcaption></figure>
+<figcaption>Typical corner, 200 Mb/s, &plusmn;100 mV. All bits overlaid: the edges land in the same place (about 50 ps spread), so the "eye" is wide open.</figcaption></figure>
 <figure><img src="eye_ss125c_200Mbps_vid100mV.png" alt="Eye diagram slow hot">
-<figcaption>Slow transistors, 125 &deg;C, 3.0 V: the hardest corner for speed.</figcaption></figure>
+<figcaption>Slow transistors, 125 &deg;C, 3.0 V: the hardest corner for speed. The edges spread over about 250 ps and the eye is still 95 % open, with no bit errors.</figcaption></figure>
 </div>
-<p class="note">These two eye diagrams come from the first full regression, which ran before the last bias adjustment (one bias voltage changed, stage-1 gain 5.10 to 4.78 minimum). They have not been re-run on the current sizing.</p>
+<p>Both eye diagrams are from the full regression on the frozen sizing (2026-11-14).</p>
 
 <h3>From the regression: Monte Carlo histograms (current sizing)</h3>
 <div class="two">
 <figure><img src="hist_offset_tt.png" alt="Offset histogram">
 <figcaption>Input offset of 1,000 randomly mismatched copies at the typical corner: spread (sigma) 3.1 mV. Green lines are the &plusmn;95 mV budget.</figcaption></figure>
 <figure><img src="hist_hysteresis_ff_m40c.png" alt="Hysteresis histogram">
-<figcaption>Hysteresis of 100 copies at the fast, cold, 3.6 V corner. The green lines are the original 8 to 25 mV window; a few copies fall just under 8 mV, which is why the window was widened to 6 to 35 mV (decision D-009, still to be reviewed).</figcaption></figure>
+<figcaption>Hysteresis of 100 copies at the fast, cold, 3.6 V corner. The green lines are the original 8 to 25 mV window; a few copies fall just under 8 mV, which is why the window was widened to 6 to 35 mV (decision D-009, accepted in the audit).</figcaption></figure>
 </div>
 
 <h2>4. Where things stand</h2>
 <table>
-<tr><th>Item</th><th>State on 2026-11-13</th></tr>
-<tr><td>Schematic (netlist) and sizing</td><td>Done, not yet frozen</td></tr>
-<tr><td>Operating point, gain, trip point, offset, hysteresis</td><td>Pass at all corners and Monte Carlo on the current sizing (some limits relaxed, pending review)</td></tr>
-<tr><td>Delay, eye, supply noise, input range, lane crosstalk, package</td><td>Passed on the previous sizing; re-run deferred</td></tr>
-<tr><td>Idle and enable behaviour</td><td>Re-run in progress</td></tr>
+<tr><th>Item</th><th>State on 2026-11-14</th></tr>
+<tr><td>Schematic (netlist) and sizing</td><td>Done and frozen (<code>sizing/FROZEN.md</code>)</td></tr>
+<tr><td>Pre-layout regression</td><td>All 17 gates pass on the frozen sizing: 21,017 simulation runs over up to 47 corners plus Monte Carlo</td></tr>
+<tr><td>Pre-layout audit</td><td>Pass with findings (<code>results/AUDIT_1.md</code>). Six limit or test changes were accepted; one of them (saturation margin at the fast, hot, 3.6 V corner) only with conditions to re-check after layout</td></tr>
 <tr><td>Layout</td><td>Building blocks only (29 small cells, DRC/LVS clean); the lane and macro are not drawn</td></tr>
 </table>
 <p class="sub">Files: <code>docs/figures/draw_schematic.py</code> draws the schematics, <code>docs/figures/make_waveforms.py</code> runs and plots the three illustration simulations.</p>
