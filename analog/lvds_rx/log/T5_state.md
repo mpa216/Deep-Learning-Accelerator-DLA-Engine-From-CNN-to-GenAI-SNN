@@ -1,4 +1,4 @@
-# T5 state at the 2026-11-12 crash (written by the orchestrator, not by the T5 agent)
+# T5 state at the 2026-11-12 crash (SUPERSEDED on 2026-11-14 by log/T9_handover.md; kept for history)
 
 The T5 agent (full regression and Monte Carlo) ran from 04:32 to about 17:40 on 2026-11-12 and was killed by a PC crash
 before it could report. This note reconstructs its state from the files it left. Nothing below was re-verified after the crash
