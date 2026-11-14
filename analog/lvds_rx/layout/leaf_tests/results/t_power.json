@@ -1,0 +1,240 @@
+{
+ "cell": "t_power",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 22.96,
+    "m2": 14.12,
+    "m3": 29.2
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 12,
+   "mos": {
+    "nfet_03v3 w=2.5 l=1.0": 12
+   },
+   "n_res": 0,
+   "want_fingers": 12,
+   "n_diode": 0,
+   "n_cap": 0
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": []
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_power/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    2,
+    2
+   ],
+   "nets": [
+    3,
+    3
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "mnt",
+     "ok": true,
+     "symbols": "(dL)MMMMMMMMMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 12,
+     "n_expected": 12,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "TN",
+    "at": [
+     3.8,
+     7.85,
+     19.4,
+     8.13
+    ],
+    "why": [
+     "nfet_03v3 (12->4)                          |nfet_03v3 (3->2) **Mismatch**",
+     "Number of devices: 4 **Mismatch**          |Number of devices: 2 **Mismatch**",
+     "Number of nets: 4 **Mismatch**             |Number of nets: 3 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: TN.2                                  |(no matching net)"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  },
+  "post": {
+   "ok": true,
+   "report": {
+    "ok": true,
+    "straps": [
+     {
+      "strap": "VSS@2.5",
+      "net": "VSS",
+      "y": 2.5,
+      "width": 2.5,
+      "length": 29.2,
+      "squares": 11.7,
+      "r_end_to_end_ohm": 1.05,
+      "ring_and_trunk_ties": 2,
+      "spine_cuts": 8,
+      "dc_load_mA": 0.105,
+      "loads": [
+       "mnt"
+      ],
+      "j_mA_per_um": 0.042,
+      "j_ok": true,
+      "m4_crossings_cell": 0,
+      "m4_crossings_macro": 7,
+      "crossings_ok": true,
+      "ir_drop_mV_half_pitch": 0.142
+     },
+     {
+      "strap": "VSS@14.12",
+      "net": "VSS",
+      "y": 14.12,
+      "width": 2.5,
+      "length": 29.2,
+      "squares": 11.7,
+      "r_end_to_end_ohm": 1.05,
+      "ring_and_trunk_ties": 2,
+      "spine_cuts": 8,
+      "dc_load_mA": 0.0,
+      "loads": [],
+      "j_mA_per_um": 0.0,
+      "j_ok": true,
+      "m4_crossings_cell": 0,
+      "m4_crossings_macro": 7,
+      "crossings_ok": true,
+      "ir_drop_mV_half_pitch": 0.0
+     }
+    ],
+    "spines": [
+     {
+      "net": "VSS",
+      "x": -1.8,
+      "w": 1.2,
+      "y1": 1.25,
+      "y2": 15.37,
+      "cuts_per_strap": [
+       8,
+       8
+      ]
+     }
+    ],
+    "rails_tied_inside_cell": {
+     "VSS": true
+    },
+    "macro_len": 542.0,
+    "assumptions": {
+     "RSH_ohm_sq": 0.09,
+     "R_via_ohm": 4.5,
+     "J_MAX_mA_per_um": 1.0,
+     "M4_width": 5.0,
+     "M4_pitch": 75.0,
+     "note": "J_MAX is an assumption, not a PDK number; currents are the DC values booked by the caller"
+    }
+   }
+  }
+ },
+ "started": "2026-11-14 09:29:23",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 24.5,
+ "bbox_um": [
+  29.2,
+  14.12
+ ]
+}

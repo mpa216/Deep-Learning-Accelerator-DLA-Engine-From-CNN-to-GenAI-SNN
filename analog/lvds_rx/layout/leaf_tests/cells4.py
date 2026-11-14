@@ -65,4 +65,32 @@ def t_esd_mirror():
     return blk, subckt("t_esd_mirror", blk, esd_lines(r, dh, dl)), "B", dict(leaf=leaf, cut_x=cx, post=post)
 
 
-CELLS4 = {"t_esd_mirror": t_esd_mirror}
+def t_power():
+    """One NMOS row (mnt) between two VSS straps: ring tied to both, the two straps tied by a Metal2 spine.  Checks the strap,
+    spine, via-array and ring-tie geometry of lib.power against the foundry deck and LVS, and the planner's report."""
+    from lib import alloc
+    from lib.power import PowerPlan
+    dev = DT["mnt"]
+    blk = Block("t_power")
+    lf = leaves.single(blk, "mnt", dev, (0, 5.0), gate="VBN", drn="TN", src="VSS", rail="VSS")
+    pp = PowerPlan(blk, -3.0, lf.bbox[2] + 3.0)
+    lo = pp.strap("VSS", lf.bbox[1] - 2.5)
+    hi = pp.strap("VSS", lf.bbox[3] + 2.5)
+    pp.ring_tie(lf, lo)
+    pp.ring_tie(lf, hi)
+    pp.spine("VSS", -1.8)
+    pp.load(lo, 105.0, "mnt")
+    blk.add_pin("VSS", "m3", pp.x1 + 1.0, lo["y"])
+    al = alloc.Alloc(blk)
+    al.pin_port("VBN", lf.port("VBN", "m3", "gate")[0])
+    al.pin_port("TN", lf.port("TN", "m3", "bar")[0])
+    lines = [DT.spice("MNT", dev, "TN", "VBN", "VSS", "VSS")]
+
+    def post(res, wd):
+        rep = pp.report(macro_len=542.0)
+        return dict(ok=rep["ok"], report=rep)
+
+    return blk, subckt(blk.name, blk, lines), "TN", dict(post=post)
+
+
+CELLS4 = {"t_esd_mirror": t_esd_mirror, "t_power": t_power}
