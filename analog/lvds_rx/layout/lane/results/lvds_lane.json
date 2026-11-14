@@ -1010,6 +1010,28 @@
      "Final result: Netlists do not match."
     ]
    },
+   "bridge": {
+    "detected": true,
+    "nets": [
+     "d2a",
+     "d2b"
+    ],
+    "layer": "m3",
+    "at": [
+     -21.55,
+     29.44,
+     -21.15,
+     30.06
+    ],
+    "gap_um": 0.42,
+    "why": [
+     "pfet_03v3 (173->22)                        |pfet_03v3 (36->27) **Mismatch**",
+     "nfet_03v3 (132->35)                        |nfet_03v3 (43->36) **Mismatch**",
+     "Number of devices: 68 **Mismatch**         |Number of devices: 74 **Mismatch**",
+     "Number of nets: 28 **Mismatch**            |Number of nets: 29 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):"
+    ]
+   },
    "sliver_magic": {
     "detected": true,
     "count": 1
@@ -1101,13 +1123,28 @@
     "exit_code": 1,
     "violations": 2
    }
+  },
+  "antenna_no_esd": {
+   "ok": true,
+   "removed": {
+    "marker_polygons": 4,
+    "plates": 4,
+    "plate_area_um2": 160.0,
+    "plate_contacts": 640
+   },
+   "expected_plates": 4,
+   "expected_area_um2": 160.0,
+   "diodes_extracted_after": 0,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1
   }
  },
- "started": "2026-11-14 10:13:06",
+ "started": "2026-11-14 10:18:51",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 39.2,
- "python_build_s": 4.5,
+ "wall_s": 42.2,
+ "python_build_s": 4.7,
  "box_um": [
   142.8,
   125.3

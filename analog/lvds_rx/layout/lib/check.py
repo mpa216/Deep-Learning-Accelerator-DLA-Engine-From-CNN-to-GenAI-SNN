@@ -9,9 +9,12 @@ run_cell(blk, schematic_text, outdir, ...) executes, for one Block:
   5 LVS        Netgen strict: 'Netlists match uniquely.' exactly, no property errors, no pin/port mismatch, equal device
                and net counts
   6 read-back  finger order, gate and S/D nets of every row from the extraction (Netgen merges parallel fingers)
-  7 negctl     wrong W (schematic), cut wire (GDS), DRC sliver (GDS): each must FAIL
+  7 negctl     wrong W (schematic), cut wire (GDS), DRC sliver (GDS), and with bridge_kind a Metal3 bridge between two
+               signal nets (GDS): each must FAIL
   8 render     PNG
 and writes <name>.json (+ gds, png) to the results directory.  Nothing is reported that was not observed.
+Helpers used by the lane (layout/lane/run_lane.py) on top of run_cell: via_arrays (rule Vn.2b, scripts/check_via_arrays.py),
+strip_diodes + klayout_drc(main=False) (antenna without the ESD diodes), pick_bridge / add_rect.
 """
 import glob
 import hashlib
@@ -129,20 +132,23 @@ def lyrdb_counts(rundir):
     return per, n
 
 
-def klayout_drc(gds, cell, rundir, antenna=True):
+def klayout_drc(gds, cell, rundir, antenna=True, main=True):
+    """main=False: the antenna deck only (used on edited copies whose main-deck result means nothing, e.g. diodes removed)."""
     gds = os.path.abspath(gds)
     shutil.rmtree(rundir, ignore_errors=True)
-    os.makedirs(rundir + "/main")
+    os.makedirs(rundir)
     res = {}
     dbu, tops = gds_dbu(gds)
     res["dbu"] = dbu
     res["dbu_ok"] = abs(dbu - 0.001) < 1e-12
-    sh(["python3", "run_drc.py", f"--path={gds}", "--variant=D", f"--topcell={cell}", f"--run_dir={rundir}/main",
-        "--run_mode=flat", "--thr=2"], cwd=DECK)
-    per, n = lyrdb_counts(rundir + "/main")
-    res["main"] = sum(per.values())
-    res["main_rules"] = per
-    res["main_lyrdb_files"] = n
+    if main:
+        os.makedirs(rundir + "/main")
+        sh(["python3", "run_drc.py", f"--path={gds}", "--variant=D", f"--topcell={cell}", f"--run_dir={rundir}/main",
+            "--run_mode=flat", "--thr=2"], cwd=DECK)
+        per, n = lyrdb_counts(rundir + "/main")
+        res["main"] = sum(per.values())
+        res["main_rules"] = per
+        res["main_lyrdb_files"] = n
     if antenna:
         os.makedirs(rundir + "/ant")
         sh(["python3", "run_drc.py", f"--path={gds}", "--variant=D", f"--topcell={cell}", f"--run_dir={rundir}/ant",
@@ -316,6 +322,79 @@ def cut_wire(gds, out, shape, width=0.5, at=None):
     edit_gds(gds, out, fn)
 
 
+def add_rect(gds, out, layer, rect):
+    """Insert one rectangle (um) on a metal layer of a copy of the GDS (the bridge negative control)."""
+    import klayout.db as db
+
+    def fn(ly, top):
+        top.shapes(ly.layer(*LAYER_NUM[layer])).insert(db.DBox(*rect))
+
+    edit_gds(gds, out, fn)
+
+
+def pick_bridge(blk, layer="m3", kind="route", avoid=("VDD", "VSS"), gap_max=1.0, min_overlap=0.6):
+    """Site of the bridge negative control: a 0.4 um wide rectangle on `layer` across the narrowest gap between two shapes of
+    kind `kind` that belong to two different signal nets and face each other over >= min_overlap um, reaching 0.1 um into
+    both and touching no shape of any third net (all shapes of the layer are looked at, rails included).  Deterministic:
+    the narrowest gap first, then by net names and position.  Returns dict(layer, rect, nets, gap_um) or None."""
+    shapes = blk.by_layer.get(layer, [])
+    sig = [s for s in shapes if s.kind == kind and s.net is not None and s.net not in avoid]
+
+    def q(v):
+        return round(round(v / 0.005) * 0.005, 3)
+    cands = []
+    for a in sig:
+        for b in sig:
+            if a.net == b.net:
+                continue
+            ox1, ox2 = max(a.x1, b.x1), min(a.x2, b.x2)
+            g = b.y1 - a.y2                                     # b above a
+            if ox2 - ox1 >= min_overlap and 1e-6 < g <= gap_max:
+                xm = q((ox1 + ox2) / 2)
+                cands.append((round(g, 3), a.net, b.net, xm, a.y2, (xm - 0.2, q(a.y2 - 0.1), xm + 0.2, q(b.y1 + 0.1))))
+            oy1, oy2 = max(a.y1, b.y1), min(a.y2, b.y2)
+            g = b.x1 - a.x2                                     # b east of a
+            if oy2 - oy1 >= min_overlap and 1e-6 < g <= gap_max:
+                ym = q((oy1 + oy2) / 2)
+                cands.append((round(g, 3), a.net, b.net, a.x2, ym, (q(a.x2 - 0.1), ym - 0.2, q(b.x1 + 0.1), ym + 0.2)))
+    cands.sort()
+    for g, na, nb, _, _, r in cands:
+        touched = {s.net for s in shapes if s.x1 <= r[2] and r[0] <= s.x2 and s.y1 <= r[3] and r[1] <= s.y2}
+        if touched == {na, nb}:
+            return dict(layer=layer, rect=tuple(round(v, 3) for v in r), nets=[na, nb], gap_um=g)
+    return None
+
+
+def strip_diodes(gds, out, marker=(115, 5), comp=(22, 0), contact=(33, 0)):
+    """Copy of the GDS without diodes.  Inside diode_mk (115/5, `diode_mk` in the foundry deck's layers_def.drc; the PDK
+    diode gencells draw it exactly over the plate) the diffusion plate (COMP 22/0) and its contacts (CO 33/0) are removed,
+    then the marker itself (Magic reads bare contacts inside the marker as diode contacts: 640 one-contact diodes otherwise).
+    The antenna deck credits a net with diode area from n+ COMP outside n-well and p+ COMP inside n-well, so the copy has no
+    diode on the nets the plates were on.  Returns what was removed (the caller compares it with the diodes placed)."""
+    import klayout.db as db
+    rec = {}
+
+    def fn(ly, top):
+        lm, lc, lk = ly.layer(*marker), ly.layer(*comp), ly.layer(*contact)
+        mk = db.Region(top.shapes(lm))
+        cm = db.Region(top.shapes(lc))
+        co = db.Region(top.shapes(lk))
+        co.merged_semantics = False                       # one polygon per contact cut
+        plates = cm & mk
+        gone = co.inside(mk)
+        keep = co.not_inside(mk)
+        rec.update(marker_polygons=mk.count(), plates=plates.count(), plate_area_um2=round(plates.area() * ly.dbu ** 2, 3),
+                   plate_contacts=gone.count())
+        top.shapes(lc).clear()
+        top.shapes(lc).insert(cm - mk)
+        top.shapes(lk).clear()
+        top.shapes(lk).insert(keep)
+        top.shapes(lm).clear()
+
+    edit_gds(gds, out, fn)
+    return rec
+
+
 def add_sliver(gds, out):
     import klayout.db as db
 
@@ -343,8 +422,9 @@ def pick_cut_shape(blk, prefer=None, kind="bar"):
 
 
 # ------------------------------------------------------------------------------------------------ driver
-def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=None, extra=None, extract_src="gds", neg_schem=None, cut_x=None, magic_gds=True, magic_allow=(), cut_kind="bar", res_cols=None):
-    """Full check of one block.  schem_text = complete SPICE text with `.subckt <blk.name> pins ... .ends`."""
+def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=None, extra=None, extract_src="gds", neg_schem=None, cut_x=None, magic_gds=True, magic_allow=(), cut_kind="bar", res_cols=None, bridge_kind=None):
+    """Full check of one block.  schem_text = complete SPICE text with `.subckt <blk.name> pins ... .ends`.
+    bridge_kind: also run the bridge negative control (pick_bridge on Metal3 shapes of that kind); off by default."""
     name = blk.name
     wd = os.path.join(outdir, name)
     os.makedirs(wd, exist_ok=True)
@@ -399,6 +479,17 @@ def run_cell(blk: Block, schem_text, outdir, results_dir, klayout=True, cut_net=
         exc = extract(name, cg, wd, "cut")
         lc = netgen_lvs(name, exc["spice"], schem_text, wd, "cut")
         neg["cut_wire"] = dict(detected=not lc["clean"], net=shp.net, at=[round(shp.x1, 2), round(shp.y1, 2), round(shp.x2, 2), round(shp.y2, 2)], why=lc.get("why"))
+    if bridge_kind is not None and extract_src == "gds":
+        pk = pick_bridge(blk, kind=bridge_kind)
+        if pk is None:
+            neg["bridge"] = dict(detected=False, error="no bridge site found")
+        else:
+            bg = os.path.join(wd, "bridge.gds")
+            add_rect(gds, bg, pk["layer"], pk["rect"])
+            exb = extract(name, bg, wd, "bridge")
+            lb = netgen_lvs(name, exb["spice"], schem_text, wd, "bridge")
+            neg["bridge"] = dict(detected=not lb["clean"], nets=pk["nets"], layer=pk["layer"], at=list(pk["rect"]), gap_um=pk["gap_um"],
+                                 why=lb.get("why"))
     sg = os.path.join(wd, "sliver.gds")
     add_sliver(gds, sg)
     ms = magic_drc(name, sg, wd, "sliver")
