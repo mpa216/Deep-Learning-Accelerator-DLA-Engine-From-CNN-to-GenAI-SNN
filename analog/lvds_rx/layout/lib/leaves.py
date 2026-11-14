@@ -529,7 +529,7 @@ def stacked(blk, inst, lower: Dev, upper: Dev, ll, nets, rail, dummies=1, **kw):
         ll, rail, dummies, **kw)
 
 
-def pair_dump(blk, inst, dev: Dev, dump: Dev, ll, A, B, S, rail, dump_gate, dummies=0, **kw):
+def pair_dump(blk, inst, dev: Dev, dump: Dev, ll, A, B, S, rail, dump_gate, dummies=0, odd_unit="right", **kw):
     """Input pair with its dump twins beside it, one row, common source S:
          [ (a b b a) x u_left ] [ (A B B A) x dev.nf/2 ] [ (a b b a) x u_right ]       u_left + u_right = dump.nf / 2
     Fingers meet at a drain region only when they share the drain net, and a finger between two different-symbol neighbours
@@ -538,13 +538,21 @@ def pair_dump(blk, inst, dev: Dev, dump: Dev, ll, A, B, S, rail, dump_gate, dumm
     no strap crosses another net's pads (it only passes over the erased pad side).  Each twin has dump.nf fingers in total.
     A, B = dict(gate, drn).  dev and dump must share Wf, L and type, nf even.
     dummies defaults to 0: the twin flanks are the edge fingers of the pair (all four exit/side slots are taken, so a separate
-    dummy strap would have to cross another net)."""
+    dummy strap would have to cross another net).
+    odd_unit: the flank that takes the extra (a b b a) unit when dump.nf / 2 is odd, "right" (default) or "left".  The B
+    strap (exit W) runs over the left flank and the A strap (exit E) over the right one, so that unit makes one input gate
+    strap 4 fingers longer than the other (measured on the leaf tests: +0.85 fF on A for the PMOS quad, +0.88 fF for the
+    NMOS quad).  The lane gives its two quads opposite choices, so gp and gn run over the same number of fingers in total."""
     if (dev.Wf, dev.L, dev.kind) != (dump.Wf, dump.L, dump.kind):
         raise ValueError("pair_dump: pair and dump devices must share Wf, L and type")
     if dev.nf % 2 or dump.nf % 2:
         raise ValueError("pair_dump needs even finger counts")
+    if odd_unit not in ("right", "left"):
+        raise ValueError("pair_dump: odd_unit is 'right' or 'left'")
     units = dump.nf // 2
     ul, ur = units // 2, units - units // 2
+    if odd_unit == "left":
+        ul, ur = ur, ul
     fingers = []
 
     def flank(n, side, ex):

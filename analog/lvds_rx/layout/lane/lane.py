@@ -116,7 +116,10 @@ BUILD = {
     "mpt": lambda b, ll: leaves.single(b, "mpt", DT["mpt"], ll, gate="VBP", drn="tp", src="VDD", rail="VDD"),
     # pair_dump puts gate A on the top strap leaving EAST and gate B on the bottom strap leaving WEST: the INN side is passed as A
     "pquad": lambda b, ll: leaves.pair_dump(b, "pq", DT["mp1"], DT["mpd"], ll, dict(gate="gn", drn="fb"), dict(gate="gp", drn="fa"), "tp", "tp", "VREF"),
-    "nquad": lambda b, ll: leaves.pair_dump(b, "nq", DT["mn1"], DT["mnd"], ll, dict(gate="gn", drn="ob"), dict(gate="gp", drn="oa"), "tn", "VSS", "VREF"),
+    # both quads have an odd number of dump units (11 and 5): the extra unit lengthens the strap that runs over its flank.  The
+    # PMOS quad keeps it on the right (gn's strap), the NMOS quad puts it on the left (gp's strap), so the two cancel
+    "nquad": lambda b, ll: leaves.pair_dump(b, "nq", DT["mn1"], DT["mnd"], ll, dict(gate="gn", drn="ob"), dict(gate="gp", drn="oa"), "tn", "VSS", "VREF",
+                                            odd_unit="left"),
     "m3": lambda b, ll: leaves.pair_abba(b, "m3", DT["m3"], ll, A=dict(gate="VBN", drn="fa"), B=dict(gate="VBN", drn="fb"), S="VSS", rail="VSS"),
     "m5a": lambda b, ll: leaves.single(b, "m5a", DT["m5"], ll, gate="VB2", drn="oa", src="fa", rail="VSS"),
     # east-side partners of a west-side leaf take their gate out to the EAST, so the two are mirror images for the router

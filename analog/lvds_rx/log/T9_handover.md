@@ -108,8 +108,25 @@ self-test and the antenna pair, no failure line; log `.scratch/t9/run_all_full.l
 | C | `layout/lib/route.py` (grid router) + test `t_route` (output chain in one row, wired only by the router) | done, all checks pass |
 | D | `layout/lane/lane.py` placement (rows, straps, spines, ties, bias trunks) + `run_lane.py --stage place` | done, foundry deck 0 / 0 |
 | E | lane routing, pins, flat LVS schematic; `run_lane.py` (full check of cell `lvds_lane`) | done, see below |
-| F | lane-only checks (list below) | **next, not started** |
-| G | leaf regression, design-log entry, T9 report, `make check`, then report to the owner and wait | open |
+| F | lane-only checks (items 1-5 below) | done in three commits (F1 `75ec043`, F2 `ab312d1`, F3), see "Piece F" below |
+| G | leaf regression, design-log entry, T9 report, `make check`, then report to the owner and wait | **next** |
+
+### Piece F (fourth session, 2026-11-14): all lane-only checks pass, now part of `run_lane.py` (about 45 s)
+
+| Step in `lvds_lane.json` | Result |
+|---|---|
+| `lvs_reference` | flat schematic without dummies vs `lvds_lane` of the frozen `netlist/lvds_rx_lvs_ref.spice` (sha256 = FROZEN.md): match uniquely, 47 devices, 29 nets; Netgen flattened lvds_esd2 x2, lvds_pre, lvds_hyst, lvds_out |
+| `via_arrays` | `/foss/designs/scripts/check_via_arrays.py` (main; identical to the worktree copy): 0 violations (Via1 472 cuts, Via2 753, every cut its own cluster); planted dense 4 x 4 Via2 array flagged |
+| `negctl.bridge` | Metal3 bridge d2a-d2b across the 0.42 um gap of two routed tracks: strict LVS fails (28 vs 29 nets) |
+| `antenna_no_esd` | copy without the 4 diode plates (160 um2), their 640 contacts and diode_mk: no diode in the extraction, foundry antenna deck 0 |
+| `input_caps` (pex_c) | INP 4.399 / INN 4.405 fF (0.16 %); gp 42.24 / gn 42.50 fF (0.60 %), limit 2 % |
+
+The first gp/gn measurement was 41.66 / 43.08 fF (3.4 %, FAIL), and gn, not gp, was the heavier net: the extra Metal2 of
+gp is not the cause. Both quads have an odd number of dump units (11 and 5); `pair_dump` gave the extra unit to the right
+flank, which the A strap (gn, exit E) runs over, so gn's strap was 4 fingers longer in both quads (leaf tests: +0.85 and
++0.88 fF). Fix: `pair_dump(odd_unit="left")` for the NMOS quad (the routing and the ports are unchanged). Magic's 10
+extraction warnings ("device missing 1 terminal") are the 10 dummies whose two terminals are one rail (6 MOS, 4 resistor
+columns), one per feedback box: expected.
 
 The three new tests are in `layout/leaf_tests/cells4.py` and are part of `run_all.py`. Quick loops without Magic, on the
 host: `python3 .scratch/t9/try_cell.py <cell>` and `python3 .scratch/t9/try_lane.py place|rails|route` (floorplan and route

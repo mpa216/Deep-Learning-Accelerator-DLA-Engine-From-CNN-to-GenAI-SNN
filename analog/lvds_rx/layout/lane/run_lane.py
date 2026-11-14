@@ -78,6 +78,36 @@ def antenna_without_esd(L, gds, wd):
                 antenna=k["antenna"], antenna_rules=k["antenna_rules"], antenna_lyrdb_files=k["antenna_lyrdb_files"])
 
 
+# the mirror image of every net of the lane (nets not listed are their own image)
+MIRROR = {"INP": "INN", "gp": "gn", "oa": "ob", "fa": "fb", "sa": "sb", "d2a": "d2b", "rla_m1": "rlb_m1"}
+MIRROR.update({b: a for a, b in list(MIRROR.items())})
+CAP_LIMIT_PCT = 2.0      # T9 exit criterion: PEX C of the two input nets within 2 %
+
+
+def input_caps(gds, wd):
+    """T9 exit criterion, P/N parasitic symmetry: a pex_c extraction (coupling and substrate capacitance, cthresh 0) of the
+    lane GDS; the total extracted capacitance of INP vs INN (pins to the ESD resistors) and gp vs gn (ESD resistors to the
+    input gates), each pair within CAP_LIMIT_PCT of its mean.  Device capacitances (gates, diode junctions) are not in these
+    numbers; they are equal on both sides by construction (strict LVS compares W, L, nf, diode area and perimeter).
+    `terms`: every coupling of the first net next to the mirror-image coupling of the second, largest difference first."""
+    ex = check.extract(lane.CELL, gds, wd, "pexc", mode="pex_c")
+    caps = check.net_caps(ex["spice"])
+    n_cap = sum(1 for line in open(ex["spice"]) if line.startswith(("C", "c")))
+    pairs, ok = {}, True
+    for a, b in (("INP", "INN"), ("gp", "gn")):
+        ca, cb = caps.get(a, {}).get("total_fF", 0.0), caps.get(b, {}).get("total_fF", 0.0)
+        mis = 100.0 * abs(ca - cb) / ((ca + cb) / 2) if ca + cb > 0 else None
+        ta, tb = caps.get(a, {}).get("to", {}), caps.get(b, {}).get("to", {})
+        keys = set(ta) | {MIRROR.get(k, k) for k in tb}
+        terms = sorted(((k, round(ta.get(k, 0.0), 3), round(tb.get(MIRROR.get(k, k), 0.0), 3)) for k in keys),
+                       key=lambda e: -abs(e[1] - e[2]))
+        p_ok = mis is not None and mis <= CAP_LIMIT_PCT
+        ok &= p_ok
+        pairs[f"{a}/{b}"] = dict(ok=p_ok, fF=[round(ca, 3), round(cb, 3)], mismatch_pct=None if mis is None else round(mis, 3),
+                                 limit_pct=CAP_LIMIT_PCT, terms=[dict(to=k, a_fF=x, b_mirror_fF=y) for k, x, y in terms[:8]])
+    return dict(ok=bool(ok), pairs=pairs, capacitors=n_cap, nets=len(caps), warnings=ex["warnings"])
+
+
 def verdict(r):
     st = r["steps"]
     r["all_ok"] = bool(st) and all(s.get("ok", False) for s in st.values())
@@ -137,6 +167,7 @@ def full(nok):
     r["steps"]["via_arrays"] = check.via_arrays(gds, lane.CELL, wd)
     if not nok:
         r["steps"]["antenna_no_esd"] = antenna_without_esd(L, gds, wd)
+    r["steps"]["input_caps"] = input_caps(gds, wd)
     verdict(r)
     r["wall_s"] = round(time.time() - t0, 1)
     r["box_um"] = [2 * lane.HALF, L.height]

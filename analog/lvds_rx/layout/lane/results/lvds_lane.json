@@ -456,7 +456,7 @@
     {
      "row": "nq",
      "ok": true,
-     "symbols": "abbaabbaABBAABBAABBAABBAABBAabbaabbaabba",
+     "symbols": "abbaabbaabbaABBAABBAABBAABBAABBAabbaabba",
      "read_gate_order": [
       "VREF",
       "VREF",
@@ -466,30 +466,30 @@
       "VREF",
       "VREF",
       "VREF",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
       "VREF",
       "VREF",
       "VREF",
       "VREF",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
       "VREF",
       "VREF",
       "VREF",
@@ -508,30 +508,30 @@
       "VREF",
       "VREF",
       "VREF",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
-      "gn",
-      "gp",
-      "gp",
-      "gn",
       "VREF",
       "VREF",
       "VREF",
       "VREF",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
       "VREF",
       "VREF",
       "VREF",
@@ -1138,13 +1138,107 @@
    "antenna": 0,
    "antenna_rules": {},
    "antenna_lyrdb_files": 1
+  },
+  "input_caps": {
+   "ok": true,
+   "pairs": {
+    "INP/INN": {
+     "ok": true,
+     "fF": [
+      4.399,
+      4.405
+     ],
+     "mismatch_pct": 0.156,
+     "limit_pct": 2.0,
+     "terms": [
+      {
+       "to": "VDD",
+       "a_fF": 2.268,
+       "b_mirror_fF": 2.563
+      },
+      {
+       "to": "VSS",
+       "a_fF": 1.946,
+       "b_mirror_fF": 1.659
+      },
+      {
+       "to": "VBP",
+       "a_fF": 0.039,
+       "b_mirror_fF": 0.037
+      },
+      {
+       "to": "gp",
+       "a_fF": 0.146,
+       "b_mirror_fF": 0.146
+      }
+     ]
+    },
+    "gp/gn": {
+     "ok": true,
+     "fF": [
+      42.243,
+      42.496
+     ],
+     "mismatch_pct": 0.598,
+     "limit_pct": 2.0,
+     "terms": [
+      {
+       "to": "tp",
+       "a_fF": 12.876,
+       "b_mirror_fF": 13.459
+      },
+      {
+       "to": "VREF",
+       "a_fF": 1.915,
+       "b_mirror_fF": 2.336
+      },
+      {
+       "to": "oa",
+       "a_fF": 1.251,
+       "b_mirror_fF": 1.038
+      },
+      {
+       "to": "tn",
+       "a_fF": 1.206,
+       "b_mirror_fF": 0.997
+      },
+      {
+       "to": "fb",
+       "a_fF": 0.868,
+       "b_mirror_fF": 0.671
+      },
+      {
+       "to": "VSS",
+       "a_fF": 14.1,
+       "b_mirror_fF": 13.917
+      },
+      {
+       "to": "fa",
+       "a_fF": 2.443,
+       "b_mirror_fF": 2.596
+      },
+      {
+       "to": "ob",
+       "a_fF": 0.363,
+       "b_mirror_fF": 0.305
+      }
+     ]
+    }
+   },
+   "capacitors": 145,
+   "nets": 31,
+   "warnings": [
+    "Warning: Calma reading is not undoable!  I hope that's OK.",
+    "lvds_lane: 10 warnings",
+    "Total of 10 warnings."
+   ]
   }
  },
- "started": "2026-11-14 10:18:51",
+ "started": "2026-11-14 10:25:54",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 42.2,
- "python_build_s": 4.7,
+ "wall_s": 43.6,
+ "python_build_s": 5.0,
  "box_um": [
   142.8,
   125.3

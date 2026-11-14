@@ -218,6 +218,33 @@ def extract(cell, gds, wd, tag, mode="lvs"):
     return dict(spice=out_sp, ext=ext, warnings=warn)
 
 
+_SI_FF = {"a": 1e-3, "f": 1.0, "p": 1e3, "n": 1e6, "u": 1e9, "m": 1e12}      # SPICE suffix -> fF
+
+
+def net_caps(spice):
+    """Extracted parasitic capacitance per net from a pex_c netlist (Magic ext2spice, cthresh 0): every C element is counted
+    on both of its nodes (a coupling cap fully on each side: the usual total net capacitance; the substrate is the VSS
+    node, tied through the taps).  Node names map to nets with base().  Device capacitances (gates, junctions) are not
+    C elements and are not included.  Returns {net: dict(total_fF, to={other net: fF})}."""
+    out = {}
+    for line in open(spice):
+        t = line.split()
+        if len(t) < 4 or t[0][0] not in "Cc":
+            continue
+        m = re.match(r"^([0-9.]+(?:[eE][-+]?\d+)?)([afpnumAFPNUM]?)", t[3])
+        if not m:
+            continue
+        v = float(m.group(1)) * (_SI_FF[m.group(2).lower()] if m.group(2) else 1e15)
+        a, b = base(t[1]), base(t[2])
+        if a == b:
+            continue
+        for x, y in ((a, b), (b, a)):
+            e = out.setdefault(x, dict(total_fF=0.0, to={}))
+            e["total_fF"] += v
+            e["to"][y] = e["to"].get(y, 0.0) + v
+    return out
+
+
 def netgen_lvs(cell, lay_spice, schem_text, wd, tag):
     sch = os.path.join(wd, f"schem_{tag}.spice")
     with open(sch, "w") as f:
