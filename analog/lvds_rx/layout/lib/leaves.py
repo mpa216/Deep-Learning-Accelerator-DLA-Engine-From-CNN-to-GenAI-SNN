@@ -457,12 +457,14 @@ def _interleave(counts):
     return left + center + left[::-1]
 
 
-def mirror_interdig(blk, inst, kind, outs, S, rail, ll, Wf, L, dummies=1, src_w=None, **kw):
+def mirror_interdig(blk, inst, kind, outs, S, rail, ll, Wf, L, dummies=1, src_w=None, gate_exit="W", **kw):
     """Interdigitated current mirror, star-connected sources.
     outs: list of dict(sym, nf (total fingers of that device), gate, drn).  All share the source net S and one Wf, L.
     Fingers sit in pairs that share a drain region (S regions between pairs); a device with an odd finger count puts its
     single finger at the left end (a second odd device puts its single finger at the right end; at most two).  Pair units are placed symmetrically (centroid balanced).
-    The sources of all devices are ONE Metal3 spine tied to the ring net when S == rail (star)."""
+    The sources of all devices are ONE Metal3 spine tied to the ring net when S == rail (star).
+    gate_exit: side of the gate strap's exit (and of a diode jog) when all fingers share one gate net; with two gate nets the
+    sides alternate as before."""
     odd = [o for o in outs if o["nf"] % 2]
     if len(odd) > 2:
         raise ValueError("mirror_interdig: at most two devices with an odd finger count (one single at each row end)")
@@ -474,7 +476,7 @@ def mirror_interdig(blk, inst, kind, outs, S, rail, ll, Wf, L, dummies=1, src_w=
 
     def add(sym):
         o = by[sym]
-        fingers.append(dict(sym=sym, gate=o["gate"], src=S, drn=o["drn"], side="top", exit="W"))
+        fingers.append(dict(sym=sym, gate=o["gate"], src=S, drn=o["drn"], side="top", exit=gate_exit))
 
     if odd:
         add(odd[0]["sym"])

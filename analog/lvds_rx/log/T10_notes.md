@@ -26,13 +26,25 @@ Solo, in small pieces with one local commit each (as in T9). Report and wait for
 | Piece | What | State |
 |---|---|---|
 | A1 | `layout/bias/bias.py` placement (leaves, straps, VSS spine, ring ties, trunk pins) + `run_bias.py --stage place` | done: Magic 0 (GDS), KLayout 0 / 0 |
-| A2 | bias routing, pins, flat schematic, full check (LVS against lvds_bias + reference file, negative controls, via arrays) | next |
-| B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | open |
+| A2 | bias routing, pins, flat schematic, full check (LVS against lvds_bias + reference file, negative controls, via arrays) | done: PASS, see below |
+| B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | next |
 | C | macro LVS (hierarchical), negative controls, via arrays, antenna with / without ESD | open |
 | D | PEX: C on all nets, RC on the input pair, bias and output nets | open |
 | E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | open |
 
+## Bias block result (piece A2, `layout/bias/results/lvds_bias.json`, about 30 s)
+
+53.2 x 142.1 um. KLayout main 0, antenna 0; Magic GDS read-back 0 (`.mag` 44, all allow-listed CO.6). Strict LVS clean,
+28 devices and 11 nets; the flat schematic without dummies matches `lvds_bias` of the frozen reference file (17 devices,
+11 nets, sha256 = FROZEN.md). Self-check 60 MOS fingers, 18 resistors; finger read-back 11 rows. Negative controls: wrong
+W, cut wire (VBN), Metal3 bridge (EN-VB2 across 0.42 um), sliver: all detected. check_via_arrays.py 0. Routing 11 nets,
+757 um Metal2, 467 um Metal3, 88 vias.
+
 ## Rules found
+
+* A diode-connected mirror (MBN : MBS, MBP : MB2P) has its gate-to-drain jog at the gate strap's exit end: the other bars
+  cannot leave past it. `mirror_interdig(gate_exit=)` (default W, unchanged for the lane's mn3) puts the strap and the jog
+  on the east side (the cell edge), the bars leave west into the channel.
 
 * `PowerPlan.ring_tie` next to a leaf drawn with `m1_ring_regions` (men_n): the tie's via1 pad 0.045 um from the leaf's
   Metal1 ring stub is a same-net Metal1 notch (M1.2a) that the shape database cannot see. `ring_tie` now skips such

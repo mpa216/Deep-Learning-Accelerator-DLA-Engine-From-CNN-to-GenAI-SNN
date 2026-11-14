@@ -1,0 +1,563 @@
+{
+ "cell": "lvds_bias",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 33.97,
+    "m2": 121.5,
+    "m3": 53.2
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 60,
+   "mos": {
+    "nfet_03v3 w=2.5 l=1.0": 12,
+    "nfet_03v3 w=7.91 l=0.5": 3,
+    "nfet_03v3 w=1.0 l=0.28": 1,
+    "pfet_03v3 w=5.0 l=0.5": 10,
+    "pfet_03v3 w=2.0 l=0.5": 3,
+    "pfet_03v3 w=2.5 l=0.28": 3,
+    "nfet_03v3 w=5.0 l=0.5": 4,
+    "nfet_03v3 w=2.0 l=0.5": 6,
+    "nfet_03v3 w=20.0 l=25.13": 1,
+    "pfet_03v3 w=5.0 l=1.0": 17
+   },
+   "n_res": 18,
+   "want_fingers": 60,
+   "n_diode": 0,
+   "n_cap": 0
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 44,
+    "rules": [
+     "RULE (44) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 44,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t10/work/lvds_bias/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    28,
+    28
+   ],
+   "nets": [
+    11,
+    11
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "mbn",
+     "ok": true,
+     "symbols": "(dL)RRRSSSSRRS(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 12,
+     "n_expected": 12,
+     "mismatch": null
+    },
+    {
+     "row": "men_n",
+     "ok": true,
+     "symbols": "M",
+     "read_gate_order": [
+      "EN"
+     ],
+     "expected_gate_order": [
+      "EN"
+     ],
+     "n_read": 1,
+     "n_expected": 1,
+     "mismatch": null
+    },
+    {
+     "row": "mb2",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VB2",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VB2",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "msw",
+     "ok": true,
+     "symbols": "(dL)MMMMMMMM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "enb",
+      "VDD"
+     ],
+     "n_read": 10,
+     "n_expected": 10,
+     "mismatch": null
+    },
+    {
+     "row": "men_p",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "mpu_p",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "mvs",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "EN",
+      "EN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "EN",
+      "EN",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "mpd_2",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "enb",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "enb",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "cvref",
+     "ok": true,
+     "symbols": "C",
+     "read_gate_order": [
+      "VREF"
+     ],
+     "expected_gate_order": [
+      "VREF"
+     ],
+     "n_read": 1,
+     "n_expected": 1,
+     "mismatch": null
+    },
+    {
+     "row": "mpd_n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "enb",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "enb",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "mbp",
+     "ok": true,
+     "symbols": "(dL)RRRUURRRRRRUURR(dR)",
+     "read_gate_order": [
+      "VDD",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VDD"
+     ],
+     "n_read": 17,
+     "n_expected": 17,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "VBN",
+    "at": [
+     22.26,
+     -2.94,
+     39.34,
+     -2.66
+    ],
+    "why": [
+     "Number of nets: 12 **Mismatch**            |Number of nets: 11 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: VBN.6                                 |(no matching net)",
+     "Netlists do not match.",
+     "Final result: Netlists do not match."
+    ]
+   },
+   "bridge": {
+    "detected": true,
+    "nets": [
+     "EN",
+     "VB2"
+    ],
+    "layer": "m3",
+    "at": [
+     15.2,
+     16.84,
+     15.6,
+     17.46
+    ],
+    "gap_um": 0.42,
+    "why": [
+     "Number of nets: 10 **Mismatch**            |Number of nets: 11 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "(no matching net)                          |Net: VB2",
+     "Netlists do not match."
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  },
+  "lvs_reference": {
+   "ok": true,
+   "reference": "netlist/lvds_rx_lvs_ref.spice",
+   "sha256": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+   "frozen_sha256": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+   "frozen_sha256_ok": true,
+   "flattened_subcells": [],
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t10/work/lvds_bias/lvs_reference.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    17,
+    17
+   ],
+   "nets": [
+    11,
+    11
+   ],
+   "counts_equal": true,
+   "clean": true
+  },
+  "via_arrays": {
+   "ok": true,
+   "script": "/foss/designs/scripts/check_via_arrays.py",
+   "sha256": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d",
+   "copies": {
+    "/foss/designs/scripts/check_via_arrays.py": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d",
+    "/foss/designs/.claude/worktrees/lvds-rx/scripts/check_via_arrays.py": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d"
+   },
+   "copies_identical": true,
+   "exit_code": 0,
+   "violations": 0,
+   "layers": {
+    "Via1 design (SRAM IP excluded)": {
+     "cuts": 148,
+     "clusters": 148,
+     "big": 0,
+     "violations": 0
+    },
+    "Via1 incl. SRAM IP": {
+     "cuts": 148,
+     "clusters": 148,
+     "big": 0,
+     "violations": 0
+    },
+    "Via2 design (SRAM IP excluded)": {
+     "cuts": 267,
+     "clusters": 267,
+     "big": 0,
+     "violations": 0
+    },
+    "Via2 incl. SRAM IP": {
+     "cuts": 267,
+     "clusters": 267,
+     "big": 0,
+     "violations": 0
+    }
+   },
+   "not_present": [
+    "Via3",
+    "Via4",
+    "Via5"
+   ],
+   "control": {
+    "detected": true,
+    "exit_code": 1,
+    "violations": 2
+   }
+  }
+ },
+ "started": "2026-11-14 11:29:54",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 29.2,
+ "python_build_s": 1.2,
+ "box_um": [
+  53.2,
+  142.1
+ ],
+ "schematic": {
+  "reference_devices": 17,
+  "dummy_devices": 22
+ },
+ "routes": {
+  "VDD": {
+   "m2_um": 121.61,
+   "m3_um": 36.54,
+   "vias": 12,
+   "terminals": 6
+  },
+  "VSS": {
+   "m2_um": 37.97,
+   "m3_um": 14.75,
+   "vias": 10,
+   "terminals": 5
+  },
+  "nrb": {
+   "m2_um": 15.33,
+   "m3_um": 16.79,
+   "vias": 3,
+   "terminals": 2
+  },
+  "vf": {
+   "m2_um": 13.87,
+   "m3_um": 38.24,
+   "vias": 5,
+   "terminals": 2
+  },
+  "nmid": {
+   "m2_um": 35.16,
+   "m3_um": 19.97,
+   "vias": 3,
+   "terminals": 2
+  },
+  "VREF": {
+   "m2_um": 32.32,
+   "m3_um": 56.36,
+   "vias": 5,
+   "terminals": 2
+  },
+  "VBN": {
+   "m2_um": 92.78,
+   "m3_um": 51.15,
+   "vias": 8,
+   "terminals": 3
+  },
+  "VBP": {
+   "m2_um": 128.99,
+   "m3_um": 57.0,
+   "vias": 6,
+   "terminals": 3
+  },
+  "VB2": {
+   "m2_um": 120.77,
+   "m3_um": 55.33,
+   "vias": 9,
+   "terminals": 3
+  },
+  "enb": {
+   "m2_um": 102.37,
+   "m3_um": 59.25,
+   "vias": 14,
+   "terminals": 5
+  },
+  "EN": {
+   "m2_um": 55.82,
+   "m3_um": 61.58,
+   "vias": 13,
+   "terminals": 4
+  }
+ },
+ "klayout_skipped": false
+}

@@ -63,13 +63,13 @@ def _arr(stems, pattern, up, b, inst, ll):
 def _mir_n(b, ll):
     m, s = DT["mbn"], DT["mbs"]
     return leaves.mirror_interdig(b, "mbn", "n", [dict(sym="R", nf=m.nf, gate="VBN", drn="VBN"), dict(sym="S", nf=s.nf, gate="VBN", drn="VBP")],
-                                  S="VSS", rail="VSS", ll=ll, Wf=m.Wf, L=m.L)
+                                  S="VSS", rail="VSS", ll=ll, Wf=m.Wf, L=m.L, gate_exit="E")
 
 
 def _mir_p(b, ll):
     m, u = DT["mbp"], DT["mb2p"]
     return leaves.mirror_interdig(b, "mbp", "p", [dict(sym="R", nf=m.nf, gate="VBP", drn="VBP"), dict(sym="U", nf=u.nf, gate="VBP", drn="VB2")],
-                                  S="VDD", rail="VDD", ll=ll, Wf=m.Wf, L=m.L)
+                                  S="VDD", rail="VDD", ll=ll, Wf=m.Wf, L=m.L, gate_exit="E")
 
 
 def _cap(b, ll):
@@ -77,19 +77,20 @@ def _cap(b, ll):
     return passives.nfet_cap(b, "cvref", c["c_width_um"], c["c_length_um"], ll, "VREF", "VSS")
 
 
+# the west leaves stand against the corridor (VSS spine): their gates leave to the EAST, into the free channels
 BUILD = {
     "ra1": lambda b, ll: _arr(("rb", "rf"), ["rb"] * 4 + ["rf"] * 2, False, b, "ra1", ll),
     "ra2": lambda b, ll: _arr(("rdt", "rdb"), ["rdt", "rdb", "rdb", "rdt", "rdt", "rdb", "rdb", "rdt"], True, b, "ra2", ll),
     "mir_n": _mir_n, "mir_p": _mir_p, "cvref": _cap,
-    "msw": lambda b, ll: leaves.single(b, "msw", DT["msw"], ll, gate="enb", drn="nrb", src="VDD", rail="VDD"),
-    "mpu_p": lambda b, ll: leaves.single(b, "mpu_p", DT["mpu_p"], ll, gate="EN", drn="VBP", src="VDD", rail="VDD"),
-    "men_p": lambda b, ll: leaves.single(b, "men_p", DT["men_p"], ll, gate="EN", drn="enb", src="VDD", rail="VDD"),
+    "msw": lambda b, ll: leaves.single(b, "msw", DT["msw"], ll, gate="enb", drn="nrb", src="VDD", rail="VDD", gate_exit="E"),
+    "mpu_p": lambda b, ll: leaves.single(b, "mpu_p", DT["mpu_p"], ll, gate="EN", drn="VBP", src="VDD", rail="VDD", gate_exit="E"),
+    "men_p": lambda b, ll: leaves.single(b, "men_p", DT["men_p"], ll, gate="EN", drn="enb", src="VDD", rail="VDD", gate_exit="E"),
     "men_n": lambda b, ll: leaves.single(b, "men_n", DT["men_n"], ll, gate="EN", drn="enb", src="VSS", rail="VSS", m1_ring_regions=True,
                                          gate_exit="E", dummies=0),
-    "mb2": lambda b, ll: leaves.single(b, "mb2", DT["mb2"], ll, gate="VB2", drn="VB2", src="vf", rail="VSS"),
-    "mvs": lambda b, ll: leaves.single(b, "mvs", DT["mvs"], ll, gate="EN", drn="nmid", src="VSS", rail="VSS"),
-    "mpd_n": lambda b, ll: leaves.single(b, "mpd_n", DT["mpd_n"], ll, gate="enb", drn="VBN", src="VSS", rail="VSS"),
-    "mpd_2": lambda b, ll: leaves.single(b, "mpd_2", DT["mpd_2"], ll, gate="enb", drn="VB2", src="VSS", rail="VSS"),
+    "mb2": lambda b, ll: leaves.single(b, "mb2", DT["mb2"], ll, gate="VB2", drn="VB2", src="vf", rail="VSS", gate_exit="E"),
+    "mvs": lambda b, ll: leaves.single(b, "mvs", DT["mvs"], ll, gate="EN", drn="nmid", src="VSS", rail="VSS", gate_exit="E"),
+    "mpd_n": lambda b, ll: leaves.single(b, "mpd_n", DT["mpd_n"], ll, gate="enb", drn="VBN", src="VSS", rail="VSS", gate_exit="E"),
+    "mpd_2": lambda b, ll: leaves.single(b, "mpd_2", DT["mpd_2"], ll, gate="enb", drn="VB2", src="VSS", rail="VSS", gate_exit="E"),
 }
 _SIZE = {}
 
@@ -183,11 +184,72 @@ def build(stage="route", name=CELL):
     for net, row in trows.items():        # outputs (and EN) on the west edge at the lane's trunk rows
         R.trunk(net, row, 0.0, 1.6)
         B.pins[net] = row
+    if stage == "place":
+        return B
+
+    def hp(key, net, kind, sides=None):
+        ps = lv[key].port(net, "m3", kind)
+        if len(ps) != 1:
+            raise ValueError(f"{key}: {len(ps)} ports of {net} / {kind}")
+        return R.hport(ps[0], lv[key].bbox, sides)
+
+    def vp(key, net, kind="term", **kw):
+        ps = lv[key].port(net, "m3", kind)
+        if len(ps) != 1:
+            raise ValueError(f"{key}: {len(ps)} ports of {net} / {kind}")
+        return R.vport(ps[0], lv[key].bbox, **kw)
+
+    # ---- rails.  S1v first joins the VDD tree (S7) by a route, so the cell's VDD is one net on its own too; then it is adopted
+    s1v = S["S1v"]
+    R.connect("VDD", [R.pin(R.col_ge(X_L + 0.7), R.row_ge(s1v["y"]), L3)])
+    R.adopt("VDD", L3, s1v["x1"], s1v["y"] - s1v["w"] / 2, s1v["x2"], s1v["y"] + s1v["w"] / 2)
+    for key in ("mir_n", "cvref"):
+        R.connect("VSS", [hp(key, "VSS", "bar")])
+    for key in ("mvs", "mpd_n", "mpd_2"):
+        R.connect("VSS", [hp(key, "VSS", "bar")])
+    for key in ("msw", "men_p", "mpu_p", "mir_p"):
+        R.connect("VDD", [hp(key, "VDD", "bar")])
+    if stage == "rails":
+        return B
+    # ---- signals: short local nets first, then the outputs, then the enable nets.  Diode-connected devices (MBN, MBP, MB2)
+    #      join gate and drain inside the leaf, so only their drain bar is a terminal.
+    R.connect("nrb", [vp("ra1", "nrb"), hp("msw", "nrb", "bar")])
+    R.connect("vf", [vp("ra1", "vf"), hp("mb2", "vf", "bar")])
+    ra2_vref = lv["ra2"].port("VREF", "m3", "bar")[0]
+    R.connect("nmid", [vp("ra2", "nmid"), hp("mvs", "nmid", "bar")])
+    R.connect("VREF", [R.vport(ra2_vref, lv["ra2"].bbox, need_via=True, x=(ra2_vref.rect[0] + ra2_vref.rect[2]) / 2),
+                       hp("cvref", "VREF", "gate")])
+    R.connect("VDD", [vp("ra2", "VDD")])
+    R.connect("VBN", [vp("ra1", "VBN"), hp("mir_n", "VBN", "bar"), hp("mpd_n", "VBN", "bar")])
+    R.connect("VBP", [hp("mir_n", "VBP", "bar"), hp("mir_p", "VBP", "bar"), hp("mpu_p", "VBP", "bar")])
+    R.connect("VB2", [hp("mir_p", "VB2", "bar"), hp("mb2", "VB2", "bar"), hp("mpd_2", "VB2", "bar")])
+    R.connect("enb", [hp("men_n", "enb", "bar"), hp("men_p", "enb", "bar"), hp("msw", "enb", "gate"), hp("mpd_2", "enb", "gate"),
+                      hp("mpd_n", "enb", "gate")])
+    R.connect("EN", [hp("men_n", "EN", "gate"), hp("men_p", "EN", "gate"), hp("mpu_p", "EN", "gate"), hp("mvs", "EN", "gate")])
+    # ---- pins: the five lane nets on the west edge, VDD on S7, VSS on S2 (both straps reach the west edge)
+    for net, row in B.pins.items():
+        blk.add_pin(net, "m3", 0.3, R.Y(row))
+    blk.add_pin("VDD", "m3", W_B / 2, S["S7"]["y"])
+    blk.add_pin("VSS", "m3", W_B / 2, S["S2"]["y"])
     return B
 
 
-if __name__ == "__main__":
-    B = build("place")
+def schematic(B, name=CELL, dummies=True):
+    """Flat LVS schematic: subckt lvds_bias of the reference flattened by name, plus the layout's dummies (MOS and the dummy
+    columns of both resistor arrays)."""
+    return lane.flat_schematic(B, "lvds_bias", ("ra1", "ra2"), name, dummies)
+
+
+if __name__ == "__main__":                 # host dry run: python3 layout/bias/bias.py [place|rails|route]
+    st = sys.argv[1] if len(sys.argv) > 1 else "place"
+    B = build(st)
     print("bias box", W_B, "x", B.height, "y", B.y1, B.y2, "shapes", len(B.blk.shapes))
-    for k, lf in B.leaf.items():
-        print("  %-6s x %6.2f..%6.2f  y %7.2f..%7.2f" % (k, lf.bbox[0], lf.bbox[2], lf.bbox[1], lf.bbox[3]))
+    if st == "place":
+        for k, lf in B.leaf.items():
+            print("  %-6s x %6.2f..%6.2f  y %7.2f..%7.2f" % (k, lf.bbox[0], lf.bbox[2], lf.bbox[1], lf.bbox[3]))
+    else:
+        for n, s in B.R.summary().items():
+            print("   %-5s" % n, s)
+        if st == "route":
+            sch = schematic(B)
+            print("schematic lines", len(sch.splitlines()), B.schem_counts)
