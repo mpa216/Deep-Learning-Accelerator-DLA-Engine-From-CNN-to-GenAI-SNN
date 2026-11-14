@@ -99,6 +99,21 @@ Full leaf regression after the row-engine change: **ALL GREEN** (`run_all.py`, e
 self-test and the antenna pair, no failure line; log `.scratch/t9/run_all_full.log`, table
 `layout/leaf_tests/results/summary.md`). The regenerated results are committed. Next session starts at step 4.
 
+## Progress, third session (2026-11-14): work is cut into pieces, one local commit each
+
+| Piece | What | State |
+|---|---|---|
+| A | `layout/lib/xform.py` (`MirrorX`: mirrored generation) + test `t_esd_mirror` | done, all checks pass, mirror XOR empty on 17 layers |
+| B | `layout/lib/power.py` (step 4: straps, spines, ring ties, report) + test `t_power` | done, all checks pass |
+| C | `layout/lib/route.py` (grid router) + test `t_route` (output chain in one row, wired only by the router) | done, all checks pass |
+| D | `layout/lane/`: lane placement (rows, straps, trunks), DRC of the placement | next |
+| E | lane routing, strict LVS | open |
+| F | lane check runner (full checks, via arrays, bridge control, antenna without ESD, input-net capacitance) | open |
+| G | design-log entry, T9 report, `make check`, then report to the owner and wait | open |
+
+The three new tests are in `layout/leaf_tests/cells4.py` and are part of `run_all.py`. Quick loop without Magic:
+`python3 .scratch/t9/try_cell.py <cell>` on the host (prints the route table or the refusal).
+
 ## Rules the owner set
 
 - Report and wait for a go-ahead before each major phase (lane, macro, post-layout simulation, packaging).

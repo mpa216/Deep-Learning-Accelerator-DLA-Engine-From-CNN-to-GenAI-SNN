@@ -1,0 +1,397 @@
+{
+ "cell": "t_route",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 10.14,
+    "m2": 9.32,
+    "m3": 102.36
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 31,
+   "mos": {
+    "pfet_03v3 w=5.0 l=0.28": 6,
+    "nfet_03v3 w=4.0 l=0.28": 4,
+    "pfet_03v3 w=3.75 l=0.28": 4,
+    "nfet_03v3 w=3.0 l=0.28": 3,
+    "pfet_03v3 w=3.7 l=0.28": 3,
+    "nfet_03v3 w=1.5 l=0.28": 3,
+    "pfet_03v3 w=3.0 l=0.28": 4,
+    "nfet_03v3 w=2.0 l=0.28": 4
+   },
+   "n_res": 0,
+   "want_fingers": 31,
+   "n_diode": 0,
+   "n_cap": 0
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 312,
+    "rules": [
+     "RULE (312) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 312,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_route/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    20,
+    20
+   ],
+   "nets": [
+    9,
+    9
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "nandn",
+     "ok": true,
+     "symbols": "(dL)YX(dR)",
+     "read_gate_order": [
+      "VSS",
+      "d3",
+      "EN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "d3",
+      "EN",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "nandp",
+     "ok": true,
+     "symbols": "(dL)(P1)(P2)(dR)",
+     "read_gate_order": [
+      "VDD",
+      "d3",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "d3",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv1n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "nd",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "nd",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv1p",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VDD",
+      "nd",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "nd",
+      "VDD"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv2n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "i1",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "i1",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv2p",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "i1",
+      "i1",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "i1",
+      "i1",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv3n",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "i2",
+      "i2",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "i2",
+      "i2",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv3p",
+     "ok": true,
+     "symbols": "(dL)MMMM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "i2",
+      "i2",
+      "i2",
+      "i2",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "i2",
+      "i2",
+      "i2",
+      "i2",
+      "VDD"
+     ],
+     "n_read": 6,
+     "n_expected": 6,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "nd",
+    "at": [
+     23.66,
+     11.76,
+     35.84,
+     12.04
+    ],
+    "why": [
+     "Number of nets: 10 **Mismatch**            |Number of nets: 9 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: nd.7                                  |(no matching net)",
+     "Netlists do not match.",
+     "Final result: Netlists do not match."
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  },
+  "post": {
+   "ok": true,
+   "routes": {
+    "VSS": {
+     "m2_um": 25.09,
+     "m3_um": 11.6,
+     "vias": 8,
+     "terminals": 4
+    },
+    "VDD": {
+     "m2_um": 24.69,
+     "m3_um": 12.96,
+     "vias": 8,
+     "terminals": 4
+    },
+    "EN": {
+     "m2_um": 15.96,
+     "m3_um": 4.14,
+     "vias": 4,
+     "terminals": 2
+    },
+    "d3": {
+     "m2_um": 14.96,
+     "m3_um": 19.2,
+     "vias": 4,
+     "terminals": 3
+    },
+    "nd": {
+     "m2_um": 12.96,
+     "m3_um": 43.33,
+     "vias": 10,
+     "terminals": 4
+    },
+    "i1": {
+     "m2_um": 15.8,
+     "m3_um": 43.11,
+     "vias": 12,
+     "terminals": 4
+    },
+    "i2": {
+     "m2_um": 11.85,
+     "m3_um": 44.69,
+     "vias": 9,
+     "terminals": 4
+    },
+    "OUT": {
+     "m2_um": 13.56,
+     "m3_um": 24.81,
+     "vias": 5,
+     "terminals": 3
+    }
+   },
+   "power": [
+    {
+     "strap": "VSS@1.75",
+     "net": "VSS",
+     "y": 1.75,
+     "width": 2.5,
+     "length": 102.36,
+     "squares": 40.9,
+     "r_end_to_end_ohm": 3.68,
+     "ring_and_trunk_ties": 8,
+     "spine_cuts": 0,
+     "dc_load_mA": 0.1,
+     "loads": [
+      "chain (average, assumed)"
+     ],
+     "j_mA_per_um": 0.04,
+     "j_ok": true,
+     "m4_crossings_cell": 1,
+     "m4_crossings_macro": 7,
+     "crossings_ok": true,
+     "ir_drop_mV_half_pitch": 0.135
+    },
+    {
+     "strap": "VDD@17.85",
+     "net": "VDD",
+     "y": 17.85,
+     "width": 2.5,
+     "length": 102.36,
+     "squares": 40.9,
+     "r_end_to_end_ohm": 3.68,
+     "ring_and_trunk_ties": 8,
+     "spine_cuts": 0,
+     "dc_load_mA": 0.1,
+     "loads": [
+      "chain (average, assumed)"
+     ],
+     "j_mA_per_um": 0.04,
+     "j_ok": true,
+     "m4_crossings_cell": 1,
+     "m4_crossings_macro": 7,
+     "crossings_ok": true,
+     "ir_drop_mV_half_pitch": 0.135
+    }
+   ]
+  }
+ },
+ "started": "2026-11-14 09:37:27",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 22.9,
+ "bbox_um": [
+  102.36,
+  19.3
+ ]
+}
