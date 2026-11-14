@@ -36,6 +36,70 @@ Pre-layout is finished and frozen. Read, in this order:
    lane (KLayout foundry deck 0 violations, strict Netgen LVS against `netlist/lvds_rx_lvs_ref.spice`, finger-order
    read-back, negative controls fail), and the extracted capacitance of the two input nets matches within 2 %.
 
+## Progress on 2026-11-14, second session (paused at the owner's request to save usage)
+
+**Done and checked: steps 1 to 3.** Steps 4 and 5 are NOT started: no power-strap planner, no router and no
+`layout/lane/` code exist yet. What follows under "Decided, not built" is a plan, not a result.
+
+1. `make check` green (71 s). It rewrote `results/{gates.json,REPORT.md,manifest.json,env.json}` with the
+   environment-only table; restored with `git checkout --` so the tracked full-tier record stays. Do the same next time.
+2. Resistor leaves rebuilt at the frozen lengths, full checks pass: `t_res_rl` (2 series pieces of 9.113 um per
+   resistor), `t_res_stage2` (8.862 um), `t_res` (18.395 um). Note for RL: the extraction rounds each piece to 9.11 um,
+   so the layout sum is 18.22 um against 18.395 um in the schematic, 0.95 % short. Netgen's limit is 1 %. It passes,
+   with little room.
+3. Inverter `inv1_p` (W 3.7, L 0.28) is now drawn with one finger as in the sizing. Fix in `layout/lib/leaves.py`
+   (`mos_row`, the `L < 0.36` block): when the contact margin is too small for the plain Metal1 trim, the contact tile
+   is shortened by 0.14 um per end, so Magic places 7 contacts per bar instead of 8 (0.125 um of Metal1 past the end
+   contact, bar end 0.37 um from the gate pad). `t_out_chain`: foundry deck 0 / 0, strict LVS clean (20 devices,
+   9 nets), all negative controls detected. The re-fingering in `layout/leaf_tests/cells3.py` is removed.
+   Full leaf regression after the change: see the last line of this section.
+
+**Measured facts needed for the lane (probe scripts in `.scratch/t9/`, not in git).**
+- `.scratch/t9/leaf_dims.py` prints the size and every port of each lane leaf without running Magic. Sizes (um):
+  mpt 42.06 x 9.12, PMOS quad 86.54 x 8.92, mnt 23.20 x 6.62, NMOS quad 45.76 x 8.87, m3 sinks 44.48 x 6.62,
+  m5 14.14 x 8.64 each, mt2 17.12 x 6.62, ms 10.06 x 7.98 each, loads2 23.98 x 6.12, mpu2 8.64 x 6.12 each,
+  mp3 22.14 x 6.12, mn3 8.16 x 6.71, RL 21.21 x 16.00, RS 14.71 x 14.35, ESD cell 32.89 x 10.90, digital leaves
+  7.4 to 10.4 wide and 5.6 to 9.1 tall.
+- Gencell geometry at L 0.28: gate pad Metal1 0.34 x 0.23, S/D bar 0.23 wide, contact tile from Wf/2 - 0.065 inward,
+  Metal1 bar 0.055 longer at each end, cuts 0.22 at 0.47 pitch (tech file `squares-grid 5 220 250`).
+- The three ESD gencells are exactly mirror-symmetric about a vertical line (checked layer by layer with XOR):
+  `ppolyf_u` 5 x 1.8 about x = 2.5 from its origin, `diode_pd2nw_03v3` 8 x 5 about x = 4.49 (box -1.12 to 10.10),
+  `diode_nd2ps_03v3` 8 x 5 about x = 4.49 (box -0.31 to 9.29). So a mirrored ESD cell needs no Magic flip, only
+  mirrored coordinates.
+- Block power grid (`librelane/config_acv.yaml`, `pdn_cfg.tcl`, read only): Metal4 vertical stripes 5 um wide, VDD/VSS
+  pair 1 um apart, pitch 75 um; macros connect Metal3 to Metal4. One lane (about 140 um) is sure of only one crossing
+  per net, so the straps must run edge to edge and join across the lanes; the 600 um macro then gets 7.
+- `check_via_arrays.py` is at `scripts/check_via_arrays.py` in the worktree root (tracked on `main`); in the container
+  `/foss/designs/.claude/worktrees/lvds-rx/scripts/check_via_arrays.py <gds> <topcell>`. Run it as it is.
+
+**Decided, not built (steps 4 and 5).**
+- Floorplan, lane axis at x = 0, INP side (gp, fa, oa, sa, d2a) west, INN side east, signal flow top to bottom so the
+  digital output sits farthest from the inputs. Rows from the top: ESD_P | mpt | ESD_N (mirrored); PMOS quad; m5a |
+  m3 sinks | m5b; mnt | NMOS quad | mt2; ms1 | RL (terminals up) | ms2 | RS; mpu2a | loads2 | mpu2b | mp3 + mn3;
+  digital chain in one row. Estimate 142 x 118 um against the 150 x 130 budget.
+  `pair_dump` puts gate A at the east end: pass the INN side as A so that INP leaves west, as `spec/pins.yaml` has it.
+- Power: eight Metal3 straps 2.5 um wide, alternating from VDD at the top to VSS at the bottom, each centred between
+  two rows of a 0.7 um routing grid (it then uses exactly four grid rows). Metal2 spines at the two lane edges tie the
+  straps of one rail together; without them the lane has four separate VDD pieces and LVS fails.
+- Shared nets as edge-to-edge Metal3 trunks on grid rows: VBP near the top, VREF and VB2 between the PMOS quad and the
+  sinks, VBN between the sinks and the NMOS quad, EN above the digital row.
+- Routing: `Alloc` (one column per net, 12 um window) is not enough for a lane. Plan: a two-layer grid router in
+  `layout/lib/`, Metal2 vertical and Metal3 horizontal at 0.7 um pitch, leaf boxes closed to routing, each port leaving
+  on Metal3 at its own height, every shape still painted through `Block.rect` so shorts are refused before painting.
+  The second net of each matched pair is routed along the mirror image of the first. On one column two via pads must
+  be at least 0.68 um apart or overlap (same rule as `alloc.pad_ys`).
+- LVS: a flat schematic built from `netlist/lvds_circuit.py` (`SUBCKTS`, `_line_lvs`) with the layout labelled by the
+  reference's own net names (they are unique across the three sub-blocks), plus the dummy devices; and a second Netgen
+  run of that flat netlist against `lvds_lane` in the frozen reference file.
+- Extra checks beyond `check.run_cell`: via-array script, a bridge between two nets as a third negative control,
+  antenna with the ESD diodes removed, and the wiring capacitance of INP against INN and of the two gate-side nets
+  from a `pex_c` extraction.
+
+Full leaf regression after the row-engine change: NOT CONFIRMED. It was still running when the session stopped (usage
+limit). Read the end of `.scratch/t9/run_all_full.log`: it must show `ALL GREEN` and `EXIT 0`. If it does, commit the
+regenerated `layout/leaf_tests/results/` (uncommitted, partly rewritten at the time of writing); if not, re-run
+`layout/leaf_tests/run_all.py` (12 min) before anything else.
+
 ## Rules the owner set
 
 - Report and wait for a go-ahead before each major phase (lane, macro, post-layout simulation, packaging).
