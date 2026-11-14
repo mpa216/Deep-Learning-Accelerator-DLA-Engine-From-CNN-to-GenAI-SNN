@@ -1,0 +1,172 @@
+{
+ "cell": "t_esd_mirror",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 10.85,
+    "m2": 0.4,
+    "m3": 28.81
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 0,
+   "mos": {},
+   "n_res": 1,
+   "want_fingers": 0,
+   "n_diode": 2,
+   "n_cap": 0
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": []
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t8/work/t_esd_mirror/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    3,
+    3
+   ],
+   "nets": [
+    4,
+    4
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": []
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "B",
+    "at": [
+     -32.59,
+     5.69,
+     -3.78,
+     6.29
+    ],
+    "why": [
+     "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: B.0                                   |(no matching net)",
+     "Netlists do not match.",
+     "A                                          |B **Mismatch**"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  },
+  "post": {
+   "ok": true,
+   "layers": 17,
+   "differing": {},
+   "what": "GDS mirrored about x = 0 XOR results/t_esd.gds, all layers",
+   "ports": {
+    "A": [
+     "ES",
+     [
+      -4.18,
+      3.33,
+      -3.78,
+      3.73
+     ]
+    ],
+    "B": [
+     "W",
+     [
+      -32.59,
+      5.69,
+      -31.59,
+      6.29
+     ]
+    ],
+    "VSS": [
+     "S",
+     [
+      -26.65,
+      0.66,
+      -15.14,
+      0.94
+     ]
+    ],
+    "VDD": [
+     "N",
+     [
+      -15.42,
+      10.46,
+      -0.78,
+      10.74
+     ]
+    ]
+   }
+  }
+ },
+ "started": "2026-11-14 09:24:42",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 34.1,
+ "bbox_um": [
+  32.63,
+  10.08
+ ]
+}

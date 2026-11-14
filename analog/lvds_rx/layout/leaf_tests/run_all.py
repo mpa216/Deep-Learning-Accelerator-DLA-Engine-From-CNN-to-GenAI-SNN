@@ -23,10 +23,11 @@ sys.path.insert(0, HERE)
 import run_leaf_tests as part1                      # noqa: E402
 import cells2                                        # noqa: E402
 import cells3                                        # noqa: E402
+import cells4                                        # noqa: E402
 import ant_tests                                     # noqa: E402
 from lib import check                                # noqa: E402
 
-ALL2 = {**cells2.CELLS2, **cells3.CELLS3}
+ALL2 = {**cells2.CELLS2, **cells3.CELLS3, **cells4.CELLS4}
 RESULTS = part1.RESULTS
 OUT = part1.OUT
 
@@ -54,12 +55,22 @@ def run_one(name, nok):
     else:
         blk, schem, cut, opts = ALL2[name]()
     leaf = opts.pop("leaf", None)
+    post = opts.pop("post", None)
     if leaf is not None and leaf.info.get("kind") == "res_array":
         opts["res_cols"] = leaf.info["cols"]
     r = check.run_cell(blk, schem, OUT, RESULTS, klayout=not nok, cut_net=cut, **opts)
+    if post is not None:
+        # cell-specific extra check (cells4): counts like any other step
+        try:
+            r["steps"]["post"] = post(r, os.path.join(OUT, name))
+        except Exception as e:                       # a crashing check is a failed check
+            r["steps"]["post"] = dict(ok=False, error=repr(e))
+        r["all_ok"] = all(s.get("ok", False) for s in r["steps"].values())
+        r["verdict"] = "PASS" if r["all_ok"] else "FAIL: " + ", ".join(k for k, s in r["steps"].items() if not s.get("ok", False))
     g = os.path.join(RESULTS, name + ".gds")
     if os.path.exists(g):
         r["bbox_um"] = gds_info(g)
+    if post is not None or os.path.exists(g):
         with open(os.path.join(RESULTS, name + ".json"), "w") as f:
             json.dump(r, f, indent=1, default=str)
     print(name, r["verdict"], f"{r['wall_s']} s", r.get("bbox_um"))
