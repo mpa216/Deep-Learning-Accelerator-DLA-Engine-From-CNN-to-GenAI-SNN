@@ -357,10 +357,11 @@ def build(stage="route", name=CELL):
 
 
 # ----------------------------------------------------------------------------------------------------------- schematic
-def schematic(L, name=CELL):
+def schematic(L, name=CELL, dummies=True):
     """Flat LVS schematic of the lane: subckt lvds_lane of the reference (netlist/lvds_circuit.py + the device table, the same
     source gen_lvs_ref.py writes netlist/lvds_rx_lvs_ref.spice from), flattened, plus the dummy devices of the layout.
-    Internal nets keep the reference's local names (tp fa fb tn ts sa sb n3a d3 nd nm i1 i2 ...), which the layout uses too."""
+    Internal nets keep the reference's local names (tp fa fb tn ts sa sb n3a d3 nd nm i1 i2 ...), which the layout uses too.
+    dummies=False: the flattened reference devices only (run_lane compares that text with the frozen reference file)."""
     import lvds_circuit as C
     tab, dev, res = C.load_table(ROOT)
     flags = dict(tab["flags"])
@@ -394,6 +395,8 @@ def schematic(L, name=CELL):
 
     expand("lvds_lane", {p: p for p in ports}, "")
     n_ref = len(lines)
+    if not dummies:
+        return f".subckt {name} {' '.join(ports)}\n" + "\n".join(lines) + f"\n.ends {name}\n"
     for d in L.blk.schem:
         if d[0] == "dummy":
             _, inst, drn, rail, body, kind, Wf, Lg = d

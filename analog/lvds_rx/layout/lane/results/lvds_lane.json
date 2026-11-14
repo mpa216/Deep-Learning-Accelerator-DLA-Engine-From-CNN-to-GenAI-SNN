@@ -1024,17 +1024,94 @@
   },
   "render": {
    "ok": true
+  },
+  "lvs_reference": {
+   "ok": true,
+   "reference": "netlist/lvds_rx_lvs_ref.spice",
+   "sha256": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+   "frozen_sha256": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+   "frozen_sha256_ok": true,
+   "flattened_subcells": [
+    "lvds_esd2",
+    "lvds_hyst",
+    "lvds_out",
+    "lvds_pre"
+   ],
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t9/work/lvds_lane/lvs_reference.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    47,
+    47
+   ],
+   "nets": [
+    29,
+    29
+   ],
+   "counts_equal": true,
+   "clean": true
+  },
+  "via_arrays": {
+   "ok": true,
+   "script": "/foss/designs/scripts/check_via_arrays.py",
+   "sha256": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d",
+   "copies": {
+    "/foss/designs/scripts/check_via_arrays.py": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d",
+    "/foss/designs/.claude/worktrees/lvds-rx/scripts/check_via_arrays.py": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d"
+   },
+   "copies_identical": true,
+   "exit_code": 0,
+   "violations": 0,
+   "layers": {
+    "Via1 design (SRAM IP excluded)": {
+     "cuts": 472,
+     "clusters": 472,
+     "big": 0,
+     "violations": 0
+    },
+    "Via1 incl. SRAM IP": {
+     "cuts": 472,
+     "clusters": 472,
+     "big": 0,
+     "violations": 0
+    },
+    "Via2 design (SRAM IP excluded)": {
+     "cuts": 753,
+     "clusters": 753,
+     "big": 0,
+     "violations": 0
+    },
+    "Via2 incl. SRAM IP": {
+     "cuts": 753,
+     "clusters": 753,
+     "big": 0,
+     "violations": 0
+    }
+   },
+   "not_present": [
+    "Via3",
+    "Via4",
+    "Via5"
+   ],
+   "control": {
+    "detected": true,
+    "exit_code": 1,
+    "violations": 2
+   }
   }
  },
- "started": "2026-11-14 10:00:41",
+ "started": "2026-11-14 10:13:06",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 28.2,
+ "wall_s": 39.2,
+ "python_build_s": 4.5,
  "box_um": [
   142.8,
   125.3
  ],
- "python_build_s": 3.8,
  "schematic": {
   "reference_devices": 47,
   "dummy_devices": 46

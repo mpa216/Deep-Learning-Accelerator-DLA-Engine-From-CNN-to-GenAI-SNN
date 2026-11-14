@@ -14,6 +14,7 @@ run_cell(blk, schematic_text, outdir, ...) executes, for one Block:
 and writes <name>.json (+ gds, png) to the results directory.  Nothing is reported that was not observed.
 """
 import glob
+import hashlib
 import json
 import os
 import re
@@ -151,6 +152,51 @@ def klayout_drc(gds, cell, rundir, antenna=True):
         res["antenna_rules"] = per
         res["antenna_lyrdb_files"] = n
     return res
+
+
+# ------------------------------------------------------------------------------------------------ 4b via arrays (Vn.2b)
+CHECKOUT = os.path.abspath(os.path.join(LIB, "..", "..", "..", ".."))       # analog/lvds_rx/layout/lib -> checkout root
+# PLAN_V2 6.4 step 4: the chip's own script.  It lives on main under scripts/ (container path /foss/designs/scripts/);
+# the worktree carries a copy at the same relative path.  The first path that exists is run; both are hashed.
+VIA_SCRIPT = ("/foss/designs/scripts/check_via_arrays.py", os.path.join(CHECKOUT, "scripts", "check_via_arrays.py"))
+
+
+def _via_script_run(script, gds, cell):
+    rc, out, _ = sh(["python3", script, os.path.abspath(gds), cell])
+    rows = re.findall(r"^(Via\d) \[(.*?)\]: cuts=(\d+) clusters=(\d+) big=(\d+) VIOLATIONS=(\d+)", out, re.M)
+    return rc, rows, out
+
+
+def via_arrays(gds, cell, wd):
+    """Rule Vn.2b (via space >= 0.36 um inside arrays of 4 x 4 cuts or more): not coded in the open KLayout deck, checked by
+    scripts/check_via_arrays.py.  Run on the GDS (must report 0) and on a copy with a planted dense 4 x 4 Via2 array
+    (0.26 um cuts, 0.26 um space) 5 um east of the cell, which the script must flag: proof that it reads this GDS's layers."""
+    found = [p for p in VIA_SCRIPT if os.path.exists(p)]
+    if not found:
+        return dict(ok=False, error="check_via_arrays.py not found", looked_in=list(VIA_SCRIPT))
+    script = found[0]
+    shas = {p: hashlib.sha256(open(p, "rb").read()).hexdigest() for p in found}
+    rc, rows, out = _via_script_run(script, gds, cell)
+    viol = sum(int(r[5]) for r in rows)
+    import klayout.db as db
+
+    def plant(ly, top):
+        li = ly.layer(38, 0)
+        bb = top.dbbox()
+        for i in range(4):
+            for j in range(4):
+                x, y = bb.right + 5.0 + 0.52 * i, bb.bottom + 0.52 * j
+                top.shapes(li).insert(db.DBox(x, y, x + 0.26, y + 0.26))
+    ctl = os.path.join(wd, "via_array_control.gds")
+    edit_gds(gds, ctl, plant)
+    rc_c, rows_c, _ = _via_script_run(script, ctl, cell)
+    viol_c = sum(int(r[5]) for r in rows_c)
+    return dict(ok=(rc == 0 and viol == 0 and len(rows) > 0 and rc_c == 1 and viol_c >= 1),
+                script=script, sha256=shas[script], copies=shas, copies_identical=(len(set(shas.values())) == 1),
+                exit_code=rc, violations=viol,
+                layers={f"{r[0]} {r[1]}": dict(cuts=int(r[2]), clusters=int(r[3]), big=int(r[4]), violations=int(r[5])) for r in rows},
+                not_present=re.findall(r"^(Via\d): layer \S+ not present", out, re.M),
+                control=dict(detected=(rc_c == 1 and viol_c >= 1), exit_code=rc_c, violations=viol_c))
 
 
 # ------------------------------------------------------------------------------------------------ 5 LVS
