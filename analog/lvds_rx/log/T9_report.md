@@ -4,7 +4,9 @@ Everything below was observed in one run of `layout/lane/run_lane.py` (cell `lvd
 `layout/lane/results/lvds_lane.json`) and one full leaf regression (`layout/leaf_tests/run_all.py`), run after the last
 library change of T9: last line `ALL GREEN` (allocator self-test, 28 leaf cells, the 2 fault cells that must fail LVS and be
 located, the antenna pair with and without ESD: 32 cells; the cell checks add up to about 12 min; table
-`layout/leaf_tests/results/summary.md`, generated 2026-11-14 10:39).
+`layout/leaf_tests/results/summary.md`, generated 2026-11-14 10:39). `make check` afterwards: green (LUT self-test
+296/296, 49 harness tests without failure, lint 0, toy layout ok, gates ENV and SELFTEST 14/14 pass); the four full-tier
+files it overwrites in `results/` were restored from git.
 
 Run: `docker exec apic_headless bash /foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/tools/cx make layout`
 (leaf regression, then the lane), or the lane alone with `... tools/cx python3 layout/lane/run_lane.py [--stage place|rails|route] [--nok]`.

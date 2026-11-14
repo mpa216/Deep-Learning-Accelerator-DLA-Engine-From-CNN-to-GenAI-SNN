@@ -109,7 +109,7 @@ self-test and the antenna pair, no failure line; log `.scratch/t9/run_all_full.l
 | D | `layout/lane/lane.py` placement (rows, straps, spines, ties, bias trunks) + `run_lane.py --stage place` | done, foundry deck 0 / 0 |
 | E | lane routing, pins, flat LVS schematic; `run_lane.py` (full check of cell `lvds_lane`) | done, see below |
 | F | lane-only checks (items 1-5 below) | done in three commits (F1 `75ec043`, F2 `ab312d1`, F3), see "Piece F" below |
-| G | leaf regression, design-log entry, T9 report, `make check`, then report to the owner and wait | **next** |
+| G | leaf regression, design-log entry, T9 report, `make check`, then report to the owner and wait | done: regression ALL GREEN (32 cells), `make check` green, `log/T9_report.md`, DESIGN_LOG entry, `make layout`. **T9 is closed; waiting for the owner's go-ahead for T10** |
 
 ### Piece F (fourth session, 2026-11-14): all lane-only checks pass, now part of `run_lane.py` (about 45 s)
 
