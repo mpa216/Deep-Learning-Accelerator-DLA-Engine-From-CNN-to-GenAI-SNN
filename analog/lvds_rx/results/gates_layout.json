@@ -1,14 +1,14 @@
 {
- "generated": "2026-11-14 12:17:07",
+ "generated": "2026-11-15 00:16:48",
  "tier": "full",
  "phases": [
   "layout"
  ],
  "git": {
-  "commit": "17aaf8a",
-  "dirty": null
+  "commit": "8893ac1",
+  "dirty": true
  },
- "gates_sha256": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5",
+ "gates_sha256": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
  "spec_sha256": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
  "summary": {
   "PASS": 1
@@ -207,6 +207,17 @@
    "files_after": {
     "spec/gates.yaml": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5"
    }
+  },
+  {
+   "id": "D-015",
+   "date": "2026-11-14",
+   "kind": "note",
+   "trigger": "T11: gate TBL was a deferred stub since T0 ('T11 writes sim/tbl_* specs and the evaluator'); T11 wrote both (sim/tbl/make_cores.py, make_benches.py, evaluate.py)",
+   "measured": "results/post_layout/tbl.json (written by sim/tbl/evaluate.py from sim/tbl_*/results/tbl_*_{pre,pex}/results.json)",
+   "gate_relaxed": "none. The stub became a json gate on the evaluator's summary: complete and ok pre / extracted run sets, at least 100 pairs, no failed check, largest use of margin <= 0.30, and the D-012 freeze condition met. The frozen criterion is unchanged (every metric within 30 % of its margin to the source TB gate's limit); its reading (a loss of margin is gated, a gain over 30 % is listed and explained; checks without a margin pass when the extracted value meets the limit) was fixed in log/T11_notes.md before the full runs.",
+   "files_after": {
+    "spec/gates.yaml": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f"
+   }
   }
  ],
  "gates": {
@@ -362,7 +373,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/layout.json",
-   "results_sha256": "467ca1ba91a6333ec35918ebb103adb18163032a58d191e883bf19488aa9002c"
+   "results_sha256": "fa6e8377c70e0708065e4034c7483de12ed4693a844ef8c3df6d490ef4f2b603"
   }
  }
 }

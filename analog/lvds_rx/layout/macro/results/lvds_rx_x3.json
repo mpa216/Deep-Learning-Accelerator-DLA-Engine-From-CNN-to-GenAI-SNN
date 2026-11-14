@@ -283,7 +283,7 @@
       "D": 12
      },
      "bytes": 136422,
-     "extract_s": 1.6
+     "extract_s": 1.5
     },
     "lvds_rx_x3.pex_rc": {
      "file": "results/layout/lvds_rx_x3.pex_rc.spice",
@@ -303,12 +303,12 @@
      ],
      "elements": {
       "X": 1029,
-      "C": 5711,
+      "C": 5735,
       "R": 10429,
       "D": 12
      },
-     "bytes": 766264,
-     "extract_s": 8.6
+     "bytes": 777203,
+     "extract_s": 7.8
     },
     "lvds_lane.pex_c": {
      "file": "results/layout/lvds_lane.pex_c.spice",
@@ -331,7 +331,7 @@
       "D": 4
      },
      "bytes": 29760,
-     "extract_s": 0.9
+     "extract_s": 0.8
     },
     "lvds_lane.pex_rc": {
      "file": "results/layout/lvds_lane.pex_rc.spice",
@@ -349,11 +349,11 @@
      ],
      "elements": {
       "X": 317,
-      "C": 1760,
+      "C": 1768,
       "R": 3125,
       "D": 4
      },
-     "bytes": 168882,
+     "bytes": 172150,
      "extract_s": 1.6
     },
     "lvds_bias.pex_c": {
@@ -374,7 +374,7 @@
       "D": 0
      },
      "bytes": 7727,
-     "extract_s": 0.6
+     "extract_s": 0.5
     },
     "lvds_bias.pex_rc": {
      "file": "results/layout/lvds_bias.pex_rc.spice",
@@ -393,8 +393,46 @@
       "R": 967,
       "D": 0
      },
-     "bytes": 44469,
-     "extract_s": 0.7
+     "bytes": 45072,
+     "extract_s": 0.6
+    }
+   },
+   "rc_repair": {
+    "lvds_rx_x3": {
+     "pairs": 472,
+     "scaled": 5700,
+     "added": 24,
+     "missing": [],
+     "max_rel_err": 4.106299599406638e-06,
+     "total_fF": {
+      "c_extraction": 2842.7,
+      "rc_before": 4304.2,
+      "rc_after": 2842.7
+     }
+    },
+    "lvds_lane": {
+     "pairs": 145,
+     "scaled": 1757,
+     "added": 8,
+     "missing": [],
+     "max_rel_err": 3.013736611494847e-06,
+     "total_fF": {
+      "c_extraction": 822.9,
+      "rc_before": 1238.4,
+      "rc_after": 822.9
+     }
+    },
+    "lvds_bias": {
+     "pairs": 79,
+     "scaled": 447,
+     "added": 0,
+     "missing": [],
+     "max_rel_err": 4.106299599406638e-06,
+     "total_fF": {
+      "c_extraction": 250.7,
+      "rc_before": 414.0,
+      "rc_after": 250.7
+     }
     }
    },
    "caps": {
@@ -473,7 +511,7 @@
     },
     "pex_c": {
      "rc": 0,
-     "wall_s": 1.0,
+     "wall_s": 0.9,
      "values": {
       "v(rx0_o)": 3.3,
       "v(rx1_o)": 4.276792e-09,
@@ -490,7 +528,7 @@
     },
     "pex_rc": {
      "rc": 0,
-     "wall_s": 4.9,
+     "wall_s": 4.5,
      "values": {
       "v(rx0_o)": 3.3,
       "v(rx1_o)": 4.314581e-09,
@@ -550,5 +588,8 @@
  "all_ok": true,
  "verdict": "PASS",
  "layout_json": "results/layout.json",
- "wall_s": 88.1
+ "wall_s": 24.1,
+ "notes": [
+  "2026-11-14 18:12:02: step pex redone alone (--stage pex, T11: RC netlists repaired) on the same GDS"
+ ]
 }

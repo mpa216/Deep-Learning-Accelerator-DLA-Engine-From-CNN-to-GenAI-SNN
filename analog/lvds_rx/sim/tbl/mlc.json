@@ -14,7 +14,7 @@
    "x1023"
   ],
   "source": "results/layout/lvds_rx_x3.pex_c.spice",
-  "source_sha256": "264fe7e552e1f6c838ac346c1953505a74638d58a2c353d2501add261fdf6a23"
+  "source_sha256": "4352a44f7c4d36fcbf74f6d1130794b236946474714fc74443f73f3f6a62a939"
  },
  "pexrc": {
   "renamed": 3784,
@@ -31,7 +31,7 @@
    "x1023"
   ],
   "source": "results/layout/lvds_rx_x3.pex_rc.spice",
-  "source_sha256": "e0bd6d0566d169c5fc8de8daf771206d9e4f83e28db5735ab426a96c3b3bb65b"
+  "source_sha256": "5f76c488b25f1f75e1b88dbd3b707f408cc9bb4cadc1d06ac8c82d8c0a179afd"
  },
  "core_sha256": "ca22c0077896c1c83352aac4db29565814a5e849bb95e50bf86d1c9090600d5e"
 }

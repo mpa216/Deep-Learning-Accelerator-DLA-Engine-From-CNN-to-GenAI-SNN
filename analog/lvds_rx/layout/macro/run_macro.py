@@ -244,15 +244,27 @@ def pex(L, B, M, wd, gds, lvs_out):
     res, files = {}, {}
     cells = ((macro.CELL, gds, True), (lane.CELL, os.path.join(wd, lane.CELL + ".gds"), False),
              (bias.CELL, os.path.join(wd, bias.CELL + ".gds"), False))
+    import re
+    rep = {}
     for cell, g, flat in cells:
         sha = hashlib.sha256(open(g, "rb").read()).hexdigest()
+        raw = {}
         for mode, note in (("pex_c", "parasitic C on all nets (coupling and to substrate, cthresh 0)"),
-                           ("pex_rc", "parasitic R (extresist, tolerance 10) and C on all nets")):
+                           ("pex_rc", "parasitic R (extresist, tolerance 10) on all nets; C from the C-coupled extraction "
+                                      "(check.rc_repair, T11: Magic 8.3.636 extresist counts every coupling twice)")):
             ex = check.extract(cell, g, wd, f"{mode}_{cell}", mode=mode, flat=flat)
-            files[f"{cell}.{mode}"] = pex_file(ex["spice"], cell, os.path.join(DELIV, f"{cell}.{mode}.spice"),
+            raw[mode] = ex
+            src = ex["spice"]
+            if mode == "pex_rc":       # T11: the RC netlist's capacitance repaired from the C-coupled one of the same layout
+                src = ex["spice"].replace(".lay.spice", ".repaired.spice")
+                rep[cell] = check.rc_repair(raw["pex_c"]["spice"], ex["spice"], src,
+                                            key=lambda n: check.flat_base(re.sub(r"\.(n|t)\d+$", "", n)))
+                rep[cell].pop("out")
+            files[f"{cell}.{mode}"] = pex_file(src, cell, os.path.join(DELIV, f"{cell}.{mode}.spice"),
                                                note + (" (flat copy of the hierarchy)" if flat else ""), sha)
             files[f"{cell}.{mode}"]["extract_s"] = ex["wall_s"]
     res["netlists"] = files
+    res["rc_repair"] = rep
     # capacitance summary of the macro (flat C netlist): RX pins and the lanes' gate nets, outputs, enable
     caps = check.net_caps(os.path.join(ROOT, files[f"{macro.CELL}.pex_c"]["file"]), key=check.flat_base)
     c = {n: round(v["total_fF"], 3) for n, v in caps.items()}
@@ -280,6 +292,7 @@ def pex(L, B, M, wd, gds, lvs_out):
                                      if "i(vdd)" in s["values"] and pre.get("i(vdd)") else None)
     lv0 = res["smoke"]["prelayout"]["levels"]
     ok = ok and lv0[0] == lv0[2] != lv0[1] and "x" not in lv0 and all(s["levels"] == lv0 for s in res["smoke"].values())
+    ok = ok and all(v["max_rel_err"] < 1e-4 and not v["missing"] for v in rep.values())
     res["ok"] = bool(ok)
     # deliverables next to the netlists: GDS, picture, the LVS report
     shutil.copy(gds, os.path.join(DELIV, macro.CELL + ".gds"))
@@ -312,9 +325,36 @@ def _write(r, t0):
     return bool(r["all_ok"])
 
 
+def pex_only():
+    """--stage pex (T11): redo step 6 (PEX, repaired RC) on the GDS of the last full run, which must be the delivered one;
+    the record of that run keeps its other steps, gains a note, and layout.json is rewritten from it."""
+    import hashlib
+    t0 = time.time()
+    rec_p = os.path.join(RESULTS, macro.CELL + ".json")
+    r = json.load(open(rec_p))
+    wd = os.path.join(OUT, macro.CELL)
+    gds = os.path.join(wd, macro.CELL + ".gds")
+    sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+    if sha(gds) != sha(os.path.join(DELIV, macro.CELL + ".gds")):
+        raise SystemExit("pex_only: the work GDS is not the delivered one; run the full flow")
+    L, B = lane.build("route"), bias.build("route")
+    M = macro.build(L, B)
+    lvs_out = os.path.join(DELIV, macro.CELL + ".lvs.out")
+    keep = os.path.join(wd, "lvs_out_delivered.txt")
+    import shutil
+    shutil.copy(lvs_out, keep)
+    r["steps"]["pex"] = pex(L, B, M, wd, gds, keep)
+    r.setdefault("notes", []).append("%s: step pex redone alone (--stage pex, T11: RC netlists repaired) on the same GDS" %
+                                     time.strftime("%Y-%m-%d %H:%M:%S"))
+    r["layout_json"] = layout_json(r, L, B, M)
+    return _write(r, t0)
+
+
 def main(args):
     nok = "--nok" in args
     stage = args[args.index("--stage") + 1] if "--stage" in args else "full"
+    if stage == "pex":
+        return 0 if pex_only() else 1
     return 0 if run(stage, nok) else 1
 
 

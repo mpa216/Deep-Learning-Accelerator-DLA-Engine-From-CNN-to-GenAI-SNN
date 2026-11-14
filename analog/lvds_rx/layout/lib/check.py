@@ -16,6 +16,7 @@ and writes <name>.json (+ gds, png) to the results directory.  Nothing is report
 Helpers used by the lane (layout/lane/run_lane.py) on top of run_cell: via_arrays (rule Vn.2b, scripts/check_via_arrays.py),
 strip_diodes + klayout_drc(main=False) (antenna without the ESD diodes), pick_bridge / add_rect.
 """
+import collections
 import glob
 import hashlib
 import json
@@ -261,6 +262,108 @@ def net_caps(spice, key=None):
             e["total_fF"] += v
             e["to"][y] = e["to"].get(y, 0.0) + v
     return out
+
+
+def _c_lines(text):
+    """(line index, name, node a, node b, value fF) of every C element of a SPICE text."""
+    out = []
+    for i, line in enumerate(text.splitlines()):
+        t = line.split()
+        if len(t) < 4 or t[0][0] not in "Cc":
+            continue
+        m = re.match(r"^([0-9.]+(?:[eE][-+]?\d+)?)([afpnumAFPNUM]?)", t[3])
+        if m:
+            out.append((i, t[0], t[1], t[2], float(m.group(1)) * (_SI_FF[m.group(2).lower()] if m.group(2) else 1e15)))
+    return out
+
+
+def _node_tokens(t):
+    """Node tokens of one element line (C/R/D: two; X: all before the subckt name, which precedes the first k=v)."""
+    c = t[0][0].upper()
+    if c in "CRD":
+        return t[1:3]
+    if c == "X":
+        k = next((i for i, x in enumerate(t) if "=" in x), len(t))
+        return t[1:k - 1]
+    return []
+
+
+def rc_repair(c_spice, rc_spice, out, key=None, gnd="VSS"):
+    """T11: repair the capacitance of a Magic RC extraction (Magic 8.3.636 extresist).  Found in T11: in the RC netlist the
+    ground capacitance of every net split by extresist equals that net's WHOLE C-coupled total (substrate + couplings) while
+    the coupling capacitors are written as well, so every coupling is counted twice; the couplings to the n-well node of the
+    stage-1 PMOS pair (and its well-to-substrate capacitance) are lost.  `ext2sim` before extresist changes nothing, and a
+    decoupled RC extraction drops the capacitance of the split nets altogether.
+    Repair: keep the RC netlist's devices and resistor networks; take the capacitance from the C-coupled extraction of the
+    same layout (`c_spice`): the ground capacitors of net X are scaled so they sum to X's capacitance to `gnd` in the C
+    extraction, the coupling capacitors of each net pair are scaled to that pair's C-extraction total (a pair missing in the
+    RC netlist gets one capacitor between representative nodes: the plain node name, else the first sub-node).  `key` maps
+    a node to its net.  Returns the largest relative error of any net-pair total against the C extraction (must be ~0)."""
+    key = key or base
+    ctext, rtext = open(c_spice).read(), open(rc_spice).read()
+    want = collections.Counter()                                    # (net, net) sorted -> fF, ground pairs included
+    for _, _, a, b, v in _c_lines(ctext):
+        x, y = key(a), key(b)
+        if x != y:
+            want[tuple(sorted((x, y)))] += v
+    lines = rtext.splitlines()
+    nodes = collections.defaultdict(set)
+    for line in lines:
+        t = line.split()
+        if t and t[0][0] not in "*.+":
+            for n in _node_tokens(t):
+                nodes[key(n)].add(n)
+    have = collections.defaultdict(list)
+    before = 0.0
+    for i, _, a, b, v in _c_lines(rtext):
+        x, y = key(a), key(b)
+        if x != y:
+            have[tuple(sorted((x, y)))].append((i, v))
+            before += v
+
+    def rep(n):
+        s = nodes.get(n)
+        if not s:
+            return None
+        return n if n in s else sorted(s, key=lambda z: (not z.endswith(".n0"), z))[0]
+
+    new, extra, missing = {}, [], []
+    for k in set(have) | set(want):
+        h = sum(v for _, v in have.get(k, []))
+        w = want.get(k, 0.0)
+        if h > 0:
+            for i, v in have[k]:
+                new[i] = v * w / h if w > 0 else None
+        elif w > 0:
+            a, b = rep(k[0]), rep(k[1])
+            if a is None or b is None:
+                missing.append((k, w))
+            else:
+                extra.append((a, b, w))
+    outl = []
+    pending = list(extra)
+    for i, line in enumerate(lines):
+        if i in new:
+            if new[i] is None:
+                continue
+            t = line.split()
+            t[3] = "%.6gf" % new[i]
+            line = " ".join(t)
+        if line.startswith(".ends") and pending:
+            outl += ["Crep%d %s %s %.6gf" % (j, a, b, v) for j, (a, b, v) in enumerate(pending)]
+            pending = []
+        outl.append(line)
+    with open(out, "w") as f:
+        f.write("\n".join(outl) + "\n")
+    after = collections.Counter()
+    for _, _, a, b, v in _c_lines(open(out).read()):
+        x, y = key(a), key(b)
+        if x != y:
+            after[tuple(sorted((x, y)))] += v
+    err = max((abs(after[k] - want[k]) / max(want[k], 1e-3) for k in set(after) | set(want) if k not in dict(missing)), default=0.0)
+    return dict(out=out, pairs=len(want), scaled=len(new), added=len(extra), missing=[[list(k), round(w, 3)] for k, w in missing],
+                max_rel_err=err, total_fF=dict(c_extraction=round(sum(want.values()), 1), rc_before=round(before, 1),
+                                               rc_after=round(sum(after.values()), 1)))
 
 
 def netgen_lvs(cell, lay_spice, schem_text, wd, tag):

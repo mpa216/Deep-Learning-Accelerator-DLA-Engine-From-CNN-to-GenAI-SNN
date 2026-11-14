@@ -48,3 +48,27 @@ meets the limit. A GAIN of margin over 30 % is listed and explained, not failed.
 spread. The systematic offset added by the layout (TB3_trip off_v delta) is compared with 30 % of the TB3_off window
 margin. D-012 is judged on the absolute limits (A1 >= 4, TB4 limits, TB5 eye limits) at ff/125C/3.6 V, VIC 0.05 V.
 Evaluator: `sim/tbl/evaluate.py` -> `results/post_layout/tbl.json`, `TBL.md`.
+
+## Finding: the T10 RC netlists counted every coupling twice (Magic 8.3.636 extresist)
+
+Diagnosis of the TB4 slow-down (`.scratch/t11/diag_tb4.py`, `node_cap_ac.py`, `lane_res.py`, `c_vs_rc.py`, `rc_test*.py`):
+- Stage by stage (tt, VIC 0.05 V, VID 100 mV, rise/fall): pre 3.46/3.71 ns, C-only 5.12/5.51, RC 5.91/6.42; the
+  hysteresis stage takes the largest part (+0.7-0.8 ns C-only), then stage 3, stage 1, the output chain.
+- The extracted resistances are small (largest element 83 ohm, largest per-net sum 1.8 kohm over 80 elements): they
+  cannot explain the 0.9 ns between C-only and RC.  The RC netlist carries 4304 fF of wiring C against 2843 fF in the
+  C-only one: for every net that extresist splits, the capacitance to VSS equals that net's whole C-coupled total
+  (oa 27.56 fF, d2a 24.04, d3 14.41: exactly the C-only totals) while all coupling capacitors are written as well; the
+  n-well node of the PMOS pair (tp) lost its 103 fF well capacitance and all its couplings.
+- `ext2sim -p` before extresist (the sak-pex.sh full-RC flow) gives the identical netlist; a decoupled RC extraction
+  (`extract no coupling`) drops the capacitance of every split net.  The Magic tech file gives diffusion no area cap
+  (no double count of junctions); the n-well has 120 aF/um2 (the tp well capacitance is real).
+- Fix: `check.rc_repair()` keeps the RC netlist's devices and resistor networks and takes the capacitance from the
+  C-coupled extraction of the same layout (ground capacitors of each net and coupling capacitors of each net pair
+  scaled to the C extraction's totals, lost pairs added between representative nodes).  On the lane: every one of the
+  145 net-pair totals equals the C extraction (largest relative error 3e-6), 3125 resistors kept.
+  `run_macro.py --stage pex` redoes step 6 with the repair on the delivered GDS (same sha256).
+- The TBL run started on the double-counted netlist was stopped (op, ac, trip-pre had finished); it is re-run.
+- What stays true: with the correct capacitance the slow-down is the C-only one, +49 % at that point (3.71 -> 5.54 ns,
+  43 % of the margin to 8 ns); node capacitance on the chain is +35 to +120 % (effective, AC at 1 GHz).  The pre-layout
+  netlist carries no wiring estimate at all (sizing assumed cw = 10 fF on oa/ob in its pole estimate only; extracted
+  wiring is 27.6 fF there) and models junctions with 0.18 um of diffusion per side (layout: about 0.27 um average).
