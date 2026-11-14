@@ -27,8 +27,8 @@ Solo, in small pieces with one local commit each (as in T9). Report and wait for
 |---|---|---|
 | A1 | `layout/bias/bias.py` placement (leaves, straps, VSS spine, ring ties, trunk pins) + `run_bias.py --stage place` | done: Magic 0 (GDS), KLayout 0 / 0 |
 | A2 | bias routing, pins, flat schematic, full check (LVS against lvds_bias + reference file, negative controls, via arrays) | done: PASS, see below |
-| B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | next |
-| C | macro LVS (hierarchical), negative controls, via arrays, antenna with / without ESD | open |
+| B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | done, see below |
+| C | macro LVS (hierarchical), negative controls, antenna without ESD | next |
 | D | PEX: C on all nets, RC on the input pair, bias and output nets | open |
 | E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | open |
 
@@ -40,7 +40,22 @@ Solo, in small pieces with one local commit each (as in T9). Report and wait for
 W, cut wire (VBN), Metal3 bridge (EN-VB2 across 0.42 um), sliver: all detected. check_via_arrays.py 0. Routing 11 nets,
 757 um Metal2, 467 um Metal3, 88 vias.
 
+## Macro after piece B (`layout/macro/run_macro.py --stage drc`, about 40 s)
+
+Cell `lvds_rx_x3`: instances lvds_lane at (100, 42.15), (300, 42.15), (500, 42.15) and lvds_bias at (571.4, 42.15);
+FIXED_BBOX (0, 0)-(650, 192.1), written by Magic into the GDS as the boundary on layer 0/0; core (25, 25)-(625, 167.1) =
+600 x 142.1 um. KLayout main 0, antenna 0; Magic DRC on the flattened .mag 1100 (all CO.6 = 3 x 352 + 44, allow-listed),
+GDS read-back 0; check_via_arrays.py 0 (Via1 1564, Via2 2535 cuts). Pins: RXk_P / RXk_N Metal3 at x 50.3 + 200k / 149.7 +
+200k on the top edge (0.3 um from pins.yaml: the lane grid), EN and RXk_O Metal2 at x 100 / 200 / 300 / 400 on the bottom
+edge. Lane 2's output runs 150 um west under the lane to x = 400 (pins.yaml order).
+
 ## Rules found
+
+* Magic DRC of a hierarchical cell: `drc listall count` counts a subcell's errors in the subcell and again per instance in
+  the parent, `drc listall why` lists boxes on yet another basis; `check.magic_drc(flat=True)` checks a flattened copy,
+  where every error is counted once with its rule.
+* `getcell CELL child 0 0 parent Xum Yum` puts the child's origin at (X, Y); a plain `getcell` aligns bounding boxes.
+* FIXED_BBOX in lambda (0.05 um) is written to the GDS as a boundary shape on layer 0/0 (the top bbox then starts at 0, 0).
 
 * A diode-connected mirror (MBN : MBS, MBP : MB2P) has its gate-to-drain jog at the gate strap's exit end: the other bars
   cannot leave past it. `mirror_interdig(gate_exit=)` (default W, unchanged for the lane's mn3) puts the strap and the jog

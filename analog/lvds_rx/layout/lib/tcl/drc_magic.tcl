@@ -11,6 +11,15 @@ if {[string match *.gds $src]} {
     addpath $src
     load $cell
 }
+# FLAT=1 (a hierarchical cell, T10): check a flattened copy.  On a hierarchy "drc listall count" counts each subcell's errors
+# in the subcell AND again per instance in the parent, while "drc listall why" lists boxes on another basis, so totals and
+# rule lists do not agree; on a flat copy every error is counted once and listed with its rule.
+if {[info exists env(FLAT)] && $env(FLAT) eq "1"} {
+    expand
+    flatten ${cell}_flatdrc
+    load ${cell}_flatdrc
+    set cell ${cell}_flatdrc
+}
 select top cell
 drc style drc(full)
 drc check

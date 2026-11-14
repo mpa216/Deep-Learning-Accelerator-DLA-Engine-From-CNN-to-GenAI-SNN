@@ -55,9 +55,10 @@ def magic(script, cwd, env=None, log="magic.log"):
 
 
 # ------------------------------------------------------------------------------------------------ 1 build
-def build(blk: Block, wd, mode="prod", tag=None):
+def build(blk: Block, wd, mode="prod", tag=None, clean=True):
+    """clean=False keeps the .mag / .gds already in wd (a parent cell built after its subcells in the same directory, T10)."""
     os.makedirs(wd, exist_ok=True)
-    for f in glob.glob(os.path.join(wd, "*.mag")) + glob.glob(os.path.join(wd, "*.gds")):
+    for f in (glob.glob(os.path.join(wd, "*.mag")) + glob.glob(os.path.join(wd, "*.gds"))) if clean else []:
         os.remove(f)
     tcl = os.path.join(wd, "build.tcl" if mode == "prod" else f"build_{mode}.tcl")
     blk.write_tcl(tcl, mode)
@@ -79,10 +80,13 @@ def build(blk: Block, wd, mode="prod", tag=None):
 
 
 # ------------------------------------------------------------------------------------------------ 3 magic DRC
-def magic_drc(cell, src, wd, tag, allow=()):
+def magic_drc(cell, src, wd, tag, allow=(), flat=False):
+    """flat=True: Magic DRC of a flattened copy (hierarchical cells: see drc_magic.tcl)."""
     rpt = os.path.join(wd, f"drc_magic_{tag}.rpt")
-    out = magic(os.path.join(LIB, "tcl", "drc_magic.tcl"), wd, {"CELL": cell, "SRC": os.path.abspath(src), "OUT": rpt},
-                f"drc_magic_{tag}.log")
+    env = {"CELL": cell, "SRC": os.path.abspath(src), "OUT": rpt}
+    if flat:
+        env["FLAT"] = "1"
+    out = magic(os.path.join(LIB, "tcl", "drc_magic.tcl"), wd, env, f"drc_magic_{tag}.log")
     m = re.findall(r"MAGIC_DRC_TOTAL (\d+)", out)
     rules = []
     if os.path.exists(rpt):
@@ -399,24 +403,30 @@ def strip_diodes(gds, out, marker=(115, 5), comp=(22, 0), contact=(33, 0)):
     The antenna deck credits a net with diode area from n+ COMP outside n-well and p+ COMP inside n-well, so the copy has no
     diode on the nets the plates were on.  Returns what was removed (the caller compares it with the diodes placed)."""
     import klayout.db as db
-    rec = {}
+    rec = dict(marker_polygons=0, plates=0, plate_area_um2=0.0, plate_contacts=0, cells=[])
 
     def fn(ly, top):
         lm, lc, lk = ly.layer(*marker), ly.layer(*comp), ly.layer(*contact)
-        mk = db.Region(top.shapes(lm))
-        cm = db.Region(top.shapes(lc))
-        co = db.Region(top.shapes(lk))
-        co.merged_semantics = False                       # one polygon per contact cut
-        plates = cm & mk
-        gone = co.inside(mk)
-        keep = co.not_inside(mk)
-        rec.update(marker_polygons=mk.count(), plates=plates.count(), plate_area_um2=round(plates.area() * ly.dbu ** 2, 3),
-                   plate_contacts=gone.count())
-        top.shapes(lc).clear()
-        top.shapes(lc).insert(cm - mk)
-        top.shapes(lk).clear()
-        top.shapes(lk).insert(keep)
-        top.shapes(lm).clear()
+        for cell in ly.each_cell():                       # every cell definition (T10: the diodes sit in the lane subcell)
+            mk = db.Region(cell.shapes(lm))
+            if mk.is_empty():
+                continue
+            cm = db.Region(cell.shapes(lc))
+            co = db.Region(cell.shapes(lk))
+            co.merged_semantics = False                   # one polygon per contact cut
+            plates = cm & mk
+            gone = co.inside(mk)
+            keep = co.not_inside(mk)
+            rec["marker_polygons"] += mk.count()
+            rec["plates"] += plates.count()
+            rec["plate_area_um2"] = round(rec["plate_area_um2"] + plates.area() * ly.dbu ** 2, 3)
+            rec["plate_contacts"] += gone.count()
+            rec["cells"].append(cell.name)
+            cell.shapes(lc).clear()
+            cell.shapes(lc).insert(cm - mk)
+            cell.shapes(lk).clear()
+            cell.shapes(lk).insert(keep)
+            cell.shapes(lm).clear()
 
     edit_gds(gds, out, fn)
     return rec

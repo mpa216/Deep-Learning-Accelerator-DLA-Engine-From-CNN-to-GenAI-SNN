@@ -84,6 +84,24 @@ class Block:
         self.notes = []
         self.n_inst = 0
         self.faults = []          # injected faults (alloc.inject_*)
+        self.paths = []           # directories Magic searches for subcells (addpath), T10
+        self.instances = []       # (cell, x, y): subcells placed with their origin at (x, y), T10
+
+    # ------------------------------------------------------------------ hierarchy (T10)
+    def instance(self, cell, x, y):
+        """A subcell (its .mag on self.paths) with its own origin at (x, y).  Placed after the device flatten, so it stays a
+        subcell (Magic: getcell ... child 0 0 parent x y, checked 2026-11-14)."""
+        x, y = snap(x), snap(y)
+        self.instances.append((cell, x, y))
+        self.ops.append(("t", f"getcell {cell} child 0 0 parent {x:.4f}um {y:.4f}um"))
+
+    def ghost(self, shapes, dx, dy, rename=lambda n: n):
+        """Register a subcell's shapes (moved by dx, dy; nets renamed to the parent's names) for the conflict checks only:
+        nothing is painted, but every parent shape is checked against them."""
+        for s in shapes:
+            g = Shape(s.layer, snap(s.x1 + dx), snap(s.y1 + dy), snap(s.x2 + dx), snap(s.y2 + dy), rename(s.net), "ghost:" + s.kind)
+            self.shapes.append(g)
+            self.by_layer.setdefault(g.layer, []).append(g)
 
     # ------------------------------------------------------------------ phase 1
     def place_gencell(self, gen, inst, params, x, y, expect_bbox):
@@ -185,7 +203,7 @@ class Block:
     # ------------------------------------------------------------------ emit
     def tcl(self, mode="prod"):
         """Tcl of the whole cell (phase 1 placement, flatten, phase 2 painting, labels)."""
-        out = [f"source $env(LFTCL)", f"lf::start {self.name}_dev"]
+        out = [f"source $env(LFTCL)"] + [f"addpath {p}" for p in self.paths] + [f"lf::start {self.name}_dev"]
         out += self.place_ops
         out += [f"lf::flatten_devices {self.name}"]
         for op in self.ops:

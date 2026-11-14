@@ -1,0 +1,140 @@
+{
+ "cell": "lvds_rx_x3",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 0.0,
+    "m2": 40.95,
+    "m3": 150.1
+   }
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 1100,
+    "rules": [
+     "RULE (1100) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 1100,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "via_arrays": {
+   "ok": true,
+   "script": "/foss/designs/scripts/check_via_arrays.py",
+   "sha256": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d",
+   "copies": {
+    "/foss/designs/scripts/check_via_arrays.py": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d",
+    "/foss/designs/.claude/worktrees/lvds-rx/scripts/check_via_arrays.py": "70795ef057119cfed9c735562bd9ac2048560161ec1c56cbb8e6b19060a4479d"
+   },
+   "copies_identical": true,
+   "exit_code": 0,
+   "violations": 0,
+   "layers": {
+    "Via1 design (SRAM IP excluded)": {
+     "cuts": 1564,
+     "clusters": 1564,
+     "big": 0,
+     "violations": 0
+    },
+    "Via1 incl. SRAM IP": {
+     "cuts": 1564,
+     "clusters": 1564,
+     "big": 0,
+     "violations": 0
+    },
+    "Via2 design (SRAM IP excluded)": {
+     "cuts": 2535,
+     "clusters": 2535,
+     "big": 0,
+     "violations": 0
+    },
+    "Via2 incl. SRAM IP": {
+     "cuts": 2535,
+     "clusters": 2535,
+     "big": 0,
+     "violations": 0
+    }
+   },
+   "not_present": [
+    "Via3",
+    "Via4",
+    "Via5"
+   ],
+   "control": {
+    "detected": true,
+    "exit_code": 1,
+    "violations": 2
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-14 11:38:54",
+ "fixed_bbox_um": [
+  0.0,
+  0.0,
+  650.0,
+  192.1
+ ],
+ "core_um": [
+  25.0,
+  25.0,
+  625.0,
+  167.1
+ ],
+ "y0": 42.15,
+ "instances": [
+  [
+   "lvds_lane",
+   100.0,
+   42.15
+  ],
+  [
+   "lvds_lane",
+   300.0,
+   42.15
+  ],
+  [
+   "lvds_lane",
+   500.0,
+   42.15
+  ],
+  [
+   "lvds_bias",
+   571.4,
+   42.15
+  ]
+ ],
+ "python_build_s": 6.9,
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 39.3
+}
