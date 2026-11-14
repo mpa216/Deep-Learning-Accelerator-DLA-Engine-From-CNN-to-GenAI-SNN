@@ -119,14 +119,16 @@ BUILD = {
     "nquad": lambda b, ll: leaves.pair_dump(b, "nq", DT["mn1"], DT["mnd"], ll, dict(gate="gn", drn="ob"), dict(gate="gp", drn="oa"), "tn", "VSS", "VREF"),
     "m3": lambda b, ll: leaves.pair_abba(b, "m3", DT["m3"], ll, A=dict(gate="VBN", drn="fa"), B=dict(gate="VBN", drn="fb"), S="VSS", rail="VSS"),
     "m5a": lambda b, ll: leaves.single(b, "m5a", DT["m5"], ll, gate="VB2", drn="oa", src="fa", rail="VSS"),
-    "m5b": lambda b, ll: leaves.single(b, "m5b", DT["m5"], ll, gate="VB2", drn="ob", src="fb", rail="VSS"),
+    # east-side partners of a west-side leaf take their gate out to the EAST, so the two are mirror images for the router
+    "m5b": lambda b, ll: leaves.single(b, "m5b", DT["m5"], ll, gate="VB2", drn="ob", src="fb", rail="VSS", gate_exit="E"),
     "mnt": lambda b, ll: leaves.single(b, "mnt", DT["mnt"], ll, gate="VBN", drn="tn", src="VSS", rail="VSS"),
-    "mt2": lambda b, ll: leaves.single(b, "mt2", DT["mt2"], ll, gate="VBN", drn="ts", src="VSS", rail="VSS"),
+    # gate out to the east (mirror of mnt): to the west it would meet the quad's gn gate port head-on, both are 1.18 um below the band top
+    "mt2": lambda b, ll: leaves.single(b, "mt2", DT["mt2"], ll, gate="VBN", drn="ts", src="VSS", rail="VSS", gate_exit="E"),
     "ms1": lambda b, ll: leaves.single(b, "ms1", DT["ms"], ll, gate="oa", drn="d2a", src="sa", rail="VSS"),
-    "ms2": lambda b, ll: leaves.single(b, "ms2", DT["ms"], ll, gate="ob", drn="d2b", src="sb", rail="VSS"),
+    "ms2": lambda b, ll: leaves.single(b, "ms2", DT["ms"], ll, gate="ob", drn="d2b", src="sb", rail="VSS", gate_exit="E"),
     "rl": _rl, "rs": _rs, "loads": _loads, "mn3": _mn3, "esd": _esd, "nandp": _nand_p,
     "mpu2a": lambda b, ll: leaves.single(b, "mpu2a", DT["mpu2"], ll, gate="EN", drn="d2a", src="VDD", rail="VDD"),
-    "mpu2b": lambda b, ll: leaves.single(b, "mpu2b", DT["mpu2"], ll, gate="EN", drn="d2b", src="VDD", rail="VDD"),
+    "mpu2b": lambda b, ll: leaves.single(b, "mpu2b", DT["mpu2"], ll, gate="EN", drn="d2b", src="VDD", rail="VDD", gate_exit="E"),
     "mp3": lambda b, ll: leaves.pair_abba(b, "mp3", DT["mp3"], ll, A=dict(gate="d2a", drn="n3a"), B=dict(gate="d2b", drn="d3"), S="VDD", rail="VDD"),
     "nandn": lambda b, ll: leaves.stacked(b, "nandn", DT["nand_n"], DT["nand_n"], ll, dict(g_lo="EN", g_up="d3", src="VSS", mid="nm", drn="nd"), rail="VSS"),
 }
@@ -150,7 +152,9 @@ def size(name):
 ROWS = {
     "R6": [("esd", ("x", -ESD_X), "bottom"), ("mpt", ("c", 0.0), "top")],          # the mirrored ESD cell is added by build()
     "R5": [("pquad", ("c", 0.0), "bottom")],
-    "R4": [("m3", ("c", 0.0), "bottom"), ("m5a", ("r", "m3", GAP), "bottom"), ("m5b", ("l", "m3", GAP), "bottom")],
+    # the cascodes sit one grid pitch higher than the sinks: bottom-aligned, the cascode's oa / ob bar (80.70) would be level with
+    # the sinks' fb bar (80.65) and the two stubs would meet head-on in the gap on the east side
+    "R4": [("m3", ("c", 0.0), "bottom"), ("m5a", ("r", "m3", GAP), "bottom", PITCH), ("m5b", ("l", "m3", GAP), "bottom", PITCH)],
     "R3": [("nquad", ("c", 0.0), "top"), ("mnt", ("r", "nquad", GAP), "top"), ("mt2", ("l", "nquad", GAP), "top")],
     "R2": [("rl", ("c", 0.0), "bottom"), ("ms1", ("r", "rl", GAP), "bottom"), ("ms2", ("l", "rl", GAP), "bottom"), ("rs", ("l", "ms2", GAP), "bottom")],
     "R1": [("loads", ("c", 0.0), "bottom"), ("mpu2a", ("r", "loads", 4.9), "bottom"), ("mpu2b", ("l", "loads", 4.9), "bottom"),
@@ -181,7 +185,7 @@ def stack():
             out.append(dict(kind="strap", net=it[1], name=it[2], j1=j, y=snap((j + 1.5) * PITCH)))
             j += 4
         else:
-            h = max(size(n)[1] for n, _x, _a in ROWS[it[1]])
+            h = max(size(r[0])[1] + abs(r[3] if len(r) > 3 else 0.0) for r in ROWS[it[1]])
             y = snap((j - 1) * PITCH + 0.4)
             out.append(dict(kind="row", name=it[1], y=y, h=h))
             j = int(math.ceil((y + h + 0.4) / PITCH - 1e-6))     # first grid row at least 0.4 um above the band
@@ -206,7 +210,9 @@ def build(stage="route", name=CELL):
         if it["kind"] != "row":
             continue
         x_of = {}
-        for nm, rule, align in ROWS[it["name"]]:
+        for row in ROWS[it["name"]]:
+            nm, rule, align = row[:3]
+            dy = row[3] if len(row) > 3 else 0.0             # optional shift away from the aligned edge (into the band)
             w, h = size(nm)
             if rule[0] == "c":
                 x = rule[1] - w / 2
@@ -217,7 +223,7 @@ def build(stage="route", name=CELL):
             else:
                 x = x_of[rule[1]][1] + rule[2]
             x = snap(x)
-            y = it["y"] if align == "bottom" else snap(it["y"] + it["h"] - h)
+            y = snap(it["y"] + dy) if align == "bottom" else snap(it["y"] + it["h"] - h - dy)
             x_of[nm] = (x, x + w)
             key = "esdp" if nm == "esd" else nm
             L.leaf[key] = BUILD[nm](blk, (x, y))
@@ -270,7 +276,135 @@ def build(stage="route", name=CELL):
         L.trunk_row[net] = row
     if stage == "place":
         return L
-    raise NotImplementedError("stages beyond 'place' are added in the next piece")
+
+    def hp(key, net, kind, sides=None):
+        ps = lv[key].port(net, "m3", kind)
+        if len(ps) != 1:
+            raise ValueError(f"{key}: {len(ps)} ports of {net} / {kind}")
+        return R.hport(ps[0], lv[key].bbox, sides)
+
+    def vp(key, net, kind="term", **kw):
+        ps = lv[key].port(net, "m3", kind)
+        if len(ps) != 1:
+            raise ValueError(f"{key}: {len(ps)} ports of {net} / {kind}")
+        return R.vport(ps[0], lv[key].bbox, **kw)
+
+    # ---- rails: the source bars that carry DC current go to the nearest strap of their net.  Both bar ends for the stage-1
+    #      devices (up to 0.25 mA per bar), one end (the router picks it) for the rest
+    both = {"VSS": ["m3", "mnt", "mt2"], "VDD": ["mpt"]}
+    # not in the list: `loads`.  Its VDD bar is enclosed on Metal3 by the diode jogs of d2a (west) and d2b (east); it reaches the
+    # ring through the two Metal1 dummy ties of the row (0.23 um each, 63 uA in total) and the ring reaches S1 through its ties
+    one = {"VSS": ["mn3", "nandn", "inv1n", "inv2n", "inv3n"], "VDD": ["mpu2a", "mpu2b", "mp3", "nandp", "inv1p", "inv2p", "inv3p"]}
+    for net in ("VSS", "VDD"):
+        for key in both[net]:
+            R.connect(net, [hp(key, net, "bar", "W"), hp(key, net, "bar", "E")])
+        for key in one[net]:
+            R.connect(net, [hp(key, net, "bar")])
+    if stage == "rails":
+        return L
+
+    # ---- signals.  Matched pairs: the west net first, then its partner along the mirror image of that route.
+    def pair(a, b, ta, tb):
+        R.connect(a, ta)
+        R.connect(b, tb, guide=R.mirror(a))
+
+    jpin = items[-1]["j1"] + 1                                  # middle row of the top tracks
+    ipin = R.col_ge(-50.0)                                      # nearest grid column inside the pad position x = -50 (pins.yaml)
+    L.pins = {"INP": (ipin, jpin, L3), "INN": (-ipin, jpin, L3)}
+    pair("gp", "gn",
+         [hp("esdp", "gp", "bar"), hp("pquad", "gp", "gate_bot"), hp("nquad", "gp", "gate_bot")],
+         [hp("esdn", "gn", "bar"), hp("pquad", "gn", "gate_top"), hp("nquad", "gn", "gate_top")])
+    pair("INP", "INN",
+         [R.pin(*L.pins["INP"]), hp("esdp", "INP", "term", "W")],
+         [R.pin(*L.pins["INN"]), hp("esdn", "INN", "term", "E")])
+    pair("oa", "ob",
+         [hp("m5a", "oa", "bar", "E"), hp("nquad", "oa", "bar", "W"), vp("rl", "oa"), hp("ms1", "oa", "gate")],
+         [hp("m5b", "ob", "bar", "W"), hp("nquad", "ob", "bar", "E"), vp("rl", "ob"), hp("ms2", "ob", "gate")])
+    pair("fa", "fb",
+         [hp("pquad", "fa", "bar", "W"), hp("m5a", "fa", "bar"), hp("m3", "fa", "bar", "W")],
+         [hp("pquad", "fb", "bar", "E"), hp("m5b", "fb", "bar"), hp("m3", "fb", "bar", "E")])
+    R.connect("tp", [hp("mpt", "tp", "bar", "W"), hp("pquad", "tp", "bar", "W"), hp("pquad", "tp", "ring"),
+                     hp("mpt", "tp", "bar", "E"), hp("pquad", "tp", "bar", "E")])
+    R.connect("tn", [hp("mnt", "tn", "bar", "E"), hp("nquad", "tn", "bar", "W")])
+    rs_ts = lv["rs"].port("ts", "m3", "bar")[0]
+    R.connect("ts", [hp("mt2", "ts", "bar"), R.vport(rs_ts, lv["rs"].bbox, need_via=True, x=(rs_ts.rect[0] + rs_ts.rect[2]) / 2)])
+    pair("sa", "sb", [hp("ms1", "sa", "bar"), vp("rs", "sa")], [hp("ms2", "sb", "bar"), vp("rs", "sb")])
+    pair("d2a", "d2b",
+         [hp("ms1", "d2a", "bar"), hp("loads", "d2a", "bar", "W"), hp("mpu2a", "d2a", "bar"), hp("mp3", "d2a", "gate_top")],
+         [hp("ms2", "d2b", "bar"), hp("loads", "d2b", "bar", "E"), hp("mpu2b", "d2b", "bar"), hp("mp3", "d2b", "gate_bot")])
+    # bias and enable: drops to the edge-to-edge trunks
+    R.connect("VREF", [hp("pquad", "VREF", "gate_top"), hp("pquad", "VREF", "gate_bot"), hp("nquad", "VREF", "gate_top"), hp("nquad", "VREF", "gate_bot")])
+    R.connect("VBN", [hp("m3", "VBN", "gate_top"), hp("m3", "VBN", "gate_bot"), hp("mnt", "VBN", "gate"), hp("mt2", "VBN", "gate")])
+    R.connect("VB2", [hp("m5a", "VB2", "gate"), hp("m5b", "VB2", "gate")])
+    R.connect("VBP", [hp("mpt", "VBP", "gate")])
+    R.connect("EN", [hp("mpu2a", "EN", "gate"), hp("mpu2b", "EN", "gate"), hp("nandn", "EN", "gate"), hp("nandp", "EN", "gate")])
+    # stage 3 and the digital chain
+    R.connect("n3a", [hp("mp3", "n3a", "bar"), hp("mn3", "n3a", "bar")])
+    R.connect("d3", [hp("mp3", "d3", "bar"), hp("mn3", "d3", "bar"), hp("nandn", "d3", "gate"), hp("nandp", "d3", "gate")])
+    R.connect("nd", [hp("nandn", "nd", "bar"), hp("nandp", "nd", "bar"), hp("inv1n", "nd", "gate"), hp("inv1p", "nd", "gate")])
+    R.connect("i1", [hp("inv1n", "i1", "bar"), hp("inv1p", "i1", "bar"), hp("inv2n", "i1", "gate"), hp("inv2p", "i1", "gate")])
+    R.connect("i2", [hp("inv2n", "i2", "bar"), hp("inv2p", "i2", "bar"), hp("inv3n", "i2", "gate"), hp("inv3p", "i2", "gate")])
+    L.pins["OUT"] = (R.col_ge(lv["inv3p"].bbox[2] + 1.0), 0, L2)
+    R.connect("OUT", [hp("inv3n", "OUT", "bar"), hp("inv3p", "OUT", "bar"), R.pin(*L.pins["OUT"])])
+    # ---- pins (label + port): signal pins on their pads, shared nets at the west end of their trunk / strap
+    for nm, (i, j, lay) in L.pins.items():
+        blk.add_pin(nm, lay, R.X(i), R.Y(j))
+    for nm, row in L.trunk_row.items():
+        blk.add_pin(nm, "m3", -HALF + 0.6, R.Y(row))
+    blk.add_pin("VDD", "m3", -HALF + 3.0, S["S7"]["y"])
+    blk.add_pin("VSS", "m3", -HALF + 3.0, S["S0"]["y"])
+    return L
+
+
+# ----------------------------------------------------------------------------------------------------------- schematic
+def schematic(L, name=CELL):
+    """Flat LVS schematic of the lane: subckt lvds_lane of the reference (netlist/lvds_circuit.py + the device table, the same
+    source gen_lvs_ref.py writes netlist/lvds_rx_lvs_ref.spice from), flattened, plus the dummy devices of the layout.
+    Internal nets keep the reference's local names (tp fa fb tn ts sa sb n3a d3 nd nm i1 i2 ...), which the layout uses too."""
+    import lvds_circuit as C
+    tab, dev, res = C.load_table(ROOT)
+    flags = dict(tab["flags"])
+    ports = C.SUBCKTS["lvds_lane"][0]
+    lines, owner = [], {}
+
+    def expand(sub, mapping, prefix):
+        for it in C.SUBCKTS[sub][1]:
+            if not C.cond_true(C._cond_of(it), flags):
+                continue
+
+            def mp(n):
+                if n in mapping:
+                    return mapping[n]
+                if owner.setdefault(n, prefix) != prefix:
+                    raise ValueError(f"internal net name {n} is used in two sub-blocks ({owner[n]} and {prefix}): cannot flatten by name")
+                return n
+            if it[0] == "x":
+                _, inst, nets, sname, _c = it
+                expand(sname, dict(zip(C.SUBCKTS[sname][0], [mp(n) for n in nets])), prefix + inst + "_")
+                continue
+            it2 = list(it)
+            if it[0] in ("n", "p"):
+                it2[2:6] = [mp(n) for n in it[2:6]]
+            elif it[0] in ("r1k", "rp"):
+                it2[2:5] = [mp(n) for n in it[2:5]]
+            else:
+                it2[2:4] = [mp(n) for n in it[2:4]]
+            it2[1] = prefix + it[1]
+            lines.append(C._line_lvs(tuple(it2), dev, res, tab))
+
+    expand("lvds_lane", {p: p for p in ports}, "")
+    n_ref = len(lines)
+    for d in L.blk.schem:
+        if d[0] == "dummy":
+            _, inst, drn, rail, body, kind, Wf, Lg = d
+            lines.append(f"X{inst} {drn} {rail} {rail} {body} {'nfet_03v3' if kind == 'n' else 'pfet_03v3'} w={Wf:g}u l={Lg:g}u")
+    for key in ("rl", "rs"):
+        info = L.leaf[key].info
+        for k, c in enumerate(info["cols"]):
+            if c.get("dummy"):
+                lines.append(f"XRDUM_{key}_{k} {c['bot']} {c['top']} {info['rail']} {info['model']} r_width={c['w']:g}u r_length={c['l']:g}u")
+    L.schem_counts = dict(reference_devices=n_ref, dummy_devices=len(lines) - n_ref)
+    return f".subckt {name} {' '.join(ports)}\n" + "\n".join(lines) + f"\n.ends {name}\n"
 
 
 def trunk_rows(items):

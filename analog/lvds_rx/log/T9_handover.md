@@ -106,13 +106,62 @@ self-test and the antenna pair, no failure line; log `.scratch/t9/run_all_full.l
 | A | `layout/lib/xform.py` (`MirrorX`: mirrored generation) + test `t_esd_mirror` | done, all checks pass, mirror XOR empty on 17 layers |
 | B | `layout/lib/power.py` (step 4: straps, spines, ring ties, report) + test `t_power` | done, all checks pass |
 | C | `layout/lib/route.py` (grid router) + test `t_route` (output chain in one row, wired only by the router) | done, all checks pass |
-| D | `layout/lane/`: lane placement (rows, straps, trunks), DRC of the placement | next |
-| E | lane routing, strict LVS | open |
-| F | lane check runner (full checks, via arrays, bridge control, antenna without ESD, input-net capacitance) | open |
-| G | design-log entry, T9 report, `make check`, then report to the owner and wait | open |
+| D | `layout/lane/lane.py` placement (rows, straps, spines, ties, bias trunks) + `run_lane.py --stage place` | done, foundry deck 0 / 0 |
+| E | lane routing, pins, flat LVS schematic; `run_lane.py` (full check of cell `lvds_lane`) | done, see below |
+| F | lane-only checks (list below) | **next, not started** |
+| G | leaf regression, design-log entry, T9 report, `make check`, then report to the owner and wait | open |
 
-The three new tests are in `layout/leaf_tests/cells4.py` and are part of `run_all.py`. Quick loop without Magic:
-`python3 .scratch/t9/try_cell.py <cell>` on the host (prints the route table or the refusal).
+The three new tests are in `layout/leaf_tests/cells4.py` and are part of `run_all.py`. Quick loops without Magic, on the
+host: `python3 .scratch/t9/try_cell.py <cell>` and `python3 .scratch/t9/try_lane.py place|rails|route` (floorplan and route
+table, or the router's refusal). Key numbers of the last lane run: `python3 .scratch/t9/lane_numbers.py`.
+
+### State of the lane after piece E (handed over on 2026-11-14)
+
+`tools/cx python3 layout/lane/run_lane.py` builds cell `lvds_lane` and runs `check.run_cell`: about 30 s, verdict PASS.
+Results in `layout/lane/results/` (`lvds_lane.gds`, `.png`, `.json`, `.spice`).
+
+| Check | Result |
+|---|---|
+| Size | 142.8 x 125.3 um (budget 150 x 130) |
+| KLayout foundry deck, variant D, DBU 0.001 | main 0, antenna 0 |
+| Magic DRC | GDS read-back 0; `.mag` 352, all the allow-listed CO.6 on the L 0.28 contact bars |
+| Strict Netgen LVS | clean, 74 devices and 29 nets on both sides; schematic = 47 reference devices + 46 dummies |
+| Self-check | 305 MOS fingers, 12 resistors, 4 diodes, as requested |
+| Finger read-back | 23 rows, 305 fingers, all in the generator's order |
+| Negative controls | wrong W, cut wire (net oa), sliver in Magic and KLayout: all detected |
+| Power planner | 7 straps, 7 Metal4 crossings each at macro length, highest 0.17 mA per um (S4), both rails tied by spines |
+| Routing | 28 nets, 728 um Metal2, 1009 um Metal3, 201 vias |
+
+Routed lengths of the matched pairs (Metal2 / Metal3, um): INP 12.87 / 22.92 and INN the same; gp 53.63 / 37.84,
+gn 46.86 / 37.84; oa 47.29 / 38.16, ob 47.17 / 37.65; fa 21.89 / 42.28, fb 19.33 / 42.46; d2a 20.77 / 60.74,
+d2b 21.85 / 64.00; sa 7.07 / 57.34, sb 8.47 / 18.12 (RS sits east of the axis, known and accepted).
+
+**Not yet shown, do not claim it (piece F and G):**
+1. The LVS above compares against the flat schematic that `lane.schematic()` builds from `netlist/lvds_circuit.py`
+   and the device table. The second Netgen run of that flat netlist (without dummies) against `lvds_lane` in the frozen
+   file `netlist/lvds_rx_lvs_ref.spice` is still to do; it closes "strict LVS against the reference file".
+2. `scripts/check_via_arrays.py` (Vn.2b) has not been run on the lane.
+3. Third negative control: a Metal3 bridge between two nets must make LVS fail.
+4. Antenna with the ESD diodes removed (PLAN_V2 6.4 step 3).
+5. Exit criterion "capacitance of the two input nets within 2 %": no extraction with capacitance has been run. INP and
+   INN have identical wire lengths. gp has 6.77 um more Metal2 than gn: in both quads the INP gate strap is the bottom
+   one and the INN strap the top one, so gp's column runs further down at each quad. If the `pex_c` sum differs by more
+   than about 1 %, extend gn's column by an unconnected Metal2 stub of the same length (or move the difference into a
+   Metal3 jog) rather than accepting it.
+6. `Block.rect` now stores one database shape per wire instead of one per painted piece (piece D), and `route.py`,
+   `power.py`, `xform.py` are new. **The full leaf regression has not been re-run since the `Block` change.** Run
+   `layout/leaf_tests/run_all.py` (about 13 min, now 32 cells) and commit the results before closing T9.
+7. `make check` (then restore the four `results/` files), DESIGN_LOG entry, `log/T9_report.md`, and the README of
+   `layout/lib` (new modules) are not written.
+
+Three things the router taught, worth keeping when the macro is assembled (T10):
+- Two mos rows aligned to the same band edge have their gate straps at the same height (1.18 um from the edge). Gate
+  ports of different nets that face each other across a gap then collide head-on: give one of them the other exit
+  (`gate_exit="E"`), as done for mt2, m5b, ms2, mpu2b.
+- Bars of neighbouring leaves less than 0.56 um apart in height cannot pass each other in the gap. The cascodes are
+  therefore one grid pitch higher than the sink pair.
+- A source bar enclosed by diode jogs on both sides (the VDD bar of `loads`) cannot be reached on Metal3; it reaches its
+  ring through the Metal1 dummy ties of the row.
 
 ## Rules the owner set
 

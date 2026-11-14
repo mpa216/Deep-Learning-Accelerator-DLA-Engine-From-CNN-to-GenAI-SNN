@@ -381,22 +381,29 @@ class Router:
         if not tree:
             if len(todo) < 2:
                 raise ValueError(f"route({net}): one terminal and nothing to connect it to")
-            # make the first terminal concrete: of its start points the one the second terminal reaches most cheaply.  Only its way
-            # out is painted here, so the second terminal is then planned against real shapes like every later one.
+            # the first two terminals are planned together: nothing of the net exists yet, so the way out of the first terminal is
+            # one of its start points, namely the one the second terminal reaches most cheaply.  The two ways out and the path are
+            # checked against each other as ONE plan (two stubs of this net facing each other in a gap, 0.3 um apart in height,
+            # would otherwise be chosen independently and leave a notch); a start point of the first terminal that fails is dropped.
             self.idx.sync()
             self._free = {}
             first = {}
             for node, cost, g in self._seeds(todo[0], net):
                 if node not in first or cost < first[node][0]:
                     first[node] = (cost, g)
-            if not first:
-                raise Conflict(f"route({net}): no legal way out of {todo[0]}")
-            path, _ops = self._route_term(net, todo[1], first, guide)
-            node0 = path[-1]
-            self._paint(net, self._plan([node0], first[node0][1]), st)
-            tree.add(node0)
-            st["terms"] += 1
-            todo.pop(0)
+            n0 = len(first)
+            while True:
+                if not first:
+                    raise Conflict(f"route({net}): no legal way out of {todo[0]} that is compatible with {todo[1]} ({n0} start points tried)")
+                path, ops1 = self._route_term(net, todo[1], first, guide)
+                ops = self._plan([path[-1]], first[path[-1]][1]) + ops1
+                if self._self_ok(ops):
+                    break
+                del first[path[-1]]
+            self._paint(net, ops, st)
+            tree.update(path)
+            st["terms"] += 2
+            todo = todo[2:]
         for t in todo:
             path, ops = self._route_term(net, t, tree, guide)
             self._paint(net, ops, st)

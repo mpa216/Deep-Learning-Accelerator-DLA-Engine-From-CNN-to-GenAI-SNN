@@ -1,0 +1,1401 @@
+{
+ "cell": "lvds_lane",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 86.3,
+    "m2": 104.7,
+    "m3": 142.8
+   }
+  },
+  "selfcheck": {
+   "ok": true,
+   "n_mos": 305,
+   "mos": {
+    "pfet_03v3 w=5.0 l=0.28": 6,
+    "nfet_03v3 w=4.0 l=0.28": 4,
+    "pfet_03v3 w=3.75 l=0.28": 4,
+    "nfet_03v3 w=3.0 l=0.28": 3,
+    "pfet_03v3 w=3.7 l=0.28": 3,
+    "nfet_03v3 w=1.5 l=0.28": 3,
+    "pfet_03v3 w=3.0 l=0.28": 4,
+    "nfet_03v3 w=2.0 l=0.28": 4,
+    "pfet_03v3 w=2.0 l=0.5": 6,
+    "pfet_03v3 w=2.0 l=0.4": 38,
+    "nfet_03v3 w=2.59 l=0.28": 4,
+    "nfet_03v3 w=3.86 l=0.5": 10,
+    "nfet_03v3 w=2.5 l=1.0": 46,
+    "nfet_03v3 w=4.75 l=0.5": 40,
+    "nfet_03v3 w=4.52 l=0.5": 18,
+    "pfet_03v3 w=4.8 l=0.4": 88,
+    "pfet_03v3 w=5.0 l=1.0": 24
+   },
+   "n_res": 12,
+   "want_fingers": 305,
+   "n_diode": 4,
+   "n_cap": 0
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 352,
+    "rules": [
+     "RULE (352) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 352,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t9/work/lvds_lane/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    74,
+    74
+   ],
+   "nets": [
+    29,
+    29
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true
+  },
+  "finger_readback": {
+   "ok": true,
+   "rows": [
+    {
+     "row": "nandn",
+     "ok": true,
+     "symbols": "(dL)YX(dR)",
+     "read_gate_order": [
+      "VSS",
+      "d3",
+      "EN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "d3",
+      "EN",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "nandp",
+     "ok": true,
+     "symbols": "(dL)(P1)(P2)(dR)",
+     "read_gate_order": [
+      "VDD",
+      "d3",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "d3",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv1n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "nd",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "nd",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv1p",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VDD",
+      "nd",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "nd",
+      "VDD"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv2n",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VSS",
+      "i1",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "i1",
+      "VSS"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "inv2p",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "i1",
+      "i1",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "i1",
+      "i1",
+      "VDD"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv3n",
+     "ok": true,
+     "symbols": "(dL)MM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "i2",
+      "i2",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "i2",
+      "i2",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "inv3p",
+     "ok": true,
+     "symbols": "(dL)MMMM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "i2",
+      "i2",
+      "i2",
+      "i2",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "i2",
+      "i2",
+      "i2",
+      "i2",
+      "VDD"
+     ],
+     "n_read": 6,
+     "n_expected": 6,
+     "mismatch": null
+    },
+    {
+     "row": "ld",
+     "ok": true,
+     "symbols": "(dL)caabbccddddccbbaad(dR)",
+     "read_gate_order": [
+      "VDD",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2a",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2a",
+      "VDD"
+     ],
+     "n_read": 20,
+     "n_expected": 20,
+     "mismatch": null
+    },
+    {
+     "row": "mpu2a",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "mpu2b",
+     "ok": true,
+     "symbols": "(dL)M(dR)",
+     "read_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "EN",
+      "VDD"
+     ],
+     "n_read": 3,
+     "n_expected": 3,
+     "mismatch": null
+    },
+    {
+     "row": "mp3",
+     "ok": true,
+     "symbols": "(dL)ABBAABBAABBAABBA(dR)",
+     "read_gate_order": [
+      "VDD",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2a",
+      "VDD"
+     ],
+     "n_read": 18,
+     "n_expected": 18,
+     "mismatch": null
+    },
+    {
+     "row": "mn3",
+     "ok": true,
+     "symbols": "(dL)DC(dR)",
+     "read_gate_order": [
+      "VSS",
+      "n3a",
+      "n3a",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "n3a",
+      "n3a",
+      "VSS"
+     ],
+     "n_read": 4,
+     "n_expected": 4,
+     "mismatch": null
+    },
+    {
+     "row": "ms1",
+     "ok": true,
+     "symbols": "(dL)MMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "oa",
+      "oa",
+      "oa",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "oa",
+      "oa",
+      "oa",
+      "VSS"
+     ],
+     "n_read": 5,
+     "n_expected": 5,
+     "mismatch": null
+    },
+    {
+     "row": "ms2",
+     "ok": true,
+     "symbols": "(dL)MMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "ob",
+      "ob",
+      "ob",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "ob",
+      "ob",
+      "ob",
+      "VSS"
+     ],
+     "n_read": 5,
+     "n_expected": 5,
+     "mismatch": null
+    },
+    {
+     "row": "nq",
+     "ok": true,
+     "symbols": "abbaabbaABBAABBAABBAABBAABBAabbaabbaabba",
+     "read_gate_order": [
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF"
+     ],
+     "expected_gate_order": [
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF"
+     ],
+     "n_read": 40,
+     "n_expected": 40,
+     "mismatch": null
+    },
+    {
+     "row": "mnt",
+     "ok": true,
+     "symbols": "(dL)MMMMMMMMMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 12,
+     "n_expected": 12,
+     "mismatch": null
+    },
+    {
+     "row": "mt2",
+     "ok": true,
+     "symbols": "(dL)MMMMMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 8,
+     "n_expected": 8,
+     "mismatch": null
+    },
+    {
+     "row": "m3",
+     "ok": true,
+     "symbols": "(dL)ABBAABBAABBAABBAABBAABBA(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VSS"
+     ],
+     "n_read": 26,
+     "n_expected": 26,
+     "mismatch": null
+    },
+    {
+     "row": "m5a",
+     "ok": true,
+     "symbols": "(dL)MMMMMMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VSS"
+     ],
+     "n_read": 9,
+     "n_expected": 9,
+     "mismatch": null
+    },
+    {
+     "row": "m5b",
+     "ok": true,
+     "symbols": "(dL)MMMMMMM(dR)",
+     "read_gate_order": [
+      "VSS",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VSS"
+     ],
+     "expected_gate_order": [
+      "VSS",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VB2",
+      "VSS"
+     ],
+     "n_read": 9,
+     "n_expected": 9,
+     "mismatch": null
+    },
+    {
+     "row": "pq",
+     "ok": true,
+     "symbols": "abbaabbaabbaabbaabbaABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAabbaabbaabbaabbaabbaabba",
+     "read_gate_order": [
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF"
+     ],
+     "expected_gate_order": [
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "gn",
+      "gp",
+      "gp",
+      "gn",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF",
+      "VREF"
+     ],
+     "n_read": 88,
+     "n_expected": 88,
+     "mismatch": null
+    },
+    {
+     "row": "mpt",
+     "ok": true,
+     "symbols": "(dL)MMMMMMMMMMMMMMMMMMMMMM(dR)",
+     "read_gate_order": [
+      "VDD",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VDD"
+     ],
+     "expected_gate_order": [
+      "VDD",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VBP",
+      "VDD"
+     ],
+     "n_read": 24,
+     "n_expected": 24,
+     "mismatch": null
+    }
+   ]
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "oa",
+    "at": [
+     -23.24,
+     58.66,
+     -5.46,
+     58.94
+    ],
+    "why": [
+     "Number of nets: 30 **Mismatch**            |Number of nets: 29 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: oa.0                                  |(no matching net)",
+     "Netlists do not match.",
+     "Final result: Netlists do not match."
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-14 10:00:41",
+ "all_ok": true,
+ "verdict": "PASS",
+ "wall_s": 28.2,
+ "box_um": [
+  142.8,
+  125.3
+ ],
+ "python_build_s": 3.8,
+ "schematic": {
+  "reference_devices": 47,
+  "dummy_devices": 46
+ },
+ "routes": {
+  "VSS": {
+   "m2_um": 68.03,
+   "m3_um": 34.11,
+   "vias": 22,
+   "terminals": 11
+  },
+  "VDD": {
+   "m2_um": 59.61,
+   "m3_um": 29.98,
+   "vias": 18,
+   "terminals": 9
+  },
+  "gp": {
+   "m2_um": 53.63,
+   "m3_um": 37.84,
+   "vias": 9,
+   "terminals": 3
+  },
+  "gn": {
+   "m2_um": 46.86,
+   "m3_um": 37.84,
+   "vias": 9,
+   "terminals": 3
+  },
+  "INP": {
+   "m2_um": 12.87,
+   "m3_um": 22.92,
+   "vias": 2,
+   "terminals": 2
+  },
+  "INN": {
+   "m2_um": 12.87,
+   "m3_um": 22.92,
+   "vias": 2,
+   "terminals": 2
+  },
+  "oa": {
+   "m2_um": 47.29,
+   "m3_um": 38.16,
+   "vias": 8,
+   "terminals": 4
+  },
+  "ob": {
+   "m2_um": 47.17,
+   "m3_um": 37.65,
+   "vias": 6,
+   "terminals": 4
+  },
+  "fa": {
+   "m2_um": 21.89,
+   "m3_um": 42.28,
+   "vias": 5,
+   "terminals": 3
+  },
+  "fb": {
+   "m2_um": 19.33,
+   "m3_um": 42.46,
+   "vias": 5,
+   "terminals": 3
+  },
+  "tp": {
+   "m2_um": 36.1,
+   "m3_um": 126.69,
+   "vias": 10,
+   "terminals": 5
+  },
+  "tn": {
+   "m2_um": 2.2,
+   "m3_um": 13.18,
+   "vias": 2,
+   "terminals": 2
+  },
+  "ts": {
+   "m2_um": 15.78,
+   "m3_um": 13.02,
+   "vias": 4,
+   "terminals": 2
+  },
+  "sa": {
+   "m2_um": 7.07,
+   "m3_um": 57.34,
+   "vias": 3,
+   "terminals": 2
+  },
+  "sb": {
+   "m2_um": 8.47,
+   "m3_um": 18.12,
+   "vias": 3,
+   "terminals": 2
+  },
+  "d2a": {
+   "m2_um": 20.77,
+   "m3_um": 60.74,
+   "vias": 8,
+   "terminals": 4
+  },
+  "d2b": {
+   "m2_um": 21.85,
+   "m3_um": 64.0,
+   "vias": 6,
+   "terminals": 4
+  },
+  "VREF": {
+   "m2_um": 63.05,
+   "m3_um": 12.28,
+   "vias": 8,
+   "terminals": 4
+  },
+  "VBN": {
+   "m2_um": 24.84,
+   "m3_um": 14.02,
+   "vias": 8,
+   "terminals": 4
+  },
+  "VB2": {
+   "m2_um": 6.68,
+   "m3_um": 4.08,
+   "vias": 4,
+   "terminals": 2
+  },
+  "VBP": {
+   "m2_um": 2.48,
+   "m3_um": 2.69,
+   "vias": 2,
+   "terminals": 1
+  },
+  "EN": {
+   "m2_um": 40.52,
+   "m3_um": 10.08,
+   "vias": 8,
+   "terminals": 4
+  },
+  "n3a": {
+   "m2_um": 5.94,
+   "m3_um": 37.77,
+   "vias": 4,
+   "terminals": 2
+  },
+  "d3": {
+   "m2_um": 27.53,
+   "m3_um": 64.45,
+   "vias": 9,
+   "terminals": 4
+  },
+  "nd": {
+   "m2_um": 13.2,
+   "m3_um": 42.87,
+   "vias": 9,
+   "terminals": 4
+  },
+  "i1": {
+   "m2_um": 14.4,
+   "m3_um": 43.35,
+   "vias": 12,
+   "terminals": 4
+  },
+  "i2": {
+   "m2_um": 14.2,
+   "m3_um": 42.83,
+   "vias": 10,
+   "terminals": 4
+  },
+  "OUT": {
+   "m2_um": 13.68,
+   "m3_um": 35.19,
+   "vias": 5,
+   "terminals": 3
+  }
+ },
+ "power": {
+  "ok": true,
+  "straps": [
+   {
+    "strap": "S0",
+    "net": "VSS",
+    "y": 1.75,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 8,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.0,
+    "loads": [],
+    "j_mA_per_um": 0.0,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.0
+   },
+   {
+    "strap": "S1",
+    "net": "VDD",
+    "y": 19.25,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 16,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.189,
+    "loads": [
+     "stage-2 loads (= mt2) + mp3 pair (bound: 2 x mt2)"
+    ],
+    "j_mA_per_um": 0.075,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.255
+   },
+   {
+    "strap": "S2",
+    "net": "VSS",
+    "y": 33.25,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 10,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.126,
+    "loads": [
+     "mn3 pair (bound: 2 x mt2)"
+    ],
+    "j_mA_per_um": 0.05,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.17
+   },
+   {
+    "strap": "S3",
+    "net": "VDD",
+    "y": 56.35,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 2,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.249,
+    "loads": [
+     "RL pair = 2 x m3 - mpt + mnt"
+    ],
+    "j_mA_per_um": 0.1,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.336
+   },
+   {
+    "strap": "S4",
+    "net": "VSS",
+    "y": 73.15,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 16,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.419,
+    "loads": [
+     "mnt + 2 x m3 + mt2 (sources)"
+    ],
+    "j_mA_per_um": 0.168,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.566
+   },
+   {
+    "strap": "S6",
+    "net": "VSS",
+    "y": 103.95,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 6,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.0,
+    "loads": [],
+    "j_mA_per_um": 0.0,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.0
+   },
+   {
+    "strap": "S7",
+    "net": "VDD",
+    "y": 121.45,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 9,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.107,
+    "loads": [
+     "mpt (source)"
+    ],
+    "j_mA_per_um": 0.043,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.145
+   }
+  ],
+  "spines": [
+   {
+    "net": "VSS",
+    "x": -70.2,
+    "w": 1.2,
+    "y1": 0.5,
+    "y2": 105.2,
+    "cuts_per_strap": [
+     8,
+     8,
+     8,
+     8
+    ]
+   },
+   {
+    "net": "VDD",
+    "x": 70.2,
+    "w": 1.2,
+    "y1": 18.0,
+    "y2": 122.7,
+    "cuts_per_strap": [
+     8,
+     8,
+     8
+    ]
+   }
+  ],
+  "rails_tied_inside_cell": {
+   "VDD": true,
+   "VSS": true
+  },
+  "macro_len": 542.8,
+  "assumptions": {
+   "RSH_ohm_sq": 0.09,
+   "R_via_ohm": 4.5,
+   "J_MAX_mA_per_um": 1.0,
+   "M4_width": 5.0,
+   "M4_pitch": 75.0,
+   "note": "J_MAX is an assumption, not a PDK number; currents are the DC values booked by the caller"
+  }
+ },
+ "klayout_skipped": false
+}
