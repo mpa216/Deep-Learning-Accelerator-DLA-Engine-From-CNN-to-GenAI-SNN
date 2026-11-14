@@ -1,0 +1,38 @@
+{
+ "generated": "2026-11-14 12:17:07",
+ "source": "layout/macro/run_macro.py (cell lvds_rx_x3, T10)",
+ "verdict": "PASS",
+ "selfcheck_failed": 0,
+ "drc_magic_total": 0,
+ "drc_magic_mag_flat_total": 1100,
+ "drc_magic_mag_allowed": 1100,
+ "drc_magic_allow_list": [
+  "(CO.6)"
+ ],
+ "klayout_dbu_um": 0.001,
+ "klayout_main_total": 0,
+ "klayout_antenna_total": 0,
+ "klayout_antenna_no_esd_total": 0,
+ "via_array_total": 0,
+ "lvs_match_unique": 1,
+ "lvs_property_errors": 0,
+ "lvs_port_errors": 0,
+ "lvs_counts_equal": 1,
+ "lvs_reference_clean": 1,
+ "negctl_all_fail": 1,
+ "finger_order_ok": 1,
+ "m1_m3_max_shape_um": 28.98,
+ "pn_input_cap_asym_pct": 0.597,
+ "fixed_bbox_um": [
+  0.0,
+  0.0,
+  650.0,
+  192.1
+ ],
+ "core_um": [
+  25.0,
+  25.0,
+  625.0,
+  167.1
+ ]
+}

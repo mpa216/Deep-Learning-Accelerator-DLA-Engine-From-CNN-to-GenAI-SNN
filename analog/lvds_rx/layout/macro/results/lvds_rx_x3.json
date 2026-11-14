@@ -283,7 +283,7 @@
       "D": 12
      },
      "bytes": 136422,
-     "extract_s": 1.8
+     "extract_s": 1.6
     },
     "lvds_rx_x3.pex_rc": {
      "file": "results/layout/lvds_rx_x3.pex_rc.spice",
@@ -307,8 +307,8 @@
       "R": 10429,
       "D": 12
      },
-     "bytes": 766243,
-     "extract_s": 8.3
+     "bytes": 766264,
+     "extract_s": 8.6
     },
     "lvds_lane.pex_c": {
      "file": "results/layout/lvds_lane.pex_c.spice",
@@ -331,7 +331,7 @@
       "D": 4
      },
      "bytes": 29760,
-     "extract_s": 1.0
+     "extract_s": 0.9
     },
     "lvds_lane.pex_rc": {
      "file": "results/layout/lvds_lane.pex_rc.spice",
@@ -354,7 +354,7 @@
       "D": 4
      },
      "bytes": 168882,
-     "extract_s": 1.7
+     "extract_s": 1.6
     },
     "lvds_bias.pex_c": {
      "file": "results/layout/lvds_bias.pex_c.spice",
@@ -374,7 +374,7 @@
       "D": 0
      },
      "bytes": 7727,
-     "extract_s": 0.5
+     "extract_s": 0.6
     },
     "lvds_bias.pex_rc": {
      "file": "results/layout/lvds_bias.pex_rc.spice",
@@ -509,7 +509,7 @@
    "ok": true
   }
  },
- "started": "2026-11-14 12:02:22",
+ "started": "2026-11-14 12:15:45",
  "fixed_bbox_um": [
   0.0,
   0.0,
@@ -545,9 +545,10 @@
    42.15
   ]
  ],
- "python_build_s": 6.1,
+ "python_build_s": 6.5,
  "schematic_lines": 143,
  "all_ok": true,
  "verdict": "PASS",
+ "layout_json": "results/layout.json",
  "wall_s": 88.1
 }

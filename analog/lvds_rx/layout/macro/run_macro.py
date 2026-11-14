@@ -145,7 +145,42 @@ def run(stage, nok):
     r["schematic_lines"] = len(sch.splitlines())
     # ---- 6 PEX (piece D): C on all nets and RC on all nets, flat, ports in the reference order; smoke test in ngspice
     r["steps"]["pex"] = pex(L, B, M, wd, gds, lv["out"])
+    run_lane.verdict(r)
+    r["layout_json"] = layout_json(r, L, B, M)
     return _write(r, t0)
+
+
+def layout_json(r, L, B, M):
+    """results/layout.json for gate LAYOUT of spec/gates.yaml (phase layout).  drc_magic_total is Magic's count on the GDS
+    read back (the deliverable); the .mag count and its allow-list (CO.6 on the L = 0.28 contact bars, stricter than the
+    foundry deck, T8) are recorded beside it.  m1_m3_max_shape_um is the largest painted Metal1-3 piece of the three cells."""
+    s = r["steps"]
+    pieces = [max(op[4] - op[2], op[5] - op[3]) for blk in (L.blk, B.blk, M.blk) for op in blk.ops
+              if op[0] == "r" and op[1] in ("m1", "m2", "m3")]
+    caps = s["pex"]["caps"]
+    asym = max(max(v["RX"]["mismatch_pct"], v["gate"]["mismatch_pct"]) for k, v in caps.items() if k.startswith("lane"))
+    k = s.get("klayout", {})
+    out = dict(
+        generated=time.strftime("%Y-%m-%d %H:%M:%S"), source="layout/macro/run_macro.py (cell lvds_rx_x3, T10)", verdict=r.get("verdict"),
+        selfcheck_failed=sum(0 if v["selfcheck"]["ok"] else 1 for c, v in s["subcells"].items() if isinstance(v, dict) and "selfcheck" in v),
+        drc_magic_total=s["magic_drc"]["gds_readback"]["total"],
+        drc_magic_mag_flat_total=s["magic_drc"]["mag"]["total"], drc_magic_mag_allowed=s["magic_drc"]["mag"]["allowed"],
+        drc_magic_allow_list=s["magic_drc"]["allow"],
+        klayout_dbu_um=k.get("dbu"), klayout_main_total=k.get("main"), klayout_antenna_total=k.get("antenna"),
+        klayout_antenna_no_esd_total=s.get("antenna_no_esd", {}).get("antenna"),
+        via_array_total=s["via_arrays"]["violations"],
+        lvs_match_unique=int(bool(s["lvs"]["match_line"] and s["lvs"]["final_unique"])),
+        lvs_property_errors=int(bool(s["lvs"]["property_errors"])), lvs_port_errors=int(bool(s["lvs"]["port_errors"])),
+        lvs_counts_equal=int(bool(s["lvs"]["counts_equal"])), lvs_reference_clean=int(bool(s["lvs_reference"]["clean"])),
+        negctl_all_fail=int(bool(s["negctl"]["ok"])),
+        finger_order_ok=int(all(v["readback_ok"] for c, v in s["subcells"].items() if isinstance(v, dict) and "readback_ok" in v)),
+        m1_m3_max_shape_um=round(max(pieces), 3),
+        pn_input_cap_asym_pct=asym,
+        fixed_bbox_um=r["fixed_bbox_um"], core_um=r["core_um"])
+    path = os.path.join(ROOT, "results", "layout.json")
+    with open(path, "w") as f:
+        json.dump(out, f, indent=1)
+    return os.path.relpath(path, ROOT)
 
 
 DELIV = os.path.join(ROOT, "results", "layout")          # PLAN_V2 T10 outputs: results/layout/*
