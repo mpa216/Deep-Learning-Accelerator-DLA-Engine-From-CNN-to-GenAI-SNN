@@ -93,6 +93,11 @@ at -100 mV, VIC 1.2 V, EN high):
 | `pex_c` | 3.3 V | 0 V | 3.3 V | -0.02 % |
 | `pex_rc` | 3.3 V | 0 V | 3.3 V | -0.09 % |
 
+**Reproducibility.** Two runs (piece D and `make layout`) gave C netlists that are the same circuit (same multiset of
+capacitors with values and of devices; only element numbers and order differ). The RC netlists have the same element
+counts, but extresist names its sub-nodes differently from run to run (`VBP.0.t28` / `.t29`) and one value differs by
+1e-5 fF in the last digit; the smoke-test values were identical.
+
 **Extracted wiring capacitance in the macro:** RXk_P / RXk_N 6.09 / 6.09 fF in every lane (<= 0.12 %, the 26 um pin stubs
 included); gp / gn 42.24 / 42.50 fF (0.60 %) in every lane, as in the lane alone; RX0_O / RX1_O / RX2_O 17.6 / 16.3 /
 23.4 fF; EN 120 fF.
