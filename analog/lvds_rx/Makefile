@@ -9,8 +9,9 @@
 #   report   regenerate results/REPORT.md from results/gates.json
 #   mutants  gate mutation tests -> results/mutants.json
 #   lint     the mechanical rules only
-#   layout   PLAN_V2 6.4 on every leaf (layout/leaf_tests/run_all.py, about 13 min) and on the lane (layout/lane/run_lane.py,
-#            about 45 s); the macro joins in T10
+#   layout   PLAN_V2 6.4 on every leaf (layout/leaf_tests/run_all.py, about 13 min), the lane (layout/lane/run_lane.py,
+#            about 45 s), the bias block (layout/bias/run_bias.py, 30 s) and the macro with its PEX
+#            (layout/macro/run_macro.py, 90 s; deliverables in results/layout/)
 #   audit    stub: the independent audit is a different agent (T6, T11)
 #   clean    remove generated results and scratch (never design files)
 PY ?= python3
@@ -44,6 +45,8 @@ lint:
 layout:
 	$(PY) layout/leaf_tests/run_all.py
 	$(PY) layout/lane/run_lane.py
+	$(PY) layout/bias/run_bias.py
+	$(PY) layout/macro/run_macro.py
 
 audit:
 	@echo "make audit: an independent agent runs this (T6 pre-layout, T11 final); see PLAN_V2 5.2 item 6"; exit 1

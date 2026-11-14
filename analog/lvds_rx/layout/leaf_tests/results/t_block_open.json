@@ -73,7 +73,7 @@
    "report": "Netgen mismatch lines:\n    Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**\n    Net: OB.6                                  |(no matching net)\nOPEN   OB in 2 pieces, apart near (21.89, 14.71) um; nearest labels ['OB', 'OB.12']\n         fragment: 9 labels, pin=True, device terminals=10, label bbox [21.33, 5.08, 48.06, 14.48]\n         fragment: 6 labels, pin=False, device terminals=8, label bbox [22.46, 14.93, 33.03, 14.93]"
   }
  },
- "started": "2026-11-14 10:30:12",
+ "started": "2026-11-14 11:52:07",
  "expect": {
   "kind": "OPEN",
   "nets": [

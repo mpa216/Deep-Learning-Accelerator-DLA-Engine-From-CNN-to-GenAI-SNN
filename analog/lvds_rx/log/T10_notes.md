@@ -30,7 +30,7 @@ Solo, in small pieces with one local commit each (as in T9). Report and wait for
 | B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | done, see below |
 | C | macro LVS (hierarchical), negative controls, antenna without ESD | done, see below |
 | D | PEX: C on all nets, RC on the input pair, bias and output nets | done (RC on ALL nets), see below |
-| E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | next |
+| E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | done: `make layout` all green (leaves ALL GREEN, lane, bias, macro + PEX), `make check` green (four results/ files restored), `log/T10_report.md`, DESIGN_LOG, lib README. **T10 closed; waiting for the owner's go-ahead for T11** |
 
 ## Bias block result (piece A2, `layout/bias/results/lvds_bias.json`, about 30 s)
 

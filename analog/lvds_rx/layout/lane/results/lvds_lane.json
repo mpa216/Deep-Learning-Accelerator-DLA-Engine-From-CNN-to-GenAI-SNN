@@ -1130,7 +1130,10 @@
     "marker_polygons": 4,
     "plates": 4,
     "plate_area_um2": 160.0,
-    "plate_contacts": 640
+    "plate_contacts": 640,
+    "cells": [
+     "lvds_lane"
+    ]
    },
    "expected_plates": 4,
    "expected_area_um2": 160.0,
@@ -1234,11 +1237,11 @@
    ]
   }
  },
- "started": "2026-11-14 10:25:54",
+ "started": "2026-11-14 12:01:01",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 43.6,
- "python_build_s": 5.0,
+ "wall_s": 49.3,
+ "python_build_s": 4.7,
  "box_um": [
   142.8,
   125.3

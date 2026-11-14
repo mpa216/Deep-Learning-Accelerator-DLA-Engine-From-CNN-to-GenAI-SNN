@@ -93,3 +93,24 @@ Its only verified properties are DRC / LVS / antenna (KLayout sees the diode: a 
   (in the lane: 6 MOS dummies, 4 dummy resistor columns).  Expected; the schematic lists those dummies explicitly.
 * L = 0.28, Wf 3.7 (inv1_p, one finger): the normal 0.04 um trim of the contact bars leaves too little margin; `mos_row` drops one contact and shortens the bars
   symmetrically (7 contacts instead of 8, 0.125 um Metal1 past the end cut).
+
+## T10 additions (2026-11-14): bias block and macro
+
+`layout/bias/` (cell `lvds_bias`) and `layout/macro/` (cell `lvds_rx_x3`) use the library unchanged except for:
+* `Block.instance(cell, x, y)`, `Block.paths`: subcells placed after the device flatten (they stay subcells); `Block.ghost(shapes,
+  dx, dy, rename)`: a subcell's shapes registered for the conflict checks only, so every parent shape is checked against them.
+* `check.build(clean=False)` (a parent built after its subcells in one directory), `check.magic_drc(flat=True)`,
+  `check.extract(flat=True)` (flattened copies), `check.flat_base`, `check.net_caps(key=)`; `strip_diodes` edits every cell.
+* `mirror_interdig(gate_exit=)`; `PowerPlan.ring_tie` skips positions next to a leaf's Metal1 ring stubs.
+
+Rules found:
+* A diode-connected mirror has its gate-to-drain jog at the gate strap's exit end, and the other bars cannot leave past it:
+  turn the exit to the cell edge (`gate_exit="E"`) so the bars leave into the free side.
+* A ring tie next to a leaf drawn with `m1_ring_regions` (men_n) left a 0.045 um same-net Metal1 notch (M1.2a) that the
+  database does not see (it checks same-net gaps on Metal2/3 only).
+* Magic on a hierarchy: `drc listall count` counts subcell errors in the subcell and again per instance in the parent, and
+  `drc listall why` uses another basis, so check a flattened copy; `getcell CELL child 0 0 parent Xum Yum` places by the
+  child's origin (plain `getcell` aligns bounding boxes); FIXED_BBOX given in lambda is written to the GDS as a boundary
+  on layer 0/0.
+* Parasitics of a hierarchical cell need a flat extraction (coupling between nodes of different instances); the
+  extracted subckt's port order is Magic's own, so it is rewritten to the reference order before any testbench uses it.

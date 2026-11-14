@@ -454,3 +454,35 @@ only the diode plates are removed for the antenna run.
 the hysteresis symmetry and the duty cycle.
 
 **Next.** Report to the owner and wait for the go-ahead for T10 (macro assembly).
+
+## 2026-11-14 T10: macro assembly and PEX (owner's go-ahead; main session, no agents, small committed pieces)
+
+**What was built.** The bias block as its own cell (`lvds_bias`, 53.2 x 142.1 um) and the macro `lvds_rx_x3`: three
+instances of the lane and one of the bias block, joined by Metal3 fills of the lanes' straps and trunks across the two
+gaps, with the RX pins on the top edge and EN and the three outputs on the bottom edge. FIXED_BBOX 650 x 192.1 um, core
+600 x 142.1 um. Details: `log/T10_report.md`; history: `log/T10_notes.md`.
+
+**Floorplan.** The plan put the bias block "in the gaps at the strip ends", but the frozen pin positions leave 28.6 um at
+each end of a 600 um strip, and the gaps between the lanes carry the straps and trunks. With a 25 um margin the core runs
+from x = 25 to 625, and the bias block takes the 53 um east of lane 2. Every frozen spec holds (core <= 600 x 150 um,
+pin x positions unchanged).
+
+**Result: steps 1 to 6 of PLAN_V2 6.4 pass on the macro.**
+
+| Check | Macro |
+|---|---|
+| foundry deck (KLayout) | main 0, antenna 0; antenna 0 also without the ESD diodes |
+| via arrays | 0 |
+| strict LVS, hierarchical | lane 74 devices / 29 nets, bias 28 / 11, top 4 / 16: match uniquely; also against `lvds_rx_x3` of the frozen reference file |
+| finger read-back | lane 23 rows, bias 11 rows, in order |
+| negative controls | wrong W, cut fill between lanes, Metal3 bridge, DRC sliver: all detected |
+| PEX | C and RC on all nets, flat, in `results/layout/`; ngspice operating point equal to the pre-layout one (IDD within 0.1 %) |
+
+`make layout` after the last library change: all green (every leaf, the lane, the bias block, the macro with its PEX).
+
+**What surprised me.** Two things, both in Magic. On a hierarchical cell its DRC counts every subcell error once in the
+subcell and again for each instance in the parent, while its error list uses yet another basis, so the totals never
+matched the list; checking a flattened copy gives one honest number. And `getcell` places an instance by its bounding box
+unless the child's origin is named explicitly (`child 0 0 parent X Y`).
+
+**Next.** Report to the owner and wait for the go-ahead for T11 (post-layout re-simulation and the second audit).
