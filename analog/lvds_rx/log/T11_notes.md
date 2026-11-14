@@ -72,3 +72,57 @@ Diagnosis of the TB4 slow-down (`.scratch/t11/diag_tb4.py`, `node_cap_ac.py`, `l
   43 % of the margin to 8 ns); node capacitance on the chain is +35 to +120 % (effective, AC at 1 GHz).  The pre-layout
   netlist carries no wiring estimate at all (sizing assumed cw = 10 fF on oa/ob in its pole estimate only; extracted
   wiring is 27.6 fF there) and models junctions with 0.18 um of diffusion per side (layout: about 0.27 um average).
+
+## Iteration 1 (the frozen sizing misses tPD after layout): plan and first results
+
+Evidence (iteration 0, correct capacitance): TB4 tt, VIC 0.05 V, VID 100 mV: pre 3.71 ns, extracted 5.55 ns. Scaled to the
+slow corner, ss/125C/3.0 V at VID 350 mV lands near 6.5-6.8 ns against the 5 ns limit (pre-layout margin there was only
+0.435 ns, 9.5 %): no layout can keep a +3 % change, which is what the 30 % rule allows there. The full iteration-0 TBL run
+(corrected netlists) is the record; it runs in parallel with 3 slots.
+
+Method: (1) put the layout's loads into the simulation netlist, (2) re-size for speed against them, (3) regression,
+re-layout, PEX, TBL.  No limit changes; this is a sizing iteration (like D-013), logged with flow/iterate.py.
+- Estimate (`sim/tbl/make_estimate.py` -> `sizing/parasitic_estimate.json`, consumed by the sizing script and
+  `lvds_circuit.ESTIMATE`, simulation netlist only, never in the LVS reference): junction diffusion length ldiff = 0.511 um
+  (extracted area / formula area = 2.84 over lane 0's signal nets, dummies included) and one wiring capacitor per net
+  (extracted totals, lane nets the mean of the three lanes; 31 nets).  Validation on the T10 layout, TB4 tt/0.05/0.1:
+  pre 3.71, pre + estimate 5.37, extracted 5.55 ns (the estimate carries 90 % of the added delay).
+- Candidates (sizing `--set`, `.scratch/t11/iter_explore*.py`, TB4 VIC 0.05 V with the estimate, tPD ns tt-0.1 / tt-0.35 /
+  ss-0.1 / ss-0.35): base 5.37/4.63/7.93/6.51; n_t2=10 4.39/3.76/6.39/5.26; + gmid_s2=8 + L_ld=0.28 (C) 3.68/3.19/5.35/4.50
+  (I_lane 757 uA at tt, 0 asserts failed); L_ld=0.28 alone 4.74/4.08/7.00/5.78; r3=3 on top of C: no gain (+139 uA).
+- Stage split of C at ss/0.35 (rise): stage 1 1.66, stage 2 +1.47, stage 3 +0.64, chain +0.60 ns (base: 1.67 / +2.66 /
+  +1.30 / +0.65): the stage-2 change works; stage 1 (fold and output nodes with the pair + dump junctions and wiring) is
+  now the largest part.
+- Device changes of C: mt2 nf 6 -> 12, ms nf 3 -> 2 (W 11.58 -> 8.74 um), mld/mlc/mp3 L 0.40 -> 0.28 um (same fingers),
+  mn3 nf 1 -> 2, Rs 4573 -> 1690 ohm (8.86 -> 3.17 um); alpha fingers unchanged 4/5.
+
+Order after the iteration-0 run has finished and is committed (the frozen sizes / netlist must not change under it):
+choose the candidate (TB4, TB3 V_H, TB2 at worst5 x 3 VIC), calibrate the wiring part of the estimate on one extracted
+point, write the estimate, sizing defaults, netlists; decisions note D-016, iterations log, freeze note; make full
+(detached); re-layout (lane, bias, macro: make layout); PEX; TBL; AUDIT_2; then T12, T13.
+- Round 2 (worst5 x 3 VIC, estimate core; limits of gates.yaml: V_H 6-35 mV since D-009): base FAILS TB2 with the estimate
+  (stage f3dB 0.46 x DR, chain 35 MHz: what tbl_ac_pex showed); C: tPD 4.50 / 5.35 ns (VID 0.35 / 0.1), V_H 8.3-14.3 mV,
+  A1 min 5.15, stage f3dB 1.05 x DR, chain 66 MHz; J (C + i_ref 60 uA): 4.11 / 4.90 ns, but 19 of 35 devices change (both
+  input quads, mirrors, bias block; odd finger counts) and I_lane 935 uA; H (C + PMOS pair gm/ID 13): A1 assert fails;
+  C + gmid_m5 10: fold-pole asserts fail; C + vr_tt 1.10: 4.42 ns for 0.3 less A1 margin.
+- DECISION: candidate C (n_t2 5 -> 10, gmid_s2 12 -> 8, L_ld 0.40 -> 0.28; everything else frozen): it fixes TB4 and TB2
+  with the layout's loads, changes 5 small devices and Rs, keeps the stage-1 quads and the bias block, and keeps the slow
+  corner margin of the original design (0.5 ns, 10 %).  The wiring part of the estimate is calibrated on the 36 TB4 points
+  of the iteration-0 extraction (`.scratch/t11/calib.py`) so that the estimate is not below the extraction.
+- tools/run_full.sh now runs the make-full sequence with --jobs 4 (make full had no --jobs: run_all defaults to 6) and
+  always writes mutants + report; flow/mutants.py mini bench 6 -> 4 jobs.
+
+## Iteration 0 record (the T10 layout, corrected RC netlists): gate TBL FAIL
+
+`results/post_layout/iter0/` (tbl.json, TBL.md, run_log.txt): 172 pairs, every run ok, counts exact, 7 checks failed,
+D-012 condition MET (ff/125C/3.6 V, VIC 0.05 V: A1 4.78, tPD 3.53 / 4.75 ns, eye ok, nodes within 6.7 mV) -> ladder R6 is not
+triggered by the freeze condition.  Failed (extracted against pre-layout):
+- TB2 stage f3dB 0.837 -> 0.435 x DR and chain f3dB 56.4 -> 37.4 MHz at ss/125C/3.0 V (limits 0.8 x DR, 50 MHz): absolute fail.
+- TB4 tPD VID 0.35: 4.565 -> 6.755 ns at ss/125C/3.0 V (limit 5 ns); VID 0.1: 5.553 -> 8.221 ns (limit 8 ns); DCD at VID 0.1
+  over 30 % at 3 points.  Absolute fails at the slow corner; +46-49 % delay everywhere.
+- TB8 vout_off_v (EN = 0, supply ramp): 0.21 -> 0.28 V at tt / ss (limit 0.33 V): within the limit, 50-57 % of the margin
+  (supply coupling: the extraction has 4-5 fF from OUT and i2 to VDD).
+- TB8 min_pulse_s (ramps, EN follows the supply): the shortest power-up pulse falls from 0.1-15 us to 13-280 ns (limit
+  2 ns); 6 runt excursions appear at tt case 4 (13 ns wide).  Within the limit, over 30 % of the margin.
+Passed: TB1 subset, TB2 gain, TB3 V_H (DC), systematic offset (0.000 mV added), TB5 eye at the D-012 corner, TB7, TB10,
+TB12 (worst eye 0.929 -> 0.887 UI).  Extracted run cost: TB10 one run 5.3 h (76 x pre-layout), TB12 ~15 min, TB4 ~4 min.

@@ -1,0 +1,481 @@
+{
+ "harness": "1.3",
+ "ngspice": "46",
+ "runs": [
+  {
+   "id": "tt_27c_3v30__vic1.2_term0",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 0
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 9.16200219776e-10
+   },
+   "errors": [],
+   "elapsed": 5.241,
+   "cached": false,
+   "hash": "771722509824ed6c4f9b9a3f68d7ef2706742f50b132fe1cbe7e1abbe02739c8",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/tt_27c_3v30__vic1.2_term0"
+  },
+  {
+   "id": "tt_27c_3v30__vic1.2_term1",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 1
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 5.001958372353389e-07,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 9.165251158605578e-10,
+    "drift_toggles": 2.0,
+    "out_end_v": 9.14082839e-10
+   },
+   "errors": [],
+   "elapsed": 12.164,
+   "cached": false,
+   "hash": "d594abc2088c2e14d72e2cf0c5875a807a83328dbf30322d1c4bfa9ffface69d",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/tt_27c_3v30__vic1.2_term1"
+  },
+  {
+   "id": "tt_27c_3v30__vic1.2_term2",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 9.16220866844e-10
+   },
+   "errors": [],
+   "elapsed": 5.185,
+   "cached": false,
+   "hash": "1aae7a022c30fc3b4e31a5d45ae4d491a4fe114b0c3138b682a7fe7433bd4dc7",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/tt_27c_3v30__vic1.2_term2"
+  },
+  {
+   "id": "ss_125c_3v00__vic1.2_term0",
+   "corner": "ss_125c_3v00",
+   "process": "ss",
+   "temp": 125,
+   "vdd": 3.0,
+   "res": "res_ss",
+   "params": {
+    "vic": 1.2,
+    "term": 0
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 4.9043190353200004e-09
+   },
+   "errors": [],
+   "elapsed": 4.937,
+   "cached": false,
+   "hash": "5960d771764bc112390a5e3e6e33f55dcd75e747c98a6a9114f9d84e3f193061",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/ss_125c_3v00__vic1.2_term0"
+  },
+  {
+   "id": "ss_125c_3v00__vic1.2_term1",
+   "corner": "ss_125c_3v00",
+   "process": "ss",
+   "temp": 125,
+   "vdd": 3.0,
+   "res": "res_ss",
+   "params": {
+    "vic": 1.2,
+    "term": 1
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 5.003989053768664e-07,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 4.904456590956176e-09,
+    "drift_toggles": 2.0,
+    "out_end_v": 4.90426432e-09
+   },
+   "errors": [],
+   "elapsed": 11.806,
+   "cached": false,
+   "hash": "0ff0f5c7d20ed3b4abd759e0ab66a3da10caf29b96986fc461ffbe06b5a0207c",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/ss_125c_3v00__vic1.2_term1"
+  },
+  {
+   "id": "ss_125c_3v00__vic1.2_term2",
+   "corner": "ss_125c_3v00",
+   "process": "ss",
+   "temp": 125,
+   "vdd": 3.0,
+   "res": "res_ss",
+   "params": {
+    "vic": 1.2,
+    "term": 2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 4.904319448520001e-09
+   },
+   "errors": [],
+   "elapsed": 5.084,
+   "cached": false,
+   "hash": "4eabba05fe9c7181a75924232bed006078b232d2d1908886c42d2ea6e50ee59f",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/ss_125c_3v00__vic1.2_term2"
+  },
+  {
+   "id": "ff_m40c_3v60__vic1.2_term0",
+   "corner": "ff_m40c_3v60",
+   "process": "ff",
+   "temp": -40,
+   "vdd": 3.6,
+   "res": "res_ff",
+   "params": {
+    "vic": 1.2,
+    "term": 0
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 1.35915198964e-09
+   },
+   "errors": [],
+   "elapsed": 5.088,
+   "cached": false,
+   "hash": "396ab03deb02c18bd291ea637839382ea7b1097672a23d274d2ebb4260b52f81",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/ff_m40c_3v60__vic1.2_term0"
+  },
+  {
+   "id": "ff_m40c_3v60__vic1.2_term1",
+   "corner": "ff_m40c_3v60",
+   "process": "ff",
+   "temp": -40,
+   "vdd": 3.6,
+   "res": "res_ff",
+   "params": {
+    "vic": 1.2,
+    "term": 1
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 5.000035529084722e-07,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 1.358546404501992e-09,
+    "drift_toggles": 2.0,
+    "out_end_v": 1.35915947e-09
+   },
+   "errors": [],
+   "elapsed": 12.162,
+   "cached": false,
+   "hash": "b7042783928a30571592084939c86ad321a74e28a6ac21b1395c9ab0405989c2",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/ff_m40c_3v60__vic1.2_term1"
+  },
+  {
+   "id": "ff_m40c_3v60__vic1.2_term2",
+   "corner": "ff_m40c_3v60",
+   "process": "ff",
+   "temp": -40,
+   "vdd": 3.6,
+   "res": "res_ff",
+   "params": {
+    "vic": 1.2,
+    "term": 2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 1.35915223672e-09
+   },
+   "errors": [],
+   "elapsed": 5.143,
+   "cached": false,
+   "hash": "02657db982a26061e69db902c1d0e0a9dabd688019b285713ad72fbe58741386",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/ff_m40c_3v60__vic1.2_term2"
+  },
+  {
+   "id": "fs_27c_3v30__vic1.2_term0",
+   "corner": "fs_27c_3v30",
+   "process": "fs",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 0
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 7.89359792672e-10
+   },
+   "errors": [],
+   "elapsed": 5.236,
+   "cached": false,
+   "hash": "633c98f119baffd013774bbca70cd34f357999558653488442ee6848f4fc84ea",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/fs_27c_3v30__vic1.2_term0"
+  },
+  {
+   "id": "fs_27c_3v30__vic1.2_term1",
+   "corner": "fs_27c_3v30",
+   "process": "fs",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 1
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 5.002508504475272e-07,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 7.877407453346614e-10,
+    "drift_toggles": 2.0,
+    "out_end_v": 7.87682944e-10
+   },
+   "errors": [],
+   "elapsed": 11.899,
+   "cached": false,
+   "hash": "8015781601500ad91e304b6b1df3f8419278e910bb705a4f652e4ac61e580e0b",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/fs_27c_3v30__vic1.2_term1"
+  },
+  {
+   "id": "fs_27c_3v30__vic1.2_term2",
+   "corner": "fs_27c_3v30",
+   "process": "fs",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 7.876848731199999e-10
+   },
+   "errors": [],
+   "elapsed": 5.092,
+   "cached": false,
+   "hash": "74333882edbcd0f0e9364ca8d6ca70e274a9a7d916473dd7e57c82df486b4977",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/fs_27c_3v30__vic1.2_term2"
+  },
+  {
+   "id": "sf_27c_3v30__vic1.2_term0",
+   "corner": "sf_27c_3v30",
+   "process": "sf",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 0
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 1.3505872171599999e-09
+   },
+   "errors": [],
+   "elapsed": 5.042,
+   "cached": false,
+   "hash": "25213b7b3f9efe5f5f2f3c7a4e79e7f03dbcc0bc465e0b82f2536ad5b12d5bd2",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/sf_27c_3v30__vic1.2_term0"
+  },
+  {
+   "id": "sf_27c_3v30__vic1.2_term1",
+   "corner": "sf_27c_3v30",
+   "process": "sf",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 1
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 5.001646700636713e-07,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 1.350369834183267e-09,
+    "drift_toggles": 2.0,
+    "out_end_v": 1.35057673e-09
+   },
+   "errors": [],
+   "elapsed": 11.108,
+   "cached": false,
+   "hash": "c7ed7cd3dc4017abf61763aff2181b5bfbb0a65378dbfd322e27aa398ca634c1",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/sf_27c_3v30__vic1.2_term1"
+  },
+  {
+   "id": "sf_27c_3v30__vic1.2_term2",
+   "corner": "sf_27c_3v30",
+   "process": "sf",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "vic": 1.2,
+    "term": 2
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "osc_flag": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 0.0,
+    "n_high": 0.0,
+    "n_mid": 0.0,
+    "n_settle_flip": 0.0,
+    "t_last_flip_s": 0.0,
+    "out_final_v": 1.3505876916e-09
+   },
+   "errors": [],
+   "elapsed": 5.142,
+   "cached": false,
+   "hash": "912d75fa5b460e69828b08587afd8f4e3c3405c96f3e92881ef751f30357cf70",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/sf_27c_3v30__vic1.2_term2"
+  }
+ ]
+}

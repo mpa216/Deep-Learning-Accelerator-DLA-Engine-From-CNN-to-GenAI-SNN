@@ -1,0 +1,22 @@
+2026-11-14 18:17:12 START benches tbl_op,tbl_ac,tbl_trip,tbl_idle,tbl_en,tbl_pd,tbl_eye,tbl_pkg,tbl_lanes jobs 3 force False
+2026-11-14 18:17:12 started tbl_lanes_pex in parallel (1 worker)
+2026-11-14 18:17:12 tbl_op_pre rc 0 wall 0 s | **Overall: PASS**
+2026-11-14 18:18:12 tbl_op_pex rc 0 wall 59 s | **Overall: PASS**
+2026-11-14 18:18:12 tbl_ac_pre rc 0 wall 0 s | **Overall: PASS**
+2026-11-14 18:20:46 tbl_ac_pex rc 1 wall 154 s | **Overall: FAIL**
+2026-11-14 18:20:46 tbl_trip_pre rc 0 wall 1 s | **Overall: PASS**
+2026-11-14 19:29:50 tbl_trip_pex rc 0 wall 4143 s | **Overall: PASS**
+2026-11-14 19:30:47 tbl_idle_pre rc 0 wall 58 s | **Overall: PASS**
+2026-11-14 19:51:06 tbl_idle_pex rc 0 wall 1218 s | **Overall: PASS**
+2026-11-14 20:00:09 tbl_en_pre rc 0 wall 543 s | **Overall: PASS**
+2026-11-14 20:28:36 tbl_en_pex rc 0 wall 1708 s | **Overall: PASS**
+2026-11-14 20:32:28 tbl_pd_pre rc 0 wall 232 s | **Overall: PASS**
+2026-11-14 21:47:22 tbl_pd_pex rc 1 wall 4494 s | **Overall: FAIL**
+2026-11-14 21:48:09 tbl_eye_pre rc 0 wall 47 s | **Overall: PASS**
+2026-11-14 22:09:07 tbl_eye_pex rc 0 wall 1258 s | **Overall: PASS**
+2026-11-14 22:12:15 tbl_pkg_pre rc 0 wall 188 s | **Overall: PASS**
+2026-11-14 23:33:07 tbl_pkg_pex rc 0 wall 4851 s | **Overall: PASS**
+2026-11-14 23:37:19 tbl_lanes_pre rc 0 wall 252 s | **Overall: PASS**
+2026-11-14 23:37:19 tbl_lanes_pex rc 0 wall 19207 s
+2026-11-14 23:37:20 evaluate rc 1 | TBL FAIL  pairs 172  checks failed 7  missing 0  not ok 0  count errors 0  margin used max 11.02550333024687  D-012 ok 1
+2026-11-14 23:37:20 EXIT 0

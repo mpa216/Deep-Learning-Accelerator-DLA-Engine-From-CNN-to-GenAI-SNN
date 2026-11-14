@@ -1,0 +1,39 @@
+{
+ "harness": "1.3",
+ "ngspice": "46",
+ "runs": [
+  {
+   "id": "tt_27c_3v30__mc3s0",
+   "corner": "tt_27c_3v30",
+   "process": "tt",
+   "temp": 27,
+   "vdd": 3.3,
+   "res": "res_typical",
+   "params": {
+    "mc3s": 0
+   },
+   "seed": null,
+   "status": "ok",
+   "metrics": {
+    "n_missed_a0": 0.0,
+    "delay_lane0_ps": 3658.5858851774315,
+    "n_missed_a1": 0.0,
+    "delay_lane1_ps": 3641.169429823273,
+    "n_missed_a2": 0.0,
+    "delay_lane2_ps": 3652.0648368366615,
+    "skew_s": 1.741645535415878e-11,
+    "xtalk_lane0_ui": 0.0006263124746202894,
+    "xtalk_lane1_ui": 0.00045508298694007187,
+    "xtalk_lane2_ui": 0.0005278280690924523,
+    "xtalk_jitter_ui": 0.0006263124746202894
+   },
+   "errors": [],
+   "elapsed": 251.85,
+   "cached": false,
+   "hash": "de8cb85f4cf2b833a3b7ebdf280959c5d3ddf78dcaea2c227ffc48e033188432",
+   "retry": null,
+   "first_status": null,
+   "run_dir": "work/tt_27c_3v30__mc3s0"
+  }
+ ]
+}
