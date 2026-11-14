@@ -340,17 +340,17 @@
     "detected": true,
     "net": "TP",
     "at": [
-     101.58,
+     48.57,
      4.32,
      128.09,
      4.6
     ],
     "why": [
-     "pfet_03v3 (112->8)                         |pfet_03v3 (7->6) **Mismatch**",
-     "Number of devices: 8 **Mismatch**          |Number of devices: 6 **Mismatch**",
+     "pfet_03v3 (112->10)                        |pfet_03v3 (7->6) **Mismatch**",
+     "Number of devices: 10 **Mismatch**         |Number of devices: 6 **Mismatch**",
      "Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
-     "Net: TP.53                                 |(no matching net)"
+     "Net: TP.14                                 |(no matching net)"
     ]
    },
    "sliver_magic": {
@@ -369,10 +369,10 @@
    "ok": true
   }
  },
- "started": "2026-11-14 01:31:34",
+ "started": "2026-11-14 10:32:22",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.5,
+ "wall_s": 29.6,
  "bbox_um": [
   131.68,
   10.26

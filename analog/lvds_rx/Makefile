@@ -9,7 +9,8 @@
 #   report   regenerate results/REPORT.md from results/gates.json
 #   mutants  gate mutation tests -> results/mutants.json
 #   lint     the mechanical rules only
-#   layout   stub: filled by tasks T8-T10 (PLAN_V2 6.4)
+#   layout   PLAN_V2 6.4 on every leaf (layout/leaf_tests/run_all.py, about 13 min) and on the lane (layout/lane/run_lane.py,
+#            about 45 s); the macro joins in T10
 #   audit    stub: the independent audit is a different agent (T6, T11)
 #   clean    remove generated results and scratch (never design files)
 PY ?= python3
@@ -41,7 +42,8 @@ lint:
 	$(PY) flow/lint.py
 
 layout:
-	@echo "make layout: not implemented yet (tasks T8-T10 fill this target)"; exit 1
+	$(PY) layout/leaf_tests/run_all.py
+	$(PY) layout/lane/run_lane.py
 
 audit:
 	@echo "make audit: an independent agent runs this (T6 pre-layout, T11 final); see PLAN_V2 5.2 item 6"; exit 1

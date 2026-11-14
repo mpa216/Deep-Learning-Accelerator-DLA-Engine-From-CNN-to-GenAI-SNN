@@ -222,7 +222,7 @@
     "at": [
      29.5,
      4.29,
-     49.08,
+     68.66,
      4.58
     ],
     "why": [
@@ -230,7 +230,7 @@
      "Number of devices: 10 **Mismatch**         |Number of devices: 6 **Mismatch**",
      "Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
-     "Net: TAIL.12                               |(no matching net)"
+     "Net: TAIL.17                               |(no matching net)"
     ]
    },
    "sliver_magic": {
@@ -249,10 +249,10 @@
    "ok": true
   }
  },
- "started": "2026-11-14 01:29:10",
+ "started": "2026-11-14 10:29:23",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 20.7,
+ "wall_s": 24.8,
  "bbox_um": [
   71.96,
   9.97

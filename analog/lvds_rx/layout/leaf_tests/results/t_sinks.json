@@ -155,15 +155,15 @@
     "detected": true,
     "net": "FA",
     "at": [
-     22.24,
+     3.8,
      2.53,
      40.68,
      2.81
     ],
     "why": [
-     "nfet_03v3 (26->5)                          |nfet_03v3 (4->3) **Mismatch**",
-     "Number of devices: 5 **Mismatch**          |Number of devices: 3 **Mismatch**",
-     "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
+     "nfet_03v3 (26->6)                          |nfet_03v3 (4->3) **Mismatch**",
+     "Number of devices: 6 **Mismatch**          |Number of devices: 3 **Mismatch**",
+     "Number of nets: 6 **Mismatch**             |Number of nets: 4 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
      "Net: VBN                                   |(no matching net)"
     ]
@@ -184,10 +184,10 @@
    "ok": true
   }
  },
- "started": "2026-11-14 01:31:57",
+ "started": "2026-11-14 10:32:52",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 20.2,
+ "wall_s": 25.7,
  "bbox_um": [
   44.48,
   7.72

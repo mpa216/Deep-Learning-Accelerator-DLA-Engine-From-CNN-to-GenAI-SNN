@@ -328,14 +328,14 @@
      "terminals": 4
     },
     "i2": {
-     "m2_um": 11.85,
-     "m3_um": 44.69,
-     "vias": 9,
+     "m2_um": 15.61,
+     "m3_um": 43.29,
+     "vias": 10,
      "terminals": 4
     },
     "OUT": {
      "m2_um": 13.56,
-     "m3_um": 24.81,
+     "m3_um": 34.25,
      "vias": 5,
      "terminals": 3
     }
@@ -386,10 +386,10 @@
    ]
   }
  },
- "started": "2026-11-14 09:37:27",
+ "started": "2026-11-14 10:38:43",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.9,
+ "wall_s": 25.7,
  "bbox_um": [
   102.36,
   19.3
