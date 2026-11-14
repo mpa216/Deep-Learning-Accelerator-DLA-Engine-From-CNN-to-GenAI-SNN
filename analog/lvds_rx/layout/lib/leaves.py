@@ -202,25 +202,47 @@ def mos_row(blk, inst, kind, Wf, L, fingers, ll, rail, dummies=(1, 1), ring_net=
     ph = (L - 0.02) / 2.0
     hw = 0.115
 
-    # --- register region contact bars (Metal1 from the generator) so strap/via shapes are checked against them
+    # --- region contact bars (Metal1 from the generator).  Measured on the gencell (T9 probe, pfet w 3.7 l 0.28): the S/D CONTACT TILE
+    #     runs from cy - Wf/2 + 0.065 to cy + Wf/2 - 0.065, the Metal1 bar (0.23 wide) 0.055 further at both ends (to Wf/2 - 0.01);
+    #     Magic generates the cuts inside the tile (0.22 squares, pitch 0.47, border 0.005, centred).  Gate pad Metal1: 0.34 x 0.23.
     ybar1, ybar2 = cy - Wf / 2 + 0.065, cy + Wf / 2 - 0.065
-    for j in range(n + 1):
-        _register(blk, "m1", rx[j] - 0.2, ybar1, rx[j] + 0.2, ybar2, regions[j], "gencell_bar")
-
+    end_clear = None                       # Metal1 erased from the bar ends: from the diffusion edge inward by this much
     if L < 0.36:
         # L = 0.28 (pitch 0.8): the corner of a used gate pad is 0.209 um (< 0.23, M1.2a) from the end of the neighbouring S/D contact
-        # bar.  The generator's bar runs from cy - Wf/2 + 0.01 to cy + Wf/2 - 0.01; its contacts (0.22, pitch 0.47, centred, CO.4 >= 0.07)
-        # leave a margin m = (Wf - span) / 2 to the diffusion edge, so the bar overshoots its first / last contact by m - 0.01.
-        # CO.6a needs 0.06 (Magic's CO.6 flags anything below ~0.13): trim up to 0.04 um off both bar ends but keep 0.065 of overshoot.
-        # Needs m >= 0.105 (corner distance sqrt((0.175 + trim)^2 + 0.115^2) >= 0.23); Wf = 3.7 (m = 0.095) cannot be fixed this way.
+        # bar (0.115 in x, 0.175 in y).  The contacts leave a margin m = (Wf - span) / 2 to the diffusion edge, so the Metal1 bar
+        # overshoots its first / last contact by m - 0.01.  CO.6a needs 0.06 (Magic's CO.6 flags anything below ~0.13).
         kc = int((Wf - 0.14 + 0.25) / 0.47 + 1e-9)
         margin = (Wf - (0.22 * kc + 0.25 * (kc - 1))) / 2
         trim = max(0.0, min(0.04, margin - 0.01 - 0.065))
-        if trim < 0.035:
-            raise Conflict(f"{inst}: Wf {Wf} at L {L}: contact margin {margin:.3f} um leaves no room for the L < 0.36 pad-corner fix (needs >= 0.105); re-finger the device (Wf 1.85 or 1.23 instead of 3.7)")
+        if trim >= 0.035:
+            # normal case (m >= 0.105): trim 0.035 - 0.04 um of plain Metal1 off both bar ends, the contacts stay where they are and keep
+            # >= 0.065 of overshoot; corner distance sqrt((0.175 + trim)^2 + 0.115^2) >= 0.239
+            end_clear = 0.01 + trim
+        else:
+            # tight case (Wf 3.7: m = 0.095, a plain trim would leave the last contact 0.045 of Metal1): shorten the CONTACT TILE itself
+            # at both ends (erasing Metal1 from a diffusion-contact tile leaves the diffusion) until one cut fewer fits; Magic then
+            # centres kc - 1 cuts in the shorter tile.  The tile length is chosen in the middle of the "kc - 1 cuts" range so the
+            # cut count does not depend on rounding.  Result for Wf 3.7: 7 cuts instead of 8, 0.125 um of Metal1 beyond the end
+            # cuts (CO.6a 0.06), bar end 0.37 um from the gate pad (M1.2a 0.23).
+            if kc < 2:
+                raise Conflict(f"{inst}: Wf {Wf} at L {L}: only {kc} contact per S/D bar, the L < 0.36 pad-corner fix has no cut to give up")
+            tile = Wf - 0.13
+            want = 0.47 * (kc - 0.5) - 0.24                 # tile length that holds kc - 1.5 "cuts": safely kc - 1
+            delta = snap(max(0.005, (tile - want) / 2))
+            n_new = int((tile - 2 * delta - 0.01 + 0.25) / 0.47 + 1e-9)
+            enc = (tile - 2 * delta - (0.22 * n_new + 0.25 * (n_new - 1))) / 2
+            if n_new != kc - 1 or enc < 0.065:
+                raise Conflict(f"{inst}: Wf {Wf} at L {L}: contact-tile trim gives {n_new} cuts with {enc:.3f} um of Metal1 enclosure")
+            ybar1, ybar2 = ybar1 + delta, ybar2 - delta
+            end_clear = 0.065 + delta
+            blk.notes.append(f"{inst}: Wf {Wf} L {L}: S/D contact tile shortened by {delta:g} um per end, {n_new} cuts per bar instead of {kc} "
+                             f"(Metal1 enclosure of the end cut {enc:.3f} um)")
+    for j in range(n + 1):
+        _register(blk, "m1", rx[j] - 0.2, ybar1, rx[j] + 0.2, ybar2, regions[j], "gencell_bar")
+    if end_clear is not None:
         for j in range(n + 1):
-            blk.clear("m1", rx[j] - 0.2, cy - Wf / 2 - 0.02, rx[j] + 0.2, cy - Wf / 2 + 0.01 + trim)
-            blk.clear("m1", rx[j] - 0.2, cy + Wf / 2 - 0.01 - trim, rx[j] + 0.2, cy + Wf / 2 + 0.02)
+            blk.clear("m1", rx[j] - 0.2, cy - Wf / 2 - 0.02, rx[j] + 0.2, cy - Wf / 2 + end_clear)
+            blk.clear("m1", rx[j] - 0.2, cy + Wf / 2 - end_clear, rx[j] + 0.2, cy + Wf / 2 + 0.02)
 
     # --- gate pads, stubs, straps
     exits_used = set()

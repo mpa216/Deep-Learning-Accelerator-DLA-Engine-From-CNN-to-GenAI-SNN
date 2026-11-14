@@ -224,9 +224,9 @@ def t_out_chain():
     prev = "nd"
     names = [("inv1", "i1"), ("inv2", "i2"), ("inv3", "OUT")]
     for stem, out in names:
+        # every device is drawn with the finger count of the sizing (device table).  inv1_p (W 3.7, nf 1) used to be re-fingered to
+        # 2 x 1.85 here; since T9 leaves.mos_row handles the tight L = 0.28 contact margin itself (7 contacts per bar instead of 8)
         dn, dp = DT[stem + "_n"], DT[stem + "_p"]
-        if stem == "inv1":
-            dp = refinger(dp, 2)         # W 3.7 as one finger leaves 0.095 um of contact margin: the L = 0.28 pad-corner fix needs 0.105 (see leaves.mos_row)
         N[stem] = leaves.single(blk, stem + "n", dn, (xs, ys_n), gate=prev, drn=out, src="VSS", rail="VSS")
         P[stem] = leaves.single(blk, stem + "p", dp, (xs, y_p), gate=prev, drn=out, src="VDD", rail="VDD")
         xs = max(N[stem].bbox[2], P[stem].bbox[2]) + 8.0
@@ -250,8 +250,7 @@ def t_out_chain():
     prev = "nd"
     for stem, out in names:
         dn, dp = DT[stem + "_n"], DT[stem + "_p"]
-        if stem == "inv1":
-            dp = refinger(dp, 2)
+        assert (dn.nf, dp.nf) == (DT[stem + "_n"].nf, DT[stem + "_p"].nf)
         lines += [DT.spice("M" + stem.upper() + "N", dn, out, prev, "VSS", "VSS"), DT.spice("M" + stem.upper() + "P", dp, out, prev, "VDD", "VDD")]
         prev = out
     return blk, subckt(blk.name, blk, lines), "nd", dict(magic_allow=CO6)
