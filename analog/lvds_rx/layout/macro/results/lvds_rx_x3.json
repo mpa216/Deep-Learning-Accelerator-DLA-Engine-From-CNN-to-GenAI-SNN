@@ -257,9 +257,259 @@
    "diodes_extracted_after": 0,
    "antenna": 0,
    "antenna_rules": {}
+  },
+  "pex": {
+   "netlists": {
+    "lvds_rx_x3.pex_c": {
+     "file": "results/layout/lvds_rx_x3.pex_c.spice",
+     "magic_port_order": [
+      "RX0_O",
+      "RX1_O",
+      "RX2_O",
+      "EN",
+      "RX0_P",
+      "RX0_N",
+      "RX1_P",
+      "RX1_N",
+      "RX2_P",
+      "RX2_N",
+      "VDD",
+      "VSS"
+     ],
+     "elements": {
+      "X": 1029,
+      "C": 472,
+      "R": 0,
+      "D": 12
+     },
+     "bytes": 136422,
+     "extract_s": 1.7
+    },
+    "lvds_rx_x3.pex_rc": {
+     "file": "results/layout/lvds_rx_x3.pex_rc.spice",
+     "magic_port_order": [
+      "RX0_O",
+      "RX1_O",
+      "RX2_O",
+      "EN",
+      "RX0_P",
+      "RX0_N",
+      "RX1_P",
+      "RX1_N",
+      "RX2_P",
+      "RX2_N",
+      "VDD",
+      "VSS"
+     ],
+     "elements": {
+      "X": 1029,
+      "C": 5711,
+      "R": 10429,
+      "D": 12
+     },
+     "bytes": 766259,
+     "extract_s": 8.7
+    },
+    "lvds_lane.pex_c": {
+     "file": "results/layout/lvds_lane.pex_c.spice",
+     "magic_port_order": [
+      "INP",
+      "INN",
+      "OUT",
+      "EN",
+      "VBN",
+      "VB2",
+      "VREF",
+      "VBP",
+      "VDD",
+      "VSS"
+     ],
+     "elements": {
+      "X": 317,
+      "C": 145,
+      "R": 0,
+      "D": 4
+     },
+     "bytes": 29760,
+     "extract_s": 0.9
+    },
+    "lvds_lane.pex_rc": {
+     "file": "results/layout/lvds_lane.pex_rc.spice",
+     "magic_port_order": [
+      "INP",
+      "INN",
+      "OUT",
+      "EN",
+      "VBN",
+      "VB2",
+      "VREF",
+      "VBP",
+      "VDD",
+      "VSS"
+     ],
+     "elements": {
+      "X": 317,
+      "C": 1760,
+      "R": 3125,
+      "D": 4
+     },
+     "bytes": 168882,
+     "extract_s": 1.7
+    },
+    "lvds_bias.pex_c": {
+     "file": "results/layout/lvds_bias.pex_c.spice",
+     "magic_port_order": [
+      "EN",
+      "VBN",
+      "VB2",
+      "VREF",
+      "VBP",
+      "VDD",
+      "VSS"
+     ],
+     "elements": {
+      "X": 78,
+      "C": 79,
+      "R": 0,
+      "D": 0
+     },
+     "bytes": 7727,
+     "extract_s": 0.6
+    },
+    "lvds_bias.pex_rc": {
+     "file": "results/layout/lvds_bias.pex_rc.spice",
+     "magic_port_order": [
+      "EN",
+      "VBN",
+      "VB2",
+      "VREF",
+      "VBP",
+      "VDD",
+      "VSS"
+     ],
+     "elements": {
+      "X": 78,
+      "C": 449,
+      "R": 967,
+      "D": 0
+     },
+     "bytes": 44469,
+     "extract_s": 0.7
+    }
+   },
+   "caps": {
+    "lane0": {
+     "RX": {
+      "fF": [
+       6.086,
+       6.093
+      ],
+      "mismatch_pct": 0.115
+     },
+     "gate": {
+      "fF": [
+       42.243,
+       42.496
+      ],
+      "mismatch_pct": 0.597
+     }
+    },
+    "lane1": {
+     "RX": {
+      "fF": [
+       6.095,
+       6.093
+      ],
+      "mismatch_pct": 0.033
+     },
+     "gate": {
+      "fF": [
+       42.243,
+       42.496
+      ],
+      "mismatch_pct": 0.597
+     }
+    },
+    "lane2": {
+     "RX": {
+      "fF": [
+       6.095,
+       6.093
+      ],
+      "mismatch_pct": 0.033
+     },
+     "gate": {
+      "fF": [
+       42.243,
+       42.496
+      ],
+      "mismatch_pct": 0.597
+     }
+    },
+    "outputs_fF": {
+     "RX0_O": 17.612,
+     "RX1_O": 16.338,
+     "RX2_O": 23.407
+    },
+    "EN_fF": 120.175
+   },
+   "smoke": {
+    "prelayout": {
+     "rc": 0,
+     "wall_s": 0.2,
+     "values": {
+      "v(rx0_o)": 3.3,
+      "v(rx1_o)": 9.140746e-10,
+      "v(rx2_o)": 3.3,
+      "i(vdd)": -0.00153929
+     },
+     "errors": [],
+     "levels": [
+      1,
+      0,
+      1
+     ],
+     "idd_vs_prelayout_pct": 0.0
+    },
+    "pex_c": {
+     "rc": 0,
+     "wall_s": 1.0,
+     "values": {
+      "v(rx0_o)": 3.3,
+      "v(rx1_o)": 4.276792e-09,
+      "v(rx2_o)": 3.3,
+      "i(vdd)": -0.00153892
+     },
+     "errors": [],
+     "levels": [
+      1,
+      0,
+      1
+     ],
+     "idd_vs_prelayout_pct": -0.02
+    },
+    "pex_rc": {
+     "rc": 0,
+     "wall_s": 5.3,
+     "values": {
+      "v(rx0_o)": 3.3,
+      "v(rx1_o)": 4.314581e-09,
+      "v(rx2_o)": 3.3,
+      "i(vdd)": -0.00153796
+     },
+     "errors": [],
+     "levels": [
+      1,
+      0,
+      1
+     ],
+     "idd_vs_prelayout_pct": -0.09
+    }
+   },
+   "ok": true
   }
  },
- "started": "2026-11-14 11:41:24",
+ "started": "2026-11-14 11:47:13",
  "fixed_bbox_um": [
   0.0,
   0.0,
@@ -295,9 +545,9 @@
    42.15
   ]
  ],
- "python_build_s": 5.6,
+ "python_build_s": 5.7,
  "schematic_lines": 143,
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 63.4
+ "wall_s": 89.7
 }

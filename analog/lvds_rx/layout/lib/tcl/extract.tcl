@@ -14,6 +14,14 @@ if {[string match *.gds $src]} {
     addpath $src
     load $cell
 }
+# FLAT=1 (T10): extract a flattened copy (cell ${cell}_flat).  For parasitics of a hierarchical cell: a hierarchical netlist
+# would need coupling capacitors between nodes of different subcell instances, which a SPICE netlist cannot express.
+if {[info exists env(FLAT)] && $env(FLAT) eq "1"} {
+    expand
+    flatten ${cell}_flat
+    load ${cell}_flat
+    set cell ${cell}_flat
+}
 select top cell
 extract path ext_$mode
 if {$mode eq "lvs"} {

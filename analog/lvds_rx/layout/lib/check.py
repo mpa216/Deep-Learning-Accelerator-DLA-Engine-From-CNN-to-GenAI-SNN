@@ -210,26 +210,40 @@ def via_arrays(gds, cell, wd):
 
 
 # ------------------------------------------------------------------------------------------------ 5 LVS
-def extract(cell, gds, wd, tag, mode="lvs"):
+def extract(cell, gds, wd, tag, mode="lvs", flat=False):
+    """flat=True: extract a flattened copy (subckt <cell>_flat in the netlist), for parasitics of a hierarchical cell."""
     d = os.path.join(wd, f"ext_{tag}")
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(d)
     out_sp = os.path.join(d, f"{cell}.lay.spice")
-    out = magic(os.path.join(LIB, "tcl", "extract.tcl"), d,
-                {"CELL": cell, "SRC": os.path.abspath(gds), "MODE": mode, "OUT": out_sp}, "extract.log")
-    ext = os.path.join(d, f"ext_{mode}", f"{cell}.ext")
+    env = {"CELL": cell, "SRC": os.path.abspath(gds), "MODE": mode, "OUT": out_sp}
+    if flat:
+        env["FLAT"] = "1"
+    t0 = time.time()
+    out = magic(os.path.join(LIB, "tcl", "extract.tcl"), d, env, "extract.log")
+    ext = os.path.join(d, f"ext_{mode}", f"{cell}_flat.ext" if flat else f"{cell}.ext")
+    if flat:
+        cell = cell + "_flat"
     warn = [l for l in out.splitlines() if re.search(r"arning|rror", l)][:6]
-    return dict(spice=out_sp, ext=ext, warnings=warn)
+    return dict(spice=out_sp, ext=ext, warnings=warn, cell=cell, wall_s=round(time.time() - t0, 1))
 
 
 _SI_FF = {"a": 1e-3, "f": 1.0, "p": 1e3, "n": 1e6, "u": 1e9, "m": 1e12}      # SPICE suffix -> fF
 
 
-def net_caps(spice):
+def flat_base(name):
+    """Net of a node of a FLAT extraction of a hierarchical cell: 'lvds_lane_0.gp.0' -> 'lvds_lane_0.gp' (only a trailing
+    numeric segment index is dropped; pins such as 'RX0_P' stay)."""
+    p = name.rsplit(".", 1)
+    return p[0] if len(p) == 2 and p[1].isdigit() else name
+
+
+def net_caps(spice, key=None):
     """Extracted parasitic capacitance per net from a pex_c netlist (Magic ext2spice, cthresh 0): every C element is counted
     on both of its nodes (a coupling cap fully on each side: the usual total net capacitance; the substrate is the VSS
-    node, tied through the taps).  Node names map to nets with base().  Device capacitances (gates, junctions) are not
-    C elements and are not included.  Returns {net: dict(total_fF, to={other net: fF})}."""
+    node, tied through the taps).  Node names map to nets with base() (or `key`, e.g. flat_base).  Device capacitances
+    (gates, junctions) are not C elements and are not included.  Returns {net: dict(total_fF, to={other net: fF})}."""
+    key = key or base
     out = {}
     for line in open(spice):
         t = line.split()
@@ -239,7 +253,7 @@ def net_caps(spice):
         if not m:
             continue
         v = float(m.group(1)) * (_SI_FF[m.group(2).lower()] if m.group(2) else 1e15)
-        a, b = base(t[1]), base(t[2])
+        a, b = key(t[1]), key(t[2])
         if a == b:
             continue
         for x, y in ((a, b), (b, a)):

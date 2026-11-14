@@ -29,8 +29,8 @@ Solo, in small pieces with one local commit each (as in T9). Report and wait for
 | A2 | bias routing, pins, flat schematic, full check (LVS against lvds_bias + reference file, negative controls, via arrays) | done: PASS, see below |
 | B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | done, see below |
 | C | macro LVS (hierarchical), negative controls, antenna without ESD | done, see below |
-| D | PEX: C on all nets, RC on the input pair, bias and output nets | next |
-| E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | open |
+| D | PEX: C on all nets, RC on the input pair, bias and output nets | done (RC on ALL nets), see below |
+| E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | next |
 
 ## Bias block result (piece A2, `layout/bias/results/lvds_bias.json`, about 30 s)
 
@@ -61,6 +61,21 @@ edge. Lane 2's output runs 150 um west under the lane to x = 400 (pins.yaml orde
 
 The extraction warns 10 times in lvds_lane and 10 times in lvds_bias ("device missing 1 terminal": dummies with both
 terminals on one rail, explained for the lane in log/T9_report.md).
+
+## PEX after piece D (part of `run_macro.py`, step `pex`; deliverables in `results/layout/`)
+
+* Netlists, each with its subckt ports rewritten to the reference order (Magic writes its own order; testbenches connect
+  by position): `lvds_rx_x3.pex_c.spice` (flat copy of the hierarchy: 1029 X + 12 D devices, 472 C), `lvds_rx_x3.pex_rc.spice`
+  (extresist tolerance 10 on ALL nets: + 10429 R, 5711 C, 0.77 MB, 8.7 s), and the same pair for `lvds_lane` and `lvds_bias`.
+  PLAN_V2 asked for RC on the input pair, bias and output nets only (to keep the netlist small); all nets cost 8.7 s of
+  extraction and 5.3 s for an operating point, so the superset is delivered and T11 picks C or RC per bench.
+* Smoke test, ngspice .op, tt 27 C 3.3 V (harness header): lanes 0 and 2 at VID +100 mV, lane 1 at -100 mV, VIC 1.2 V.
+  Pre-layout netlist: RX0_O 3.3 V, RX1_O 0 V, RX2_O 3.3 V, IDD 1.539 mA. pex_c and pex_rc: the same levels, IDD -0.02 % and
+  -0.09 %.
+* Extracted wiring capacitance in the macro: RXk_P / RXk_N 6.09 / 6.09 fF (<= 0.12 %, pin stubs included), gp / gn
+  42.24 / 42.50 fF (0.60 %) in all three lanes (as in the lane alone), RX0_O / RX1_O / RX2_O 17.6 / 16.3 / 23.4 fF,
+  EN 120 fF.
+* Also in `results/layout/`: `lvds_rx_x3.gds`, `.png`, `.lvs.out` (the Netgen report of the clean run).
 
 ## Rules found
 
