@@ -20,8 +20,31 @@ schematic device is several layout fingers).
 | Piece | What | State |
 |---|---|---|
 | 0 | `results/layout.json` for gate LAYOUT (T10 left it out), evaluated with `flow/gates.py --phases layout --out results/gates_layout.json` | done: PASS |
-| A | PEX node names = pre-layout hierarchical paths (probe-compatible macro netlists) | next |
-| B | `sim/tbl_*` specs (the pre-layout benches with the PEX include, the 6.5 corner / grid subset) + cost of one run each | open |
+| A | PEX node names = pre-layout hierarchical paths (probe-compatible macro netlists) | done (b91c4d2) |
+| B | `sim/tbl_*` specs (the pre-layout benches with the PEX include, the 6.5 corner / grid subset) + cost of one run each | in progress |
 | C | the runs (detached, 4 jobs) | open |
 | D | evaluator (post vs pre, 30 % of margin) and gate TBL | open |
 | E | AUDIT_2, REPORT, DESIGN_LOG, make check; report to the owner and wait | open |
+
+## Piece B findings (2026-11-14, after the owner's "keep going without waiting for my approval")
+
+- ngspice keeps every node of a transient in memory: TB4 on the RC netlist (about 9400 nodes, 18000 time points) asked
+  for 548 MB and was refused. `make_benches.py` now writes one `.save` line per deck with the vectors its control section
+  reads (no circuit change; pre and pex share the deck).
+- Cost of one extracted (RC) run, tt, first grid point: tbl_op 3.8 s, tbl_ac 15.6 s, tbl_trip 158 s, tbl_pd 252 s
+  (C-only 75 s), tbl_idle 92 s, tbl_en 108 s.
+- **tPD rises a lot**: TB4 at tt, VIC 0.05 V, VID 100 mV: pre-layout 3.71 ns (the TBL deck with the pre-layout core
+  reproduces TB4 exactly), C-only extraction 5.54 ns, RC extraction 6.45 ns (+2.74 ns, 64 % of the 4.29 ns margin to 8 ns).
+  Two thirds capacitance, one third wire resistance. Being diagnosed stage by stage (`.scratch/t11/diag_tb4.py`).
+- D-012 (sizing/FROZEN.md) asks for op, gain, delay and one eye run at ff/125C/3.6 V, VIC 0.05 V after extraction:
+  tbl_op now covers the 7 VIC x VID +-100 mV at tt and that corner; new bench tbl_eye (TB5 deck) at that corner.
+
+## Criterion reading for gate TBL (fixed here before the full runs)
+
+Per pair (same deck, corner, grid point): margin = distance of the value to the source TB gate's limit (the nearer side
+of a two-sided limit, as flow/gates.py). used = (margin_pre - margin_pex) / margin_pre. PASS when used <= 0.30.
+Checks with no margin by construction (ber_errors, toggle_diff, osc_flag, model_warnings) pass when the extracted value
+meets the limit. A GAIN of margin over 30 % is listed and explained, not failed. Spread checks use the same rule on the
+spread. The systematic offset added by the layout (TB3_trip off_v delta) is compared with 30 % of the TB3_off window
+margin. D-012 is judged on the absolute limits (A1 >= 4, TB4 limits, TB5 eye limits) at ff/125C/3.6 V, VIC 0.05 V.
+Evaluator: `sim/tbl/evaluate.py` -> `results/post_layout/tbl.json`, `TBL.md`.

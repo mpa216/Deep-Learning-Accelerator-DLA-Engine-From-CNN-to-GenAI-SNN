@@ -1,0 +1,26 @@
+{
+ "description": "post-layout gate TBL (pre): tb10_lanes with core = netlist/lvds_rx_core.spice",
+ "limits": {
+  "xtalk_jitter_ui": {
+   "max": 0.05,
+   "scale": 100,
+   "unit": "% UI"
+  }
+ },
+ "name": "tbl_lanes_pre",
+ "deck": "tbl_lanes.spice",
+ "corners": "tt",
+ "grid": {
+  "mc3s": [
+   0
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "tstop": 8.3e-07,
+  "core": "netlist/lvds_rx_core.spice"
+ },
+ "timeout": 1800,
+ "prep": "../tb10_lanes/hooks.py:prep",
+ "post": "../tb10_lanes/hooks.py:post"
+}

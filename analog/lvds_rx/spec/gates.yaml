@@ -326,4 +326,15 @@ gates:
   TBL:
     title: "post-layout re-simulation: same metrics as TB1,TB2,TB3,TB4,TB5,TB7,TB8,TB10 on PEX netlists"
     phase: postlayout
-    deferred: "T11 writes sim/tbl_* specs and the evaluator; frozen criterion: every metric within 30 % of its margin to the TB limit (PLAN_V2 3.2, 6.5), about 100 runs"
+    # T11 (D-015): the deferred stub of T0 becomes a gate on the evaluator's summary.  sim/tbl/evaluate.py pairs every run of
+    # sim/tbl_*/ (pre-layout core) with the same run on the extracted RC macro and applies the source TB gate's own checks.
+    json: results/post_layout/tbl.json
+    checks:
+      # frozen criterion (PLAN_V2 3.2, 6.5): every metric within 30 % of its margin to the TB limit, about 100 runs
+      - {kind: json_value, path: summary.benches_missing, eq: 0}
+      - {kind: json_value, path: summary.count_errors,    eq: 0}
+      - {kind: json_value, path: summary.runs_not_ok,     eq: 0}
+      - {kind: json_value, path: summary.pairs,           min: 100}
+      - {kind: json_value, path: summary.checks_failed,   eq: 0}
+      - {kind: json_value, path: summary.margin_used_max, max: 0.30}
+      - {kind: json_value, path: d012.ok,                 eq: 1}       # sizing/FROZEN.md freeze condition (decision D-012)

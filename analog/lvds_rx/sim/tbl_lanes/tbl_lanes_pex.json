@@ -1,0 +1,26 @@
+{
+ "description": "post-layout gate TBL (pex): tb10_lanes with core = sim/tbl/core_pexrc.spice",
+ "limits": {
+  "xtalk_jitter_ui": {
+   "max": 0.05,
+   "scale": 100,
+   "unit": "% UI"
+  }
+ },
+ "name": "tbl_lanes_pex",
+ "deck": "tbl_lanes.spice",
+ "corners": "tt",
+ "grid": {
+  "mc3s": [
+   0
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "tstop": 8.3e-07,
+  "core": "sim/tbl/core_pexrc.spice"
+ },
+ "timeout": 18000,
+ "prep": "../tb10_lanes/hooks.py:prep",
+ "post": "../tb10_lanes/hooks.py:post"
+}

@@ -1,0 +1,37 @@
+{
+ "description": "post-layout gate TBL (pre): tb2_ac with core = netlist/lvds_rx_core.spice",
+ "limits": {
+  "a1": {
+   "min": 4.0
+  },
+  "f3db_stage_over_dr": {
+   "min": 0.8
+  },
+  "f3db_chain_hz": {
+   "min": 50000000.0,
+   "scale": 1e-06,
+   "unit": "MHz"
+  }
+ },
+ "name": "tbl_ac_pre",
+ "deck": "tbl_ac.spice",
+ "corners": [
+  "worst5",
+  "ff:125:3.6"
+ ],
+ "grid": {
+  "vic": [
+   0.05,
+   1.2,
+   2.35
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "dr": 100000000.0,
+  "core": "netlist/lvds_rx_core.spice",
+  "alters": "alter m.xdut.xl0.xhyst.xmlc1.m0 m = 0.001\nalter m.xdut.xl0.xhyst.xmlc2.m0 m = 0.001"
+ },
+ "timeout": 180,
+ "post": "../tb2_ac/hooks.py:post_tb2"
+}

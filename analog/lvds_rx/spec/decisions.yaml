@@ -235,3 +235,10 @@ entries:                    # ladder rungs and waivers taken so far (none: only 
     measured: "results/mutants.json (offset_area_div4, N = 100 x extreme2 x 3 VIC): mutant sigma 5.70 mV; real design (N = 1000, worst5 x 3 VIC) 3.24 mV."
     gate_relaxed: "none: TIGHTENED. TB3_off check sigma_max now $spec.offset.design_sigma_v (5 mV, the spec table's design target and R2 rung 0) instead of hard_sigma_limit_v (8 mV, R2 rung 1). The mutant (5.70 mV) now fails, the real design passes with 1.5 mV to spare. The 95 mV window is unchanged."
     files_after: {spec/gates.yaml: 737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5}
+  - id: D-015
+    date: 2026-11-14
+    kind: note
+    trigger: "T11: gate TBL was a deferred stub since T0 ('T11 writes sim/tbl_* specs and the evaluator'); T11 wrote both (sim/tbl/make_cores.py, make_benches.py, evaluate.py)"
+    measured: "results/post_layout/tbl.json (written by sim/tbl/evaluate.py from sim/tbl_*/results/tbl_*_{pre,pex}/results.json)"
+    gate_relaxed: "none. The stub became a json gate on the evaluator's summary: complete and ok pre / extracted run sets, at least 100 pairs, no failed check, largest use of margin <= 0.30, and the D-012 freeze condition met. The frozen criterion is unchanged (every metric within 30 % of its margin to the source TB gate's limit); its reading (a loss of margin is gated, a gain over 30 % is listed and explained; checks without a margin pass when the extracted value meets the limit) was fixed in log/T11_notes.md before the full runs."
+    files_after: {spec/gates.yaml: c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f}

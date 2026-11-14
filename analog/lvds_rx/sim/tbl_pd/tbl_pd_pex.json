@@ -1,0 +1,48 @@
+{
+ "description": "post-layout gate TBL (pex): tb4_pd with core = sim/tbl/core_pexrc.spice",
+ "limits": {
+  "tpd_s": {
+   "max": 8e-09,
+   "scale": 1000000000.0,
+   "unit": "ns"
+  },
+  "dcd_ui": {
+   "max": 0.1,
+   "scale": 100,
+   "unit": "% UI"
+  },
+  "edge_10_90_s": {
+   "max": 1e-09,
+   "scale": 1000000000.0,
+   "unit": "ns"
+  },
+  "n_missed": {
+   "max": 0
+  }
+ },
+ "name": "tbl_pd_pex",
+ "deck": "tbl_pd.spice",
+ "corners": [
+  "worst5",
+  "ff:125:3.6"
+ ],
+ "grid": {
+  "vic": [
+   0.05,
+   1.2,
+   2.35
+  ],
+  "vid": [
+   0.1,
+   0.35
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "ui": 1e-08,
+  "core": "sim/tbl/core_pexrc.spice"
+ },
+ "timeout": 3000,
+ "prep": "../tb4_pd/hooks.py:prep_tb4",
+ "post": "../tb4_pd/hooks.py:post_tb4"
+}

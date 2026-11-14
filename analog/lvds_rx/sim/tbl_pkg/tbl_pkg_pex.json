@@ -1,0 +1,41 @@
+{
+ "description": "post-layout gate TBL (pex): tb12_pkg with core = sim/tbl/core_pexrc.spice",
+ "limits": {
+  "ber_errors": {
+   "max": 0
+  },
+  "toggle_diff": {
+   "min": 0,
+   "max": 0
+  },
+  "eye_open_ui": {
+   "min": 0.5
+  }
+ },
+ "name": "tbl_pkg_pex",
+ "deck": "tbl_pkg.spice",
+ "corners": [
+  "ss:125:3.0",
+  "fs:27:3.3"
+ ],
+ "grid": {
+  "pkg": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "rate": [
+   100000000.0,
+   200000000.0
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "vic": 1.2,
+  "core": "sim/tbl/core_pexrc.spice"
+ },
+ "timeout": 6000,
+ "prep": "../tb5_eye/hooks.py:prep_eye",
+ "post": "../tb5_eye/hooks.py:post_eye"
+}

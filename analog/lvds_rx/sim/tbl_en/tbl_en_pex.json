@@ -1,0 +1,66 @@
+{
+ "description": "post-layout gate TBL (pex): tb8_en with core = sim/tbl/core_pexrc.spice",
+ "limits": {
+  "min_pulse_s": {
+   "min": 2e-09,
+   "scale": 1000000000.0,
+   "unit": "ns"
+  }
+ },
+ "name": "tbl_en_pex",
+ "deck": "tbl_en.spice",
+ "corners": [
+  "ff:125:3.6",
+  "ss:125:3.0",
+  "tt:27:3.3"
+ ],
+ "grid": {
+  "case": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "core": "sim/tbl/core_pexrc.spice"
+ },
+ "timeout": 2400,
+ "prep": "../tb8_en/hooks.py:prep",
+ "post": "../tb8_en/hooks.py:post",
+ "retry": {
+  "timeout": 2400,
+  "variants": [
+   {
+    "name": "step49p",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".tran 49p "
+     ]
+    ]
+   },
+   {
+    "name": "reltol0.05",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".option reltol=0.05\n.tran 50p "
+     ]
+    ]
+   },
+   {
+    "name": "reltol0.05_step47p",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".option reltol=0.05\n.tran 47p "
+     ]
+    ]
+   }
+  ]
+ }
+}

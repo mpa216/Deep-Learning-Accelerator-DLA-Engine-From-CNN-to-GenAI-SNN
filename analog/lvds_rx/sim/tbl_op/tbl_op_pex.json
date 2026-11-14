@@ -1,0 +1,38 @@
+{
+ "name": "tbl_op_pex",
+ "deck": "tbl_op.spice",
+ "corners": [
+  "tt",
+  "ff:125:3.6"
+ ],
+ "grid": {
+  "vic": [
+   0.05,
+   0.3,
+   0.6,
+   1.2,
+   1.8,
+   2.1,
+   2.35
+  ],
+  "vid": [
+   -0.1,
+   0.1
+  ]
+ },
+ "vars": {
+  "core": "sim/tbl/core_pexrc.spice"
+ },
+ "post": "hooks.py:post",
+ "timeout": 600,
+ "jobs": 4,
+ "limits": {
+  "vnode_min_v": {
+   "min": -0.3
+  },
+  "vnode_over_vdd_v": {
+   "max": 0.3
+  }
+ },
+ "description": "post-layout gate TBL (pex): operating point, core = sim/tbl/core_pexrc.spice"
+}

@@ -1,0 +1,43 @@
+{
+ "description": "post-layout gate TBL (pre): tb3_trip with core = netlist/lvds_rx_core.spice",
+ "limits": {
+  "vh_v": {
+   "min": 0.008,
+   "max": 0.025,
+   "scale": 1000,
+   "unit": "mV"
+  },
+  "n_up": {
+   "min": 1,
+   "max": 1
+  },
+  "n_dn": {
+   "min": 1,
+   "max": 1
+  }
+ },
+ "name": "tbl_trip_pre",
+ "deck": "tbl_trip.spice",
+ "corners": [
+  "worst5",
+  "sf:-40:3.0"
+ ],
+ "grid": {
+  "vic": [
+   0.05,
+   1.2,
+   2.35
+  ],
+  "sweep": [
+   0,
+   1
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "wmax": 0.051,
+  "core": "netlist/lvds_rx_core.spice"
+ },
+ "timeout": 300,
+ "post": "../tb3_trip/hooks.py:post_tb3"
+}
