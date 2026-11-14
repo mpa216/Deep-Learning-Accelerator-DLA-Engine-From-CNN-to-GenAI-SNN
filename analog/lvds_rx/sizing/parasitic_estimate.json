@@ -1,0 +1,304 @@
+{
+ "generated_by": "sim/tbl/make_estimate.py (T11 iteration 1)",
+ "source": "sim/tbl/core_pexc.spice",
+ "source_sha256": "5658ffb06fb9bb05093933c581cc817b18a47223fb79044f32654e03e4ab24f7",
+ "sizes": "sizing/sizes.spice",
+ "sizes_sha256": "904ffecb584c3f9d14f97af497ede18c43dee2adad4a99a46a33db4ae7e904ad",
+ "cw_scale": 1.2,
+ "ldiff_um": 0.5114,
+ "junction_area_factor": 2.8411,
+ "junction_nets": {
+  "xl0.d2a": [
+   10.254,
+   3.55
+  ],
+  "xl0.d2b": [
+   10.254,
+   3.55
+  ],
+  "xl0.oa": [
+   34.102,
+   11.804
+  ],
+  "xl0.ob": [
+   35.812,
+   11.804
+  ],
+  "xl0.xhyst.sa": [
+   4.014,
+   1.39
+  ],
+  "xl0.xhyst.sb": [
+   4.014,
+   1.39
+  ],
+  "xl0.xhyst.ts": [
+   5.2,
+   1.35
+  ],
+  "xl0.xout.d3": [
+   5.507,
+   1.906
+  ],
+  "xl0.xout.i1": [
+   2.704,
+   0.936
+  ],
+  "xl0.xout.i2": [
+   5.46,
+   1.215
+  ],
+  "xl0.xout.n3a": [
+   6.547,
+   1.906
+  ],
+  "xl0.xout.nd": [
+   4.16,
+   1.44
+  ],
+  "xl0.xout.nm": [
+   1.04,
+   0.72
+  ],
+  "xl0.xpre.fa": [
+   73.414,
+   24.962
+  ],
+  "xl0.xpre.fb": [
+   73.842,
+   24.962
+  ],
+  "xl0.xpre.tn": [
+   57.2,
+   22.77
+  ],
+  "xl0.xpre.tp": [
+   141.024,
+   51.372
+  ]
+ },
+ "cw_fF": {
+  "pre_fa": 57.654,
+  "pre_fb": 56.742,
+  "pre_tp": 238.446,
+  "pre_tn": 34.158,
+  "hyst_sa": 9.591,
+  "hyst_sb": 5.615,
+  "hyst_ts": 7.249,
+  "out_n3a": 5.672,
+  "out_d3": 12.184,
+  "out_nd": 5.9,
+  "out_nm": 0.69,
+  "out_i1": 5.385,
+  "out_i2": 6.418,
+  "lane_inp": 4.579,
+  "lane_inn": 4.233,
+  "lane_gp": 45.247,
+  "lane_gn": 45.571,
+  "lane_oa": 31.161,
+  "lane_ob": 30.772,
+  "lane_d2a": 13.217,
+  "lane_d2b": 12.122,
+  "lane_out": 18.143,
+  "bias_enb": 22.6,
+  "bias_nrb": 5.167,
+  "bias_vf": 9.501,
+  "bias_nmid": 8.071,
+  "top_vbn": 237.635,
+  "top_vbp": 57.607,
+  "top_vb2": 111.368,
+  "top_vref": 217.572,
+  "top_en": 66.064
+ },
+ "cwd_fF": {
+  "pre_fa": 0.0,
+  "pre_fb": 0.0,
+  "pre_tp": 13.609,
+  "pre_tn": 0.234,
+  "hyst_sa": 0.007,
+  "hyst_sb": 0.0,
+  "hyst_ts": 0.66,
+  "out_n3a": 6.365,
+  "out_d3": 5.106,
+  "out_nd": 3.27,
+  "out_nm": 0.0,
+  "out_i1": 3.147,
+  "out_i2": 5.14,
+  "lane_inp": 2.731,
+  "lane_inn": 3.079,
+  "lane_gp": 5.444,
+  "lane_gn": 5.424,
+  "lane_oa": 1.915,
+  "lane_ob": 2.389,
+  "lane_d2a": 15.628,
+  "lane_d2b": 14.711,
+  "lane_out": 4.8,
+  "bias_enb": 7.414,
+  "bias_nrb": 6.121,
+  "bias_vf": 0.004,
+  "bias_nmid": 1.076,
+  "top_vbn": 4.514,
+  "top_vbp": 136.848,
+  "top_vb2": 7.933,
+  "top_vref": 2.56,
+  "top_en": 78.146
+ },
+ "cw_site": {
+  "pre_fa": {
+   "subckt": "lvds_pre",
+   "node": "fa",
+   "extracted_net": "xpre.fa"
+  },
+  "pre_fb": {
+   "subckt": "lvds_pre",
+   "node": "fb",
+   "extracted_net": "xpre.fb"
+  },
+  "pre_tp": {
+   "subckt": "lvds_pre",
+   "node": "tp",
+   "extracted_net": "xpre.tp"
+  },
+  "pre_tn": {
+   "subckt": "lvds_pre",
+   "node": "tn",
+   "extracted_net": "xpre.tn"
+  },
+  "hyst_sa": {
+   "subckt": "lvds_hyst",
+   "node": "sa",
+   "extracted_net": "xhyst.sa"
+  },
+  "hyst_sb": {
+   "subckt": "lvds_hyst",
+   "node": "sb",
+   "extracted_net": "xhyst.sb"
+  },
+  "hyst_ts": {
+   "subckt": "lvds_hyst",
+   "node": "ts",
+   "extracted_net": "xhyst.ts"
+  },
+  "out_n3a": {
+   "subckt": "lvds_out",
+   "node": "n3a",
+   "extracted_net": "xout.n3a"
+  },
+  "out_d3": {
+   "subckt": "lvds_out",
+   "node": "d3",
+   "extracted_net": "xout.d3"
+  },
+  "out_nd": {
+   "subckt": "lvds_out",
+   "node": "nd",
+   "extracted_net": "xout.nd"
+  },
+  "out_nm": {
+   "subckt": "lvds_out",
+   "node": "nm",
+   "extracted_net": "xout.nm"
+  },
+  "out_i1": {
+   "subckt": "lvds_out",
+   "node": "i1",
+   "extracted_net": "xout.i1"
+  },
+  "out_i2": {
+   "subckt": "lvds_out",
+   "node": "i2",
+   "extracted_net": "xout.i2"
+  },
+  "lane_inp": {
+   "subckt": "lvds_lane",
+   "node": "INP",
+   "extracted_net": "RX_P"
+  },
+  "lane_inn": {
+   "subckt": "lvds_lane",
+   "node": "INN",
+   "extracted_net": "RX_N"
+  },
+  "lane_gp": {
+   "subckt": "lvds_lane",
+   "node": "gp",
+   "extracted_net": "gp"
+  },
+  "lane_gn": {
+   "subckt": "lvds_lane",
+   "node": "gn",
+   "extracted_net": "gn"
+  },
+  "lane_oa": {
+   "subckt": "lvds_lane",
+   "node": "oa",
+   "extracted_net": "oa"
+  },
+  "lane_ob": {
+   "subckt": "lvds_lane",
+   "node": "ob",
+   "extracted_net": "ob"
+  },
+  "lane_d2a": {
+   "subckt": "lvds_lane",
+   "node": "d2a",
+   "extracted_net": "d2a"
+  },
+  "lane_d2b": {
+   "subckt": "lvds_lane",
+   "node": "d2b",
+   "extracted_net": "d2b"
+  },
+  "lane_out": {
+   "subckt": "lvds_lane",
+   "node": "OUT",
+   "extracted_net": "RX_O"
+  },
+  "bias_enb": {
+   "subckt": "lvds_bias",
+   "node": "enb",
+   "extracted_net": "xbias.enb"
+  },
+  "bias_nrb": {
+   "subckt": "lvds_bias",
+   "node": "nrb",
+   "extracted_net": "xbias.nrb"
+  },
+  "bias_vf": {
+   "subckt": "lvds_bias",
+   "node": "vf",
+   "extracted_net": "xbias.vf"
+  },
+  "bias_nmid": {
+   "subckt": "lvds_bias",
+   "node": "nmid",
+   "extracted_net": "xbias.nmid"
+  },
+  "top_vbn": {
+   "subckt": "lvds_rx_x3",
+   "node": "vbn",
+   "extracted_net": "vbn"
+  },
+  "top_vbp": {
+   "subckt": "lvds_rx_x3",
+   "node": "vbp",
+   "extracted_net": "vbp"
+  },
+  "top_vb2": {
+   "subckt": "lvds_rx_x3",
+   "node": "vb2",
+   "extracted_net": "vb2"
+  },
+  "top_vref": {
+   "subckt": "lvds_rx_x3",
+   "node": "vref",
+   "extracted_net": "vref"
+  },
+  "top_en": {
+   "subckt": "lvds_rx_x3",
+   "node": "EN",
+   "extracted_net": "EN"
+  }
+ },
+ "note": "validated on the T10 layout: TB4 tt, VIC 0.05 V, VID 0.1 V: pre 3.710 ns, pre + estimate 5.372 ns, extracted RC 5.548 ns"
+}

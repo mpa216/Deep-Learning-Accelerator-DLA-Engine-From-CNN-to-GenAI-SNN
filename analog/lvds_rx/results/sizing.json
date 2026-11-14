@@ -5,38 +5,38 @@
  "tally_ok": 1,
  "tally": {
   "tt_27c_3v30": {
-   "i_lane_uA": 547.9346894371849,
+   "i_lane_uA": 756.8946069914765,
    "i_bias_uA": 166.22879913760426
   },
   "tt_27c_3v00": {
-   "i_lane_uA": 481.2715483089428,
+   "i_lane_uA": 662.0275653246196,
    "i_bias_uA": 147.33597991276812
   },
   "tt_27c_3v60": {
-   "i_lane_uA": 614.9373898186446,
+   "i_lane_uA": 852.6397841552983,
    "i_bias_uA": 185.18046118982394
   },
   "ss_125c_3v00": {
-   "i_lane_uA": 418.7905705905614,
+   "i_lane_uA": 572.8849975625392,
    "i_bias_uA": 129.18498241834246
   },
   "ff_m40c_3v60": {
-   "i_lane_uA": 735.1147068177362,
+   "i_lane_uA": 1027.6877576322727,
    "i_bias_uA": 219.80995529921535
   },
   "ss_125c_3v00_xrff": {
-   "i_lane_uA": 603.0519040607155,
+   "i_lane_uA": 819.906163327274,
    "i_bias_uA": 188.25814137547985
   },
   "ff_m40c_3v60_xrss": {
-   "i_lane_uA": 501.67297646524696,
+   "i_lane_uA": 709.5507689843586,
    "i_bias_uA": 149.3716859329792
   }
  },
- "sigma_total_mV": 3.234658828681985,
+ "sigma_total_mV": 3.5789339148868917,
  "failed_names": [],
  "hashes": {
-  "sizing_script": "da8e83df4f9c578bc3099cc480fa442b7b99d8b43fb68e2c1b140656b64dea8a",
+  "sizing_script": "2c882a08013d8fab0fb77eb5f2f0521727dfb6b5ff1d88fb24d2297d3db9bca8",
   "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
   "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857"
  }

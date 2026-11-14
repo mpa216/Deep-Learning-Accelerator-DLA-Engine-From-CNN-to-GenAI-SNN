@@ -66,8 +66,8 @@ class Ctx:
             f.write(deck_text)
         with open(os.path.join(d, "tb_mini.json"), "w") as f:
             json.dump({"name": "tb_mini", "deck": "tb_mini.spice", "corners": "worst5", "grid": {"vg": [1.2, 3.3]},
-                       "limits": {}, "timeout": 60, "jobs": 6}, f)
-        runner.run_spec(os.path.join(d, "tb_mini.json"), jobs=6, verbose=False)
+                       "limits": {}, "timeout": 60, "jobs": 4}, f)
+        runner.run_spec(os.path.join(d, "tb_mini.json"), jobs=4, verbose=False)
         return os.path.join(d, "results", "tb_mini", "results.json"), os.path.join(d, "tb_mini.json")
 
     def eval_mini(self, results_path, spec_path, gate=None):

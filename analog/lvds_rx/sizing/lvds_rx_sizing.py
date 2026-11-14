@@ -63,7 +63,8 @@ D = dict(
     L_unit=1.0, gmid_unit=7.5,           # mirror devices: low VDsat (2/7.5 = 0.27 V; 7.0 left M3 at 62 mV at the ss/125 cross corner), matching and ro from L = 1 (book 5.2, handoff 7.3 item 5)
     wf_n=2.5, wf_p=5.0,                  # finger widths of the NMOS and PMOS unit (um): integer finger counts give exact ratios
     i_ref=48e-6,                         # reference current: the NMOS diode carries it; 48 uA keeps Rb about 53 kohm (one poly serpentine)
-    n_tail_n=8, n_m3=10, n_t2=5,         # NMOS multiples (units of the diode/4): stage-1 N tail 2x iref, M3 sinks 2.5x, stage-2 tail 1.25x
+    n_tail_n=8, n_m3=10, n_t2=10,        # NMOS multiples (units of the diode/4): stage-1 N tail 2x iref, M3 sinks 2.5x, stage-2 tail 2.5x
+                                         # (T11 iteration 1: n_t2 5 -> 10; with the layout's loads the frozen stage 2 made tPD 6.8 ns at ss/125C/3.0 V)
     p_ratio_tail=2.0,                    # PMOS tail = 2 x the PMOS reference diode
     ib2_div=4,                           # VB2 replica carries I(M5)/4: a 1-finger copy of M5 on Vf
     vf_tt=0.46,                          # cascode offset voltage F at tt: the window is M3 VDS >= VDsat3 + 50 mV at ss/125 C (F falls 18 % there) and the steered PMOS-pair device's VSD at VIC = 0.05 V at ff/-40 C (F rises 15 %); t2_op measured 45 mV there at F = 0.62 V
@@ -79,8 +80,10 @@ D = dict(
     vds=dict(pair_n=1.2, vsb_pair_n=0.7, pair_p=1.4, tail_n=0.8, tail_p=0.8, m5=1.8, vsb_m5=0.5, t2=1.1),
     wf_pair=5.0,
     # ---- stage 2 hysteresis comparator
-    gmid_s2=12.0, L_s2=0.5, wf_s2=5.0,   # pair: moderate inversion; offset allowance sigma_2 <= 0.5*A1_min*sigma_target = 10 mV is generous, so area is spent on speed
-    L_ld=0.4, wf_ld=2.0,                 # PMOS loads (diode + cross-coupled): short L for the regeneration time constant
+    gmid_s2=8.0, L_s2=0.5, wf_s2=5.0,    # pair: offset allowance sigma_2 <= 0.5*A1_min*sigma_target = 10 mV is generous, so area is spent on speed
+                                         # (T11 iteration 1: 12 -> 8: twice the tail current at a smaller pair, less gate load on oa/ob)
+    L_ld=0.28, wf_ld=2.0,                # PMOS loads (diode + cross-coupled) and the stage-3 copies: short L for the regeneration time constant
+                                         # (T11 iteration 1: 0.4 -> 0.28; 0.4 failed the latched pair margin at ss/res_ff once n_t2 doubled)
     alpha_cands=[(4, 5), (5, 7), (2, 3), (3, 5)],   # (nf diode, nf cross): alpha = ratio; for each, the source-degeneration Rs gives V_H,in = 14 mV at tt, the one with the smallest corner spread wins
     # ---- stage 3 + output
     r3=2.0,                              # stage-3 PMOS mirror copies the load diode x r3
@@ -97,6 +100,21 @@ D = dict(
     esd_rw=5.0, esd_rl=1.8, esd_dw=8.0, esd_dl=5.0,
     cw=10.0,                             # wiring + RL parasitic on the stage-1 output nodes (fF), assumption
 )
+
+EST_PATH = os.path.join(HERE, 'parasitic_estimate.json')
+
+
+def load_estimate():
+    """T11 iteration 1: the layout parasitic estimate (sim/tbl/make_estimate.py), or None before it exists."""
+    if not os.path.isfile(EST_PATH):
+        return None
+    with open(EST_PATH) as f:
+        return json.load(f)
+
+
+_est = load_estimate()
+if _est:
+    D['cw'] = _est['cw_fF']['lane_oa'] + _est['cwd_fF']['lane_oa']    # stage-1 output wiring of the extracted layout (was the 10 fF assumption)
 
 # resistor facts (docs/ENV_REPORT.md section 3): ppolyf_u_1k, rsh_eff 1013 ohm/sq tt/27C, end resistance 85 ohm
 RSH_1K, R_ENDS = 1013.0, 85.0
@@ -757,6 +775,14 @@ def write_outputs(S, devs, ev, budget, cin, A, args):
     params['cap_vref_w'] = 20.0
     params['cap_vref_l'] = round(D['c_vref_ff'] / 3.98 / 20.0, 2)                  # 3.98 fF/um2 plateau (ENV_REPORT section 3)
     params['vref_ratio'] = D['vref_ratio']
+    # T11 iteration 1: layout parasitic estimate of the simulation netlist (sim/tbl/make_estimate.py -> parasitic_estimate.json)
+    est = load_estimate()
+    if est:
+        params['ldiff'] = est['ldiff_um']
+        for stem, v in est['cw_fF'].items():
+            params['cw_' + stem] = v
+        for stem, v in est['cwd_fF'].items():
+            params['cwd_' + stem] = v
     flags = {'nmos_pair': 1 if VARIANTS['nmos_pair'] else 0, 'dump_devices': 1 if VARIANTS['dump_devices'] else 0,
              'extra_gain_stage': 1 if VARIANTS['extra_gain_stage'] else 0, 'bias_constgm': 1 if VARIANTS['bias'] == 'constgm' else 0,
              'failsafe': 1 if VARIANTS['failsafe'] else 0, 'on_die_term': 1 if VARIANTS['on_die_term'] else 0}
@@ -772,8 +798,10 @@ def write_outputs(S, devs, ev, budget, cin, A, args):
         lines.append('.param flag_%s = %d' % (k, v))
     lines.append('* devices: w_<stem> / l_<stem> in m, nf_<stem> integer; stems are the instance names of netlist/lvds_rx_core.spice')
     for k, v in params.items():
-        if k.startswith(('w_', 'l_', 'rw_', 'rl_', 'dw_', 'dl_', 'cap_vref_w', 'cap_vref_l')):
+        if k.startswith(('w_', 'l_', 'rw_', 'rl_', 'dw_', 'dl_', 'cap_vref_w', 'cap_vref_l')) or k == 'ldiff':
             lines.append('.param %s = %su' % (k, ('%.6g' % v)))
+        elif k.startswith(('cw_', 'cwd_')):
+            lines.append('.param %s = %sf' % (k, ('%.6g' % v)))
         elif k.startswith('nf_'):
             lines.append('.param %s = %d' % (k, v))
         else:
@@ -782,6 +810,11 @@ def write_outputs(S, devs, ev, budget, cin, A, args):
     paths = C.load_yaml('spec/paths.yaml', ROOT)['generated']
     sizes_path = C.path(paths['sizes'], root=ROOT)
     dt_path = C.path(paths['device_table'], root=ROOT)
+    sizing_json = C.path('results', 'sizing.json', root=ROOT)
+    if getattr(args, 'out', None):           # T11: candidate sizings go to a scratch directory, the frozen files stay untouched
+        os.makedirs(args.out, exist_ok=True)
+        sizes_path, dt_path = os.path.join(args.out, 'sizes.spice'), os.path.join(args.out, 'device_table.json')
+        sizing_json = os.path.join(args.out, 'sizing.json')
     # ---------------------------------------------------------------- device table (layout input)
     table = dict(generated_by='sizing/lvds_rx_sizing.py', hashes=C.input_hashes(ROOT), flags=flags, units='um, A, ohm', devices=[], resistors=[], diodes=[], bias_ratios={})
     for stem, d in devs.items():
@@ -829,7 +862,7 @@ def write_outputs(S, devs, ev, budget, cin, A, args):
     with open(sizes_path, 'w') as f:
         f.write(text)
     C.write_json(dt_path, table)
-    C.write_json(C.path('results', 'sizing.json', root=ROOT), res)
+    C.write_json(sizing_json, res)
     return res
 
 
@@ -1015,6 +1048,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--set', action='append', default=[], help='key=value override of a scalar in D')
     ap.add_argument('--no-write', action='store_true')
+    ap.add_argument('--out', default=None, help='write sizes.spice, device_table.json, sizing.json and the report to this directory instead')
     args = ap.parse_args()
     for kv in args.set:
         k, v = kv.split('=', 1)
@@ -1027,7 +1061,7 @@ def main():
     run_asserts(A, S, devs, ev, budget, cin)
     res = write_outputs(S, devs, ev, budget, cin, A, args)
     if not args.no_write:
-        with open(os.path.join(HERE, 'sizing_report.md'), 'w') as f:
+        with open(os.path.join(args.out or HERE, 'sizing_report.md'), 'w') as f:
             f.write(report(S, devs, ev, budget, cin, A))
     for n, ok, dtl in A.items:
         if not ok:

@@ -134,6 +134,21 @@ sub('lvds_rx_x3', ['VDD', 'VSS', 'RX0_P', 'RX0_N', 'RX1_P', 'RX1_N', 'RX2_P', 'R
 
 UNIMPLEMENTED_FLAGS = ('extra_gain_stage', 'bias_constgm', 'failsafe', 'on_die_term')
 
+# Layout parasitic estimate (T11 iteration 1): per net one capacitor to VSS (.param cw_<stem>) and one to VDD (cwd_<stem>,
+# the extracted coupling to the supply), values from sizes.spice (from
+# sizing/parasitic_estimate.json, made by sim/tbl/make_estimate.py from the T10 extraction).  SIMULATION netlist only:
+# emit_lvs() and the layout schematics never see these (they read SUBCKTS).  The junction part of the estimate is the
+# diffusion length `ldiff` of the ad/as/pd/ps formulas (.param ldiff of sizes.spice).
+ESTIMATE = {
+    'lvds_pre': [('fa', 'pre_fa'), ('fb', 'pre_fb'), ('tp', 'pre_tp'), ('tn', 'pre_tn')],
+    'lvds_hyst': [('sa', 'hyst_sa'), ('sb', 'hyst_sb'), ('ts', 'hyst_ts')],
+    'lvds_out': [('n3a', 'out_n3a'), ('d3', 'out_d3'), ('nd', 'out_nd'), ('nm', 'out_nm'), ('i1', 'out_i1'), ('i2', 'out_i2')],
+    'lvds_lane': [('INP', 'lane_inp'), ('INN', 'lane_inn'), ('gp', 'lane_gp'), ('gn', 'lane_gn'), ('oa', 'lane_oa'),
+                  ('ob', 'lane_ob'), ('d2a', 'lane_d2a'), ('d2b', 'lane_d2b'), ('OUT', 'lane_out')],
+    'lvds_bias': [('enb', 'bias_enb'), ('nrb', 'bias_nrb'), ('vf', 'bias_vf'), ('nmid', 'bias_nmid')],
+    'lvds_rx_x3': [('vbn', 'top_vbn'), ('vbp', 'top_vbp'), ('vb2', 'top_vb2'), ('vref', 'top_vref'), ('EN', 'top_en')],
+}
+
 
 # ====================================================================================================
 def _cond_expr(cond):
@@ -149,8 +164,8 @@ def _mos_sim(it):
     kind, inst, d, g, s, b, stem, _ = it
     model = 'nfet_03v3' if kind == 'n' else 'pfet_03v3'
     return ("X%s %s %s %s %s %s L={l_%s} W={w_%s} nf={nf_%s} "
-            "ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' "
-            "pd='2*int((nf+1)/2) * (W/nf + 0.18u)' ps='2*int((nf+2)/2) * (W/nf + 0.18u)' "
+            "ad='int((nf+1)/2) * W/nf * ldiff' as='int((nf+2)/2) * W/nf * ldiff' "
+            "pd='2*int((nf+1)/2) * (W/nf + ldiff)' ps='2*int((nf+2)/2) * (W/nf + ldiff)' "
             "nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0" % (inst, d, g, s, b, model, stem, stem, stem))
 
 
@@ -213,6 +228,11 @@ def emit_sim():
             out.append(_line_sim(it))
         if cur is not None:
             out.append('.endif')
+        if ESTIMATE.get(name):
+            out.append('* layout parasitic estimate (T11): wiring C per net, values from sizes.spice (cw_<stem>)')
+            for node, stem in ESTIMATE[name]:
+                out.append('Ccw_%s %s VSS {cw_%s}' % (stem, node, stem))
+                out.append('Ccwd_%s %s VDD {cwd_%s}' % (stem, node, stem))
         out.append('.ends %s' % name)
         out.append('')
     return '\n'.join(out)

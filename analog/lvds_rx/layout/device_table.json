@@ -1,7 +1,7 @@
 {
  "generated_by": "sizing/lvds_rx_sizing.py",
  "hashes": {
-  "sizing_script": "da8e83df4f9c578bc3099cc480fa442b7b99d8b43fb68e2c1b140656b64dea8a",
+  "sizing_script": "2c882a08013d8fab0fb77eb5f2f0521727dfb6b5ff1d88fb24d2297d3db9bca8",
   "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
   "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857"
  },
@@ -64,11 +64,11 @@
    "block": "lane",
    "model": "nfet_03v3",
    "role": "stage-2 tail",
-   "W_um": 15.0,
+   "W_um": 30.0,
    "L_um": 1.0,
-   "nf": 6,
+   "nf": 12,
    "Wf_um": 2.5,
-   "ID_tt_uA": 62.88539906074244
+   "ID_tt_uA": 125.77079812148487
   },
   {
    "stem": "mbp",
@@ -251,11 +251,11 @@
    "block": "lane",
    "model": "nfet_03v3",
    "role": "stage-2 input pair (x2)",
-   "W_um": 11.58,
+   "W_um": 8.74,
    "L_um": 0.5,
-   "nf": 3,
-   "Wf_um": 3.86,
-   "ID_tt_uA": 31.44269953037122
+   "nf": 2,
+   "Wf_um": 4.37,
+   "ID_tt_uA": 62.88539906074244
   },
   {
    "stem": "mld",
@@ -263,10 +263,10 @@
    "model": "pfet_03v3",
    "role": "stage-2 diode load (x2)",
    "W_um": 8.0,
-   "L_um": 0.4,
+   "L_um": 0.28,
    "nf": 4,
    "Wf_um": 2.0,
-   "ID_tt_uA": 13.974533124609431
+   "ID_tt_uA": 27.949066249218863
   },
   {
    "stem": "mlc",
@@ -274,10 +274,10 @@
    "model": "pfet_03v3",
    "role": "stage-2 cross-coupled load (x2)",
    "W_um": 10.0,
-   "L_um": 0.4,
+   "L_um": 0.28,
    "nf": 5,
    "Wf_um": 2.0,
-   "ID_tt_uA": 17.46816640576179
+   "ID_tt_uA": 34.93633281152358
   },
   {
    "stem": "mpu2",
@@ -296,7 +296,7 @@
    "model": "pfet_03v3",
    "role": "stage-3 PMOS mirror copies (x2): current of the load diode x r3",
    "W_um": 16.0,
-   "L_um": 0.4,
+   "L_um": 0.28,
    "nf": 8,
    "Wf_um": 2.0,
    "ID_tt_uA": null
@@ -306,11 +306,11 @@
    "block": "lane",
    "model": "nfet_03v3",
    "role": "stage-3 NMOS mirror (diode + copy)",
-   "W_um": 2.59,
+   "W_um": 5.18,
    "L_um": 0.28,
-   "nf": 1,
+   "nf": 2,
    "Wf_um": 2.59,
-   "ID_tt_uA": 27.949066249218863
+   "ID_tt_uA": 55.898132498437725
   },
   {
    "stem": "nand_n",
@@ -441,8 +441,8 @@
    "stem": "rs",
    "model": "ppolyf_u_1k",
    "r_width_um": 2.0,
-   "r_length_um": 8.862,
-   "R_tt_ohm": 4573.3642578125
+   "r_length_um": 3.169,
+   "R_tt_ohm": 1690.0634765625
   },
   {
    "stem": "resd",
@@ -476,7 +476,7 @@
   "n_refp": 11,
   "mnt_over_mbn": 2.0,
   "m3_over_mbn": 2.4,
-  "mt2_over_mbn": 1.2,
+  "mt2_over_mbn": 2.4,
   "mpt_over_mbp": 2.0,
   "alpha": 1.25,
   "alpha_fingers": [
