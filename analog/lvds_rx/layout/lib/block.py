@@ -133,10 +133,13 @@ class Block:
                 raise Conflict(msg)
         for (a, b, c, d) in pieces:
             self.ops.append(("r", layer, a, b, c, d))
-            if net is not None:
-                s = Shape(layer, a, b, c, d, net, kind)
-                self.shapes.append(s)
-                self.by_layer.setdefault(layer, []).append(s)
+        if net is not None:
+            # ONE database shape for the whole rectangle, however many <= 29 um pieces are painted (T9): with one shape per
+            # piece, a same-net pad just inside one piece was reported as "0.1 um from" the abutting piece (a notch that does
+            # not exist), which made ties and vias near a piece boundary of a long strap impossible.
+            s = Shape(layer, x1, y1, x2, y2, net, kind)
+            self.shapes.append(s)
+            self.by_layer.setdefault(layer, []).append(s)
         if label and net is not None:
             self.label(net, layer, (x1 + x2) / 2, (y1 + y2) / 2)
         return (x1, y1, x2, y2)

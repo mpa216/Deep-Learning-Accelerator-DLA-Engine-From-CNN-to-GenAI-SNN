@@ -1,0 +1,250 @@
+{
+ "cell": "lane_place",
+ "stage": "place",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 86.3,
+    "m2": 104.0,
+    "m3": 142.8
+   }
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 352,
+    "rules": [
+     "RULE (352) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 352,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-14 09:45:00",
+ "box_um": [
+  142.8,
+  124.6
+ ],
+ "python_build_s": 1.6,
+ "power": {
+  "ok": true,
+  "straps": [
+   {
+    "strap": "S0",
+    "net": "VSS",
+    "y": 1.75,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 8,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.0,
+    "loads": [],
+    "j_mA_per_um": 0.0,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.0
+   },
+   {
+    "strap": "S1",
+    "net": "VDD",
+    "y": 19.25,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 16,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.189,
+    "loads": [
+     "stage-2 loads (= mt2) + mp3 pair (bound: 2 x mt2)"
+    ],
+    "j_mA_per_um": 0.075,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.255
+   },
+   {
+    "strap": "S2",
+    "net": "VSS",
+    "y": 33.25,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 10,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.126,
+    "loads": [
+     "mn3 pair (bound: 2 x mt2)"
+    ],
+    "j_mA_per_um": 0.05,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.17
+   },
+   {
+    "strap": "S3",
+    "net": "VDD",
+    "y": 56.35,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 2,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.249,
+    "loads": [
+     "RL pair = 2 x m3 - mpt + mnt"
+    ],
+    "j_mA_per_um": 0.1,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.336
+   },
+   {
+    "strap": "S4",
+    "net": "VSS",
+    "y": 73.15,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 16,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.419,
+    "loads": [
+     "mnt + 2 x m3 + mt2 (sources)"
+    ],
+    "j_mA_per_um": 0.168,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.566
+   },
+   {
+    "strap": "S6",
+    "net": "VSS",
+    "y": 103.25,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 6,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.0,
+    "loads": [],
+    "j_mA_per_um": 0.0,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.0
+   },
+   {
+    "strap": "S7",
+    "net": "VDD",
+    "y": 120.75,
+    "width": 2.5,
+    "length": 142.8,
+    "squares": 57.1,
+    "r_end_to_end_ohm": 5.14,
+    "ring_and_trunk_ties": 9,
+    "spine_cuts": 8,
+    "dc_load_mA": 0.107,
+    "loads": [
+     "mpt (source)"
+    ],
+    "j_mA_per_um": 0.043,
+    "j_ok": true,
+    "m4_crossings_cell": 1,
+    "m4_crossings_macro": 7,
+    "crossings_ok": true,
+    "ir_drop_mV_half_pitch": 0.145
+   }
+  ],
+  "spines": [
+   {
+    "net": "VSS",
+    "x": -70.2,
+    "w": 1.2,
+    "y1": 0.5,
+    "y2": 104.5,
+    "cuts_per_strap": [
+     8,
+     8,
+     8,
+     8
+    ]
+   },
+   {
+    "net": "VDD",
+    "x": 70.2,
+    "w": 1.2,
+    "y1": 18.0,
+    "y2": 122.0,
+    "cuts_per_strap": [
+     8,
+     8,
+     8
+    ]
+   }
+  ],
+  "rails_tied_inside_cell": {
+   "VDD": true,
+   "VSS": true
+  },
+  "macro_len": 542.8,
+  "assumptions": {
+   "RSH_ohm_sq": 0.09,
+   "R_via_ohm": 4.5,
+   "J_MAX_mA_per_um": 1.0,
+   "M4_width": 5.0,
+   "M4_pitch": 75.0,
+   "note": "J_MAX is an assumption, not a PDK number; currents are the DC values booked by the caller"
+  }
+ },
+ "all_ok": true,
+ "wall_s": 17.7
+}
