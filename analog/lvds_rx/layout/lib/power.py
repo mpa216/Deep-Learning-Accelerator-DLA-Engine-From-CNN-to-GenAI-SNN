@@ -111,6 +111,14 @@ class PowerPlan:
             else:
                 n = max(1, int(math.ceil((b - a) / max_pitch)))
                 xs = [a + (b - a) * k / n for k in range(n + 1)]
+            # a leaf drawn with m1_ring_regions ties regions to the ring with Metal1 stubs: a via1 pad next to one leaves a
+            # same-net Metal1 notch (M1.2a, 0.23 um) that the database does not see (it checks same-net gaps on Metal2/3 only)
+            stubs = [s for s in self.blk.by_layer.get("m1", []) if s.kind == "ring_stub" and s.net == net
+                     and s.x1 < ox2 and ox1 < s.x2 and s.y1 <= yr + 0.4 and yr - 0.4 <= s.y2]
+            keep = [x for x in xs if all(x + 0.2 + 0.23 <= s.x1 or x - 0.2 - 0.23 >= s.x2 for s in stubs)]
+            if not keep:
+                raise Conflict(f"ring_tie: every tie position of {leaf.name} meets a ring stub; pass xs")
+            xs = keep
         out = []
         for x in xs:
             x = snap(x)

@@ -48,13 +48,18 @@ def reference_lvs(L, wd):
     strict criteria) with subckt lvds_lane of netlist/lvds_rx_lvs_ref.spice; Netgen flattens the reference's sub-blocks
     (lvds_esd2, lvds_pre, lvds_hyst, lvds_out).  With the layout run (layout == flat + dummies) this gives
     layout == reference + the layout's dummies.  The reference file's sha256 must equal the one in sizing/FROZEN.md."""
+    return reference_lvs_text(lane.CELL, lane.schematic(L, dummies=False), wd)
+
+
+def reference_lvs_text(cell, flat_text, wd):
+    """The same check for any cell: `flat_text` (its flat schematic without dummies) against subckt `cell` of the frozen file."""
     flat = os.path.join(wd, "flat_nodummy.spice")
     with open(flat, "w") as f:
-        f.write(lane.schematic(L, dummies=False))
+        f.write(flat_text)
     path = os.path.join(ROOT, REF)
     sha = hashlib.sha256(open(path, "rb").read()).hexdigest()
     want = frozen_sha(REF)
-    lv = check.netgen_lvs(lane.CELL, flat, open(path).read(), wd, "reference")
+    lv = check.netgen_lvs(cell, flat, open(path).read(), wd, "reference")
     flattened = re.findall(r"Flattening unmatched subcell (\S+)", open(lv["out"]).read()) if os.path.exists(lv["out"]) else []
     return dict(ok=bool(lv["clean"] and sha == want), reference=REF, sha256=sha, frozen_sha256=want, frozen_sha256_ok=(sha == want),
                 flattened_subcells=sorted(set(flattened)), **lv)

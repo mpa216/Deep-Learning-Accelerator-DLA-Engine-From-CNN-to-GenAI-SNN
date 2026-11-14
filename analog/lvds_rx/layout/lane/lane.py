@@ -365,10 +365,16 @@ def schematic(L, name=CELL, dummies=True):
     source gen_lvs_ref.py writes netlist/lvds_rx_lvs_ref.spice from), flattened, plus the dummy devices of the layout.
     Internal nets keep the reference's local names (tp fa fb tn ts sa sb n3a d3 nd nm i1 i2 ...), which the layout uses too.
     dummies=False: the flattened reference devices only (run_lane compares that text with the frozen reference file)."""
+    return flat_schematic(L, "lvds_lane", ("rl", "rs"), name, dummies)
+
+
+def flat_schematic(L, sub, res_keys, name, dummies=True):
+    """Subckt `sub` of the reference flattened by name, plus (dummies=True) the MOS dummies of L.blk and the dummy columns of
+    the resistor arrays L.leaf[k] for k in res_keys.  Sets L.schem_counts when the dummies are included."""
     import lvds_circuit as C
     tab, dev, res = C.load_table(ROOT)
     flags = dict(tab["flags"])
-    ports = C.SUBCKTS["lvds_lane"][0]
+    ports = C.SUBCKTS[sub][0]
     lines, owner = [], {}
 
     def expand(sub, mapping, prefix):
@@ -396,7 +402,7 @@ def schematic(L, name=CELL, dummies=True):
             it2[1] = prefix + it[1]
             lines.append(C._line_lvs(tuple(it2), dev, res, tab))
 
-    expand("lvds_lane", {p: p for p in ports}, "")
+    expand(sub, {p: p for p in ports}, "")
     n_ref = len(lines)
     if not dummies:
         return f".subckt {name} {' '.join(ports)}\n" + "\n".join(lines) + f"\n.ends {name}\n"
@@ -404,7 +410,7 @@ def schematic(L, name=CELL, dummies=True):
         if d[0] == "dummy":
             _, inst, drn, rail, body, kind, Wf, Lg = d
             lines.append(f"X{inst} {drn} {rail} {rail} {body} {'nfet_03v3' if kind == 'n' else 'pfet_03v3'} w={Wf:g}u l={Lg:g}u")
-    for key in ("rl", "rs"):
+    for key in res_keys:
         info = L.leaf[key].info
         for k, c in enumerate(info["cols"]):
             if c.get("dummy"):

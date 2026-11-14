@@ -1,0 +1,62 @@
+{
+ "cell": "bias_place",
+ "stage": "place",
+ "steps": {
+  "build": {
+   "ok": true,
+   "errors": [],
+   "genbbox_mismatch": []
+  },
+  "metal_cap": {
+   "ok": true,
+   "pieces_over_cap": [],
+   "longest_merged_polygon_um": {
+    "m1": 33.97,
+    "m2": 121.5,
+    "m3": 53.2
+   }
+  },
+  "magic_drc": {
+   "ok": true,
+   "mag": {
+    "total": 44,
+    "rules": [
+     "RULE (44) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 44,
+    "effective": 0
+   },
+   "gds_readback": {
+    "total": 0,
+    "rules": [],
+    "allowed": 0,
+    "effective": 0
+   },
+   "allow": [
+    "(CO.6)"
+   ]
+  },
+  "klayout": {
+   "dbu": 0.001,
+   "dbu_ok": true,
+   "main": 0,
+   "main_rules": {},
+   "main_lyrdb_files": 1,
+   "antenna": 0,
+   "antenna_rules": {},
+   "antenna_lyrdb_files": 1,
+   "ok": true
+  },
+  "render": {
+   "ok": true
+  }
+ },
+ "started": "2026-11-14 11:25:18",
+ "box_um": [
+  53.2,
+  142.1
+ ],
+ "python_build_s": 0.3,
+ "all_ok": true,
+ "wall_s": 15.7
+}
