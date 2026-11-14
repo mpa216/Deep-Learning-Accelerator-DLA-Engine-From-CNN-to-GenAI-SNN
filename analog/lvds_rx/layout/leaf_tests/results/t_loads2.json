@@ -10,16 +10,16 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 23.74,
+    "m1": 21.34,
     "m2": 0.4,
-    "m3": 18.8
+    "m3": 16.4
    }
   },
   "selfcheck": {
    "ok": true,
    "n_mos": 20,
    "mos": {
-    "pfet_03v3 w=2.0 l=0.4": 20
+    "pfet_03v3 w=2.0 l=0.28": 20
    },
    "n_res": 0,
    "want_fingers": 20,
@@ -29,9 +29,11 @@
   "magic_drc": {
    "ok": true,
    "mag": {
-    "total": 0,
-    "rules": [],
-    "allowed": 0,
+    "total": 168,
+    "rules": [
+     "RULE (168) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 168,
     "effective": 0
    },
    "gds_readback": {
@@ -40,7 +42,9 @@
     "allowed": 0,
     "effective": 0
    },
-   "allow": []
+   "allow": [
+    "(CO.6)"
+   ]
   },
   "klayout": {
    "dbu": 0.001,
@@ -135,7 +139,8 @@
     "detected": true,
     "why": [
      "Netlists match uniquely with property errors.",
-     "Property errors were found.",
+     "D2B                                        |D2A **Mismatch**",
+     "D2A                                        |D2B **Mismatch**",
      "The following cells had property errors:"
     ]
    },
@@ -143,9 +148,9 @@
     "detected": true,
     "net": "D2A",
     "at": [
-     3.51,
+     3.39,
      2.28,
-     18.63,
+     16.59,
      2.56
     ],
     "why": [
@@ -172,12 +177,12 @@
    "ok": true
   }
  },
- "started": "2026-11-14 11:56:27",
+ "started": "2026-11-15 00:02:24",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 21.3,
+ "wall_s": 22.8,
  "bbox_um": [
-  24.06,
+  21.66,
   6.2
  ]
 }

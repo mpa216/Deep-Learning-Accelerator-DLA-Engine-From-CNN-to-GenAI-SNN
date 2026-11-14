@@ -21,7 +21,7 @@
    "mos": {
     "nfet_03v3 w=4.75 l=0.5": 22,
     "nfet_03v3 w=2.5 l=1.0": 12,
-    "pfet_03v3 w=2.0 l=0.4": 14
+    "pfet_03v3 w=2.0 l=0.28": 14
    },
    "n_res": 0,
    "want_fingers": 48,
@@ -31,9 +31,11 @@
   "magic_drc": {
    "ok": true,
    "mag": {
-    "total": 0,
-    "rules": [],
-    "allowed": 0,
+    "total": 120,
+    "rules": [
+     "RULE (120) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+    ],
+    "allowed": 120,
     "effective": 0
    },
    "gds_readback": {
@@ -42,7 +44,9 @@
     "allowed": 0,
     "effective": 0
    },
-   "allow": []
+   "allow": [
+    "(CO.6)"
+   ]
   },
   "klayout": {
    "dbu": 0.001,
@@ -254,10 +258,10 @@
    "ok": true
   }
  },
- "started": "2026-11-14 11:50:36",
+ "started": "2026-11-14 23:56:34",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 23.5,
+ "wall_s": 23.6,
  "bbox_um": [
   53.6,
   18.03

@@ -10,19 +10,19 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 9.82,
+    "m1": 8.8,
     "m2": 0.4,
-    "m3": 13.46
+    "m3": 12.44
    }
   },
   "selfcheck": {
    "ok": true,
-   "n_mos": 10,
+   "n_mos": 8,
    "mos": {
-    "nfet_03v3 w=3.86 l=0.5": 10
+    "nfet_03v3 w=4.37 l=0.5": 8
    },
    "n_res": 0,
-   "want_fingers": 10,
+   "want_fingers": 8,
    "n_diode": 0,
    "n_cap": 0
   },
@@ -61,8 +61,8 @@
    "port_errors": false,
    "pin_problems": [],
    "devices": [
-    6,
-    6
+    4,
+    4
    ],
    "nets": [
     7,
@@ -78,10 +78,9 @@
     {
      "row": "msa",
      "ok": true,
-     "symbols": "(dL)MMM(dR)",
+     "symbols": "(dL)MM(dR)",
      "read_gate_order": [
       "VSS",
-      "OA",
       "OA",
       "OA",
       "VSS"
@@ -90,20 +89,18 @@
       "VSS",
       "OA",
       "OA",
-      "OA",
       "VSS"
      ],
-     "n_read": 5,
-     "n_expected": 5,
+     "n_read": 4,
+     "n_expected": 4,
      "mismatch": null
     },
     {
      "row": "msb",
      "ok": true,
-     "symbols": "(dL)MMM(dR)",
+     "symbols": "(dL)MM(dR)",
      "read_gate_order": [
       "VSS",
-      "OB",
       "OB",
       "OB",
       "VSS"
@@ -112,11 +109,10 @@
       "VSS",
       "OB",
       "OB",
-      "OB",
       "VSS"
      ],
-     "n_read": 5,
-     "n_expected": 5,
+     "n_read": 4,
+     "n_expected": 4,
      "mismatch": null
     }
    ]
@@ -126,28 +122,26 @@
    "wrong_W": {
     "detected": true,
     "why": [
-     "Netlists match with 4 symmetries with property errors.",
-     "OB                                         |OA **Mismatch**",
-     "OA                                         |OB **Mismatch**",
-     "SB                                         |D2A **Mismatch**",
-     "D2B                                        |SA **Mismatch**"
+     "Netlists match uniquely with property errors.",
+     "Property errors were found.",
+     "The following cells had property errors:"
     ]
    },
    "cut_wire": {
     "detected": true,
-    "net": "SA",
+    "net": "D2A",
     "at": [
-     4.32,
-     4.17,
-     6.76,
-     4.45
+     3.3,
+     3.79,
+     5.74,
+     4.07
     ],
     "why": [
-     "nfet_03v3 (10->7)                          |nfet_03v3 (6) **Mismatch**",
-     "Number of devices: 7 **Mismatch**          |Number of devices: 6 **Mismatch**",
+     "nfet_03v3 (8->6)                           |nfet_03v3 (6->4) **Mismatch**",
+     "Number of devices: 6 **Mismatch**          |Number of devices: 4 **Mismatch**",
      "Number of nets: 8 **Mismatch**             |Number of nets: 7 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
-     "Net: D2A                                   |(no matching net)"
+     "Net: D2A.0                                 |(no matching net)"
     ]
    },
    "sliver_magic": {
@@ -166,12 +160,12 @@
    "ok": true
   }
  },
- "started": "2026-11-14 11:55:23",
+ "started": "2026-11-15 00:01:16",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 21.9,
+ "wall_s": 22.7,
  "bbox_um": [
-  23.12,
-  7.98
+  21.08,
+  8.49
  ]
 }

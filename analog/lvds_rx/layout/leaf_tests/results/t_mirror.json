@@ -10,19 +10,19 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 39.68,
+    "m1": 48.8,
     "m2": 0.4,
-    "m3": 35.36
+    "m3": 44.48
    }
   },
   "selfcheck": {
    "ok": true,
-   "n_mos": 23,
+   "n_mos": 29,
    "mos": {
-    "nfet_03v3 w=2.5 l=1.0": 23
+    "nfet_03v3 w=2.5 l=1.0": 29
    },
    "n_res": 0,
-   "want_fingers": 23,
+   "want_fingers": 29,
    "n_diode": 0,
    "n_cap": 0
   },
@@ -78,9 +78,15 @@
     {
      "row": "mir",
      "ok": true,
-     "symbols": "(dL)RTTRRUUTTTTUUTTUURRTT(dR)",
+     "symbols": "(dL)RUUTTRRUUTTUUTTUUTTUURRTTUU(dR)",
      "read_gate_order": [
       "VSS",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
       "VBN",
       "VBN",
       "VBN",
@@ -127,10 +133,16 @@
       "VBN",
       "VBN",
       "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
+      "VBN",
       "VSS"
      ],
-     "n_read": 23,
-     "n_expected": 23,
+     "n_read": 29,
+     "n_expected": 29,
      "mismatch": null
     }
    ]
@@ -149,15 +161,15 @@
     "detected": true,
     "net": "TN",
     "at": [
-     6.84,
-     3.49,
-     34.6,
-     3.77
+     9.88,
+     4.13,
+     40.68,
+     4.41
     ],
     "why": [
-     "nfet_03v3 (23->6)                          |nfet_03v3 (5) **Mismatch**",
-     "Number of devices: 6 **Mismatch**          |Number of devices: 5 **Mismatch**",
-     "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
+     "nfet_03v3 (29->7)                          |nfet_03v3 (5) **Mismatch**",
+     "Number of devices: 7 **Mismatch**          |Number of devices: 5 **Mismatch**",
+     "Number of nets: 6 **Mismatch**             |Number of nets: 4 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
      "Net: TN.2                                  |(no matching net)"
     ]
@@ -178,12 +190,12 @@
    "ok": true
   }
  },
- "started": "2026-11-14 11:50:14",
+ "started": "2026-11-14 23:56:11",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 21.9,
+ "wall_s": 22.7,
  "bbox_um": [
-  39.92,
+  49.04,
   6.62
  ]
 }

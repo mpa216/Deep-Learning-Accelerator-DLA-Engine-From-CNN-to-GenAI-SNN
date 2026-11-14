@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-15 00:16:48",
+ "generated": "2026-11-15 06:10:53",
  "tier": "full",
  "phases": [
   "layout"
  ],
  "git": {
-  "commit": "8893ac1",
+  "commit": "96c5c2e",
   "dirty": true
  },
  "gates_sha256": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
@@ -218,6 +218,14 @@
    "files_after": {
     "spec/gates.yaml": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f"
    }
+  },
+  {
+   "id": "D-016",
+   "date": "2026-11-15",
+   "kind": "note",
+   "trigger": "T11 iteration 0: the extracted T10 macro fails TB2 and TB4 outright at ss/125C/3.0 V (tPD VID 0.35 4.57 -> 6.76 ns against 5 ns, VID 0.1 5.55 -> 8.22 ns against 8 ns; stage f3dB 0.84 -> 0.44 x DR, chain 56 -> 37 MHz) and gate TBL fails; cause: the pre-layout netlist carried no wiring capacitance and modelled junctions with 0.18 um of diffusion (the layout has 2.84 x that area), so the frozen sizing had 9.5 % tPD margin for none of the layout's load",
+   "measured": "results/post_layout/iter0/TBL.md; calibration .scratch/t11/calib.py (36 TB4 points: the estimate at wiring scale 1.0 captures 87-90 % of the added delay everywhere, est = extraction at scale 1.14-1.21, at 1.2 the estimate is >= the extraction at 35 of 36 points, 7 ps short at the last); candidates in log/T11_notes.md",
+   "gate_relaxed": "none (no limit changed; spec.yaml and gates.yaml untouched).  Sizing iteration (T11, block timing, results/iterations.jsonl): (1) the simulation netlist now carries the layout parasitic estimate (sizing/parasitic_estimate.json from sim/tbl/make_estimate.py: junction diffusion length ldiff 0.511 um in the ad/as/pd/ps formulas, one capacitor per net to VSS and one to VDD = the extracted wiring x 1.2, 31 nets; netlist/lvds_circuit.ESTIMATE, simulation netlist only, never in the LVS reference); (2) stage 2 re-sized: n_t2 5 -> 10, gmid_s2 12 -> 8, L_ld 0.40 -> 0.28 (mt2 nf 6 -> 12, ms nf 3 -> 2, mld/mlc/mp3 L 0.28, mn3 nf 1 -> 2, Rs 4573 -> 1690 ohm).  The sizing freeze re-opens: full regression, re-layout, PEX, TBL."
   }
  ],
  "gates": {
@@ -364,7 +372,7 @@
      "agg": "value",
      "reasons": [],
      "n": 1,
-     "worst": 0.597,
+     "worst": 0.611,
      "limit": "-inf .. 2",
      "status": "PASS"
     }
@@ -373,7 +381,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/layout.json",
-   "results_sha256": "fa6e8377c70e0708065e4034c7483de12ed4693a844ef8c3df6d490ef4f2b603"
+   "results_sha256": "f8806533317699b04d5b88d842396e1fabdbf830c5467b48ffa38e2f0d5fe84b"
   }
  }
 }

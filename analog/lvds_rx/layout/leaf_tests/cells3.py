@@ -95,7 +95,8 @@ def t_stage2_pair():
         for net in (d, s):
             al.pin_port(net, lf.port(net, "m3", "bar")[0])
     lines = [DT.spice("MS1", dev, "D2A", "OA", "SA", "VSS"), DT.spice("MS2", dev, "D2B", "OB", "SB", "VSS")]
-    return blk, subckt(blk.name, blk, lines), "SA", {}
+    # T11 iteration 1: nf 3 -> 2; the SA bar is no longer the only link between the source regions, the drain bar is
+    return blk, subckt(blk.name, blk, lines), "D2A", {}
 
 
 def t_bias_n():
@@ -132,7 +133,7 @@ def t_loads2():
     leaves.pin_ports(blk, lf)
     lines = [DT.spice("MLD1", d, "D2A", "D2A", "VDD", "VDD"), DT.spice("MLD2", d, "D2B", "D2B", "VDD", "VDD"),
              DT.spice("MLC1", c, "D2A", "D2B", "VDD", "VDD"), DT.spice("MLC2", c, "D2B", "D2A", "VDD", "VDD")]
-    return blk, subckt(blk.name, blk, lines), "D2A", {}
+    return blk, subckt(blk.name, blk, lines), "D2A", dict(magic_allow=CO6)       # T11 iteration 1: L 0.40 -> 0.28
 
 
 def t_stage3p():
@@ -141,7 +142,7 @@ def t_stage3p():
     lf = leaves.pair_abba(blk, "mp3", dev, (0, 0), A=dict(gate="D2A", drn="n3a"), B=dict(gate="D2B", drn="d3"), S="VDD", rail="VDD")
     leaves.pin_ports(blk, lf)
     lines = [DT.spice("MP3A", dev, "n3a", "D2A", "VDD", "VDD"), DT.spice("MP3B", dev, "d3", "D2B", "VDD", "VDD")]
-    return blk, subckt(blk.name, blk, lines), "n3a", {}
+    return blk, subckt(blk.name, blk, lines), "n3a", dict(magic_allow=CO6)       # T11 iteration 1: L 0.40 -> 0.28
 
 
 def t_stage3n():

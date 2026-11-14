@@ -110,9 +110,9 @@
     "net": "ts",
     "at": [
      5.59,
-     12.43,
+     6.74,
      9.12,
-     12.71
+     7.01
     ],
     "why": [
      "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
@@ -138,12 +138,12 @@
    "ok": true
   }
  },
- "started": "2026-11-14 11:52:34",
+ "started": "2026-11-14 23:58:33",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 23.9,
+ "wall_s": 22.4,
  "bbox_um": [
   14.71,
-  14.35
+  8.65
  ]
 }

@@ -21,9 +21,10 @@ schematic device is several layout fingers).
 |---|---|---|
 | 0 | `results/layout.json` for gate LAYOUT (T10 left it out), evaluated with `flow/gates.py --phases layout --out results/gates_layout.json` | done: PASS |
 | A | PEX node names = pre-layout hierarchical paths (probe-compatible macro netlists) | done (b91c4d2) |
-| B | `sim/tbl_*` specs (the pre-layout benches with the PEX include, the 6.5 corner / grid subset) + cost of one run each | in progress |
-| C | the runs (detached, 4 jobs) | open |
-| D | evaluator (post vs pre, 30 % of margin) and gate TBL | open |
+| B | `sim/tbl_*` specs (the pre-layout benches with the PEX include, the 6.5 corner / grid subset) + cost of one run each | done (8893ac1); RC repair ccff3ff |
+| C | the runs (detached, 4 jobs) | iteration 0 done (c9190a5): TBL FAIL -> iteration 1 |
+| D | evaluator (post vs pre, 30 % of margin) and gate TBL | done (evaluate.py, D-015) |
+| I1 | iteration 1 (D-016): estimate in the sim netlist + stage-2 re-size; full regression; re-layout (lane, bias, macro); PEX; TBL again | design committed (96c5c2e); regression + re-layout next |
 | E | AUDIT_2, REPORT, DESIGN_LOG, make check; report to the owner and wait | open |
 
 ## Piece B findings (2026-11-14, after the owner's "keep going without waiting for my approval")

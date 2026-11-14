@@ -35,12 +35,13 @@ FROZEN = "sizing/FROZEN.md"
 
 
 def frozen_sha(rel):
-    """The sha256 that sizing/FROZEN.md records for `rel` (None if the file is not in its table)."""
+    """The sha256 that sizing/FROZEN.md records for `rel` in its NEWEST table (re-freezes append tables; None if absent)."""
+    sha = None
     for line in open(os.path.join(ROOT, FROZEN)):
         m = re.match(r"\|\s*`([^`]+)`\s*\|\s*([0-9a-f]{64})\s*\|", line)
         if m and m.group(1) == rel:
-            return m.group(2)
-    return None
+            sha = m.group(2)
+    return sha
 
 
 def reference_lvs(L, wd):

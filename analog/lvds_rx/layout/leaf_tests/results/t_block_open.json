@@ -18,7 +18,7 @@
   },
   "locator": {
    "ok": true,
-   "distance_to_fault_um": 0.78,
+   "distance_to_fault_um": 0.73,
    "found": [
     {
      "kind": "OPEN",
@@ -47,9 +47,9 @@
        "has_pin": false,
        "device_terminals": 8,
        "bbox": [
-        22.46,
+        22.34,
         14.93,
-        33.03,
+        31.59,
         14.93
        ],
        "sample": [
@@ -60,20 +60,20 @@
       }
      ],
      "where": [
-      21.89,
+      21.84,
       14.71
      ],
      "nearest_labels": [
       "OB",
       "OB.12"
      ],
-     "gap_um": 1.58
+     "gap_um": 1.46
     }
    ],
-   "report": "Netgen mismatch lines:\n    Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**\n    Net: OB.6                                  |(no matching net)\nOPEN   OB in 2 pieces, apart near (21.89, 14.71) um; nearest labels ['OB', 'OB.12']\n         fragment: 9 labels, pin=True, device terminals=10, label bbox [21.33, 5.08, 48.06, 14.48]\n         fragment: 6 labels, pin=False, device terminals=8, label bbox [22.46, 14.93, 33.03, 14.93]"
+   "report": "Netgen mismatch lines:\n    Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**\n    Net: OB.6                                  |(no matching net)\nOPEN   OB in 2 pieces, apart near (21.84, 14.71) um; nearest labels ['OB', 'OB.12']\n         fragment: 9 labels, pin=True, device terminals=10, label bbox [21.33, 5.08, 48.06, 14.48]\n         fragment: 6 labels, pin=False, device terminals=8, label bbox [22.34, 14.93, 31.59, 14.93]"
   }
  },
- "started": "2026-11-14 11:52:07",
+ "started": "2026-11-14 23:58:08",
  "expect": {
   "kind": "OPEN",
   "nets": [

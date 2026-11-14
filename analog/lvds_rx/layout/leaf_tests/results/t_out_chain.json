@@ -289,10 +289,10 @@
    "ok": true
   }
  },
- "started": "2026-11-14 11:58:50",
+ "started": "2026-11-15 00:04:43",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 26.4,
+ "wall_s": 23.9,
  "bbox_um": [
   60.66,
   22.34

@@ -50,8 +50,9 @@ def run_one(name, nok):
         print(name, r["verdict"], f"{r['wall_s']} s")
         return r
     if name in part1.CELLS:
-        blk, schem, cut = part1.CELLS[name]()
-        opts = {}
+        got = part1.CELLS[name]()                  # (blk, schem, cut) or, since T11, (blk, schem, cut, opts)
+        blk, schem, cut = got[:3]
+        opts = dict(got[3]) if len(got) > 3 else {}
     else:
         blk, schem, cut, opts = ALL2[name]()
     leaf = opts.pop("leaf", None)

@@ -151,7 +151,8 @@ def build_block(name, fault=None):
 
 def t_block():
     blk, sch = build_block("t_block")
-    return blk, sch, "TAIL"
+    # T11 iteration 1: mld / mp3 are L = 0.28 now; Magic CO.6 is stricter than the foundry deck on those contact bars (T8 allow-list)
+    return blk, sch, "TAIL", dict(magic_allow=("(CO.6)",))
 
 
 FAULTS = {"t_block_short": ("short", dict(kind="SHORT", nets=["OB", "TAIL"])),
@@ -216,7 +217,7 @@ def main(args):
             print(r["steps"]["locator"]["report"])
             ok &= r["all_ok"]
             continue
-        blk, schem, cut = CELLS[n]()
+        blk, schem, cut = CELLS[n]()[:3]
         r = check.run_cell(blk, schem, OUT, RESULTS, klayout=not nok, cut_net=cut)
         print(n, r["verdict"], f"{r['wall_s']} s")
         for k, s in r["steps"].items():
