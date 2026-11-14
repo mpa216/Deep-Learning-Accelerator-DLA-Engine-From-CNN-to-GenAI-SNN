@@ -54,7 +54,7 @@
    "report": "Netgen mismatch lines:\n    Number of nets: 7 **Mismatch**             |Number of nets: 8 **Mismatch**\n    (no matching net)                          |Net: TAIL\n    OB                                         |(no pin, node is TAIL)\n    (no pin, node is OB)                       |OB\nSHORT  OB <-> TAIL  near (39.9, 4.75) um; labels OB.2 / TAIL.17; unintended metal m3 [31.6, 4.577, 31.88, 4.873]"
   }
  },
- "started": "2026-11-11 15:50:00",
+ "started": "2026-11-14 01:29:51",
  "expect": {
   "kind": "SHORT",
   "nets": [

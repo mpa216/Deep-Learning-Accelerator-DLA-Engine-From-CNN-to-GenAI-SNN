@@ -12,12 +12,12 @@
    "longest_merged_polygon_um": {
     "m1": 10.14,
     "m2": 17.22,
-    "m3": 18.68
+    "m3": 32.42
    }
   },
   "selfcheck": {
    "ok": true,
-   "n_mos": 32,
+   "n_mos": 31,
    "mos": {
     "nfet_03v3 w=4.0 l=0.28": 4,
     "nfet_03v3 w=3.0 l=0.28": 3,
@@ -25,22 +25,22 @@
     "nfet_03v3 w=2.0 l=0.28": 4,
     "pfet_03v3 w=5.0 l=0.28": 6,
     "pfet_03v3 w=3.75 l=0.28": 4,
-    "pfet_03v3 w=1.85 l=0.28": 4,
+    "pfet_03v3 w=3.7 l=0.28": 3,
     "pfet_03v3 w=3.0 l=0.28": 4
    },
    "n_res": 0,
-   "want_fingers": 32,
+   "want_fingers": 31,
    "n_diode": 0,
    "n_cap": 0
   },
   "magic_drc": {
    "ok": true,
    "mag": {
-    "total": 320,
+    "total": 312,
     "rules": [
-     "RULE (320) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (312) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 320,
+    "allowed": 312,
     "effective": 0
    },
    "gds_readback": {
@@ -72,8 +72,8 @@
    "port_errors": false,
    "pin_problems": [],
    "devices": [
-    19,
-    19
+    20,
+    20
    ],
    "nets": [
     9,
@@ -147,21 +147,19 @@
     {
      "row": "inv1p",
      "ok": true,
-     "symbols": "(dL)MM(dR)",
+     "symbols": "(dL)M(dR)",
      "read_gate_order": [
       "VDD",
-      "nd",
       "nd",
       "VDD"
      ],
      "expected_gate_order": [
       "VDD",
       "nd",
-      "nd",
       "VDD"
      ],
-     "n_read": 4,
-     "n_expected": 4,
+     "n_read": 3,
+     "n_expected": 3,
      "mismatch": null
     },
     {
@@ -268,8 +266,8 @@
      15.5
     ],
     "why": [
-     "pfet_03v3 (18->10)                         |pfet_03v3 (13->9) **Mismatch**",
-     "Number of devices: 20 **Mismatch**         |Number of devices: 19 **Mismatch**",
+     "pfet_03v3 (17->11)                         |pfet_03v3 (13->10) **Mismatch**",
+     "Number of devices: 21 **Mismatch**         |Number of devices: 20 **Mismatch**",
      "Number of nets: 10 **Mismatch**            |Number of nets: 9 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
      "Net: nd.2                                  |(no matching net)"
@@ -291,12 +289,12 @@
    "ok": true
   }
  },
- "started": "2026-11-11 15:56:05",
+ "started": "2026-11-14 01:35:57",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 20.5,
+ "wall_s": 20.4,
  "bbox_um": [
-  61.46,
+  60.66,
   22.34
  ]
 }

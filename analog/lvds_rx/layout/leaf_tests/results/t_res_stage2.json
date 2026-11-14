@@ -10,7 +10,7 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 14.58,
+    "m1": 14.47,
     "m2": 0.4,
     "m3": 3.65
    }
@@ -110,9 +110,9 @@
     "net": "ts",
     "at": [
      5.59,
-     12.88,
+     12.43,
      9.12,
-     13.16
+     12.71
     ],
     "why": [
      "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
@@ -138,12 +138,12 @@
    "ok": true
   }
  },
- "started": "2026-11-11 15:50:23",
+ "started": "2026-11-14 01:30:14",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 23.8,
+ "wall_s": 19.3,
  "bbox_um": [
   14.71,
-  14.8
+  14.35
  ]
 }

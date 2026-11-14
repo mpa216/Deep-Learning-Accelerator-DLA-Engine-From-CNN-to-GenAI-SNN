@@ -95,10 +95,9 @@ Pre-layout is finished and frozen. Read, in this order:
   antenna with the ESD diodes removed, and the wiring capacitance of INP against INN and of the two gate-side nets
   from a `pex_c` extraction.
 
-Full leaf regression after the row-engine change: NOT CONFIRMED. It was still running when the session stopped (usage
-limit). Read the end of `.scratch/t9/run_all_full.log`: it must show `ALL GREEN` and `EXIT 0`. If it does, commit the
-regenerated `layout/leaf_tests/results/` (uncommitted, partly rewritten at the time of writing); if not, re-run
-`layout/leaf_tests/run_all.py` (12 min) before anything else.
+Full leaf regression after the row-engine change: **ALL GREEN** (`run_all.py`, exit 0, 27 cells plus the allocator
+self-test and the antenna pair, no failure line; log `.scratch/t9/run_all_full.log`, table
+`layout/leaf_tests/results/summary.md`). The regenerated results are committed. Next session starts at step 4.
 
 ## Rules the owner set
 
