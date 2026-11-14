@@ -12,11 +12,13 @@
 #   layout   PLAN_V2 6.4 on every leaf (layout/leaf_tests/run_all.py, about 13 min), the lane (layout/lane/run_lane.py,
 #            about 45 s), the bias block (layout/bias/run_bias.py, 30 s) and the macro with its PEX
 #            (layout/macro/run_macro.py, 90 s; deliverables in results/layout/)
+#   package  T12 (PLAN_V2 section 7): pin caps of the extracted macro, gds/lef/lib/spice/verilog/tb, the section 7 checks
+#            (package/checks/report.json), README; package/ is generated, never edited by hand
 #   audit    stub: the independent audit is a different agent (T6, T11)
 #   clean    remove generated results and scratch (never design files)
 PY ?= python3
 
-.PHONY: check smoke shakedown full report mutants lint layout audit clean
+.PHONY: check smoke shakedown full report mutants lint layout package audit clean
 
 check:
 	$(PY) flow/envcheck.py
@@ -47,6 +49,12 @@ layout:
 	$(PY) layout/lane/run_lane.py
 	$(PY) layout/bias/run_bias.py
 	$(PY) layout/macro/run_macro.py
+
+package:
+	$(PY) package/pin_caps.py
+	$(PY) package/make_package.py
+	$(PY) package/checks/run_checks.py
+	$(PY) package/make_readme.py
 
 audit:
 	@echo "make audit: an independent agent runs this (T6 pre-layout, T11 final); see PLAN_V2 5.2 item 6"; exit 1
