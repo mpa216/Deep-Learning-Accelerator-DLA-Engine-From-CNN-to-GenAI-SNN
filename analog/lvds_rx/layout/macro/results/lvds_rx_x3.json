@@ -95,9 +95,171 @@
   },
   "render": {
    "ok": true
+  },
+  "lvs": {
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t10/work/lvds_rx_x3/lvs_good.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    4,
+    4
+   ],
+   "nets": [
+    16,
+    16
+   ],
+   "counts_equal": true,
+   "clean": true,
+   "ok": true,
+   "extraction_warnings": [
+    "Warning: Calma reading is not undoable!  I hope that's OK.",
+    "lvds_lane: 10 warnings",
+    "lvds_bias: 10 warnings",
+    "Total of 20 warnings."
+   ]
+  },
+  "lvs_reference": {
+   "ok": true,
+   "reference": "netlist/lvds_rx_lvs_ref.spice",
+   "sha256": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+   "frozen_sha256": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
+   "frozen_sha256_ok": true,
+   "flattened_subcells": [
+    "lvds_esd2",
+    "lvds_hyst",
+    "lvds_out",
+    "lvds_pre"
+   ],
+   "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t10/work/lvds_rx_x3/lvs_reference.out",
+   "match_line": true,
+   "final_unique": true,
+   "property_errors": false,
+   "port_errors": false,
+   "pin_problems": [],
+   "devices": [
+    4,
+    4
+   ],
+   "nets": [
+    16,
+    16
+   ],
+   "counts_equal": true,
+   "clean": true
+  },
+  "subcells": {
+   "ok": true,
+   "lvds_lane": {
+    "ok": true,
+    "selfcheck": {
+     "ok": true,
+     "n_mos": 305,
+     "n_res": 12,
+     "want_fingers": 305,
+     "n_diode": 4,
+     "n_cap": 0
+    },
+    "finger_rows": 23,
+    "fingers": 305,
+    "readback_ok": true
+   },
+   "lvds_bias": {
+    "ok": true,
+    "selfcheck": {
+     "ok": true,
+     "n_mos": 60,
+     "n_res": 18,
+     "want_fingers": 60,
+     "n_diode": 0,
+     "n_cap": 0
+    },
+    "finger_rows": 11,
+    "fingers": 60,
+    "readback_ok": true
+   }
+  },
+  "negctl": {
+   "ok": true,
+   "wrong_W": {
+    "detected": true,
+    "why": [
+     "Netlists match uniquely with property errors.",
+     "Netlists match uniquely.",
+     "Netlists match uniquely.",
+     "The following cells had property errors:"
+    ]
+   },
+   "cut_wire": {
+    "detected": true,
+    "net": "vbn",
+    "at": [
+     171.4,
+     116.91,
+     228.6,
+     117.19
+    ],
+    "why": [
+     "Netlists match uniquely.",
+     "Netlists match uniquely.",
+     "Number of nets: 17 **Mismatch**            |Number of nets: 16 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "Net: lvds_lane_2/VBN                       |(no matching net)"
+    ]
+   },
+   "bridge": {
+    "detected": true,
+    "nets": [
+     "EN",
+     "RX0_O"
+    ],
+    "at": [
+     161.65,
+     40.09,
+     162.05,
+     40.71
+    ],
+    "gap_um": 0.42,
+    "why": [
+     "Netlists match uniquely.",
+     "Netlists match uniquely.",
+     "Number of nets: 15 **Mismatch**            |Number of nets: 16 **Mismatch**",
+     "NET mismatches: Class fragments follow (with fanout counts):",
+     "(no matching net)                          |Net: RX0_O"
+    ]
+   },
+   "sliver_magic": {
+    "detected": true,
+    "count": 1
+   },
+   "sliver_klayout": {
+    "detected": true,
+    "count": 1,
+    "rules": {
+     "M1.1": 1
+    }
+   }
+  },
+  "antenna_no_esd": {
+   "ok": true,
+   "removed": {
+    "marker_polygons": 4,
+    "plates": 4,
+    "plate_area_um2": 160.0,
+    "plate_contacts": 640,
+    "cells": [
+     "lvds_lane"
+    ]
+   },
+   "expected_plates_per_lane_cell": 4,
+   "diodes_extracted_after": 0,
+   "antenna": 0,
+   "antenna_rules": {}
   }
  },
- "started": "2026-11-14 11:38:54",
+ "started": "2026-11-14 11:41:24",
  "fixed_bbox_um": [
   0.0,
   0.0,
@@ -133,8 +295,9 @@
    42.15
   ]
  ],
- "python_build_s": 6.9,
+ "python_build_s": 5.6,
+ "schematic_lines": 143,
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 39.3
+ "wall_s": 63.4
 }

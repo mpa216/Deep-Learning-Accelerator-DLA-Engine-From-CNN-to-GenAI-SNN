@@ -28,8 +28,8 @@ Solo, in small pieces with one local commit each (as in T9). Report and wait for
 | A1 | `layout/bias/bias.py` placement (leaves, straps, VSS spine, ring ties, trunk pins) + `run_bias.py --stage place` | done: Magic 0 (GDS), KLayout 0 / 0 |
 | A2 | bias routing, pins, flat schematic, full check (LVS against lvds_bias + reference file, negative controls, via arrays) | done: PASS, see below |
 | B | macro cell: lane x 3 + bias instances, gap fills, EN and output routes, pin stubs, FIXED_BBOX; DRC | done, see below |
-| C | macro LVS (hierarchical), negative controls, antenna without ESD | next |
-| D | PEX: C on all nets, RC on the input pair, bias and output nets | open |
+| C | macro LVS (hierarchical), negative controls, antenna without ESD | done, see below |
+| D | PEX: C on all nets, RC on the input pair, bias and output nets | next |
 | E | report, DESIGN_LOG, make layout, make check; report to the owner and wait | open |
 
 ## Bias block result (piece A2, `layout/bias/results/lvds_bias.json`, about 30 s)
@@ -48,6 +48,19 @@ FIXED_BBOX (0, 0)-(650, 192.1), written by Magic into the GDS as the boundary on
 GDS read-back 0; check_via_arrays.py 0 (Via1 1564, Via2 2535 cuts). Pins: RXk_P / RXk_N Metal3 at x 50.3 + 200k / 149.7 +
 200k on the top edge (0.3 um from pins.yaml: the lane grid), EN and RXk_O Metal2 at x 100 / 200 / 300 / 400 on the bottom
 edge. Lane 2's output runs 150 um west under the lane to x = 400 (pins.yaml order).
+
+## Macro after piece C (`layout/macro/run_macro.py`, about 65 s, verdict PASS)
+
+| Step | Result |
+|---|---|
+| strict LVS, hierarchical | Netgen matched lvds_lane (74 devices, 29 nets), lvds_bias (28, 11), lvds_rx_x3 (4 instances, 16 nets) uniquely, no property or port errors |
+| reference file | the same netlist without dummies against lvds_rx_x3 of netlist/lvds_rx_lvs_ref.spice (sha256 = FROZEN.md): match uniquely; Netgen flattened the lane's four sub-blocks |
+| subcells in the macro's extraction | lane 305 fingers / 12 resistors / 4 diodes, 23 rows read back; bias 60 fingers / 18 resistors, 11 rows read back |
+| negative controls | wrong W (property errors), cut vbn fill between lanes 0 and 1 (17 vs 16 nets), Metal3 bridge EN-RX0_O across 0.42 um (15 vs 16 nets), sliver (Magic 1, KLayout M1.1): all detected |
+| antenna without ESD | the 4 plates (160 um2, 640 contacts, diode_mk) removed from the lane cell (all three instances): no diode extracted, antenna 0 |
+
+The extraction warns 10 times in lvds_lane and 10 times in lvds_bias ("device missing 1 terminal": dummies with both
+terminals on one rail, explained for the lane in log/T9_report.md).
 
 ## Rules found
 
