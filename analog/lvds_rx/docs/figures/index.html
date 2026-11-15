@@ -29,7 +29,7 @@
 <body>
 <main>
 <h1>LVDS receiver <code>lvds_rx_x3</code>: circuit and simulation gallery</h1>
-<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-14: schematic frozen, pre-layout simulation complete. No layout of the macro exists yet.</p>
+<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-15: layout of the whole macro done and checked; stage 2 re-sized after the first post-layout simulation; final verification under way (section 5).</p>
 
 <p class="note">The schematics below were drawn by hand (by script) from the netlist <code>netlist/lvds_rx_core.spice</code>; they are not generated from it. The waveform plots are single runs at the typical corner (27 &deg;C, 3.3 V) with ideal sources, made as illustrations. The pass/fail record of the design is the regression in <code>results/</code>, not these pictures.</p>
 
@@ -104,9 +104,9 @@
 <figure><img src="eye_ss125c_200Mbps_vid100mV.png" alt="Eye diagram slow hot">
 <figcaption>Slow transistors, 125 &deg;C, 3.0 V: the hardest corner for speed. The edges spread over about 250 ps and the eye is still 95 % open, with no bit errors.</figcaption></figure>
 </div>
-<p>Both eye diagrams are from the full regression on the frozen sizing (2026-11-14).</p>
+<p>Both eye diagrams are from the full regression on the first frozen sizing (2026-11-14), before the post-layout re-size.</p>
 
-<h3>From the regression: Monte Carlo histograms (current sizing)</h3>
+<h3>From the regression: Monte Carlo histograms (first sizing, before the 2026-11-15 re-size)</h3>
 <div class="two">
 <figure><img src="hist_offset_tt.png" alt="Offset histogram">
 <figcaption>Input offset of 1,000 randomly mismatched copies at the typical corner: spread (sigma) 3.1 mV. Green lines are the &plusmn;95 mV budget.</figcaption></figure>
@@ -114,15 +114,28 @@
 <figcaption>Hysteresis of 100 copies at the fast, cold, 3.6 V corner. The green lines are the original 8 to 25 mV window; a few copies fall just under 8 mV, which is why the window was widened to 6 to 35 mV (decision D-009, accepted in the audit).</figcaption></figure>
 </div>
 
-<h2>4. Where things stand</h2>
+<h2>4. The layout</h2>
+<figure><img src="layout_macro.png" alt="Layout of the whole macro">
+<figcaption>The whole macro, 650 &times; 192.1 &micro;m: three identical lanes (centred at 100, 300 and 500 &micro;m) and the shared bias block on the right. The inputs arrive at the top edge (pad side); the enable and the three outputs leave at the bottom edge (core side). Everything is drawn on Metal1 to Metal3, so the chip's own wiring can pass over it on Metal4 and Metal5.</figcaption></figure>
+<div class="two">
+<figure><img src="layout_lane.png" alt="Layout of one lane">
+<figcaption>One lane, 142.8 &times; 124.3 &micro;m, rows from the top: the two protection cells and the PMOS tail; the PMOS input pair with its dump twins (the long block); the fold cascodes and sinks; the NMOS input pair with its tail and the stage-2 tail; the stage-1 load resistors with the stage-2 pair and its resistors; the stage-2 loads with the stage-3 mirror; the output gates. The hatched horizontal bands are the VDD and VSS power straps.</figcaption></figure>
+<figure><img src="layout_bias.png" alt="Layout of the bias block">
+<figcaption>The bias block, 53.2 &times; 139.0 &micro;m: the reference resistor and the other bias resistors, the NMOS and PMOS reference diodes and their mirrors, the Vref divider with its 2 pF decoupling capacitor, and the enable switches.</figcaption></figure>
+</div>
+<p>All three pass the foundry design-rule deck, strict layout-versus-schematic, the antenna checks and the deliberate-fault tests (gate LAYOUT). These pictures show the layout after the stage-2 re-size of 2026-11-15 (decision D-016); the outline did not change. <code>docs/figures/make_layout_figures.py</code> renders them from the delivered GDS files.</p>
+
+<h2>5. Where things stand</h2>
 <table>
-<tr><th>Item</th><th>State on 2026-11-14</th></tr>
-<tr><td>Schematic (netlist) and sizing</td><td>Done and frozen (<code>sizing/FROZEN.md</code>)</td></tr>
-<tr><td>Pre-layout regression</td><td>All 17 gates pass on the frozen sizing: 21,017 simulation runs over up to 47 corners plus Monte Carlo</td></tr>
-<tr><td>Pre-layout audit</td><td>Pass with findings (<code>results/AUDIT_1.md</code>). Six limit or test changes were accepted; one of them (saturation margin at the fast, hot, 3.6 V corner) only with conditions to re-check after layout</td></tr>
-<tr><td>Layout</td><td>Building blocks only (29 small cells, DRC/LVS clean); the lane and macro are not drawn</td></tr>
+<tr><th>Item</th><th>State on 2026-11-15</th></tr>
+<tr><td>Schematic (netlist) and sizing</td><td>Re-sized once after layout (decision D-016): stage 2 runs faster, and the simulations now include the layout's wiring capacitance. Frozen again (<code>sizing/FROZEN.md</code>)</td></tr>
+<tr><td>Pre-layout regression</td><td>Passed on the first sizing (2026-11-14, 21,017 runs); re-running on the new sizing</td></tr>
+<tr><td>Pre-layout audit</td><td>Pass with findings (<code>results/AUDIT_1.md</code>); the final audit (<code>results/AUDIT_2.md</code>) follows the post-layout runs</td></tr>
+<tr><td>Layout</td><td>Done: lane, bias block and macro, every layout check passes; redrawn for the new sizing</td></tr>
+<tr><td>Post-layout simulation</td><td>The first run on the extracted layout missed the delay limit at the slow, hot, 3.0 V corner (6.8 ns against 5 ns), which led to the re-size; the new layout is being verified</td></tr>
+<tr><td>Package (LEF, Liberty, Verilog model)</td><td>Generators written and dry-run checked; built after the post-layout runs</td></tr>
 </table>
-<p class="sub">Files: <code>docs/figures/draw_schematic.py</code> draws the schematics, <code>docs/figures/make_waveforms.py</code> runs and plots the three illustration simulations.</p>
+<p class="sub">Files: <code>docs/figures/draw_schematic.py</code> draws the schematics, <code>docs/figures/make_waveforms.py</code> runs and plots the three illustration simulations, <code>docs/figures/make_layout_figures.py</code> renders the layout pictures. More detail: <code>DESIGN_GUIDE.md</code> and <code>CARRY_ON_GUIDE.md</code> in the project folder.</p>
 </main>
 </body>
 </html>
