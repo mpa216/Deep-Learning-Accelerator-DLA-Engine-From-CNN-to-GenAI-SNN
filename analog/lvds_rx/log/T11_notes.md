@@ -127,3 +127,12 @@ triggered by the freeze condition.  Failed (extracted against pre-layout):
   2 ns); 6 runt excursions appear at tt case 4 (13 ns wide).  Within the limit, over 30 % of the margin.
 Passed: TB1 subset, TB2 gain, TB3 V_H (DC), systematic offset (0.000 mV added), TB5 eye at the D-012 corner, TB7, TB10,
 TB12 (worst eye 0.929 -> 0.887 UI).  Extracted run cost: TB10 one run 5.3 h (76 x pre-layout), TB12 ~15 min, TB4 ~4 min.
+
+## Iteration 1: first post-layout number (2026-11-15)
+
+TB10 (three lanes) on the iteration-1 extraction, tt: lane delays 3714 / 3720 / 3719 ps (iteration 0 extracted:
+5358 / 5355 / 5360 ps; iteration-0 pre-layout 3659 / 3641 / 3652 ps), skew 6 ps, crosstalk jitter 0.0010 UI (limit 0.05),
+no missed edges; 9046 s on one job.  The re-sized design on its extracted layout is as fast as the first sizing was
+before layout.  Its pre-layout partner (tbl_lanes_pre with the estimate core) runs with the TBL suite.
+Owner, 2026-11-15: finish the running batch (this run + the iteration-1 full regression), commit, then pause; the hourly
+auto-resume job was deleted.  Next steps after the pause: `CARRY_ON_GUIDE.md` sections 5-6.
