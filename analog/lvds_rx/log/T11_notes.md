@@ -24,7 +24,8 @@ schematic device is several layout fingers).
 | B | `sim/tbl_*` specs (the pre-layout benches with the PEX include, the 6.5 corner / grid subset) + cost of one run each | done (8893ac1); RC repair ccff3ff |
 | C | the runs (detached, 4 jobs) | iteration 0 done (c9190a5): TBL FAIL -> iteration 1 |
 | D | evaluator (post vs pre, 30 % of margin) and gate TBL | done (evaluate.py, D-015) |
-| I1 | iteration 1 (D-016): estimate in the sim netlist + stage-2 re-size; full regression; re-layout (lane, bias, macro); PEX; TBL again | design committed (96c5c2e); regression + re-layout next |
+| I1 | iteration 1 (D-016): estimate in the sim netlist + stage-2 re-size; full regression; re-layout (lane, bias, macro); PEX; TBL again | design 96c5c2e, layout 9a957e2; regression 5a78f0d: TB3_hmc FAIL (hysteresis spread) -> iteration 2 |
+| I2 | iteration 2 (D-017): stage-2 alpha / Rs for the hysteresis Monte Carlo; TB3_trip / TB3_hmc solver retries | exploring (2026-11-21) |
 | E | AUDIT_2, REPORT, DESIGN_LOG, make check; report to the owner and wait | open |
 
 ## Piece B findings (2026-11-14, after the owner's "keep going without waiting for my approval")
@@ -136,3 +137,58 @@ no missed edges; 9046 s on one job.  The re-sized design on its extracted layout
 before layout.  Its pre-layout partner (tbl_lanes_pre with the estimate core) runs with the TBL suite.
 Owner, 2026-11-15: finish the running batch (this run + the iteration-1 full regression), commit, then pause; the hourly
 auto-resume job was deleted.  Next steps after the pause: `CARRY_ON_GUIDE.md` sections 5-6.
+
+## Iteration 1 pre-layout regression (2026-11-20/21)
+
+The container was killed on 2026-11-15 mid-run (exit 137, host restart); `tools/run_full.sh 4` was relaunched on 2026-11-20
+(the harness cache kept TB3_off / TB3_hmc from the interrupted run; the log is unbuffered now).  Result (commit 5a78f0d):
+17 PASS, 2 FAIL, TB11 not applicable; mutants 11 of 11 detected.
+
+* **TB3_hmc FAIL (design):** 17 of 600 Monte Carlo runs below the 6 mV floor, all at ff/-40C/3.6 V (mean 8.3-8.6 mV, sd
+  1.4-1.6 mV, min 4.0 mV); ss/125C/3.0 V mean 13.4-14.4 mV, max 20.5 mV.  After iteration 0 (D-009) the same corner had
+  mean 10.7-11.0 mV with sd 12 % of the mean; iteration 1 lowered the mean (L_ld 0.40 -> 0.28 changed the load behaviour the
+  trip model does not capture: simulation 0.74 x the model at tt) and raised the spread to 15-22 % (the load VT mismatch grows
+  1.4x at L 0.28).  R3 is exhausted (rung 1 = 6-35 mV), so the design must change.
+* **TB3_trip FAIL (solver):** 4 of 270 runs (sf, 27/125 C, VIC 2.35 V, sweep 1) stall in the first operating point of the
+  DC sweep, where VDD is 0.3 V: gmin and source stepping fail, the transient op hangs to the 300 s timeout.  Fix: the
+  TB3_off retry variants (itl/gmin) added to tb3_trip.json and tb3_hmc.json; the circuit and stimulus are untouched.
+
+## Iteration 2: stage-2 hysteresis (2026-11-21, exploration)
+
+Why alpha: with source degeneration the trip voltage is dI x Rs + dVGS, dI = I_T2 (alpha-1)/(alpha+1), so the relative
+V_H error per relative alpha error is 2 alpha/(alpha^2-1): 4.4 at alpha 1.25, 2.4 at 1.5, 1.9 at 1.67.  The alpha error is
+the diode / cross-coupled load VT mismatch, so a larger alpha cuts the Monte Carlo spread.  The cost: less Rs, so the
+corner spread of V_H grows (dVGS dominates), and V_H,in is largest where A1 is lowest (ff/125C/3.6 V, VIC 0.05 V).
+Tool: `.scratch/t11/iter2/explore_vh.py` (candidate sizing -> trip at worst5 + sf/-40/3.0 + ff/125/3.6 + fs/-40/3.3, the
+hysteresis Monte Carlo with the regression's first 40 seeds per group, delay and AC with the estimate core).
+New sizing knob `vh_scale` (multiplies the V_H target of the Rs solve) and a new assert: every ppolyf_u_1k >= 1.0 um long
+(Magic lmin; the solve had produced 0.26 um and a negative length without complaint).
+
+| candidate | Rs length | trip V_H (8 corners) | MC low: min of mean-3sd | MC high: max of mean+3sd | tPD ss/125 VID 0.35 |
+|---|---|---|---|---|---|
+| base (4,5) alpha 1.25 | 3.169 um | 7.9-16.7 mV | 2.95 mV (6 of 240 < 6 mV) | 20.5 (ss/125) | 4.50 ns (iteration 1) |
+| (4,6) alpha 1.5 | 0.262 um (not drawable) | 8.7-23.9 | 6.34 | 22.4 (ss/125; ff/125 not run) | - |
+| (5,7) alpha 1.4 | 1.014 um | 8.7-22.3 | 5.61 | 21.9 (ss/125) | - |
+| (3,5) alpha 1.67 | negative (invalid) | 9.5-28.3 | 7.88 | 25.4 | - |
+| (4,6) vh_scale 1.3 | 1.328 um | 11.9-29.9 | 8.57 | 37.4 (ff/125 VIC 0.05; 1 of 480 > 35 mV) | 4.665 ns |
+| (4,6) vh_scale 1.25 | 1.157 um | 11.3-29.1 | 8.25 | 36.2 (ff/125 VIC 0.05) | - |
+
+Monte Carlo relative sd: base 15-22 % at ff/-40C, alpha 1.5 7-11 %, alpha 1.4 9-13 %.  Alpha 1.5 with a drawable Rs sits
+too high (the balance point needs vh_scale about 1.05, a 0.45 um resistor); next round: alpha 1.4 with vh_scale 1.10-1.20.
+
+Rounds 3-4 (alpha 1.4, Rs raised a little; then narrower load fingers to win back the delay):
+
+| candidate | Rs length | trip V_H (8 corners) | MC low: min of mean-3sd | MC high: max of mean+3sd | tPD ss/125 VID 0.35 / 0.1 |
+|---|---|---|---|---|---|
+| (5,7) vh_scale 1.10 | 1.436 um | 9.7-24.3 mV | 6.24 mV | 31.40 mV | - |
+| (5,7) vh_scale 1.15 | 1.641 um | 10.3-25.1 | 6.57 | 32.65 | 4.815 / 5.675 ns |
+| (5,7) vh_scale 1.20 | 1.851 um | 10.7-26.1 | 6.89 | 33.89 | - |
+| (5,7) 1.15, wf_ld 1.8 | 1.641 um | 10.3-24.9 | 6.55 | 32.23 | 4.739 / 5.578 |
+| **(5,7) 1.15, wf_ld 1.6** | 1.641 um | 10.1-24.5 | 6.51 | 31.68 | **4.659 / 5.482** |
+
+Chosen: alpha 1.4 (5, 7), vh_scale 1.15, wf_ld 1.6 (D-017, FROZEN.md iteration-2 table; 128 sizing asserts pass; AC: A1
+min 4.78, stage f3dB 1.00 x DR, chain 60.7 MHz).  Margins at +-3 sd: 8.5 % above the 6 mV floor (ff/-40C/3.6 V, VIC
+2.35 V), 10.5 % below the 35 mV ceiling (ff/125C/3.6 V, VIC 0.05 V, not one of the gate's two Monte Carlo corners).
+tPD margin 6.8 % at the slowest corner with the estimate (iteration 1: 10 %).  The load-finger width did not change
+the spread: less area raises sigma(VT) but the denser loads have a lower gm/ID.  Next: make layout, the post-layout suite
+(TBL first: the timing margin is the risk), then the full pre-layout regression.

@@ -82,9 +82,18 @@ D = dict(
     # ---- stage 2 hysteresis comparator
     gmid_s2=8.0, L_s2=0.5, wf_s2=5.0,    # pair: offset allowance sigma_2 <= 0.5*A1_min*sigma_target = 10 mV is generous, so area is spent on speed
                                          # (T11 iteration 1: 12 -> 8: twice the tail current at a smaller pair, less gate load on oa/ob)
-    L_ld=0.28, wf_ld=2.0,                # PMOS loads (diode + cross-coupled) and the stage-3 copies: short L for the regeneration time constant
+    L_ld=0.28, wf_ld=1.6,                # PMOS loads (diode + cross-coupled) and the stage-3 copies: short L for the regeneration time constant
                                          # (T11 iteration 1: 0.4 -> 0.28; 0.4 failed the latched pair margin at ss/res_ff once n_t2 doubled)
-    alpha_cands=[(4, 5), (5, 7), (2, 3), (3, 5)],   # (nf diode, nf cross): alpha = ratio; for each, the source-degeneration Rs gives V_H,in = 14 mV at tt, the one with the smallest corner spread wins
+                                         # (T11 iteration 2: wf 2.0 -> 1.6 with alpha 1.4: tPD ss/125C VID 0.35 4.82 -> 4.66 ns with the estimate,
+                                         #  the V_H spread unchanged: smaller area, but lower gm/ID of the denser loads)
+    alpha_cands=[(5, 7)],                # (nf diode, nf cross): alpha = ratio; the source-degeneration Rs gives V_H,in = vh_scale x 14 mV at tt.
+                                         # T11 iteration 2: alpha 1.25 (4, 5) -> 1.4 (5, 7).  The relative V_H error per relative alpha error
+                                         # (load VT mismatch) is 2 alpha/(alpha^2 - 1): 4.4 at 1.25 gave a Monte Carlo sd of 15-22 % at
+                                         # ff/-40C and 17 of 600 runs below 6 mV; 1.4 gives 9-13 %.  1.5 sits too high once Rs is drawable
+                                         # (>= 1 um), 1.67 needs Rs < 0 (.scratch/t11/iter2, log/T11_notes.md)
+    vh_scale=1.15,                       # multiplies the V_H,in target the Rs solve aims for (calibration of the large-signal trip model against
+                                         # simulation).  T11 iteration 2: 1.15 centres the Monte Carlo V_H (+-3 sd, 4 extreme corners) in the
+                                         # 6-35 mV window: 6.5 .. 31.7 mV (1.10: 6.2 .. 31.4, 1.20: 6.9 .. 33.9)
     # ---- stage 3 + output
     r3=2.0,                              # stage-3 PMOS mirror copies the load diode x r3
     gmid_n3=8.0, L_n3=0.28,              # was 0.5: TB2 (T2 part 2) measured the d3 pole (rds of the mirror / C of d3 + NAND gate) at 39 MHz ss/125 C vs 80 MHz needed; L 0.28 gives 102 MHz (gain A3 48 -> 19, ample after A1 x A2)
@@ -352,7 +361,7 @@ def choose_alpha_rs(S, devs, pre):
     wms, Lms = devs['ms']['W'], D['L_s2']
     a1_ref = 1.1 * pre[TT.name]['s1']['a1_ext']                   # mid-VIC gain is ~1.0-1.2 x the extremes (T1: spread <= 1.27)
     target = 2 * VH_NOM * a1_ref / 2.0 * 1.0                        # V_H2 = 2 x V_trip; V_trip target = VH_NOM*a1_ref/2
-    target_trip = VH_NOM * a1_ref / 2.0
+    target_trip = VH_NOM * a1_ref / 2.0 * D['vh_scale']
     scan = []
     for nd, nc in D['alpha_cands']:
         alpha = nc / nd
@@ -702,6 +711,10 @@ def run_asserts(A, S, devs, ev, budget, cin):
     A.check('ESD2 R*Cin pole >= 10 x f1', cin['f_esd'] >= 10 * ev[TT.name]['s1']['f1'], '%.1f GHz' % (cin['f_esd'] / 1e9))
     # gain-matching of poly: RL and Rb share the poly type and width
     A.check('RL/Rb/Rf/R_div use one poly type and one width (gain = geometry ratio, eq. 5.7)', True, 'ppolyf_u_1k, W = %.1f um' % D['rw'])
+    # every ppolyf_u_1k resistor must be drawable: Magic's generator has lmin 1.0 um (gf180mcu::ppolyf_u_1k_defaults).  T11
+    # iteration 2: the Rs solve gave 0.26 um for alpha 1.5 and a negative length for alpha 1.67 without any complaint
+    rlen = {k: res_len(S[s]) for k, s in (('rl', 'rl'), ('rb', 'rb'), ('rf', 'rf'), ('rdt', 'r_div_top'), ('rdb', 'r_div_bot'), ('rs', 'rs'))}
+    A.check('every ppolyf_u_1k length >= 1.0 um (Magic lmin)', min(rlen.values()) >= 1.0, ', '.join('%s %.2f' % kv for kv in rlen.items()))
     # nf-not-m
     A.check('no m= on matched devices (device table)', all(d.get('m', 1) == 1 for d in devs.values()), 'all devices carry nf')
     # unimplemented variants must not be requested

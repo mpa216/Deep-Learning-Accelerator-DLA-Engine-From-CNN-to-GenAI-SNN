@@ -13,6 +13,9 @@ date +%s > .scratch/full_start
   python3 flow/envcheck.py && python3 flow/run_all.py --tier smoke --phases env || { echo "EXIT 2 (env check failed)"; exit 2; }
   python3 flow/run_all.py --tier full --phases env,prelayout --jobs "$JOBS"
   rc=$?
+  # AUDIT_1 F4: a gate table can show PASS for results simulated from older inputs; check every stored run against the
+  # current inputs (no simulation) -> results/audit_hashes.json.  A stale result makes the run fail like a failed gate.
+  python3 tools/audit_hashes.py --tier full || { echo "AUDIT_HASHES: stored results not tied to the current inputs (results/audit_hashes.json)"; [ "$rc" -eq 0 ] && rc=3; }
   python3 flow/mutants.py
   python3 flow/report.py
   echo "EXIT $rc"

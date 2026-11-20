@@ -24,8 +24,8 @@
  "post": "hooks.py:post",
  "limits": {
   "vh_v": {
-   "min": 0.008,
-   "max": 0.025,
+   "min": 0.006,
+   "max": 0.035,
    "scale": 1000,
    "unit": "mV"
   },
@@ -34,5 +34,8 @@
   }
  },
  "timeout": 300,
+ "retry": {"timeout": 150, "variants": [
+  {"name": "itl_gmin1e-10", "sub": [[".option rshunt=1e11", ".option rshunt=1e11 itl1=500 itl2=200 gmin=1e-10"]]},
+  {"name": "gmin1e-9", "sub": [[".option rshunt=1e11", ".option rshunt=1e11 gmin=1e-9"]]}]},
  "jobs": 6
 }

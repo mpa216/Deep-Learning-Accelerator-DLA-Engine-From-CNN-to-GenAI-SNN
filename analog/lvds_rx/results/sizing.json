@@ -1,5 +1,5 @@
 {
- "asserts_total": 127,
+ "asserts_total": 128,
  "asserts_failed": 0,
  "nf_m_violations": 0,
  "tally_ok": 1,
@@ -33,10 +33,10 @@
    "i_bias_uA": 149.3716859329792
   }
  },
- "sigma_total_mV": 3.5789339148868917,
+ "sigma_total_mV": 3.431787468493054,
  "failed_names": [],
  "hashes": {
-  "sizing_script": "2c882a08013d8fab0fb77eb5f2f0521727dfb6b5ff1d88fb24d2297d3db9bca8",
+  "sizing_script": "553c88214f682159272ccce2efb25958adf4bdb0c59a332685d0eef9ee4695c7",
   "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
   "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857"
  }
