@@ -5,6 +5,8 @@
 # here the env check must pass, then the full tier runs, and mutants + report always follow.  Ends with "EXIT <code of the full tier>".
 cd "$(dirname "$0")/.." || exit 1
 JOBS="${1:-4}"
+# unbuffered: the log fills while the run is going (2026-11-20: a container kill mid-run lost the buffered full-tier output)
+export PYTHONUNBUFFERED=1
 mkdir -p .scratch
 date +%s > .scratch/full_start
 {

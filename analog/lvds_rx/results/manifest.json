@@ -1,34 +1,35 @@
 {
- "generated": "2026-11-13 18:44:16",
+ "generated": "2026-11-20 20:54:52",
  "tier": "full",
  "phases": [
+  "env",
   "prelayout"
  ],
  "git": {
-  "commit": "a8d771d",
+  "commit": "3c119e1",
   "dirty": null
  },
  "harness_version": "1.3",
  "hashes": {
-  "sizing_script": "da8e83df4f9c578bc3099cc480fa442b7b99d8b43fb68e2c1b140656b64dea8a",
+  "sizing_script": "2c882a08013d8fab0fb77eb5f2f0521727dfb6b5ff1d88fb24d2297d3db9bca8",
   "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
   "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
   "spec_files": {
    "spec/spec.yaml": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
-   "spec/gates.yaml": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5",
+   "spec/gates.yaml": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
    "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
    "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
-   "spec/decisions.yaml": "c13b921dae6ce7c3a5f92ca792b493f2f4c67059d1dcc767d3a6d8faec1f715e"
+   "spec/decisions.yaml": "58cc5dce6ae6743b4b05774b80ac1c83cb951cbbb2175c769b8cafa988b3349e"
   }
  },
  "netlists": {
   "input_network.spice": "704a49b1e94d46ded6a19e4ffe781f8ec67b248ea5143635f8dc95424e72f2b5",
-  "lvds_rx_core.spice": "ca22c0077896c1c83352aac4db29565814a5e849bb95e50bf86d1c9090600d5e",
-  "lvds_rx_lvs_ref.spice": "87c21277bc4e7c4a653b1dac4d15bc9a5ef4ae1ea28f0e846598443f03247640",
-  "lvds_rx_lvs_ref_flat.spice": "2a0829d3b7708e34ded75827c094ec7793133485bf8abaabf76c2c4350842d7a",
+  "lvds_rx_core.spice": "12b8123ca20db8679600e10ba1676027d46e39c3c76223967911f9096f415f85",
+  "lvds_rx_lvs_ref.spice": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+  "lvds_rx_lvs_ref_flat.spice": "def2fcc4babd8d2ef99fbcd5af8f82f439a3d6b4dd3c614b199c3c184072ca01",
   "pad_asig_5p0.spice": "f7dec41ef2df2b36dd86fb7c48ef6a25404c5c788d71ea9a157800d6e2fd7bb2"
  },
- "sizes_spice_sha256": "904ffecb584c3f9d14f97af497ede18c43dee2adad4a99a46a33db4ae7e904ad",
+ "sizes_spice_sha256": "366208be9582b0b307e8450291902285ff11501b08a665912376dc8ae721aa23",
  "tools": {
   "ngspice": {
    "path": "/foss/tools/bin/ngspice",
@@ -89,23 +90,265 @@
  },
  "runs": [
   {
+   "gate": "ENV",
+   "expected": null,
+   "spec_exists": false,
+   "wall_s": null,
+   "actual": null,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "SELFTEST",
+   "expected": 94,
+   "spec_exists": true,
+   "wall_s": 0.1,
+   "actual": 94,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "SIZE",
+   "expected": null,
+   "spec_exists": false,
+   "wall_s": null,
+   "actual": null,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB0",
+   "expected": null,
+   "spec_exists": false,
+   "wall_s": null,
+   "actual": null,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB1",
+   "expected": 987,
+   "spec_exists": true,
+   "wall_s": 113.7,
+   "actual": 987,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB2",
+   "expected": 315,
+   "spec_exists": true,
+   "wall_s": 0.5,
+   "actual": 315,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB3_trip",
+   "expected": 270,
+   "spec_exists": true,
+   "wall_s": 324.0,
+   "actual": 270,
+   "gate_status": "FAIL"
+  },
+  {
+   "gate": "TB3_off",
+   "expected": 15000,
+   "spec_exists": true,
+   "wall_s": 79.8,
+   "actual": 15000,
+   "gate_status": "PASS"
+  },
+  {
    "gate": "TB3_hmc",
    "expected": 600,
    "spec_exists": true,
-   "wall_s": 432.3,
+   "wall_s": 4.9,
    "actual": 600,
+   "gate_status": "FAIL"
+  },
+  {
+   "gate": "TB4",
+   "expected": 630,
+   "spec_exists": true,
+   "wall_s": 867.8,
+   "actual": 630,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB4b",
+   "expected": 70,
+   "spec_exists": true,
+   "wall_s": 200.7,
+   "actual": 70,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB5",
+   "expected": 180,
+   "spec_exists": true,
+   "wall_s": 1458.4,
+   "actual": 180,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB6",
+   "expected": 20,
+   "spec_exists": true,
+   "wall_s": 412.4,
+   "actual": 20,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB7",
+   "expected": 945,
+   "spec_exists": true,
+   "wall_s": 1691.5,
+   "actual": 945,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB7_mc",
+   "expected": 1500,
+   "spec_exists": true,
+   "wall_s": 1763.6,
+   "actual": 1500,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB8",
+   "expected": 270,
+   "spec_exists": true,
+   "wall_s": 2367.7,
+   "actual": 270,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB9",
+   "expected": 180,
+   "spec_exists": true,
+   "wall_s": 140.7,
+   "actual": 180,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB10",
+   "expected": 10,
+   "spec_exists": true,
+   "wall_s": 1305.7,
+   "actual": 10,
+   "gate_status": "PASS"
+  },
+  {
+   "gate": "TB11",
+   "expected": 45,
+   "spec_exists": false,
+   "wall_s": null,
+   "actual": null,
+   "gate_status": "NOT_APPLICABLE"
+  },
+  {
+   "gate": "TB12",
+   "expected": 40,
+   "spec_exists": true,
+   "wall_s": 316.7,
+   "actual": 40,
    "gate_status": "PASS"
   }
  ],
- "wall_s": 433.7,
+ "wall_s": 11050.8,
  "measured_vs_plan_5_3": {
+  "SELFTEST": {
+   "cpu_min_measured": 0.1,
+   "cpu_min_plan": null,
+   "wall_s": 0.1,
+   "retried_runs": 0
+  },
+  "TB1": {
+   "cpu_min_measured": 9.8,
+   "cpu_min_plan": 3,
+   "wall_s": 113.7,
+   "retried_runs": 0
+  },
+  "TB2": {
+   "cpu_min_measured": 2.9,
+   "cpu_min_plan": 3,
+   "wall_s": 0.5,
+   "retried_runs": 0
+  },
+  "TB3_trip": {
+   "cpu_min_measured": 67.9,
+   "cpu_min_plan": 2,
+   "wall_s": 324.0,
+   "retried_runs": 0
+  },
+  "TB3_off": {
+   "cpu_min_measured": 487.0,
+   "cpu_min_plan": 75,
+   "wall_s": 79.8,
+   "retried_runs": 2
+  },
   "TB3_hmc": {
-   "cpu_min_measured": 148.2,
+   "cpu_min_measured": 81.2,
    "cpu_min_plan": 40,
-   "wall_s": 432.3,
+   "wall_s": 4.9,
+   "retried_runs": 0
+  },
+  "TB4": {
+   "cpu_min_measured": 115.0,
+   "cpu_min_plan": 4,
+   "wall_s": 867.8,
+   "retried_runs": 0
+  },
+  "TB4b": {
+   "cpu_min_measured": 13.1,
+   "cpu_min_plan": null,
+   "wall_s": 200.7,
+   "retried_runs": 0
+  },
+  "TB5": {
+   "cpu_min_measured": 94.9,
+   "cpu_min_plan": 24,
+   "wall_s": 1458.4,
+   "retried_runs": 0
+  },
+  "TB6": {
+   "cpu_min_measured": 26.5,
+   "cpu_min_plan": null,
+   "wall_s": 412.4,
+   "retried_runs": 0
+  },
+  "TB7": {
+   "cpu_min_measured": 111.8,
+   "cpu_min_plan": null,
+   "wall_s": 1691.5,
+   "retried_runs": 0
+  },
+  "TB7_mc": {
+   "cpu_min_measured": 116.4,
+   "cpu_min_plan": null,
+   "wall_s": 1763.6,
+   "retried_runs": 0
+  },
+  "TB8": {
+   "cpu_min_measured": 37.2,
+   "cpu_min_plan": null,
+   "wall_s": 2367.7,
+   "retried_runs": 17
+  },
+  "TB9": {
+   "cpu_min_measured": 8.7,
+   "cpu_min_plan": null,
+   "wall_s": 140.7,
+   "retried_runs": 0
+  },
+  "TB10": {
+   "cpu_min_measured": 69.9,
+   "cpu_min_plan": null,
+   "wall_s": 1305.7,
+   "retried_runs": 0
+  },
+  "TB12": {
+   "cpu_min_measured": 19.9,
+   "cpu_min_plan": null,
+   "wall_s": 316.7,
    "retried_runs": 0
   }
  },
- "cpu_min_total": 1690.0,
+ "cpu_min_total": 1262.3,
  "cpu_min_plan_total": 180
 }

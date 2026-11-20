@@ -1,24 +1,26 @@
 {
- "generated": "2026-11-13 18:44:16",
+ "generated": "2026-11-20 20:54:52",
  "tier": "full",
  "phases": [
+  "env",
   "prelayout"
  ],
  "git": {
-  "commit": "a8d771d",
+  "commit": "3c119e1",
   "dirty": null
  },
- "gates_sha256": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5",
+ "gates_sha256": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
  "spec_sha256": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
  "summary": {
   "PASS": 17,
+  "FAIL": 2,
   "NOT_APPLICABLE": 1
  },
- "cpu_min": 1690.0,
+ "cpu_min": 1262.3,
  "flags": [
-  "full-tier CPU time 1690 min is over 2.0x the 180 min estimate"
+  "full-tier CPU time 1262 min is over 2.0x the 180 min estimate"
  ],
- "green": true,
+ "green": false,
  "waivers": [
   {
    "id": "D-001",
@@ -210,9 +212,247 @@
    "files_after": {
     "spec/gates.yaml": "737cb18fd5533fcaa66840a4690ceb046faeb508235c785317c2dc46487415d5"
    }
+  },
+  {
+   "id": "D-015",
+   "date": "2026-11-14",
+   "kind": "note",
+   "trigger": "T11: gate TBL was a deferred stub since T0 ('T11 writes sim/tbl_* specs and the evaluator'); T11 wrote both (sim/tbl/make_cores.py, make_benches.py, evaluate.py)",
+   "measured": "results/post_layout/tbl.json (written by sim/tbl/evaluate.py from sim/tbl_*/results/tbl_*_{pre,pex}/results.json)",
+   "gate_relaxed": "none. The stub became a json gate on the evaluator's summary: complete and ok pre / extracted run sets, at least 100 pairs, no failed check, largest use of margin <= 0.30, and the D-012 freeze condition met. The frozen criterion is unchanged (every metric within 30 % of its margin to the source TB gate's limit); its reading (a loss of margin is gated, a gain over 30 % is listed and explained; checks without a margin pass when the extracted value meets the limit) was fixed in log/T11_notes.md before the full runs.",
+   "files_after": {
+    "spec/gates.yaml": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f"
+   }
+  },
+  {
+   "id": "D-016",
+   "date": "2026-11-15",
+   "kind": "note",
+   "trigger": "T11 iteration 0: the extracted T10 macro fails TB2 and TB4 outright at ss/125C/3.0 V (tPD VID 0.35 4.57 -> 6.76 ns against 5 ns, VID 0.1 5.55 -> 8.22 ns against 8 ns; stage f3dB 0.84 -> 0.44 x DR, chain 56 -> 37 MHz) and gate TBL fails; cause: the pre-layout netlist carried no wiring capacitance and modelled junctions with 0.18 um of diffusion (the layout has 2.84 x that area), so the frozen sizing had 9.5 % tPD margin for none of the layout's load",
+   "measured": "results/post_layout/iter0/TBL.md; calibration .scratch/t11/calib.py (36 TB4 points: the estimate at wiring scale 1.0 captures 87-90 % of the added delay everywhere, est = extraction at scale 1.14-1.21, at 1.2 the estimate is >= the extraction at 35 of 36 points, 7 ps short at the last); candidates in log/T11_notes.md",
+   "gate_relaxed": "none (no limit changed; spec.yaml and gates.yaml untouched).  Sizing iteration (T11, block timing, results/iterations.jsonl): (1) the simulation netlist now carries the layout parasitic estimate (sizing/parasitic_estimate.json from sim/tbl/make_estimate.py: junction diffusion length ldiff 0.511 um in the ad/as/pd/ps formulas, one capacitor per net to VSS and one to VDD = the extracted wiring x 1.2, 31 nets; netlist/lvds_circuit.ESTIMATE, simulation netlist only, never in the LVS reference); (2) stage 2 re-sized: n_t2 5 -> 10, gmid_s2 12 -> 8, L_ld 0.40 -> 0.28 (mt2 nf 6 -> 12, ms nf 3 -> 2, mld/mlc/mp3 L 0.28, mn3 nf 1 -> 2, Rs 4573 -> 1690 ohm).  The sizing freeze re-opens: full regression, re-layout, PEX, TBL."
   }
  ],
  "gates": {
+  "ENV": {
+   "id": "ENV",
+   "title": "make check: tools, LUT load + self-test, harness tests, lint, OMP exports",
+   "phase": "env",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "json_value",
+     "metric": "lut_selftest.failed",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.0,
+     "limit": "== 0",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_selftest.passed",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 296.0,
+     "limit": "296 .. +inf",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_load.vgs_v",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.8015774025430232,
+     "limit": "0.7996 .. 0.8036",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_load.ft_hz",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 3297840696.4033084,
+     "limit": "3.25e+09 .. 3.35e+09",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lut_load.id_w_a_per_um",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 2.702363910027819e-06,
+     "limit": "2.67e-06 .. 2.74e-06",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "harness_tests.failures",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.0,
+     "limit": "== 0",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "harness_tests.run",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 49.0,
+     "limit": "45 .. +inf",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "lint.failed",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 0.0,
+     "limit": "== 0",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "omp.ok",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 1.0,
+     "limit": "== 1",
+     "status": "PASS"
+    },
+    {
+     "kind": "json_value",
+     "metric": "layout_toy.ok",
+     "agg": "value",
+     "reasons": [],
+     "n": 1,
+     "worst": 1.0,
+     "limit": "== 1",
+     "status": "PASS"
+    }
+   ],
+   "expected_runs": null,
+   "actual_runs": null,
+   "status_counts": {},
+   "results_file": "results/env.json",
+   "results_sha256": "16ff38d04dd8c23549059f7d9f3c7d59d44d69254d19666133a1326fd0f42fe8"
+  },
+  "SELFTEST": {
+   "id": "SELFTEST",
+   "title": "placeholder testbench: PDK resistor/MOS over the harness corner sets (proves resistor corners follow process, wnflag set)",
+   "phase": "env",
+   "status": "PASS",
+   "reasons": [],
+   "checks": [
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": [
+       "tt_27c_3v30",
+       "fs_27c_3v30",
+       "sf_27c_3v30"
+      ]
+     },
+     "limit": "1150 .. 1250",
+     "n": 6,
+     "reasons": [],
+     "worst": 1201.85,
+     "worst_run": "tt_27c_3v30__vg1.2",
+     "margin": 48.15000000000009,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ss_125c_3v00"
+     },
+     "limit": "1200 .. 1330",
+     "n": 2,
+     "reasons": [],
+     "worst": 1262.92,
+     "worst_run": "ss_125c_3v00__vg1.2",
+     "margin": 62.92000000000007,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ff_m40c_3v60"
+     },
+     "limit": "1130 .. 1240",
+     "n": 2,
+     "reasons": [],
+     "worst": 1181.79,
+     "worst_run": "ff_m40c_3v60__vg1.2",
+     "margin": 51.789999999999964,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ss_125c_3v00_xrff"
+     },
+     "limit": "820 .. 940",
+     "n": 2,
+     "reasons": [],
+     "worst": 879.104,
+     "worst_run": "ss_125c_3v00_xrff__vg1.2",
+     "margin": 59.10400000000004,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "r_ohm",
+     "where": {
+      "corner": "ff_m40c_3v60_xrss"
+     },
+     "limit": "1550 .. 1700",
+     "n": 2,
+     "reasons": [],
+     "worst": 1623.49,
+     "worst_run": "ff_m40c_3v60_xrss__vg1.2",
+     "margin": 73.49000000000001,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "idsat_a",
+     "where": null,
+     "limit": "reported",
+     "n": 94,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.000409126,
+     "max": 0.00978911,
+     "mean": 0.004069408265957446
+    }
+   ],
+   "expected_runs": 94,
+   "actual_runs": 94,
+   "status_counts": {
+    "ok": 94
+   },
+   "results_file": "sim/tb_selftest/results/tb_selftest/results.json",
+   "results_sha256": "01e98b43e433a5d9eb0e70c3a5fd7268c26dab21e1058c4d52fac18470590e4f",
+   "cpu_s": 7.4,
+   "retried": []
+  },
   "SIZE": {
    "id": "SIZE",
    "title": "sizing script asserts, current tally, nf-not-m",
@@ -255,7 +495,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/sizing.json",
-   "results_sha256": "ea4dda7dbcd630e1f6e698f9f40daaaad32ec9f61490781486772b137b5874aa"
+   "results_sha256": "d56c45a25d0deff4ffe7f14fe128e68d500cd59dd5d62f2ed1670fd07d2e76d3"
   },
   "TB0": {
    "id": "TB0",
@@ -325,9 +565,9 @@
      "limit": "0.05 .. +inf",
      "n": 147,
      "reasons": [],
-     "worst": 0.0524596,
+     "worst": 0.0524595,
      "worst_run": "ss_125c_3v00_xrff__vic1.2_vid-0.1",
-     "margin": 0.0024595999999999993,
+     "margin": 0.0024594999999999964,
      "status": "PASS"
     },
     {
@@ -409,9 +649,9 @@
      "limit": "-0.3 .. +inf",
      "n": 987,
      "reasons": [],
-     "worst": 2.82793e-14,
-     "worst_run": "ss_m40c_3v00__vic0.05_vid-0.1",
-     "margin": 0.30000000000002824,
+     "worst": -2.32486e-06,
+     "worst_run": "sf_27c_3v30__vic0.05_vid0.1",
+     "margin": 0.29999767514,
      "status": "PASS"
     },
     {
@@ -445,9 +685,9 @@
      "limit": "-inf .. 0.0015",
      "n": 987,
      "reasons": [],
-     "worst": 0.0008190954333333333,
+     "worst": 0.0010860154333333333,
      "worst_run": "ff_125c_3v60__vic1.8_vid-0.1",
-     "margin": 0.0006809045666666667,
+     "margin": 0.00041398456666666677,
      "status": "PASS"
     },
     {
@@ -469,8 +709,8 @@
     "ok": 987
    },
    "results_file": "sim/tb1_op/results/tb1_op/results.json",
-   "results_sha256": "e6587ff276dfce8b2d8938a09a3323366acfd108f2a8e893c6f310a86f9cd7eb",
-   "cpu_s": 538.3,
+   "results_sha256": "bb091e084a7664ebd379b60c4b53d0c3306d45b8410c1bf4a70fb733028053ad",
+   "cpu_s": 589.8,
    "retried": []
   },
   "TB2": {
@@ -492,9 +732,9 @@
      "limit": "4 .. +inf",
      "n": 90,
      "reasons": [],
-     "worst": 4.77847431,
+     "worst": 4.77842682,
      "worst_run": "ff_125c_3v60__vic0.05",
-     "margin": 0.77847431,
+     "margin": 0.77842682,
      "status": "PASS"
     },
     {
@@ -506,9 +746,9 @@
      "limit": "-inf .. 2.2",
      "n": 45,
      "reasons": [],
-     "worst": 1.5920003617221496,
+     "worst": 1.592000437918185,
      "worst_run": "('ff_125c_3v60',)",
-     "margin": 0.6079996382778505,
+     "margin": 0.6079995620818153,
      "status": "PASS"
     },
     {
@@ -518,9 +758,9 @@
      "limit": "0.8 .. +inf",
      "n": 315,
      "reasons": [],
-     "worst": 0.8364360750916122,
-     "worst_run": "ss_125c_3v00__vic2.35",
-     "margin": 0.036436075091612175,
+     "worst": 0.9456521569951959,
+     "worst_run": "ss_m40c_3v00__vic1.2",
+     "margin": 0.14565215699519585,
      "status": "PASS"
     },
     {
@@ -530,9 +770,9 @@
      "limit": "5e+07 .. +inf",
      "n": 315,
      "reasons": [],
-     "worst": 56439673.9841103,
-     "worst_run": "ss_125c_3v00__vic2.35",
-     "margin": 6439673.984110303,
+     "worst": 62803623.67231886,
+     "worst_run": "ss_125c_3v00__vic0.05",
+     "margin": 12803623.67231886,
      "status": "PASS"
     },
     {
@@ -544,9 +784,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 46.45959489275932,
-     "max": 53.72423689064493,
-     "mean": 50.517411959750376
+     "min": 42.7562125972681,
+     "max": 52.013736957791174,
+     "mean": 48.31166665078869
     },
     {
      "kind": "report",
@@ -557,9 +797,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 12.690710725598837,
-     "max": 19.92102265344622,
-     "mean": 16.391987869889515
+     "min": 12.689934915126058,
+     "max": 19.93630350880959,
+     "mean": 16.39797516998102
     }
    ],
    "expected_runs": 315,
@@ -568,27 +808,32 @@
     "ok": 315
    },
    "results_file": "sim/tb2_ac/results/tb2_ac/results.json",
-   "results_sha256": "9788a5ecf2d4bc1d15f4c7ebc85183dca50981d0710b4c2490e3eeb3488ef212",
-   "cpu_s": 204.3,
+   "results_sha256": "853f926b6e42379bf78fc075438417fccb85258debed9f979f73389d5c463d12",
+   "cpu_s": 171.4,
    "retried": []
   },
   "TB3_trip": {
    "id": "TB3_trip",
    "title": "hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)",
    "phase": "prelayout",
-   "status": "PASS",
-   "reasons": [],
+   "status": "FAIL",
+   "reasons": [
+    [
+     "STATUS",
+     "runs not ok: {'timeout': 4}"
+    ]
+   ],
    "checks": [
     {
      "kind": "per_run",
      "metric": "vh_v",
      "where": null,
      "limit": "0.006 .. 0.035",
-     "n": 270,
+     "n": 266,
      "reasons": [],
-     "worst": 0.010099999999999987,
-     "worst_run": "sf_m40c_3v00__vic0.05_sweep0",
-     "margin": 0.004099999999999987,
+     "worst": 0.007899999999998995,
+     "worst_run": "sf_m40c_3v00__vic1.2_sweep1",
+     "margin": 0.0018999999999989945,
      "status": "PASS"
     },
     {
@@ -596,36 +841,37 @@
      "metric": "dvh_dvdd",
      "where": null,
      "limit": "reported",
-     "n": 270,
+     "n": 266,
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": -0.00033333333343302013,
-     "max": 0.007999999996452008,
-     "mean": 0.0003777777751485852
+     "min": -0.0006666666672232487,
+     "max": 0.005333333333333414,
+     "mean": -3.383491218944412e-05
     },
     {
      "kind": "report",
      "metric": "dvtrip_dvdd",
      "where": null,
      "limit": "reported",
-     "n": 270,
+     "n": 266,
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": -4.975649348556063e-10,
-     "max": 1.089889636873842e-10,
-     "mean": 1.2722278220623483e-12
+     "min": -8.333333323713664e-05,
+     "max": 2.601812654212665e-09,
+     "mean": -1.8798601941850532e-06
     }
    ],
    "expected_runs": 270,
    "actual_runs": 270,
    "status_counts": {
-    "ok": 270
+    "ok": 266,
+    "timeout": 4
    },
    "results_file": "sim/tb3_trip/results/tb3_trip/results.json",
-   "results_sha256": "7201c92f5f589d41437d5582855951b6c731fdbaddb176a23c495f309a817b34",
-   "cpu_s": 4368.7,
+   "results_sha256": "f82e03e09ff6e9f07fccc19c6a3638345a32ea521ec2ebfdc87924d097233e1f",
+   "cpu_s": 4076.1,
    "retried": []
   },
   "TB3_off": {
@@ -641,12 +887,12 @@
      "limit": "<= 0.095 (k=6, extra=0.0205)",
      "n": 15,
      "reasons": [],
-     "normality_p_min": 0.15164687603264995,
-     "worst": 0.04018919715902662,
-     "worst_run": "('ss_125c_3v00', ('vic', '0.05'))",
-     "margin": 0.05481080284097338,
-     "mean": 7.231364399712715e-05,
-     "sigma": 0.0032694805858382494,
+     "normality_p_min": 0.10637368898302862,
+     "worst": 0.04132820067570108,
+     "worst_run": "('ss_125c_3v00', ('vic', '1.2'))",
+     "margin": 0.05367179932429892,
+     "mean": -4.420444927705926e-05,
+     "sigma": 0.00346399937107067,
      "samples": 1000,
      "status": "PASS"
     },
@@ -659,9 +905,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": -0.013983220993150728,
-     "max": 0.011862439191401085,
-     "mean": 4.2132270658669694e-05
+     "min": -0.014646001418561778,
+     "max": 0.012660476119071421,
+     "mean": 4.803735281141448e-05
     }
    ],
    "expected_runs": 15000,
@@ -670,22 +916,24 @@
     "ok": 15000
    },
    "results_file": "sim/tb3_off/results/tb3_off/results.json",
-   "results_sha256": "8fd85ec68e69e2f8536899d40cbaa9da35a73eff77801b9050ea6034ff643bab",
-   "cpu_s": 43771.4,
+   "results_sha256": "a42a406cc495639b5a0ed2c06c20ff040e7deebe4a53a389d49e2cadecb1142b",
+   "cpu_s": 29221.6,
    "retried": [
-    "sf_27c_3v30__vic2.35__s1170052424 (timeout -> itl_gmin1e-10)",
-    "sf_27c_3v30__vic2.35__s1336117571 (timeout -> itl_gmin1e-10)",
-    "sf_27c_3v30__vic2.35__s1463787947 (timeout -> itl_gmin1e-10)",
-    "sf_27c_3v30__vic2.35__s1572422165 (timeout -> itl_gmin1e-10)",
-    "sf_27c_3v30__vic2.35__s38642135 (timeout -> itl_gmin1e-10)"
+    "sf_27c_3v30__vic2.35__s217420337 (timeout -> itl_gmin1e-10)",
+    "sf_27c_3v30__vic2.35__s883221576 (timeout -> itl_gmin1e-10)"
    ]
   },
   "TB3_hmc": {
    "id": "TB3_hmc",
    "title": "transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)",
    "phase": "prelayout",
-   "status": "PASS",
-   "reasons": [],
+   "status": "FAIL",
+   "reasons": [
+    [
+     "LIMIT",
+     "vh_v: 17 of 600 runs outside 0.006 .. 0.035 (first ff_m40c_3v60__vic0.05__s448325143 = 0.005899999999999993)"
+    ]
+   ],
    "checks": [
     {
      "kind": "per_run",
@@ -693,11 +941,17 @@
      "where": null,
      "limit": "0.006 .. 0.035",
      "n": 600,
-     "reasons": [],
-     "worst": 0.006700000000000007,
+     "reasons": [
+      [
+       "LIMIT",
+       "vh_v: 17 of 600 runs outside 0.006 .. 0.035 (first ff_m40c_3v60__vic0.05__s448325143 = 0.005899999999999993)"
+      ]
+     ],
+     "worst": 0.003999999999999993,
      "worst_run": "ff_m40c_3v60__vic2.35__s578106990",
-     "margin": 0.000700000000000007,
-     "status": "PASS"
+     "margin": -0.002000000000000007,
+     "status": "FAIL",
+     "detail": "17 of 600 runs violate (first: ff_m40c_3v60__vic0.05__s448325143 = 0.005899999999999993)"
     },
     {
      "kind": "per_run",
@@ -718,8 +972,8 @@
     "ok": 600
    },
    "results_file": "sim/tb3_hmc/results/tb3_hmc/results.json",
-   "results_sha256": "8309b32fe26c96d67858ff02e60b82447e994cb7ccb04ae294e947dc48b79143",
-   "cpu_s": 8892.5,
+   "results_sha256": "8b6ccbe36540119dd56b5652158ca4afbd4101612a6d9e0b1404dfbfcd304ffe",
+   "cpu_s": 4874.7,
    "retried": []
   },
   "TB4": {
@@ -738,9 +992,9 @@
      "limit": "-inf .. 5e-09",
      "n": 315,
      "reasons": [],
-     "worst": 4.638192989547061e-09,
-     "worst_run": "ss_m40c_3v00__vic0.05_vid0.35",
-     "margin": 3.61807010452939e-10,
+     "worst": 4.6930746136982185e-09,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.35",
+     "margin": 3.069253863017816e-10,
      "status": "PASS"
     },
     {
@@ -752,9 +1006,9 @@
      "limit": "-inf .. 8e-09",
      "n": 315,
      "reasons": [],
-     "worst": 5.552757777423509e-09,
+     "worst": 5.5870081562443814e-09,
      "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
-     "margin": 2.4472422225764917e-09,
+     "margin": 2.412991843755619e-09,
      "status": "PASS"
     },
     {
@@ -766,9 +1020,9 @@
      "limit": "-inf .. 0.05",
      "n": 315,
      "reasons": [],
-     "worst": 0.009865959454771719,
-     "worst_run": "ss_125c_3v00__vic1.2_vid0.35",
-     "margin": 0.04013404054522828,
+     "worst": 0.009102169435098598,
+     "worst_run": "ss_27c_3v00__vic1.2_vid0.35",
+     "margin": 0.040897830564901407,
      "status": "PASS"
     },
     {
@@ -780,9 +1034,9 @@
      "limit": "-inf .. 0.1",
      "n": 315,
      "reasons": [],
-     "worst": 0.06277608913303992,
+     "worst": 0.061689700109484644,
      "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
-     "margin": 0.037223910866960086,
+     "margin": 0.03831029989051536,
      "status": "PASS"
     },
     {
@@ -792,9 +1046,9 @@
      "limit": "-inf .. 1e-09",
      "n": 630,
      "reasons": [],
-     "worst": 1.1655000992364592e-10,
-     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
-     "margin": 8.834499900763542e-10,
+     "worst": 1.4924974019545625e-10,
+     "worst_run": "ss_125c_3v00__vic1.8_vid0.35",
+     "margin": 8.507502598045438e-10,
      "status": "PASS"
     },
     {
@@ -808,9 +1062,9 @@
      "limit": "-inf .. 1e-09",
      "n": 45,
      "reasons": [],
-     "worst": 4.439734658504799e-10,
+     "worst": 5.704539838898207e-10,
      "worst_run": "('ss_125c_3v60', ('vid', '0.35'))",
-     "margin": 5.560265341495202e-10,
+     "margin": 4.2954601611017933e-10,
      "status": "PASS"
     }
    ],
@@ -820,8 +1074,8 @@
     "ok": 630
    },
    "results_file": "sim/tb4_pd/results/tb4_pd/results.json",
-   "results_sha256": "9c4687127e83a0293514881f12dc30fcbee935bcb73f69c4e08b1fbcb2675b2a",
-   "cpu_s": 8630.9,
+   "results_sha256": "be2383e55787eddaa7894f9c890f7245ebace20258a528fbd6d2c2a0027575ba",
+   "cpu_s": 6898.7,
    "retried": []
   },
   "TB4b": {
@@ -840,9 +1094,9 @@
      "limit": "-inf .. 1e-09",
      "n": 35,
      "reasons": [],
-     "worst": 3.241552320850298e-10,
+     "worst": 3.8261268516851e-10,
      "worst_run": "('ss_125c_3v00', ('vic', '1.2'))",
-     "margin": 6.758447679149703e-10,
+     "margin": 6.173873148314901e-10,
      "status": "PASS"
     }
    ],
@@ -852,8 +1106,8 @@
     "ok": 70
    },
    "results_file": "sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json",
-   "results_sha256": "ad03ddf2c2992817a3d1ae42de8cffdc4c003269a0612fdd4a0b9e0e6cc2db91",
-   "cpu_s": 797.9,
+   "results_sha256": "982d9d5616c6e77db6d3034ff2989c744919d6750a81a486cd9c35c097158bf8",
+   "cpu_s": 783.1,
    "retried": []
   },
   "TB5": {
@@ -896,9 +1150,9 @@
      "limit": "0.6 .. +inf",
      "n": 90,
      "reasons": [],
-     "worst": 0.974047373691895,
+     "worst": 0.9716906354885599,
      "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate100000000.0",
-     "margin": 0.374047373691895,
+     "margin": 0.37169063548855996,
      "status": "PASS"
     },
     {
@@ -912,9 +1166,9 @@
      "limit": "0.7 .. +inf",
      "n": 3,
      "reasons": [],
-     "worst": 0.9949839615574548,
+     "worst": 0.9964460888553784,
      "worst_run": "tt_27c_3v30__vic0.05_vid0.1_rate100000000.0",
-     "margin": 0.2949839615574549,
+     "margin": 0.2964460888553785,
      "status": "PASS"
     },
     {
@@ -931,9 +1185,9 @@
      "limit": "0.5 .. +inf",
      "n": 6,
      "reasons": [],
-     "worst": 0.9291406823073043,
+     "worst": 0.9201742482344416,
      "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate200000000.0",
-     "margin": 0.4291406823073043,
+     "margin": 0.4201742482344416,
      "status": "PASS"
     },
     {
@@ -945,9 +1199,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 1.3396499527919915e-06,
-     "max": 0.018736832384180578,
-     "mean": 0.005335540270404226
+     "min": 4.3824824832168596e-05,
+     "max": 0.016235184078331737,
+     "mean": 0.004032994040974965
     }
    ],
    "expected_runs": 180,
@@ -956,8 +1210,8 @@
     "ok": 180
    },
    "results_file": "sim/tb5_eye/results/tb5_eye/results.json",
-   "results_sha256": "70e5dff5be6e8e402d19d980ff0af4fe22904cf09d70891c9a599f02801157ce",
-   "cpu_s": 6657.9,
+   "results_sha256": "ed31ff387e6f87407a88ed2f3e344ac38b0fb9a6574f3f99a99d45f532c49779",
+   "cpu_s": 5695.0,
    "retried": []
   },
   "TB6": {
@@ -986,9 +1240,9 @@
      "limit": "-inf .. 0.1",
      "n": 20,
      "reasons": [],
-     "worst": 0.011859502543959153,
+     "worst": 0.013645320957903032,
      "worst_run": "ff_m40c_3v60__case2",
-     "margin": 0.08814049745604086,
+     "margin": 0.08635467904209697,
      "status": "PASS"
     }
    ],
@@ -998,8 +1252,8 @@
     "ok": 20
    },
    "results_file": "sim/tb6_cm_supply/results/tb6_cm_supply/results.json",
-   "results_sha256": "943ccc20402f00b32897959c9a530b20548f14c9d70de72a8bb7ee0ddf60dc62",
-   "cpu_s": 1662.3,
+   "results_sha256": "6342aaf9b9ca7d41e97280b492709df6973fda703875a389018d71c89d519e5d",
+   "cpu_s": 1589.1,
    "retried": []
   },
   "TB7": {
@@ -1028,9 +1282,9 @@
      "limit": "2e-09 .. +inf",
      "n": 945,
      "reasons": [],
-     "worst": 5.000009100982886e-07,
-     "worst_run": "ff_m40c_3v60__vic1.8_term1",
-     "margin": 4.980009100982886e-07,
+     "worst": 4.998249058173242e-07,
+     "worst_run": "ff_125c_3v60__vic1.2_term1",
+     "margin": 4.978249058173242e-07,
      "status": "PASS"
     },
     {
@@ -1078,11 +1332,9 @@
     "ok": 945
    },
    "results_file": "sim/tb7_idle/results/tb7_idle/results.json",
-   "results_sha256": "13c1c71959556beee2f455e3d9774d29401449924c21549abad52d49632b3bcc",
-   "cpu_s": 9525.4,
-   "retried": [
-    "ff_125c_3v60__vic2.1_term2 (timeout -> step49p)"
-   ]
+   "results_sha256": "5682d7973f98c229bc69339aee8bad2614f203cb8596dbec105acc004cd1ca95",
+   "cpu_s": 6707.0,
+   "retried": []
   },
   "TB7_mc": {
    "id": "TB7_mc",
@@ -1126,7 +1378,7 @@
      "worst": null,
      "min": 0.0,
      "max": 1.0,
-     "mean": 0.0013333333333333333
+     "mean": 0.005333333333333333
     },
     {
      "kind": "per_run",
@@ -1135,9 +1387,9 @@
      "limit": "-inf .. 5e-07",
      "n": 1500,
      "reasons": [],
-     "worst": 1.9921498179853746e-07,
-     "worst_run": "ff_m40c_3v60__vic1.2__s844184713",
-     "margin": 3.007850182014625e-07,
+     "worst": 2.2739179871849986e-07,
+     "worst_run": "tt_27c_3v30__vic0.05__s971138191",
+     "margin": 2.726082012815001e-07,
      "status": "PASS"
     }
    ],
@@ -1147,8 +1399,8 @@
     "ok": 1500
    },
    "results_file": "sim/tb7_idle_mc/results/tb7_idle_mc/results.json",
-   "results_sha256": "2b03cb5eb0cfef34574286c9a609bfa55e17b7d55fc973d1d19f54315439259b",
-   "cpu_s": 8309.2,
+   "results_sha256": "630236ebc6a31a9a0b8095fe479f3a9973b74de6e58e3ba31d632b6ac8d1b5a2",
+   "cpu_s": 6984.7,
    "retried": []
   },
   "TB8": {
@@ -1170,9 +1422,9 @@
      "limit": "-inf .. 0.33",
      "n": 90,
      "reasons": [],
-     "worst": 0.279665806,
-     "worst_run": "ss_m40c_3v60__case0",
-     "margin": 0.050334194,
+     "worst": 0.295702219,
+     "worst_run": "ss_m40c_3v30__case0",
+     "margin": 0.03429778100000003,
      "status": "PASS"
     },
     {
@@ -1188,9 +1440,9 @@
      "limit": "-inf .. 1e-06",
      "n": 30,
      "reasons": [],
-     "worst": 5.186740318604651e-08,
-     "worst_run": "ss_27c_3v00__case0",
-     "margin": 9.481325968139534e-07,
+     "worst": 1.3308110543853822e-07,
+     "worst_run": "ss_m40c_3v60__case0",
+     "margin": 8.669188945614618e-07,
      "status": "PASS"
     },
     {
@@ -1203,9 +1455,9 @@
      "limit": "-inf .. 5e-06",
      "n": 15,
      "reasons": [],
-     "worst": 6.040552735348838e-08,
+     "worst": 1.1016323485614618e-07,
      "worst_run": "ff_125c_3v60__case0",
-     "margin": 4.939594472646512e-06,
+     "margin": 4.889836765143855e-06,
      "status": "PASS"
     },
     {
@@ -1217,9 +1469,9 @@
      "limit": "-inf .. 1e-06",
      "n": 45,
      "reasons": [],
-     "worst": 3.022150339763227e-08,
+     "worst": 2.9813243830917495e-08,
      "worst_run": "ss_m40c_3v00__case2",
-     "margin": 9.697784966023676e-07,
+     "margin": 9.701867561690825e-07,
      "status": "PASS"
     },
     {
@@ -1229,9 +1481,9 @@
      "limit": "2e-09 .. +inf",
      "n": 270,
      "reasons": [],
-     "worst": 9.907455798253743e-09,
-     "worst_run": "ff_125c_3v60__case2",
-     "margin": 7.907455798253743e-09,
+     "worst": 3.0000000000000136e-09,
+     "worst_run": "ss_125c_3v00__case3",
+     "margin": 1.0000000000000135e-09,
      "status": "PASS"
     },
     {
@@ -1243,9 +1495,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 1.9859794712084506e-09,
-     "max": 1.8144904050442747e-05,
-     "mean": 1.6330844655375457e-06
+     "min": 2.9999999999999996e-09,
+     "max": 1.0,
+     "mean": 0.007408458355207427
     }
    ],
    "expected_runs": 270,
@@ -1254,24 +1506,26 @@
     "ok": 270
    },
    "results_file": "sim/tb8_en/results/tb8_en/results.json",
-   "results_sha256": "b91f5c1517ba8d82a53d15bb20fb8a43042710dadcb7a4ccc52cbb8d6e07eb2e",
-   "cpu_s": 2191.6,
+   "results_sha256": "bd1866bb03bc4d1885cbd774b65e21ca894c1800230027b1a587092f201546a5",
+   "cpu_s": 2230.1,
    "retried": [
-    "fs_125c_3v30__case0 (timeout -> step49p)",
-    "fs_27c_3v60__case5 (timeout -> reltol0.05)",
-    "fs_m40c_3v00__case4 (timeout -> reltol0.05)",
-    "fs_m40c_3v60__case4 (timeout -> reltol0.05)",
-    "sf_27c_3v60__case5 (timeout -> reltol0.05)",
-    "sf_m40c_3v60__case5 (timeout -> reltol0.05)",
+    "ff_125c_3v60__case3 (timeout -> reltol0.05)",
+    "ff_m40c_3v30__case5 (timeout -> reltol0.05)",
+    "ff_m40c_3v60__case3 (timeout -> reltol0.05_step47p)",
+    "ff_m40c_3v60__case5 (timeout -> step49p)",
+    "fs_125c_3v00__case3 (timeout -> step49p)",
+    "fs_125c_3v00__case5 (timeout -> reltol0.05)",
+    "fs_125c_3v30__case3 (timeout -> step49p)",
+    "fs_125c_3v30__case4 (timeout -> reltol0.05)",
+    "fs_125c_3v30__case5 (timeout -> reltol0.05)",
+    "fs_m40c_3v60__case5 (timeout -> reltol0.05)",
+    "ss_125c_3v30__case5 (timeout -> reltol0.05)",
+    "ss_125c_3v60__case5 (timeout -> reltol0.05)",
     "ss_m40c_3v00__case5 (timeout -> reltol0.05)",
-    "ss_m40c_3v30__case5 (timeout -> reltol0.05)",
-    "tt_125c_3v00__case0 (timeout -> reltol0.05)",
-    "tt_125c_3v30__case0 (timeout -> reltol0.05)",
+    "ss_m40c_3v60__case5 (timeout -> step49p)",
+    "tt_125c_3v30__case5 (timeout -> reltol0.05)",
     "tt_125c_3v60__case3 (timeout -> step49p)",
-    "tt_27c_3v30__case3 (timeout -> reltol0.05)",
-    "tt_27c_3v60__case3 (timeout -> reltol0.05)",
-    "tt_27c_3v60__case5 (timeout -> reltol0.05)",
-    "tt_m40c_3v30__case3 (timeout -> reltol0.05)"
+    "tt_27c_3v30__case5 (timeout -> reltol0.05)"
    ]
   },
   "TB9": {
@@ -1288,9 +1542,9 @@
      "limit": "-inf .. 2e-05",
      "n": 180,
      "reasons": [],
-     "worst": 2.537190613861385e-09,
+     "worst": 2.930749042574257e-09,
      "worst_run": "ss_125c_3v00__vin2.4",
-     "margin": 1.999746280938614e-05,
+     "margin": 1.9997069250957428e-05,
      "status": "PASS"
     },
     {
@@ -1300,9 +1554,9 @@
      "limit": "-inf .. 6e-06",
      "n": 180,
      "reasons": [],
-     "worst": 3.175247522195901e-15,
-     "worst_run": "ss_m40c_3v60__vin0.05",
-     "margin": 5.999999996824752e-06,
+     "worst": 5.5736564334012856e-15,
+     "worst_run": "ss_m40c_3v60__vin2.35",
+     "margin": 5.999999994426344e-06,
      "status": "PASS"
     }
    ],
@@ -1312,8 +1566,8 @@
     "ok": 180
    },
    "results_file": "sim/tb9_input/results/tb9_input/results.json",
-   "results_sha256": "1269613cdcec411463d5d9643407d1770a45c517dbbb4c0c7e17c42a69803d99",
-   "cpu_s": 553.4,
+   "results_sha256": "af985e0801253191b5f5cbdd50e2606b587845b4bbb676f0a4f08e722ee2243a",
+   "cpu_s": 523.3,
    "retried": []
   },
   "TB10": {
@@ -1332,9 +1586,9 @@
      "limit": "-inf .. 1e-09",
      "n": 5,
      "reasons": [],
-     "worst": 4.745210954025836e-11,
+     "worst": 2.165100238506252e-11,
      "worst_run": "fs_27c_3v30__mc3s0",
-     "margin": 9.525478904597417e-10,
+     "margin": 9.783489976149375e-10,
      "status": "PASS"
     },
     {
@@ -1344,9 +1598,9 @@
      "limit": "-inf .. 0.05",
      "n": 10,
      "reasons": [],
-     "worst": 0.0009014569774057727,
-     "worst_run": "sf_27c_3v30__mc3s0",
-     "margin": 0.049098543022594233,
+     "worst": 0.0012728089247580991,
+     "worst_run": "tt_27c_3v30__mc3s0",
+     "margin": 0.048727191075241906,
      "status": "PASS"
     },
     {
@@ -1358,9 +1612,9 @@
      "limit": "-inf .. 5e-10",
      "n": 5,
      "reasons": [],
-     "worst": 2.1328102816756636e-10,
+     "worst": 2.1341649235614234e-10,
      "worst_run": "fs_27c_3v30__mc3s1",
-     "margin": 2.8671897183243365e-10,
+     "margin": 2.865835076438577e-10,
      "status": "PASS"
     }
    ],
@@ -1370,8 +1624,8 @@
     "ok": 10
    },
    "results_file": "sim/tb10_lanes/results/tb10_lanes/results.json",
-   "results_sha256": "fb50fc02898d3ef44818dd3fe056402ff469f61101565ca14738b44ab772d0a9",
-   "cpu_s": 4132.5,
+   "results_sha256": "9e9909e1573abffa2ca231fb94a61da7442e2fb7d2e576e63e037a148d931efe",
+   "cpu_s": 4192.5,
    "retried": []
   },
   "TB11": {
@@ -1416,9 +1670,9 @@
      "limit": "0.5 .. +inf",
      "n": 40,
      "reasons": [],
-     "worst": 0.9281306631839343,
+     "worst": 0.9196910148612238,
      "worst_run": "ss_125c_3v00__pkg3_rate200000000.0",
-     "margin": 0.42813066318393433,
+     "margin": 0.41969101486122384,
      "status": "PASS"
     }
    ],
@@ -1428,8 +1682,8 @@
     "ok": 40
    },
    "results_file": "sim/tb12_pkg/results/tb12_pkg/results.json",
-   "results_sha256": "8f500d6101defb06f930c37cca45c16380617dc64d29f195816a15edf3b5d8e7",
-   "cpu_s": 1165.4,
+   "results_sha256": "7a02530fc178e3c5729b11b2a47ed46122ebdf2521a16472046ae7bf399a9963",
+   "cpu_s": 1193.0,
    "retried": []
   }
  }

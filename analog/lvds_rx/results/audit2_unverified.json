@@ -1,0 +1,276 @@
+{
+ "audit": "AUDIT_2 step (f): handoff section 16 UNVERIFIED items",
+ "items": {
+  "1": {
+   "item": "nfet/pfet mismatch coefficients",
+   "evidence": [
+    {
+     "file": "log/foundation_results.json",
+     "line": 284,
+     "text": "\"Per-instance model (sm141064.ngspice fets_mm): var_vth = 0.7071*par_vth*1e-6/sqrt(Leff*Weff), Leff = L-0.15u, Weff = W+0.1u, par_vth 0.007148 (nfet) / 0.00666 (pfet). Pair sigma = par_vth/sqrt(Leff*Weff) = 11.52 mV for "
+    },
+    {
+     "file": "log/sim_harness.md",
+     "line": 9,
+     "text": "How the PDK does mismatch: in `sm141064.ngspice`, section `fets_mm`, each `nfet_03v3`/`pfet_03v3` subcircuit holds"
+    }
+   ],
+   "expected_open": false
+  },
+  "2": {
+   "item": "sw_stat_* defaults in design.ngspice",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 17,
+     "text": "- Every simulation deck needs the explicit lines `.param sw_stat_global=0 sw_stat_mismatch=0 res_mc_skew=... fnoicor=...`"
+    },
+    {
+     "file": "log/pdk_facts.md",
+     "line": 8,
+     "text": "* **Model header.** The GF180 model file refuses to run if four named parameters are missing (`sw_stat_global`, `sw_stat_mismatch`,"
+    }
+   ],
+   "expected_open": false
+  },
+  "3": {
+   "item": "C-vs-D model identity",
+   "evidence": [
+    {
+     "file": "log/foundation_results.json",
+     "line": 229,
+     "text": "\"Analog/starter_files_open_source_tools/gf180mcuD/simulation/techsweep_nfet_03v3.spice was overwritten (1858 bytes, mtime 2026-11-10 17:36) by the interrupted FIRST attempt: its try_netlist.sh TRY 2 passed the kit's own "
+    },
+    {
+     "file": "log/luts.md",
+     "line": 20,
+     "text": "Meaning: the kit's gf180mcuC paths and our gf180mcuD models are the same for these devices, and my sweep is a faithful copy."
+    }
+   ],
+   "expected_open": false
+  },
+  "4": {
+   "item": "xschem headless netlisting flags",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 16,
+     "text": "- Tools in the `apic_headless` container: ngspice-46, Magic 8.3.636, KLayout 0.30.8, Netgen, xschem, pygmid 1.2.12."
+    },
+    {
+     "file": "log/pdk_facts.md",
+     "line": 4,
+     "text": "experiment; `bash sim/env/run_all.sh` through `tools/cx` regenerates it in about two minutes). xschem experiments: `xschem/smoke/`."
+    }
+   ],
+   "expected_open": false
+  },
+  "5": {
+   "item": "magic::gencell syntax",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 325,
+     "text": "* *The PDK's MOS capacitor gencell is a trap.* `nmoscap_3p3` draws a varactor (`cap_nmos_03v3_b`), vanishes when Magic reads the GDS back (the marker layer is not mapped) and fails"
+    },
+    {
+     "file": "log/pdk_facts.md",
+     "line": 33,
+     "text": "4. A lone Magic gencell nfet shows \"8 DRC errors\" (Metal1 min area on gate-contact stubs); exporting it to GDS and running `sak-drc.sh -m` says clean."
+    }
+   ],
+   "expected_open": false
+  },
+  "6": {
+   "item": "pygmid struct key vs file stem",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 16,
+     "text": "- Tools in the `apic_headless` container: ngspice-46, Magic 8.3.636, KLayout 0.30.8, Netgen, xschem, pygmid 1.2.12."
+    },
+    {
+     "file": "log/foundation_results.json",
+     "line": 71,
+     "text": "\"problem\": \"Traps for an automated designer: (a) 'never tune W in SPICE' plus an iteration loop with no cap can run forever when two specs conflict; (b) pygmid LUT extrapolation is guarded, but the VSB range is only 0-0."
+    }
+   ],
+   "expected_open": false
+  },
+  "7": {
+   "item": "ngspice -b executing .control",
+   "evidence": [
+    {
+     "file": "log/pdk_facts.md",
+     "line": 10,
+     "text": "header runs under `ngspice -b` with a `.control` block."
+    },
+    {
+     "file": "docs/ENV_REPORT.md",
+     "line": 17,
+     "text": "`ngspice -b` runs it, executes the `.control` block and prints (typical, 27C, VGS=0.9 V, |VGS|=0.9 V, |VDS|=1.65 V):"
+    }
+   ],
+   "expected_open": false
+  },
+  "8": {
+   "item": "Monte Carlo setseed/reset",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 47,
+     "text": "- One command runs a testbench over corners and Monte Carlo seeds in parallel, parses the measurements, and writes a pass/fail table."
+    },
+    {
+     "file": "log/foundation_results.json",
+     "line": 43,
+     "text": "\"problem\": \"Monte Carlo is correct only if matched devices are written as total w with nf. I verified the mechanism (setseed plus reset plus op in a dowhile loop re-draws mismatch and a re-run with the same seed is ident"
+    }
+   ],
+   "expected_open": false
+  },
+  "9": {
+   "item": ".option wnflag semantics",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 19,
+     "text": "- `.option wnflag=1` makes the model pick its size bin from the width **per finger**. It is needed for the simulation to agree with"
+    },
+    {
+     "file": "log/pdk_facts.md",
+     "line": 12,
+     "text": "`.option wnflag=1` makes the width bin follow the width per finger. Legal sizes: L 0.28..50 um, W 0.22..100 um per finger."
+    }
+   ],
+   "expected_open": false
+  },
+  "10": {
+   "item": "pad capacitance",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 42,
+     "text": "- Capacitance of the analog pad `gf180mcu_fd_io__asig_5p0`: 0.88-0.99 pF typical, up to 1.15 pF slow/hot. The handoff guessed 1-1.5 pF."
+    },
+    {
+     "file": "log/foundation_results.json",
+     "line": 130,
+     "text": "\"rationale\": \"Fine for a learning macro. ESD capability cannot be shown in simulation; only capacitance and leakage can, so the TB0/TB9 pass criteria must say that.\""
+    }
+   ],
+   "expected_open": false
+  },
+  "11": {
+   "item": "resistor tolerance and TC",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 320,
+     "text": "resistor (1 % tolerance), so the unmodified reference netlist still matches. We choose the piece length so that the RESISTANCE is right (every piece has 85 ohm of end contacts), which"
+    },
+    {
+     "file": "docs/ENV_REPORT.md",
+     "line": 142,
+     "text": "| device | rsh tt (ohm/sq) | ss | ff | R_ss/R_tt | R_ff/R_tt | R(-40)/R(27) | R(125)/R(27) | TC (ppm/K) | Rends (ohm) |"
+    }
+   ],
+   "expected_open": false
+  },
+  "12": {
+   "item": "diode and MOS-cap device names",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 325,
+     "text": "* *The PDK's MOS capacitor gencell is a trap.* `nmoscap_3p3` draws a varactor (`cap_nmos_03v3_b`), vanishes when Magic reads the GDS back (the marker layer is not mapped) and fails"
+    },
+    {
+     "file": "docs/ENV_REPORT.md",
+     "line": 56,
+     "text": "D1  anode cathode diode_nd2ps_03v3 area=100e-12 pj=40e-6   * a .model, plain D element, SI units (m^2, m)"
+    }
+   ],
+   "expected_open": false
+  },
+  "13": {
+   "item": "deep-N-well availability",
+   "evidence": [
+    {
+     "file": "DESIGN_LOG.md",
+     "line": 25,
+     "text": "- Deep n-well exists in the process but the Magic device generator cannot draw it; version 1 uses none."
+    },
+    {
+     "file": "log/pdk_facts.md",
+     "line": 21,
+     "text": "* **Deep n-well** exists (DNWELL layer, DRC rules, KLayout PCell option `deepnwell`), but the Magic device generator has no option for it."
+    }
+   ],
+   "expected_open": false
+  },
+  "14": {
+   "item": "sak-* scripts in the image",
+   "evidence": [
+    {
+     "file": "log/pdk_facts.md",
+     "line": 24,
+     "text": "* **sak-drc/lvs/pex** work for gf180mcuD in Magic/Netgen mode; `sak-drc -k` (KLayout) is not supported for this PDK."
+    },
+    {
+     "file": "docs/ENV_REPORT.md",
+     "line": 6,
+     "text": "(about 20 s; the xschem and sak checks have their own scripts, listed in section 7/8)."
+    }
+   ],
+   "expected_open": false
+  },
+  "15": {
+   "item": "OpenSTA/OpenROAD clocks and input delays on macro pins",
+   "evidence": [
+    {
+     "file": "log/foundation_results.json",
+     "line": 754,
+     "text": "\"improvement\": \"Build the package under analog/lvds_rx/package/ with the same internal structure. Test it with the tools that exist in the container (openroad and sta are present): LEF antenna property check, liberty loa"
+    }
+   ],
+   "expected_open": true,
+   "in_plan_section_9": true,
+   "in_known_limits": null
+  },
+  "16": {
+   "item": "RSZ_DONT_TOUCH_RX vs port buffering",
+   "evidence": [],
+   "expected_open": true,
+   "in_plan_section_9": true,
+   "in_known_limits": null
+  },
+  "17": {
+   "item": "analog template geometry and slot assignment",
+   "evidence": [
+    {
+     "file": "log/foundation_results.json",
+     "line": 816,
+     "text": "\"Sending the organizer email and relaying the answers (pin count, analog template geometry, package and bond wire data, secondary ESD cell, LVS keys). Agents cannot contact anyone; the draft already exists, so this is on"
+    }
+   ],
+   "expected_open": true,
+   "in_plan_section_9": true,
+   "in_known_limits": null
+  },
+  "18": {
+   "item": "LVS key semantics",
+   "evidence": [
+    {
+     "file": "log/foundation_results.json",
+     "line": 816,
+     "text": "\"Sending the organizer email and relaying the answers (pin count, analog template geometry, package and bond wire data, secondary ESD cell, LVS keys). Agents cannot contact anyone; the draft already exists, so this is on"
+    }
+   ],
+   "expected_open": true,
+   "in_plan_section_9": true,
+   "in_known_limits": null
+  }
+ },
+ "known_limits_present": false
+}
