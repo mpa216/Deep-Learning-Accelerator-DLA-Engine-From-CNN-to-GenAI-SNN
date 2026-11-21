@@ -1,6 +1,7 @@
 # lvds_rx_x3 design guide: architecture, sizing and tuning
 
-Written 2026-11-15 for the design as of iteration 1 (decision D-016). Companion to `CARRY_ON_GUIDE.md` (how to finish
+Written 2026-11-15 for iteration 1 (decision D-016), updated 2026-11-21 for iteration 2 (D-017, D-018: the stage-2
+hysteresis). Companion to `CARRY_ON_GUIDE.md` (how to finish
 the project). Every number here comes from `sizing/sizing_report.md` (regenerated with the current sizing), the
 simulations, or the extracted layout; the report and the netlist are the sources of truth when they differ.
 Paths are relative to the project folder `analog/lvds_rx/` (= `LVDS/lvds_rx_work/`).
@@ -23,7 +24,7 @@ forces the outputs LOW.
 | Output | 10-90 % edge <= 1 ns into 30 fF |
 | Supply / corners | 3.0 / 3.3 / 3.6 V, -40 / 27 / 125 C, tt ss ff fs sf (45 corners) |
 | Current | <= 1.5 mA per lane, <= 0.3 mA bias; EN = 0: <= 1 uA at 27 C |
-| Area | macro 650 x 192.1 um (core 600 x 142.1 plus a 25 um margin), Metal1-Metal3 only |
+| Area | macro 650 x 194.2 um (core 600 x 144.2 plus a 25 um margin; spec core limit 600 x 150), Metal1-Metal3 only |
 
 The full criteria per testbench are PLAN_V2 section 3.2 and `spec/gates.yaml`.
 
@@ -43,7 +44,7 @@ The full criteria per testbench are PLAN_V2 section 3.2 and `spec/gates.yaml`.
  RXk_N --[151 ohm]--+-- gn --+                       +-> oa / ob ---------+               Vref = 0.48 VDD divider
                                                                          |                + 2 pF decap
                      NMOS pair ms + Rs, tail mt2, diode + cross-coupled  |                EN: opens Rb branch and
-                     PMOS loads (alpha = 5/4): hysteresis comparator  <--+                divider, parks VBN, VBP,
+                     PMOS loads (alpha = 6/4): hysteresis comparator  <--+                divider, parks VBN, VBP,
                                          |                                                VB2 and d2a / d2b
                                          d2a / d2b
                                          |
@@ -63,7 +64,8 @@ Why each block is what it is (decisions in `spec/decisions.yaml`, details in PLA
   pair pulls straight from the load nodes. The loads RL are poly resistors, so the gain is a resistor ratio
   that tracks the bias resistor Rb.
 - **Hysteresis comparator in stage 2.** A pair with diode plus cross-coupled loads (positive feedback alpha =
-  nf_cross/nf_diode = 1.25) gives a clean decision with built-in hysteresis, so slow or noisy edges do not chatter.
+  nf_cross/nf_diode = 1.5 since iteration 2) gives a clean decision with built-in hysteresis, so slow or noisy edges
+  do not chatter.
 - **Current-mirror converter in stage 3 (D-003).** The stage-2 outputs drive PMOS gates directly; the copy of one
   side is mirrored by an NMOS diode and subtracted from the other at node d3. d3 swings rail to rail with no
   tail, which an NMOS diff-pair converter could not do at the stage-2 output level (about 2 V).
@@ -123,33 +125,41 @@ I_ref ranges 40 uA (ss, 125 C, 3.0 V) to 70 uA (ff, -40 C, 3.6 V); the whole bia
 - Known exception (D-012): at fast / hot corners and VIC 0.05 V the steered PMOS pair device runs up to 100 mV
   into triode; gain, delay and eye are checked there after extraction (met in iteration 0).
 
-### 3.3 Stage 2 (hysteresis comparator), re-sized in iteration 1
+### 3.3 Stage 2 (hysteresis comparator), re-sized in iterations 1 and 2
 
 | Device | Role | W / L (um), fingers | ID | gm/ID |
 |---|---|---|---|---|
 | mt2 | tail (2.4x mbn) | 30 / 1.0, nf 12 | 125.8 uA | 7.5 |
 | ms x2 | input pair, gates on oa / ob | 8.74 / 0.5, nf 2 | 62.9 uA each | 8 |
-| Rs x2 | source degeneration | 1.69 kohm | | |
-| mld x2 | diode loads | 8 / 0.28, nf 4 | 27.9 uA | 8.5 |
-| mlc x2 | cross-coupled loads (alpha = 5/4) | 10 / 0.28, nf 5 | 34.9 uA | 8.5 |
+| Rs x2 | source degeneration | 0.37 kohm (5 um wide, 1.637 um long) | | |
+| mld x2 | diode loads | 7.4 / 0.28, nf 4 (1.85 um fingers) | 25.2 uA | 8.6 |
+| mlc x2 | cross-coupled loads (alpha = 6/4) | 11.1 / 0.28, nf 6 | 37.7 uA | 8.6 |
 | mpu2 x2 | park d2a / d2b at VDD when EN = 0 | 2 / 0.5 | | |
 
 - Hysteresis: V_H,in = V_H2 / A1. A plain pair would spread about 4:1 over the corners (V_H2 follows 1/(gm/ID),
   A1 follows gm/ID x VR). With Rs the trip is partly the drop I_T2 x Rs, which follows (VDD - VGS) x Rs/Rb exactly
-  as VR does, so it cancels against A1. The script solves Rs for 14 mV at tt (large-signal, from the tables), then
-  picks the largest alpha whose corner spread stays <= 2.2.
-- Speed: the latch regenerates with tau about C_d2 / (gm_cross - gm_diode); the script's model gives 833 ps at
-  tt, 1.2 ns at ss/125 C. This stage dominated the delay before iteration 1.
+  as VR does, so it cancels against A1. The script solves Rs for vh_scale x 14 mV = 15.1 mV at tt (large-signal,
+  from the tables; `vh_scale` 1.08 calibrates that solve against simulation). Simulated: 9.3 to 25.3 mV over the
+  eight V_H-extreme corners, inside the 6 to 35 mV window.
+- Mismatch of the load ratio moves V_H by 2 alpha / (alpha^2 - 1) times its relative error: 4.4 at alpha 1.25,
+  2.4 at 1.5. At 1.25 (iterations 0 and 1) the Monte Carlo spread was 15 to 22 % of the mean and 17 of 600 runs fell
+  below 6 mV at ff/-40C/3.6 V; at 1.5 it is 7 to 11 % (480 runs: 7.3 to 30.4 mV, 6.68 to 31.59 mV at +-3 sd).
+- Speed: the latch regenerates with tau about C_d2 / (gm_cross - gm_diode); the script's model gives 449 ps at
+  tt, 653 ps at ss/125 C (iteration 1: 833 ps and 1.2 ns). This stage dominated the delay before iteration 1.
 - Iteration 1 changed `n_t2` 5 -> 10 (tail 63 -> 126 uA), `gmid_s2` 12 -> 8 (a smaller pair for twice the
   current, so less gate load on oa / ob) and `L_ld` 0.40 -> 0.28 (faster loads; at 0.40 the latched pair margin
   failed at ss with the resistor cross corner).
+- Iteration 2 changed alpha 1.25 -> 1.5 (4 / 6 fingers), Rs to 5 um wide (a 2 um wide Rs this small would be
+  shorter than the 1 um minimum length), the load fingers 2.0 -> 1.85 um and `vh_scale` to 1.08. The layout
+  generator set two limits: an interdigitated load row with three source/drain nets needs fingers of at least
+  1.81 um, and at most two devices in it may have an odd finger count, so alpha 1.4 = (5, 7) cannot be built.
 
 ### 3.4 Stage 3 and the output chain
 
 | Device | Role | W / L (um), fingers |
 |---|---|---|
-| mp3 x2 | PMOS copies of the stage-2 diodes, ratio `r3` = 2 | 16 / 0.28, nf 8 |
-| mn3 x2 | NMOS mirror (diode + copy), 55.9 uA at balance | 5.18 / 0.28, nf 2 |
+| mp3 x2 | PMOS copies of the stage-2 diodes, ratio `r3` = 2 | 14.8 / 0.28, nf 8 |
+| mn3 x2 | NMOS mirror (diode + copy), 50.3 uA at balance | 4.66 / 0.28, nf 1 |
 | NAND2, INV1, INV2, INV3 | n / p widths 2.0/3.0, 1.5/3.7, 3.0/7.5, 8.0/20.0 um, L 0.28 | fan-out <= 4 each |
 
 `L_n3` = 0.28 (was 0.5) came from T2: the d3 pole was 39 MHz at ss/125 C, below the 80 MHz needed.
@@ -158,12 +168,12 @@ I_ref ranges 40 uA (ss, 125 C, 3.0 V) to 70 uA (ff, -40 C, 3.6 V); the whole bia
 
 | Corner | I_lane | I_bias |
 |---|---|---|
-| tt 27 C 3.3 V | 757 uA | 166 uA |
-| ss 125 C 3.0 V | 573 uA | 129 uA |
-| ff -40 C 3.6 V | 1028 uA | 220 uA |
+| tt 27 C 3.3 V | 755 uA | 166 uA |
+| ss 125 C 3.0 V | 572 uA | 129 uA |
+| ff -40 C 3.6 V | 1025 uA | 220 uA |
 
-Three lanes plus bias draw about 2.44 mA at tt. The hand offset budget gives sigma_total = 3.58 mV (target 5 mV):
-stage 1 2.80, stage 2 / A1 1.47, hysteresis spread / 2 1.58, stage 3 0.55 mV. The trip window is 44 mV
+Three lanes plus bias draw about 2.43 mA at tt. The hand offset budget gives sigma_total = 3.34 mV (target 5 mV):
+stage 1 2.80, stage 2 / A1 1.47, hysteresis spread / 2 0.88, stage 3 0.58 mV. The trip window is 42.5 mV
 against 95 mV. The Monte Carlo of TB3_off (N = 1000 per corner and VIC) is the judge.
 
 ---
@@ -189,7 +199,10 @@ candidate (CARRY_ON_GUIDE section 7).
 | `gmid_m5` (13) | fold pole | headroom | 10 failed the fold-pole assert |
 | `vf_tt` (0.46 V) | cascode bias window | m3 vs PMOS pair margins | squeezed at both ends: leave it |
 | `vref_ratio` (0.48) | dump threshold: centre of the N/P overlap | the overlap window at the slow corner | not changed |
-| `alpha_cands` | hysteresis spread vs regeneration speed | larger alpha = wider V_H spread | 4/5 chosen |
+| `alpha_cands` ([(4, 6)]) | hysteresis: Monte Carlo spread of V_H, regeneration speed | the load row: at most two odd finger counts | (4, 5) -> (4, 6) in iteration 2 halved the V_H spread; (5, 7) cannot be built; (3, 5) needs Rs < 0 |
+| `vh_scale` (1.08) | the V_H target of the Rs solve (centres V_H in the window) | higher = less room at the top (ff/125C/3.6 V, VIC 0.05 V has the lowest A1) | 1.03 / 1.06 / 1.10: +-3 sd 6.31-30.32 / 6.54-31.15 / 6.87-32.07 mV |
+| `rw_rs` (5.0 um) | Rs width only (RL, Rb, Rf and the divider stay 2 um, their ratios unchanged) | wider = longer Rs for the same value | lets the 0.37 kohm Rs meet the 1 um minimum length |
+| `wf_ld` (1.85 um) | load and stage-3 copy finger width: d2 capacitance | layout floor 1.81 um (three contact bars) | with alpha 1.4: 2.0 um 4.82 ns, 1.6 um 4.66 ns (not drawable); final 1.85 um with alpha 1.5: 4.54 ns (ss/125C/3.0 V, VID 0.35 V) |
 | `dig` widths | output chain delay and edge into 30 fF | input load on d3 | not changed |
 | `wiring estimate scale` (1.2, `sim/tbl/make_estimate.py`) | how pessimistic the layout loads are in pre-layout sims | frozen file: needs a decision entry | calibrated on 36 extracted points |
 
@@ -199,7 +212,9 @@ Rules of thumb from the trials:
   1.66 / 1.47 / 0.64 / 0.60 ns).
 - Scaling a current with gm/ID sizing scales W and C too: speed comes only from the fixed loads (wiring, the next
   stage's gates). Lower gm/ID or shorter L buys real speed at the same current.
-- Check the hysteresis (TB3) after any stage-2 change: iteration 1 moved V_H from 10.7-17.3 to 8.3-14.3 mV.
+- Check the hysteresis (TB3) after any stage-2 change: iteration 1 moved V_H from 10.7-17.3 to 8.3-14.3 mV, and at
+  ff/-40C/3.6 V its Monte Carlo spread (sd 1.4-1.6 mV on a mean of 8.3-8.6 mV) put 17 of 600 runs below 6 mV.
+  Check TB3_hmc, not only the corner trip points.
 - Spec limits are not knobs. Relaxing one is a ladder rung (`spec/decisions.yaml`), taken only when its trigger
   fired twice in a row.
 
@@ -234,6 +249,13 @@ Two more lessons:
   only about 3 %, which no layout achieves; keep real margin at the slow corner.
 - Magic 8.3.636 `extresist` counts every coupling capacitor twice in the RC netlist. `check.rc_repair` takes the
   capacitance from the C-coupled extraction instead; wire resistance itself adds only about 6 ps here.
+- The sizing must stay inside what the layout generator can draw. Iteration 2 lost one round to it: (5, 7) load
+  fingers (more than two odd counts in an interdigitated row) and 1.6 um fingers (below the 1.81 um that three
+  contact bars need) both failed `make layout`. The sizing asserts every poly resistor at least 1 um long; the two
+  row limits are not asserted yet (AUDIT_2 F8).
+- The poly resistor model has 85.45 ohm/sq x 1 um / W at each terminal, so the end resistance scales as 1/W.
+  Sizing (`res_len`) and layout (`passives.seg_len`) use 85 ohm x 2 um / W per end; at the 2 um of every resistor
+  except Rs this is the old constant.
 
 ---
 
@@ -254,7 +276,8 @@ Earlier full-tier records: `results/full_2026-11-14/` (the frozen sizing before 
 `results/post_layout/iter0/` (the failed post-layout run). Decisions on record that shape the gates: D-007 (TB6
 jitter window, waiver), D-008 (EN with low supply, waiver), D-009 (hysteresis window, ladder R3 rung 1), D-010 /
 D-011 (idle and EN pulse definitions), D-012 (triode corner, waiver with a post-layout condition), D-014 (offset
-gate tightened), D-015 (gate TBL defined), D-016 (iteration 1).
+gate tightened), D-015 (gate TBL defined), D-016 (iteration 1), D-017 / D-018 (iteration 2: stage-2 hysteresis,
+retry variants for TB3_trip / TB3_hmc).
 
 ---
 
