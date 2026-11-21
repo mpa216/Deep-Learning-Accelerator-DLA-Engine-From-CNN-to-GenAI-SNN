@@ -312,3 +312,19 @@ completed-swing fix touches no other bench.  Also done: `tb8x_pex_rt` (the six e
 expected / actual for every check.  Note on the "1.15 V" level: `tb8_low_from.py` reports the supply at the last sample
 above 10 %; interpolated, the outputs come down at about 1.18 V on the worst run (ss/-40C/3.3 V, case 0), so the brief
 now says "about 1.2 V".
+
+Owner follow-up (2026-11-21, evening): route each RXn_O to a spare pad so an off-chip pull-down can reach it?  Answer: it
+would hold the node down, but the output stage is sized for 30 fF (`spec.yaml` output.load_f) and a pad plus package adds
+about 1.8 pF (pad 1.0-1.15 pF, package 0.7 pF, `spec.yaml` input_network), about 60x; extracted tPD is already 4.57 ns of
+5 ns at ss/125C/3.0 V.  A pad driver in between would isolate the node the core reads; a 60x last inverter adds the very
+VDD coupling that causes the bump; three more pins; board noise / ESD path into the core; 33 uA per output at 100 kohm.
+The protection belongs on the digital side (consumer logic held in reset until the supply is up; EN = 0 until 2 V, D-008).
+D-019 stays the plan.  Brief guide section "Follow-up: why not wire each output out to a pin?".
+
+**PAUSED 2026-11-21 20:35 at the owner's request (machine needed).**  Stopped the scheduler chain5 (background task), then
+`tools/run_full.sh 4` and its `flow/run_all.py --tier full --phases env,prelayout --jobs 4` (process group 250739) and the
+three live ngspice runs (each in its own session, killed separately), during the TB3 offset Monte Carlo after SELFTEST,
+TB1, TB2 and TB3_trip had passed.  The hourly auto-resume cron was deleted.  Completed runs stay in the harness cache, so a
+restart continues from there.  To resume: start the iteration-2 full regression again (`python3 .scratch/t11/iter2/chain5.py`
+in the background; `queue.json` now holds only the full run, max 4 simulations), then apply D-019 (task list: re-run TB8 and
+the TBL power-up benches), AUDIT_2, T11 report, T12 package, T13.
