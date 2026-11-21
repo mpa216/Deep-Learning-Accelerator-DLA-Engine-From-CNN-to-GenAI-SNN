@@ -11,7 +11,7 @@
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
     "m1": 86.3,
-    "m2": 104.7,
+    "m2": 106.8,
     "m3": 142.8
    }
   },
@@ -28,8 +28,8 @@
     "pfet_03v3 w=3.0 l=0.28": 4,
     "nfet_03v3 w=2.0 l=0.28": 4,
     "pfet_03v3 w=2.0 l=0.5": 6,
-    "pfet_03v3 w=2.0 l=0.28": 38,
-    "nfet_03v3 w=2.59 l=0.28": 6,
+    "pfet_03v3 w=1.85 l=0.28": 40,
+    "nfet_03v3 w=4.66 l=0.28": 4,
     "nfet_03v3 w=4.37 l=0.5": 8,
     "nfet_03v3 w=2.5 l=1.0": 52,
     "nfet_03v3 w=4.75 l=0.5": 40,
@@ -47,15 +47,17 @@
    "mag": {
     "total": 688,
     "rules": [
-     "RULE (688) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (736) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 688,
+    "allowed": 736,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -81,8 +83,8 @@
    "port_errors": false,
    "pin_problems": [],
    "devices": [
-    70,
-    70
+    72,
+    72
    ],
    "nets": [
     29,
@@ -256,10 +258,9 @@
     {
      "row": "ld",
      "ok": true,
-     "symbols": "(dL)caabbccddddccbbaad(dR)",
+     "symbols": "(dL)aabbccddccddddccbbaa(dR)",
      "read_gate_order": [
       "VDD",
-      "d2b",
       "d2a",
       "d2a",
       "d2b",
@@ -268,20 +269,22 @@
       "d2b",
       "d2a",
       "d2a",
-      "d2a",
-      "d2a",
-      "d2b",
-      "d2b",
       "d2b",
       "d2b",
       "d2a",
+      "d2a",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2b",
       "d2a",
       "d2a",
       "VDD"
      ],
      "expected_gate_order": [
       "VDD",
-      "d2b",
       "d2a",
       "d2a",
       "d2b",
@@ -290,19 +293,22 @@
       "d2b",
       "d2a",
       "d2a",
-      "d2a",
-      "d2a",
-      "d2b",
-      "d2b",
       "d2b",
       "d2b",
       "d2a",
+      "d2a",
+      "d2a",
+      "d2a",
+      "d2b",
+      "d2b",
+      "d2b",
+      "d2b",
       "d2a",
       "d2a",
       "VDD"
      ],
-     "n_read": 20,
-     "n_expected": 20,
+     "n_read": 22,
+     "n_expected": 22,
      "mismatch": null
     },
     {
@@ -392,11 +398,9 @@
     {
      "row": "mn3",
      "ok": true,
-     "symbols": "(dL)DDCC(dR)",
+     "symbols": "(dL)DC(dR)",
      "read_gate_order": [
       "VSS",
-      "n3a",
-      "n3a",
       "n3a",
       "n3a",
       "VSS"
@@ -405,12 +409,10 @@
       "VSS",
       "n3a",
       "n3a",
-      "n3a",
-      "n3a",
       "VSS"
      ],
-     "n_read": 6,
-     "n_expected": 6,
+     "n_read": 4,
+     "n_expected": 4,
      "mismatch": null
     },
     {
@@ -1010,9 +1012,9 @@
     "net": "oa",
     "at": [
      -23.24,
-     58.66,
+     60.76,
      -5.46,
-     58.94
+     61.04
     ],
     "why": [
      "Number of nets: 30 **Mismatch**            |Number of nets: 29 **Mismatch**",
@@ -1030,16 +1032,16 @@
     ],
     "layer": "m3",
     "at": [
-     -18.75,
+     -19.1,
      29.44,
-     -18.35,
+     -18.7,
      30.06
     ],
     "gap_um": 0.42,
     "why": [
-     "pfet_03v3 (173->22)                        |pfet_03v3 (36->27) **Mismatch**",
-     "nfet_03v3 (138->31)                        |nfet_03v3 (43->32) **Mismatch**",
-     "Number of devices: 64 **Mismatch**         |Number of devices: 70 **Mismatch**",
+     "nfet_03v3 (136->33)                        |nfet_03v3 (43->34) **Mismatch**",
+     "pfet_03v3 (175->22)                        |pfet_03v3 (36->27) **Mismatch**",
+     "Number of devices: 66 **Mismatch**         |Number of devices: 72 **Mismatch**",
      "Number of nets: 28 **Mismatch**            |Number of nets: 29 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):"
     ]
@@ -1062,8 +1064,8 @@
   "lvs_reference": {
    "ok": true,
    "reference": "netlist/lvds_rx_lvs_ref.spice",
-   "sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
-   "frozen_sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+   "sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
+   "frozen_sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
    "frozen_sha256_ok": true,
    "flattened_subcells": [
     "lvds_esd2",
@@ -1101,14 +1103,14 @@
    "violations": 0,
    "layers": {
     "Via1 design (SRAM IP excluded)": {
-     "cuts": 479,
-     "clusters": 479,
+     "cuts": 480,
+     "clusters": 480,
      "big": 0,
      "violations": 0
     },
     "Via1 incl. SRAM IP": {
-     "cuts": 479,
-     "clusters": 479,
+     "cuts": 480,
+     "clusters": 480,
      "big": 0,
      "violations": 0
     },
@@ -1191,56 +1193,56 @@
     "gp/gn": {
      "ok": true,
      "fF": [
-      42.239,
-      42.498
+      42.349,
+      42.531
      ],
-     "mismatch_pct": 0.611,
+     "mismatch_pct": 0.429,
      "limit_pct": 2.0,
      "terms": [
       {
        "to": "tp",
-       "a_fF": 12.876,
-       "b_mirror_fF": 13.459
+       "a_fF": 12.892,
+       "b_mirror_fF": 13.475
       },
       {
        "to": "VREF",
-       "a_fF": 1.915,
-       "b_mirror_fF": 2.336
+       "a_fF": 2.309,
+       "b_mirror_fF": 2.837
       },
       {
-       "to": "tn",
-       "a_fF": 1.206,
-       "b_mirror_fF": 0.997
-      },
-      {
-       "to": "VSS",
-       "a_fF": 14.102,
-       "b_mirror_fF": 13.899
-      },
-      {
-       "to": "fb",
-       "a_fF": 0.868,
-       "b_mirror_fF": 0.671
+       "to": "VBN",
+       "a_fF": 0.576,
+       "b_mirror_fF": 0.278
       },
       {
        "to": "oa",
-       "a_fF": 1.231,
-       "b_mirror_fF": 1.038
+       "a_fF": 1.26,
+       "b_mirror_fF": 1.016
+      },
+      {
+       "to": "fb",
+       "a_fF": 0.897,
+       "b_mirror_fF": 0.669
+      },
+      {
+       "to": "tn",
+       "a_fF": 1.203,
+       "b_mirror_fF": 0.997
       },
       {
        "to": "fa",
-       "a_fF": 2.443,
-       "b_mirror_fF": 2.596
+       "a_fF": 2.423,
+       "b_mirror_fF": 2.609
       },
       {
-       "to": "ob",
-       "a_fF": 0.363,
-       "b_mirror_fF": 0.305
+       "to": "VSS",
+       "a_fF": 13.374,
+       "b_mirror_fF": 13.293
       }
      ]
     }
    },
-   "capacitors": 150,
+   "capacitors": 146,
    "nets": 31,
    "warnings": [
     "Warning: Calma reading is not undoable!  I hope that's OK.",
@@ -1249,14 +1251,14 @@
    ]
   }
  },
- "started": "2026-11-15 00:06:45",
+ "started": "2026-11-21 02:24:23",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 43.0,
- "python_build_s": 4.2,
+ "wall_s": 47.1,
+ "python_build_s": 4.6,
  "box_um": [
   142.8,
-  125.3
+  127.4
  ],
  "schematic": {
   "reference_devices": 47,
@@ -1264,14 +1266,14 @@
  },
  "routes": {
   "VSS": {
-   "m2_um": 68.67,
-   "m3_um": 33.53,
+   "m2_um": 69.1,
+   "m3_um": 33.63,
    "vias": 22,
    "terminals": 11
   },
   "VDD": {
-   "m2_um": 59.61,
-   "m3_um": 29.98,
+   "m2_um": 59.53,
+   "m3_um": 30.08,
    "vias": 18,
    "terminals": 9
   },
@@ -1300,13 +1302,13 @@
    "terminals": 2
   },
   "oa": {
-   "m2_um": 46.78,
+   "m2_um": 46.77,
    "m3_um": 37.78,
    "vias": 8,
    "terminals": 4
   },
   "ob": {
-   "m2_um": 46.66,
+   "m2_um": 46.65,
    "m3_um": 37.27,
    "vias": 6,
    "terminals": 4
@@ -1336,32 +1338,32 @@
    "terminals": 2
   },
   "ts": {
-   "m2_um": 21.47,
-   "m3_um": 16.12,
+   "m2_um": 23.0,
+   "m3_um": 17.12,
    "vias": 4,
    "terminals": 2
   },
   "sa": {
    "m2_um": 7.33,
-   "m3_um": 57.34,
+   "m3_um": 61.84,
    "vias": 3,
    "terminals": 2
   },
   "sb": {
-   "m2_um": 8.72,
-   "m3_um": 19.14,
+   "m2_um": 8.73,
+   "m3_um": 26.64,
    "vias": 3,
    "terminals": 2
   },
   "d2a": {
-   "m2_um": 18.23,
-   "m3_um": 60.86,
+   "m2_um": 19.91,
+   "m3_um": 62.26,
    "vias": 8,
    "terminals": 4
   },
   "d2b": {
-   "m2_um": 22.11,
-   "m3_um": 62.68,
+   "m2_um": 24.28,
+   "m3_um": 65.88,
    "vias": 6,
    "terminals": 4
   },
@@ -1391,20 +1393,20 @@
   },
   "EN": {
    "m2_um": 40.52,
-   "m3_um": 9.68,
-   "vias": 7,
+   "m3_um": 10.18,
+   "vias": 8,
    "terminals": 4
   },
   "n3a": {
-   "m2_um": 2.38,
-   "m3_um": 14.25,
+   "m2_um": 2.81,
+   "m3_um": 13.45,
    "vias": 2,
    "terminals": 2
   },
   "d3": {
-   "m2_um": 27.53,
-   "m3_um": 54.73,
-   "vias": 9,
+   "m2_um": 21.66,
+   "m3_um": 37.09,
+   "vias": 8,
    "terminals": 4
   },
   "nd": {
@@ -1478,12 +1480,12 @@
    {
     "strap": "S2",
     "net": "VSS",
-    "y": 33.25,
+    "y": 35.35,
     "width": 2.5,
     "length": 142.8,
     "squares": 57.1,
     "r_end_to_end_ohm": 5.14,
-    "ring_and_trunk_ties": 10,
+    "ring_and_trunk_ties": 11,
     "spine_cuts": 8,
     "dc_load_mA": 0.252,
     "loads": [
@@ -1499,7 +1501,7 @@
    {
     "strap": "S3",
     "net": "VDD",
-    "y": 56.35,
+    "y": 58.45,
     "width": 2.5,
     "length": 142.8,
     "squares": 57.1,
@@ -1520,7 +1522,7 @@
    {
     "strap": "S4",
     "net": "VSS",
-    "y": 73.15,
+    "y": 75.25,
     "width": 2.5,
     "length": 142.8,
     "squares": 57.1,
@@ -1541,7 +1543,7 @@
    {
     "strap": "S6",
     "net": "VSS",
-    "y": 103.95,
+    "y": 106.05,
     "width": 2.5,
     "length": 142.8,
     "squares": 57.1,
@@ -1560,7 +1562,7 @@
    {
     "strap": "S7",
     "net": "VDD",
-    "y": 121.45,
+    "y": 123.55,
     "width": 2.5,
     "length": 142.8,
     "squares": 57.1,
@@ -1585,7 +1587,7 @@
     "x": -70.2,
     "w": 1.2,
     "y1": 0.5,
-    "y2": 105.2,
+    "y2": 107.3,
     "cuts_per_strap": [
      8,
      8,
@@ -1598,7 +1600,7 @@
     "x": 70.2,
     "w": 1.2,
     "y1": 18.0,
-    "y2": 122.7,
+    "y2": 124.8,
     "cuts_per_strap": [
      8,
      8,

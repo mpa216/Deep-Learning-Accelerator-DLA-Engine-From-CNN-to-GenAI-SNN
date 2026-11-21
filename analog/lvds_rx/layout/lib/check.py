@@ -93,14 +93,25 @@ def magic_drc(cell, src, wd, tag, allow=(), flat=False):
     if os.path.exists(rpt):
         rules = [l.strip() for l in open(rpt) if l.startswith("RULE")][:6]
     total = int(m[-1]) if m else None
-    allowed = 0
+    allowed = other = 0
     if os.path.exists(rpt):
         for l in open(rpt):
             mm = re.match(r"RULE \((\d+)\) (.*)", l)
             if mm and any(a in mm.group(2) for a in allow):
                 allowed += int(mm.group(1))
-    # `allow`: Magic rule names known to be STRICTER than the foundry deck (the KLayout deck stays the sign-off), see run_cell
-    return dict(total=total, rules=rules, allowed=allowed, effective=None if total is None else total - allowed)
+            elif mm:
+                other += int(mm.group(1))
+    # `allow`: Magic rule names known to be STRICTER than the foundry deck (the KLayout deck stays the sign-off), see run_cell.
+    # effective = error boxes of the rules NOT on the allow-list.  T11: Magic's total and its per-rule box counts can differ
+    # (t_block with 1.85 um load fingers: total 144, CO.6 boxes 160), so total - allowed went negative; with no per-rule list
+    # the total is used as it is.
+    if total is None:
+        effective = None
+    elif allowed + other == 0:
+        effective = total
+    else:
+        effective = other
+    return dict(total=total, rules=rules, allowed=allowed, other=other, effective=effective)
 
 
 # ------------------------------------------------------------------------------------------------ 4 KLayout

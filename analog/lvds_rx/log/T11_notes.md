@@ -192,3 +192,27 @@ min 4.78, stage f3dB 1.00 x DR, chain 60.7 MHz).  Margins at +-3 sd: 8.5 % above
 tPD margin 6.8 % at the slowest corner with the estimate (iteration 1: 10 %).  The load-finger width did not change
 the spread: less area raises sigma(VT) but the denser loads have a lower gm/ID.  Next: make layout, the post-layout suite
 (TBL first: the timing margin is the risk), then the full pre-layout regression.
+
+**Correction (D-018): (5,7) cannot be built.**  `make layout` failed twice: load fingers below 1.81 um leave no room for the
+three contact bars of the interdigitated load row (1.6 um: 1.47 um available, 1.68 um needed), and `mirror_interdig` takes
+at most two devices with an odd finger count (a single finger sits at a row end; (5,7) has four).  Layout-feasible: alpha
+1.5 = (4,6) (both even).  Its Rs must be small (about 0.3-0.4 kohm) to centre V_H, which at 2 um width is shorter than
+the 1 um gencell minimum; Rs is not part of the gain ratio (RL/Rb/Rf/divider), so it gets its own width (new knob rw_rs).
+The model's terminal resistors are 85.45 ohm/sq x 1 um / W each, so the end resistance scales 1/W: sizing.res_len and
+passives.seg_len now use 85 x 2/W ohm (unchanged at 2 um: the default sizing came out byte-identical).
+Also fixed: check.magic_drc compared Magic's total (144) with the per-rule CO.6 count (160) and failed t_block on a
+negative difference; it now counts the boxes of the rules that are not on the allow-list.
+
+Round 5 (alpha 1.5 (4,6), wf_ld 1.85, Rs 5 um wide):
+
+| vh_scale | Rs | trip V_H | MC +-3 sd (4 corners) | tPD ss/125 VID 0.35 / 0.1 |
+|---|---|---|---|---|
+| 1.03 | 270 ohm, 1.167 um | 8.7-24.3 mV | 6.31-30.32 mV | - |
+| 1.06 | 329 ohm, 1.456 um | 9.1-24.9 | 6.54-31.15 | 4.533 / 5.243 ns |
+| 1.10 | 402 ohm, 1.817 um | 9.5-25.7 | 6.87-32.07 | - |
+| **1.08 (final)** | about 365 ohm, 1.637 um | 9.3-25.3 | **6.68-31.59** (observed 7.3-30.4, 0 of 480 outside) | **4.541 / 5.257** |
+
+Final AC: A1 min 4.78, stage f3dB 0.99 x DR, chain 60.7 MHz; 128 sizing asserts pass.  `make layout`: all leaf tests,
+lane, bias block and macro PASS; frame 650 x 194.2 um (+2.1 um: core 600 x 144.2 um, spec limit 600 x 150); extracted
+wiring 2842.6 fF (2836.2 before); gate LAYOUT PASS.  TBL cores regenerated (lane-0 MLC fingers 12).  Next: the post-layout
+suite (TBL) first, then the full pre-layout regression.

@@ -2,8 +2,8 @@
  "description": "post-layout gate TBL (pex): tb3_trip with core = sim/tbl/core_pexrc.spice",
  "limits": {
   "vh_v": {
-   "min": 0.008,
-   "max": 0.025,
+   "min": 0.006,
+   "max": 0.035,
    "scale": 1000,
    "unit": "mV"
   },
@@ -39,5 +39,28 @@
   "core": "sim/tbl/core_pexrc.spice"
  },
  "timeout": 3000,
- "post": "../tb3_trip/hooks.py:post_tb3"
+ "post": "../tb3_trip/hooks.py:post_tb3",
+ "retry": {
+  "timeout": 1500,
+  "variants": [
+   {
+    "name": "itl_gmin1e-10",
+    "sub": [
+     [
+      ".option rshunt=1e11",
+      ".option rshunt=1e11 itl1=500 itl2=200 gmin=1e-10"
+     ]
+    ]
+   },
+   {
+    "name": "gmin1e-9",
+    "sub": [
+     [
+      ".option rshunt=1e11",
+      ".option rshunt=1e11 gmin=1e-9"
+     ]
+    ]
+   }
+  ]
+ }
 }

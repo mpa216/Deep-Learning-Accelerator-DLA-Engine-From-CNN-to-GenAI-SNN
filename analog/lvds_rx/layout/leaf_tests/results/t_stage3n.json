@@ -10,36 +10,38 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 9.52,
+    "m1": 8.56,
     "m2": 0.4,
-    "m3": 5.2
+    "m3": 4.25
    }
   },
   "selfcheck": {
    "ok": true,
-   "n_mos": 6,
+   "n_mos": 4,
    "mos": {
-    "nfet_03v3 w=2.59 l=0.28": 6
+    "nfet_03v3 w=4.66 l=0.28": 4
    },
    "n_res": 0,
-   "want_fingers": 6,
+   "want_fingers": 4,
    "n_diode": 0,
    "n_cap": 0
   },
   "magic_drc": {
    "ok": true,
    "mag": {
-    "total": 56,
+    "total": 40,
     "rules": [
-     "RULE (56) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (40) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 56,
+    "allowed": 40,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -65,8 +67,8 @@
    "port_errors": false,
    "pin_problems": [],
    "devices": [
-    3,
-    3
+    4,
+    4
    ],
    "nets": [
     3,
@@ -82,11 +84,9 @@
     {
      "row": "mn3",
      "ok": true,
-     "symbols": "(dL)DDCC(dR)",
+     "symbols": "(dL)DC(dR)",
      "read_gate_order": [
       "VSS",
-      "n3a",
-      "n3a",
       "n3a",
       "n3a",
       "VSS"
@@ -95,12 +95,10 @@
       "VSS",
       "n3a",
       "n3a",
-      "n3a",
-      "n3a",
       "VSS"
      ],
-     "n_read": 6,
-     "n_expected": 6,
+     "n_read": 4,
+     "n_expected": 4,
      "mismatch": null
     }
    ]
@@ -120,9 +118,9 @@
     "net": "n3a",
     "at": [
      1.14,
-     3.21,
-     3.88,
-     3.5
+     3.61,
+     3.08,
+     3.89
     ],
     "why": [
      "Number of nets: 4 **Mismatch**             |Number of nets: 3 **Mismatch**",
@@ -148,12 +146,12 @@
    "ok": true
   }
  },
- "started": "2026-11-15 00:03:10",
+ "started": "2026-11-21 02:20:18",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.8,
+ "wall_s": 26.8,
  "bbox_um": [
-  9.76,
-  6.71
+  8.16,
+  8.78
  ]
 }

@@ -35,12 +35,14 @@
      "RULE (44) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
     "allowed": 44,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -157,10 +159,10 @@
    "ok": true
   }
  },
- "started": "2026-11-15 00:04:19",
+ "started": "2026-11-21 02:21:37",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.9,
+ "wall_s": 25.8,
  "bbox_um": [
   16.78,
   6.7

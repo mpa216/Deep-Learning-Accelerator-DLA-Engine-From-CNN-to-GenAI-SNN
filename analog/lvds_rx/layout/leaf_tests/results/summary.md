@@ -1,41 +1,41 @@
 # Leaf test summary (run_all.py)
 
-Generated 2026-11-15 00:06:41.  Result: **ALL GREEN**
+Generated 2026-11-21 02:24:18.  Result: **ALL GREEN**
 
 Magic DRC = .mag / GDS read-back (effective counts, after the allow-list in the cell options); KLayout = foundry deck variant D, main / antenna at DBU 0.001 (0 / 0 required); LVS = strict Netgen (unique match, no property / port errors, equal device and net counts); negctl: Y = the injected error (wrong W, cut wire, sliver) was detected.
 
 | cell | verdict | bbox um | Magic DRC | KLayout main / ant | strict LVS | self-check | negative controls | read-back | s |
 |---|---|---|---|---|---|---|---|---|---|
-| t_bias_n | PASS | 23.2 x 6.62 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=12 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (12 fingers) | 22.9 |
-| t_block | PASS | 53.6 x 18.03 | 0 / 0 | 0 / 0 | clean (8 dev, 8 nets) | ok fingers=48 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 3 row(s) ok (48 fingers) | 23.6 |
+| t_bias_n | PASS | 23.2 x 6.62 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=12 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (12 fingers) | 25.8 |
+| t_block | PASS | 53.6 x 17.88 | 0 / 0 | 0 / 0 | clean (8 dev, 8 nets) | ok fingers=48 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 3 row(s) ok (48 fingers) | 27.3 |
 | t_block_open | PASS | - | - | - | - | LVS must fail: fails (ok) | locator ok, 0.7 um | - | 1.0 |
-| t_block_short | PASS | - | - | - | - | LVS must fail: fails (ok) | locator ok, 0.0 um | - | 0.9 |
-| t_cap | PASS | 30.69 x 24.12 | 0 / 0 | 0 / 0 | clean (1 dev, 1 nets) | ok fingers=1 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (1 fingers) | 22.9 |
-| t_cascodes | PASS | 31.28 x 8.64 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=18 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (18 fingers) | 23.1 |
-| t_en_inv | PASS | 16.78 x 6.7 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=4 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (4 fingers) | 22.9 |
-| t_esd | PASS | 32.63 x 10.08 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=1 dio=2 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | - | 22.9 |
-| t_esd_mirror | PASS | 32.63 x 10.08 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=1 dio=2 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | - | 22.9 |
-| t_loads2 | PASS | 21.66 x 6.2 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=20 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (20 fingers) | 22.8 |
-| t_mirror | PASS | 49.04 x 6.62 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=29 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (29 fingers) | 22.7 |
-| t_mirror_p | PASS | 64.94 x 9.2 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=39 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (39 fingers) | 23.0 |
-| t_nmos_pair | PASS | 27.4 x 8.87 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=22 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (22 fingers) | 23.2 |
-| t_out_chain | PASS | 60.66 x 22.34 | 0 / 0 | 0 / 0 | clean (20 dev, 20 nets) | ok fingers=31 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 8 row(s) ok (31 fingers) | 23.9 |
-| t_pmos_pair | PASS | 47.98 x 9.0 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=46 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (46 fingers) | 23.8 |
-| t_pmos_tail_dump | PASS | 131.68 x 10.26 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=112 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (112 fingers) | 24.9 |
-| t_power | PASS | 29.2 x 14.12 | 0 / 0 | 0 / 0 | clean (2 dev, 2 nets) | ok fingers=12 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (12 fingers) | 22.8 |
-| t_res | PASS | 4.96 x 22.57 | 0 / 0 | 0 / 0 | clean (1 dev, 1 nets) | ok fingers=0 res=1 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | - | 23.0 |
-| t_res_bias | PASS | 53.71 x 35.55 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=0 res=16 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 16 resistor columns ok | 23.1 |
-| t_res_rl | PASS | 21.21 x 16.0 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=6 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 6 resistor columns ok | 23.2 |
-| t_res_stage2 | PASS | 14.71 x 8.65 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=4 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 4 resistor columns ok | 22.4 |
-| t_route | PASS | 102.36 x 19.3 | 0 / 0 | 0 / 0 | clean (20 dev, 20 nets) | ok fingers=31 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 8 row(s) ok (31 fingers) | 23.6 |
-| t_singles_n | PASS | 42.1 x 12.03 | 0 / 0 | 0 / 0 | clean (10 dev, 10 nets) | ok fingers=13 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 4 row(s) ok (13 fingers) | 23.4 |
-| t_singles_p | PASS | 50.78 x 9.2 | 0 / 0 | 0 / 0 | clean (9 dev, 9 nets) | ok fingers=19 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 4 row(s) ok (19 fingers) | 23.1 |
-| t_sinks | PASS | 44.48 x 7.72 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=26 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (26 fingers) | 23.1 |
-| t_stacked | PASS | 21.28 x 8.64 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=16 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (16 fingers) | 23.0 |
-| t_stage2_pair | PASS | 21.08 x 8.49 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=8 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (8 fingers) | 22.7 |
-| t_stage3n | PASS | 9.76 x 6.71 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=6 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (6 fingers) | 22.8 |
-| t_stage3p | PASS | 20.06 x 6.2 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=18 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (18 fingers) | 22.6 |
-| t_tail_dump | PASS | 71.96 x 9.97 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=52 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (52 fingers) | 23.6 |
+| t_block_short | PASS | - | - | - | - | LVS must fail: fails (ok) | locator ok, 0.0 um | - | 1.0 |
+| t_cap | PASS | 30.69 x 24.12 | 0 / 0 | 0 / 0 | clean (1 dev, 1 nets) | ok fingers=1 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (1 fingers) | 25.9 |
+| t_cascodes | PASS | 31.28 x 8.64 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=18 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (18 fingers) | 26.6 |
+| t_en_inv | PASS | 16.78 x 6.7 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=4 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (4 fingers) | 25.8 |
+| t_esd | PASS | 32.63 x 10.08 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=1 dio=2 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | - | 26.0 |
+| t_esd_mirror | PASS | 32.63 x 10.08 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=1 dio=2 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | - | 25.5 |
+| t_loads2 | PASS | 23.26 x 6.05 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=22 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (22 fingers) | 26.6 |
+| t_mirror | PASS | 49.04 x 6.62 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=29 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (29 fingers) | 25.6 |
+| t_mirror_p | PASS | 64.94 x 9.2 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=39 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (39 fingers) | 26.7 |
+| t_nmos_pair | PASS | 27.4 x 8.87 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=22 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (22 fingers) | 26.5 |
+| t_out_chain | PASS | 60.66 x 22.34 | 0 / 0 | 0 / 0 | clean (20 dev, 20 nets) | ok fingers=31 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 8 row(s) ok (31 fingers) | 27.1 |
+| t_pmos_pair | PASS | 47.98 x 9.0 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=46 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (46 fingers) | 26.3 |
+| t_pmos_tail_dump | PASS | 131.68 x 10.26 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=112 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (112 fingers) | 29.1 |
+| t_power | PASS | 29.2 x 14.12 | 0 / 0 | 0 / 0 | clean (2 dev, 2 nets) | ok fingers=12 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (12 fingers) | 26.1 |
+| t_res | PASS | 4.96 x 22.57 | 0 / 0 | 0 / 0 | clean (1 dev, 1 nets) | ok fingers=0 res=1 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | - | 26.4 |
+| t_res_bias | PASS | 53.71 x 35.55 | 0 / 0 | 0 / 0 | clean (5 dev, 5 nets) | ok fingers=0 res=16 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 16 resistor columns ok | 27.0 |
+| t_res_rl | PASS | 21.21 x 16.0 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=6 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 6 resistor columns ok | 25.5 |
+| t_res_stage2 | PASS | 26.71 x 7.12 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=0 res=4 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 4 resistor columns ok | 26.1 |
+| t_route | PASS | 102.36 x 19.3 | 0 / 0 | 0 / 0 | clean (20 dev, 20 nets) | ok fingers=31 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 8 row(s) ok (31 fingers) | 26.6 |
+| t_singles_n | PASS | 42.1 x 12.03 | 0 / 0 | 0 / 0 | clean (10 dev, 10 nets) | ok fingers=13 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 4 row(s) ok (13 fingers) | 25.7 |
+| t_singles_p | PASS | 50.78 x 9.2 | 0 / 0 | 0 / 0 | clean (9 dev, 9 nets) | ok fingers=19 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 4 row(s) ok (19 fingers) | 26.1 |
+| t_sinks | PASS | 44.48 x 7.72 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=26 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (26 fingers) | 26.2 |
+| t_stacked | PASS | 21.28 x 8.64 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=16 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (16 fingers) | 26.3 |
+| t_stage2_pair | PASS | 21.08 x 8.49 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=8 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (8 fingers) | 26.6 |
+| t_stage3n | PASS | 8.16 x 8.78 | 0 / 0 | 0 / 0 | clean (4 dev, 4 nets) | ok fingers=4 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (4 fingers) | 26.8 |
+| t_stage3p | PASS | 20.06 x 6.05 | 0 / 0 | 0 / 0 | clean (3 dev, 3 nets) | ok fingers=18 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 1 row(s) ok (18 fingers) | 25.7 |
+| t_tail_dump | PASS | 71.96 x 9.97 | 0 / 0 | 0 / 0 | clean (6 dev, 6 nets) | ok fingers=52 res=0 dio=0 | wrong_W:Y, cut_wire:Y, sliver_magic:Y, sliver_klayout:Y | 2 row(s) ok (52 fingers) | 24.5 |
 
 ## Antenna with / without the secondary-ESD cell (KLayout, UNQUALIFIED cell)
 
@@ -50,21 +50,21 @@ Magic DRC = .mag / GDS read-back (effective counts, after the allow-list in the 
 | leaf | count | bbox area um2 | subtotal |
 |---|---|---|---|
 | t_res_rl | 1 | 339 | 339 |
-| t_res_stage2 | 1 | 127 | 127 |
+| t_res_stage2 | 1 | 190 | 190 |
 | t_esd | 2 | 329 | 658 |
 | t_pmos_tail_dump | 1 | 1351 | 1351 |
 | t_tail_dump | 1 | 717 | 717 |
 | t_sinks | 1 | 343 | 343 |
 | t_cascodes | 1 | 270 | 270 |
 | t_stage2_pair | 1 | 179 | 179 |
-| t_loads2 | 1 | 134 | 134 |
-| t_stage3p | 1 | 124 | 124 |
-| t_stage3n | 1 | 65 | 65 |
+| t_loads2 | 1 | 141 | 141 |
+| t_stage3p | 1 | 121 | 121 |
+| t_stage3n | 1 | 72 | 72 |
 | t_singles_p | 0.5 | 467 | 234 |
 | t_mirror | 0.4 | 325 | 130 |
 | t_out_chain | 1 | 1355 | 1355 |
-| **sum of leaf boxes** | | | **6028** |
-| x routing / channel factor 1.35 | | | **8138** |
+| **sum of leaf boxes** | | | **6101** |
+| x routing / channel factor 1.35 | | | **8236** |
 
 
 ## Estimated bias block

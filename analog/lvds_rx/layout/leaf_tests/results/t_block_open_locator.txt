@@ -1,6 +1,6 @@
 Netgen mismatch lines:
     Number of nets: 9 **Mismatch**             |Number of nets: 8 **Mismatch**
     Net: OB.6                                  |(no matching net)
-OPEN   OB in 2 pieces, apart near (21.84, 14.71) um; nearest labels ['OB', 'OB.12']
-         fragment: 9 labels, pin=True, device terminals=10, label bbox [21.33, 5.08, 48.06, 14.48]
-         fragment: 6 labels, pin=False, device terminals=8, label bbox [22.34, 14.93, 31.59, 14.93]
+OPEN   OB in 2 pieces, apart near (21.84, 14.63) um; nearest labels ['OB', 'OB.12']
+         fragment: 9 labels, pin=True, device terminals=10, label bbox [21.33, 5.08, 48.06, 14.4]
+         fragment: 6 labels, pin=False, device terminals=8, label bbox [22.34, 14.86, 31.59, 14.86]

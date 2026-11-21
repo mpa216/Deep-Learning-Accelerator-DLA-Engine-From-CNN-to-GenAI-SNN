@@ -53,21 +53,21 @@ XMNDB OB VREF tn VSS nfet_03v3 w=47.5u nf=10 l=0.5u
 XMT2 ts VBN VSS VSS nfet_03v3 w=30u nf=12 l=1u
 XMS1 D2A OA sa VSS nfet_03v3 w=8.74u nf=2 l=0.5u
 XMS2 D2B OB sb VSS nfet_03v3 w=8.74u nf=2 l=0.5u
-XRS1 sa ts VSS ppolyf_u_1k r_width=2u r_length=1.641u
-XRS2 sb ts VSS ppolyf_u_1k r_width=2u r_length=1.641u
-XMLD1 D2A D2A VDD VDD pfet_03v3 w=8u nf=5 l=0.28u
-XMLD2 D2B D2B VDD VDD pfet_03v3 w=8u nf=5 l=0.28u
-XMLC1 D2A D2B VDD VDD pfet_03v3 w=11.2u nf=7 l=0.28u
-XMLC2 D2B D2A VDD VDD pfet_03v3 w=11.2u nf=7 l=0.28u
+XRS1 sa ts VSS ppolyf_u_1k r_width=5u r_length=1.637u
+XRS2 sb ts VSS ppolyf_u_1k r_width=5u r_length=1.637u
+XMLD1 D2A D2A VDD VDD pfet_03v3 w=7.4u nf=4 l=0.28u
+XMLD2 D2B D2B VDD VDD pfet_03v3 w=7.4u nf=4 l=0.28u
+XMLC1 D2A D2B VDD VDD pfet_03v3 w=11.1u nf=6 l=0.28u
+XMLC2 D2B D2A VDD VDD pfet_03v3 w=11.1u nf=6 l=0.28u
 XMPU1 D2A EN VDD VDD pfet_03v3 w=2u l=0.5u
 XMPU2 D2B EN VDD VDD pfet_03v3 w=2u l=0.5u
 .ends lvds_hyst
 
 .subckt lvds_out VDD VSS D2A D2B EN OUT
-XMP3A n3a D2A VDD VDD pfet_03v3 w=16u nf=10 l=0.28u
-XMP3B d3 D2B VDD VDD pfet_03v3 w=16u nf=10 l=0.28u
-XMN3A n3a n3a VSS VSS nfet_03v3 w=4.85u l=0.28u
-XMN3B d3 n3a VSS VSS nfet_03v3 w=4.85u l=0.28u
+XMP3A n3a D2A VDD VDD pfet_03v3 w=14.8u nf=8 l=0.28u
+XMP3B d3 D2B VDD VDD pfet_03v3 w=14.8u nf=8 l=0.28u
+XMN3A n3a n3a VSS VSS nfet_03v3 w=4.66u l=0.28u
+XMN3B d3 n3a VSS VSS nfet_03v3 w=4.66u l=0.28u
 XMNANDP1 nd d3 VDD VDD pfet_03v3 w=3u l=0.28u
 XMNANDP2 nd EN VDD VDD pfet_03v3 w=3u l=0.28u
 XMNANDN1 nd d3 nm VSS nfet_03v3 w=2u l=0.28u

@@ -19,15 +19,17 @@
    "mag": {
     "total": 2108,
     "rules": [
-     "RULE (2108) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (2252) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 2108,
+    "allowed": 2252,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -58,14 +60,14 @@
    "violations": 0,
    "layers": {
     "Via1 design (SRAM IP excluded)": {
-     "cuts": 1585,
-     "clusters": 1585,
+     "cuts": 1588,
+     "clusters": 1588,
      "big": 0,
      "violations": 0
     },
     "Via1 incl. SRAM IP": {
-     "cuts": 1585,
-     "clusters": 1585,
+     "cuts": 1588,
+     "clusters": 1588,
      "big": 0,
      "violations": 0
     },
@@ -124,8 +126,8 @@
   "lvs_reference": {
    "ok": true,
    "reference": "netlist/lvds_rx_lvs_ref.spice",
-   "sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
-   "frozen_sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+   "sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
+   "frozen_sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
    "frozen_sha256_ok": true,
    "flattened_subcells": [
     "lvds_esd2",
@@ -197,9 +199,9 @@
     "net": "vbn",
     "at": [
      171.4,
-     116.91,
+     119.01,
      228.6,
-     117.19
+     119.29
     ],
     "why": [
      "Netlists match uniquely.",
@@ -278,12 +280,12 @@
      ],
      "elements": {
       "X": 1047,
-      "C": 487,
+      "C": 475,
       "R": 0,
       "D": 12
      },
-     "bytes": 138946,
-     "extract_s": 1.5
+     "bytes": 138992,
+     "extract_s": 1.6
     },
     "lvds_rx_x3.pex_rc": {
      "file": "results/layout/lvds_rx_x3.pex_rc.spice",
@@ -303,12 +305,12 @@
      ],
      "elements": {
       "X": 1047,
-      "C": 5798,
-      "R": 10604,
+      "C": 5813,
+      "R": 10601,
       "D": 12
      },
-     "bytes": 788897,
-     "extract_s": 8.1
+     "bytes": 790293,
+     "extract_s": 8.8
     },
     "lvds_lane.pex_c": {
      "file": "results/layout/lvds_lane.pex_c.spice",
@@ -326,12 +328,12 @@
      ],
      "elements": {
       "X": 323,
-      "C": 150,
+      "C": 146,
       "R": 0,
       "D": 4
      },
-     "bytes": 30369,
-     "extract_s": 0.8
+     "bytes": 30469,
+     "extract_s": 0.9
     },
     "lvds_lane.pex_rc": {
      "file": "results/layout/lvds_lane.pex_rc.spice",
@@ -349,12 +351,12 @@
      ],
      "elements": {
       "X": 323,
-      "C": 1789,
+      "C": 1794,
       "R": 3182,
       "D": 4
      },
-     "bytes": 175097,
-     "extract_s": 1.6
+     "bytes": 175749,
+     "extract_s": 1.8
     },
     "lvds_bias.pex_c": {
      "file": "results/layout/lvds_bias.pex_c.spice",
@@ -373,8 +375,8 @@
       "R": 0,
       "D": 0
      },
-     "bytes": 7727,
-     "extract_s": 0.5
+     "bytes": 7729,
+     "extract_s": 0.6
     },
     "lvds_bias.pex_rc": {
      "file": "results/layout/lvds_bias.pex_rc.spice",
@@ -390,36 +392,36 @@
      "elements": {
       "X": 78,
       "C": 449,
-      "R": 967,
+      "R": 968,
       "D": 0
      },
-     "bytes": 45072,
-     "extract_s": 0.6
+     "bytes": 45110,
+     "extract_s": 0.7
     }
    },
    "rc_repair": {
     "lvds_rx_x3": {
-     "pairs": 487,
-     "scaled": 5757,
+     "pairs": 475,
+     "scaled": 5775,
      "added": 24,
      "missing": [],
-     "max_rel_err": 4.106299599406638e-06,
+     "max_rel_err": 4.230261599405019e-06,
      "total_fF": {
-      "c_extraction": 2836.2,
-      "rc_before": 4283.4,
-      "rc_after": 2836.2
+      "c_extraction": 2842.6,
+      "rc_before": 4285.7,
+      "rc_after": 2842.6
      }
     },
     "lvds_lane": {
-     "pairs": 150,
-     "scaled": 1776,
+     "pairs": 146,
+     "scaled": 1782,
      "added": 8,
      "missing": [],
      "max_rel_err": 3.013736611494847e-06,
      "total_fF": {
-      "c_extraction": 820.7,
-      "rc_before": 1231.4,
-      "rc_after": 820.7
+      "c_extraction": 822.5,
+      "rc_before": 1230.9,
+      "rc_after": 822.5
      }
     },
     "lvds_bias": {
@@ -427,11 +429,11 @@
      "scaled": 447,
      "added": 0,
      "missing": [],
-     "max_rel_err": 4.106299599406638e-06,
+     "max_rel_err": 4.230261599405019e-06,
      "total_fF": {
-      "c_extraction": 250.7,
-      "rc_before": 414.0,
-      "rc_after": 250.7
+      "c_extraction": 251.7,
+      "rc_before": 418.0,
+      "rc_after": 251.7
      }
     }
    },
@@ -446,10 +448,10 @@
      },
      "gate": {
       "fF": [
-       42.239,
-       42.498
+       42.349,
+       42.531
       ],
-      "mismatch_pct": 0.611
+      "mismatch_pct": 0.429
      }
     },
     "lane1": {
@@ -462,10 +464,10 @@
      },
      "gate": {
       "fF": [
-       42.239,
-       42.498
+       42.349,
+       42.531
       ],
-      "mismatch_pct": 0.611
+      "mismatch_pct": 0.429
      }
     },
     "lane2": {
@@ -478,10 +480,10 @@
      },
      "gate": {
       "fF": [
-       42.239,
-       42.498
+       42.349,
+       42.531
       ],
-      "mismatch_pct": 0.611
+      "mismatch_pct": 0.429
      }
     },
     "outputs_fF": {
@@ -489,17 +491,17 @@
      "RX1_O": 16.338,
      "RX2_O": 23.407
     },
-    "EN_fF": 118.758
+    "EN_fF": 118.739
    },
    "smoke": {
     "prelayout": {
      "rc": 0,
-     "wall_s": 0.1,
+     "wall_s": 0.2,
      "values": {
       "v(rx0_o)": 3.3,
       "v(rx1_o)": 9.143991e-10,
       "v(rx2_o)": 3.3,
-      "i(vdd)": -0.00187219
+      "i(vdd)": -0.00187548
      },
      "errors": [],
      "levels": [
@@ -511,12 +513,12 @@
     },
     "pex_c": {
      "rc": 0,
-     "wall_s": 1.3,
+     "wall_s": 1.0,
      "values": {
       "v(rx0_o)": 3.3,
       "v(rx1_o)": 4.276792e-09,
       "v(rx2_o)": 3.3,
-      "i(vdd)": -0.00187175
+      "i(vdd)": -0.00187505
      },
      "errors": [],
      "levels": [
@@ -528,12 +530,12 @@
     },
     "pex_rc": {
      "rc": 0,
-     "wall_s": 5.1,
+     "wall_s": 4.9,
      "values": {
       "v(rx0_o)": 3.3,
       "v(rx1_o)": 4.314581e-09,
       "v(rx2_o)": 3.3,
-      "i(vdd)": -0.00187053
+      "i(vdd)": -0.00187386
      },
      "errors": [],
      "levels": [
@@ -547,18 +549,18 @@
    "ok": true
   }
  },
- "started": "2026-11-15 00:07:58",
+ "started": "2026-11-21 02:25:47",
  "fixed_bbox_um": [
   0.0,
   0.0,
   650.0,
-  192.1
+  194.2
  ],
  "core_um": [
   25.0,
   25.0,
   625.0,
-  167.1
+  169.2
  ],
  "y0": 42.15,
  "instances": [
@@ -583,10 +585,10 @@
    42.15
   ]
  ],
- "python_build_s": 5.6,
+ "python_build_s": 6.1,
  "schematic_lines": 143,
  "all_ok": true,
  "verdict": "PASS",
  "layout_json": "results/layout.json",
- "wall_s": 82.8
+ "wall_s": 92.9
 }

@@ -30,7 +30,7 @@
  "vars": {
   "dr": 100000000.0,
   "core": "sim/tbl/core_pexrc.spice",
-  "alters": "alter m.xdut.x3.m0 m = 0.001\nalter m.xdut.x15.m0 m = 0.001\nalter m.xdut.x54.m0 m = 0.001\nalter m.xdut.x277.m0 m = 0.001\nalter m.xdut.x500.m0 m = 0.001\nalter m.xdut.x629.m0 m = 0.001\nalter m.xdut.x755.m0 m = 0.001\nalter m.xdut.x853.m0 m = 0.001\nalter m.xdut.x881.m0 m = 0.001\nalter m.xdut.x901.m0 m = 0.001"
+  "alters": "alter m.xdut.x21.m0 m = 0.001\nalter m.xdut.x69.m0 m = 0.001\nalter m.xdut.x103.m0 m = 0.001\nalter m.xdut.x236.m0 m = 0.001\nalter m.xdut.x272.m0 m = 0.001\nalter m.xdut.x319.m0 m = 0.001\nalter m.xdut.x482.m0 m = 0.001\nalter m.xdut.x507.m0 m = 0.001\nalter m.xdut.x638.m0 m = 0.001\nalter m.xdut.x757.m0 m = 0.001\nalter m.xdut.x861.m0 m = 0.001\nalter m.xdut.x896.m0 m = 0.001"
  },
  "timeout": 1800,
  "post": "../tb2_ac/hooks.py:post_tb2"

@@ -10,9 +10,9 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 14.47,
+    "m1": 26.47,
     "m2": 0.4,
-    "m3": 3.65
+    "m3": 6.65
    }
   },
   "selfcheck": {
@@ -30,12 +30,14 @@
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": []
@@ -101,7 +103,8 @@
     "detected": true,
     "why": [
      "Netlists match uniquely with property errors.",
-     "Property errors were found.",
+     "sb                                         |sa **Mismatch**",
+     "sa                                         |sb **Mismatch**",
      "The following cells had property errors:"
     ]
    },
@@ -109,17 +112,17 @@
     "detected": true,
     "net": "ts",
     "at": [
-     5.59,
-     6.74,
-     9.12,
-     7.01
+     10.09,
+     5.2,
+     16.62,
+     5.48
     ],
     "why": [
      "Number of nets: 5 **Mismatch**             |Number of nets: 4 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
      "Net: ts.1                                  |(no matching net)",
      "Netlists do not match.",
-     "ts                                         |sa **Mismatch**"
+     "Final result: Netlists do not match."
     ]
    },
    "sliver_magic": {
@@ -138,12 +141,12 @@
    "ok": true
   }
  },
- "started": "2026-11-14 23:58:33",
+ "started": "2026-11-21 02:14:59",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.4,
+ "wall_s": 26.1,
  "bbox_um": [
-  14.71,
-  8.65
+  26.71,
+  7.12
  ]
 }

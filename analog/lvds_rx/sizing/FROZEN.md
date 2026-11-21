@@ -60,21 +60,24 @@ is re-sized (n_t2 10, gmid_s2 8, L_ld 0.28).  The pre-layout regression re-runs 
 Unchanged: `netlist/input_network.spice`, `netlist/pad_asig_5p0.spice`, `spec/spec.yaml`, `spec/gates.yaml` (D-015).
 The estimate is calibrated on the T10 layout: a new layout is checked against it by gate TBL (30 % of margin).
 
-## Re-freeze, T11 iteration 2 (2026-11-21): stage-2 hysteresis (decision D-017)
+## Re-freeze, T11 iteration 2 (2026-11-21): stage-2 hysteresis (decisions D-017, D-018)
 
 The iteration-1 pre-layout regression failed TB3_hmc: 17 of 600 Monte Carlo runs had V_H below the 6 mV floor at
-ff/-40C/3.6 V (the R3 ladder is exhausted).  Stage 2 now has alpha 1.4 (5 diode / 7 cross-coupled load fingers, was 4 / 5),
-the V_H target of the Rs solve scaled by 1.15 (Rs 1.641 um long, was 3.169 um) and load fingers 1.6 um wide (was 2.0 um).
-Monte Carlo (40 per group at the four V_H-extreme corners, the estimate core): 6.5 .. 31.7 mV at +-3 sd; tPD at
-ss/125C/3.0 V, VID 0.35 V 4.66 ns.  The sizing gained one assert (every ppolyf_u_1k at least 1.0 um long, 128 asserts).
+ff/-40C/3.6 V (the R3 ladder is exhausted).  Stage 2 now has alpha 1.5 (4 diode / 6 cross-coupled load fingers, was
+4 / 5), the V_H target of the Rs solve scaled by 1.08 with Rs 5 um wide (about 365 ohm, 1.637 um long; was 2 x 3.169 um),
+and load fingers 1.85 um wide (was 2.0 um).  Layout limits that shaped the choice: the interdigitated load row takes at most
+two devices with an odd finger count (so alpha 1.4 = (5, 7) cannot be built) and needs Wf >= 1.81 um for its three contact
+bars; every ppolyf_u_1k must be at least 1.0 um long (a new sizing assert, 128 asserts).  The end resistance of a poly
+resistor now scales as 1/W in both the sizing and the layout planner (unchanged at the 2 um of every other resistor).
+Monte Carlo and delay numbers of this sizing: `log/T11_notes.md`.
 
 | File | sha256 |
 |---|---|
-| `sizing/sizes.spice` | 3bbad3f244cb6c9205786a8845a5e370a168c297f45376707c8848cf2610514b |
-| `layout/device_table.json` | 42a2825992ddcedd8e00b1c5cf0f6135de675ae57f7edcb5a15043a32fd46fda |
+| `sizing/sizes.spice` | 2549687c013a12cf82f57d1f8fc1da86038a919ca388123934116ce5fe9c6c74 |
+| `layout/device_table.json` | bf3e986315b5dab740e73907c1a506005aceeb7559a2af84a2103753987c0d11 |
 | `netlist/lvds_rx_core.spice` | 12b8123ca20db8679600e10ba1676027d46e39c3c76223967911f9096f415f85 |
-| `netlist/lvds_rx_lvs_ref.spice` | 6ba99a8dbcf58adae7f8d37e082fc6caa316327b9e6865901fbc0619bbbbcc4c |
-| `netlist/lvds_rx_lvs_ref_flat.spice` | de39ba8a322c3df76bf9900f0adc7f46bec9dcb2392177ffb8ccfda0725bc6c1 |
+| `netlist/lvds_rx_lvs_ref.spice` | e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99 |
+| `netlist/lvds_rx_lvs_ref_flat.spice` | 2e34f904a22c7b6aea05affd9dfdb096e38c526a18a971cb0cf2b7261e026746 |
 | `sizing/parasitic_estimate.json` | de6e7c43cf1c9735da2290acf1b8351d41d266cbf3e4976563e61bddbbaf0a65 |
 
 Unchanged: `netlist/lvds_rx_core.spice` (parametric in the sizes), `sizing/parasitic_estimate.json`,

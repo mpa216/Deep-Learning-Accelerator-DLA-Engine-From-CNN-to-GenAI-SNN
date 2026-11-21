@@ -28,8 +28,9 @@ TRACK = 0.70         # Metal3 trunk pitch
 def seg_len(R, k, w, rsh=RSH_1K, rend=R_END):
     """Length of each of k equal series segments of width w so that the chain has resistance R (every segment brings its
     own end resistance).  Netgen merges the series chain and compares the SUM of the segment lengths with the schematic's
-    r_length (cutoff 1 %): the sum is (k-1)*rend*w/rsh shorter than the single-resistor length."""
-    return round(((R / k) - rend) * w / rsh, 3)
+    r_length (cutoff 1 %): the sum is (k-1)*rend*w/rsh shorter than the single-resistor length.  `rend` is the end resistance at
+    W = 2 um; it scales as 1/W (the model's terminal resistors are 85.45 ohm/sq x 1 um / W; sizing.res_len uses the same law)."""
+    return round(((R / k) - rend * 2.0 / w) * w / rsh, 3)
 
 
 def plan_series(resistors, pattern, rsh=RSH_1K, rend=R_END):

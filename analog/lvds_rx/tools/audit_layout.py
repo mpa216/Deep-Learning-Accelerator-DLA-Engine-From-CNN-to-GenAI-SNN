@@ -41,7 +41,7 @@ SCHEM = os.path.join(ROOT, "layout", "macro", "results", CELL + ".spice")
 DELIV = os.path.join(ROOT, "results", "layout")
 WD = os.path.join(ROOT, ".scratch", "audit2", "work")
 OUT = os.path.join(ROOT, "results", "audit2_layout.json")
-FRAME_UM = (0.0, 0.0, 650.0, 192.1)
+MARGIN_UM = (15.0, 25.0)   # spec.yaml layout.macro_max_um: the core plus a 15-25 um margin on every side (FIXED_BBOX)
 CO6 = ("(CO.6)",)          # the T8 allow-list (Magic CO.6 stricter than the foundry deck on L = 0.28 contact bars)
 
 
@@ -112,15 +112,27 @@ def strip_dummies(text):
 
 
 def gds_frame(gds):
+    """The GDS's own bounding box against (a) the frame the layout run recorded (results/layout.json fixed_bbox_um) and (b) the
+    spec: frame minus the margin within spec.yaml layout.macro_max_um (the frame follows the lane height, T11 iteration 2)."""
     import klayout.db as kdb
+    import yaml
+    rec = json.load(open(os.path.join(ROOT, "results", "layout.json")))["fixed_bbox_um"]
+    spec = yaml.safe_load(open(os.path.join(ROOT, "spec", "spec.yaml")))
+    cmax = None
+    for blk in spec.values():
+        if isinstance(blk, dict) and "macro_max_um" in blk:
+            cmax = blk["macro_max_um"]
     ly = kdb.Layout()
     ly.read(gds)
     tops = [c.name for c in ly.top_cells()]
     top = ly.cell(CELL)
     bb = top.dbbox() if top else None
     frame = [round(bb.left, 3), round(bb.bottom, 3), round(bb.right, 3), round(bb.top, 3)] if bb else None
-    return dict(top_cells=tops, dbu_um=ly.dbu, bbox_um=frame,
-                ok=bool(tops == [CELL] and abs(ly.dbu - 0.001) < 1e-12 and frame == [round(v, 3) for v in FRAME_UM]))
+    margin = MARGIN_UM[1]
+    core = None if frame is None else (frame[2] - frame[0] - 2 * margin, frame[3] - frame[1] - 2 * margin)
+    core_ok = bool(cmax and core and core[0] <= cmax[0] + 1e-6 and core[1] <= cmax[1] + 1e-6)
+    return dict(top_cells=tops, dbu_um=ly.dbu, bbox_um=frame, recorded_fixed_bbox_um=rec, core_um=core, spec_core_max_um=cmax,
+                ok=bool(tops == [CELL] and abs(ly.dbu - 0.001) < 1e-12 and frame == [round(v, 3) for v in rec] and core_ok))
 
 
 def caps_by_net(path):

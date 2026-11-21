@@ -70,6 +70,8 @@ D = dict(
     vf_tt=0.46,                          # cascode offset voltage F at tt: the window is M3 VDS >= VDsat3 + 50 mV at ss/125 C (F falls 18 % there) and the steered PMOS-pair device's VSD at VIC = 0.05 V at ff/-40 C (F rises 15 %); t2_op measured 45 mV there at F = 0.62 V
     i_div=40e-6,                         # Vref divider current (EN-gated)
     rw=2.0,                              # poly resistor width (um), ppolyf_u_1k: the same material for RL, Rb, Rf, divider (gain = ratio, eq. 5.7)
+    rw_rs=5.0,                           # width of Rs (stage-2 degeneration, not part of the gain ratio).  T11 iteration 2: 2 -> 5 um, so the
+                                         # small Rs that centres V_H with alpha 1.5 (about 365 ohm) is drawable (1.6 um long; >= 1 um)
     # ---- stage 1 (T1 decision D-002: hybrid + dump)
     vr_tt=1.17,                          # T5 iteration 1: was 1.25; the NMOS pair at VIC = 2.35 V ran 9-19 mV into triode at ff/fs hot corners at VDD 3.0 V (TB1 full45, vr 1.10 gave +130 mV, linear: ~1 mV per mV of VR); 1.17 gives about +60 mV there at 6 % less gain.  RL drop at tt (T1 used 1.0 with ideal bias; the resistor-diode bias makes VR follow (VDD - VGS_b) x RL/Rb, i.e. -14 % at ss/125 C, so the slow corners need 1.25 at tt)
     gmid_pair_n=16.0, L_pair_n=0.5,        # NMOS pair 15 -> 16: the NMOS path is the weakest at ss/125 C (gm/ID falls with temperature)
@@ -82,18 +84,21 @@ D = dict(
     # ---- stage 2 hysteresis comparator
     gmid_s2=8.0, L_s2=0.5, wf_s2=5.0,    # pair: offset allowance sigma_2 <= 0.5*A1_min*sigma_target = 10 mV is generous, so area is spent on speed
                                          # (T11 iteration 1: 12 -> 8: twice the tail current at a smaller pair, less gate load on oa/ob)
-    L_ld=0.28, wf_ld=1.6,                # PMOS loads (diode + cross-coupled) and the stage-3 copies: short L for the regeneration time constant
+    L_ld=0.28, wf_ld=1.85,               # PMOS loads (diode + cross-coupled) and the stage-3 copies: short L for the regeneration time constant
                                          # (T11 iteration 1: 0.4 -> 0.28; 0.4 failed the latched pair margin at ss/res_ff once n_t2 doubled)
-                                         # (T11 iteration 2: wf 2.0 -> 1.6 with alpha 1.4: tPD ss/125C VID 0.35 4.82 -> 4.66 ns with the estimate,
-                                         #  the V_H spread unchanged: smaller area, but lower gm/ID of the denser loads)
-    alpha_cands=[(5, 7)],                # (nf diode, nf cross): alpha = ratio; the source-degeneration Rs gives V_H,in = vh_scale x 14 mV at tt.
-                                         # T11 iteration 2: alpha 1.25 (4, 5) -> 1.4 (5, 7).  The relative V_H error per relative alpha error
+                                         # (T11 iteration 2: wf 2.0 -> 1.85 with alpha 1.4: less capacitance on d2a/d2b, tPD ss/125C VID 0.35
+                                         #  4.82 ns at 2.0, 4.74 at 1.8, 4.66 at 1.6 with the estimate; the V_H spread does not change.  1.85 is
+                                         #  the layout floor: the interdigitated load row carries 3 S/D nets whose contact bars need
+                                         #  1.68 um, the row offers Wf - 0.13 um (leaves.mos_row; 1.6 failed make layout))
+    alpha_cands=[(4, 6)],                # (nf diode, nf cross): alpha = ratio; the source-degeneration Rs gives V_H,in = vh_scale x 14 mV at tt.
+                                         # T11 iteration 2: alpha 1.25 (4, 5) -> 1.5 (4, 6).  The relative V_H error per relative alpha error
                                          # (load VT mismatch) is 2 alpha/(alpha^2 - 1): 4.4 at 1.25 gave a Monte Carlo sd of 15-22 % at
-                                         # ff/-40C and 17 of 600 runs below 6 mV; 1.4 gives 9-13 %.  1.5 sits too high once Rs is drawable
-                                         # (>= 1 um), 1.67 needs Rs < 0 (.scratch/t11/iter2, log/T11_notes.md)
-    vh_scale=1.15,                       # multiplies the V_H,in target the Rs solve aims for (calibration of the large-signal trip model against
-                                         # simulation).  T11 iteration 2: 1.15 centres the Monte Carlo V_H (+-3 sd, 4 extreme corners) in the
-                                         # 6-35 mV window: 6.5 .. 31.7 mV (1.10: 6.2 .. 31.4, 1.20: 6.9 .. 33.9)
+                                         # ff/-40C and 17 of 600 runs below 6 mV; 1.5 gives 7-11 %.  1.4 (5, 7) cannot be built (the
+                                         # interdigitated load row takes at most two devices with an odd finger count), 1.67 needs Rs < 0
+                                         # (.scratch/t11/iter2, log/T11_notes.md)
+    vh_scale=1.08,                       # multiplies the V_H,in target the Rs solve aims for (calibration of the large-signal trip model against
+                                         # simulation).  T11 iteration 2: 1.08 centres the Monte Carlo V_H (+-3 sd, 4 extreme corners) in the
+                                         # 6-35 mV window (1.06: 6.5 .. 31.2 mV, 1.10: 6.9 .. 32.1 mV with alpha 1.5 and Rs 5 um wide)
     # ---- stage 3 + output
     r3=2.0,                              # stage-3 PMOS mirror copies the load diode x r3
     gmid_n3=8.0, L_n3=0.28,              # was 0.5: TB2 (T2 part 2) measured the d3 pole (rds of the mirror / C of d3 + NAND gate) at 39 MHz ss/125 C vs 80 MHz needed; L 0.28 gives 102 MHz (gain A3 48 -> 19, ample after A1 x A2)
@@ -279,8 +284,11 @@ def block_stage1(S, devs):
     return
 
 
-def res_len(R):                                                        # um of ppolyf_u_1k at width rw for R ohm (tt/27C)
-    return (R - R_ENDS) * D['rw'] / RSH_1K
+def res_len(R, w=None):                                                # um of ppolyf_u_1k at width w (default rw) for R ohm (tt/27C)
+    w = D['rw'] if w is None else w
+    # the model's two terminal resistors are 85.45 ohm/sq x 1 um / W each, so the end resistance scales as 1/W (85 ohm at 2 um);
+    # layout/lib/passives.seg_len uses the same law (T11 iteration 2: Rs may be wider than 2 um)
+    return (R - R_ENDS * 2.0 / w) * w / RSH_1K
 
 
 def block_bias_rest(S, devs):
@@ -397,7 +405,7 @@ def finish_stage2(S, devs):
     dev(devs, 'mld', 'lane', 'p', 'stage-2 diode load (x2)', p['L_ld'], nd, p['wf_ld'], it2 / (2 * (1 + nc / nd)))
     dev(devs, 'mlc', 'lane', 'p', 'stage-2 cross-coupled load (x2)', p['L_ld'], nc, p['wf_ld'], it2 / 2 * (nc / nd) / (1 + nc / nd))
     dev(devs, 'mpu2', 'lane', 'p', 'parks d2a/d2b at VDD when EN=0 (x2, gate EN)', p['L_pull'], 1, p['w_pull'])
-    devs['rs2'] = dict(stem='rs2', block='lane', kind='res', role='stage-2 source degeneration (x2), ppolyf_u_1k', R=S['rs'], W=D['rw'], L=res_len(S['rs']), nf=1, Wf=D['rw'], ID=None)
+    devs['rs2'] = dict(stem='rs2', block='lane', kind='res', role='stage-2 source degeneration (x2), ppolyf_u_1k', R=S['rs'], W=D['rw_rs'], L=res_len(S['rs'], D['rw_rs']), nf=1, Wf=D['rw_rs'], ID=None)
 
 
 def block_stage3(S, devs):
@@ -713,7 +721,7 @@ def run_asserts(A, S, devs, ev, budget, cin):
     A.check('RL/Rb/Rf/R_div use one poly type and one width (gain = geometry ratio, eq. 5.7)', True, 'ppolyf_u_1k, W = %.1f um' % D['rw'])
     # every ppolyf_u_1k resistor must be drawable: Magic's generator has lmin 1.0 um (gf180mcu::ppolyf_u_1k_defaults).  T11
     # iteration 2: the Rs solve gave 0.26 um for alpha 1.5 and a negative length for alpha 1.67 without any complaint
-    rlen = {k: res_len(S[s]) for k, s in (('rl', 'rl'), ('rb', 'rb'), ('rf', 'rf'), ('rdt', 'r_div_top'), ('rdb', 'r_div_bot'), ('rs', 'rs'))}
+    rlen = {k: res_len(S[s], D['rw_rs'] if k == 'rs' else None) for k, s in (('rl', 'rl'), ('rb', 'rb'), ('rf', 'rf'), ('rdt', 'r_div_top'), ('rdb', 'r_div_bot'), ('rs', 'rs'))}
     A.check('every ppolyf_u_1k length >= 1.0 um (Magic lmin)', min(rlen.values()) >= 1.0, ', '.join('%s %.2f' % kv for kv in rlen.items()))
     # nf-not-m
     A.check('no m= on matched devices (device table)', all(d.get('m', 1) == 1 for d in devs.values()), 'all devices carry nf')
@@ -780,8 +788,8 @@ def write_outputs(S, devs, ev, budget, cin, A, args):
     # resistors (ppolyf_u_1k): width and length
     rtt = dict(rl=S['rl'], rb=S['rb'], rf=S['rf'], rdt=S['r_div_top'], rdb=S['r_div_bot'], rs=S['rs'])
     for k, R in rtt.items():
-        params['rw_' + k] = D['rw']
-        params['rl_' + k] = round(res_len(R), 3)
+        params['rw_' + k] = D['rw_rs'] if k == 'rs' else D['rw']
+        params['rl_' + k] = round(res_len(R, params['rw_' + k]), 3)
     # ESD
     params.update(rw_esd=D['esd_rw'], rl_esd=D['esd_rl'], dw_esd=D['esd_dw'], dl_esd=D['esd_dl'])
     params['c_vref_ff'] = D['c_vref_ff']
@@ -835,7 +843,7 @@ def write_outputs(S, devs, ev, budget, cin, A, args):
             table['devices'].append(dict(stem=stem, block=d['block'], model='nfet_03v3' if d['kind'] == 'n' else 'pfet_03v3', role=d['role'],
                                          W_um=d['W'], L_um=d['L'], nf=d['nf'], Wf_um=d['Wf'], ID_tt_uA=None if d.get('ID') is None else d['ID'] * 1e6))
     for k, R in rtt.items():
-        table['resistors'].append(dict(stem=k, model='ppolyf_u_1k', r_width_um=D['rw'], r_length_um=params['rl_' + k], R_tt_ohm=R))
+        table['resistors'].append(dict(stem=k, model='ppolyf_u_1k', r_width_um=params['rw_' + k], r_length_um=params['rl_' + k], R_tt_ohm=R))
     table['resistors'].append(dict(stem='resd', model='ppolyf_u', r_width_um=D['esd_rw'], r_length_um=D['esd_rl'], R_tt_ohm=151.0, note='secondary ESD, 2 per lane'))
     table['diodes'].append(dict(stem='desd_h', model='diode_pd2nw_03v3', w_um=D['esd_dw'], l_um=D['esd_dl'], area_um2=D['esd_dw'] * D['esd_dl']))
     table['diodes'].append(dict(stem='desd_l', model='diode_nd2ps_03v3', w_um=D['esd_dw'], l_um=D['esd_dl'], area_um2=D['esd_dw'] * D['esd_dl']))
@@ -938,7 +946,8 @@ def report(S, devs, ev, budget, cin, A):
     w('|---|---|---|---|---|---|')
     for k, nm in (('rb', 'Rb (VDD to MBN)'), ('rl', 'RL x2 (stage-1 load)'), ('rf', 'Rf (Vf generator)'), ('rdt', 'Vref divider top'), ('rdb', 'Vref divider bottom (corrected for the switch Ron %.0f ohm)' % S['ron_vsw']), ('rs', 'Rs x2 (stage-2 source degeneration)')):
         R = {'rb': S['rb'], 'rl': S['rl'], 'rf': S['rf'], 'rdt': S['r_div_top'], 'rdb': S['r_div_bot'], 'rs': S['rs']}[k]
-        w('| %s | %s | %.0f | %.1f | %.2f | |' % (k, nm, R, D['rw'], res_len(R)))
+        wk = D['rw_rs'] if k == 'rs' else D['rw']
+        w('| %s | %s | %.0f | %.1f | %.2f | |' % (k, nm, R, wk, res_len(R, wk)))
     w('')
     w('Reference current %.1f uA (tt), Rb = %.1f kohm, VGS(MBN) = %.3f V. Mirror ratios (fingers): MNT/MBN = %.2f, M3/MBN = %.2f, MT2/MBN = %.2f, MPT/MBP = %.2f.\n' % (
         b0['iref'] * 1e6, S['rb'] / 1e3, b0['vbn'], devs['mnt']['nf'] / devs['mbn']['nf'], devs['m3']['nf'] / devs['mbn']['nf'], devs['mt2']['nf'] / devs['mbn']['nf'], devs['mpt']['nf'] / devs['mbp']['nf']))

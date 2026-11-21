@@ -1,7 +1,7 @@
 {
  "generated_by": "sizing/lvds_rx_sizing.py",
  "hashes": {
-  "sizing_script": "553c88214f682159272ccce2efb25958adf4bdb0c59a332685d0eef9ee4695c7",
+  "sizing_script": "45c4ce9e10e1e3c882528062216b374532995ae2dbc9722845bb9f73c47f1bf4",
   "luts": "ed294bfa2ea31bf470c7b065d7ce2a6687c2dc4ab8084a1598c58c56024c2f39",
   "spec": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857"
  },
@@ -262,22 +262,22 @@
    "block": "lane",
    "model": "pfet_03v3",
    "role": "stage-2 diode load (x2)",
-   "W_um": 8.0,
+   "W_um": 7.4,
    "L_um": 0.28,
-   "nf": 5,
-   "Wf_um": 1.6,
-   "ID_tt_uA": 26.20224960864268
+   "nf": 4,
+   "Wf_um": 1.85,
+   "ID_tt_uA": 25.154159624296977
   },
   {
    "stem": "mlc",
    "block": "lane",
    "model": "pfet_03v3",
    "role": "stage-2 cross-coupled load (x2)",
-   "W_um": 11.2,
+   "W_um": 11.1,
    "L_um": 0.28,
-   "nf": 7,
-   "Wf_um": 1.6,
-   "ID_tt_uA": 36.683149452099755
+   "nf": 6,
+   "Wf_um": 1.85,
+   "ID_tt_uA": 37.731239436445456
   },
   {
    "stem": "mpu2",
@@ -295,10 +295,10 @@
    "block": "lane",
    "model": "pfet_03v3",
    "role": "stage-3 PMOS mirror copies (x2): current of the load diode x r3",
-   "W_um": 16.0,
+   "W_um": 14.8,
    "L_um": 0.28,
-   "nf": 10,
-   "Wf_um": 1.6,
+   "nf": 8,
+   "Wf_um": 1.85,
    "ID_tt_uA": null
   },
   {
@@ -306,11 +306,11 @@
    "block": "lane",
    "model": "nfet_03v3",
    "role": "stage-3 NMOS mirror (diode + copy)",
-   "W_um": 4.85,
+   "W_um": 4.66,
    "L_um": 0.28,
    "nf": 1,
-   "Wf_um": 4.85,
-   "ID_tt_uA": 52.40449921728536
+   "Wf_um": 4.66,
+   "ID_tt_uA": 50.30831924859395
   },
   {
    "stem": "nand_n",
@@ -440,9 +440,9 @@
   {
    "stem": "rs",
    "model": "ppolyf_u_1k",
-   "r_width_um": 2.0,
-   "r_length_um": 1.641,
-   "R_tt_ohm": 916.1376953125
+   "r_width_um": 5.0,
+   "r_length_um": 1.637,
+   "R_tt_ohm": 365.6005859375
   },
   {
    "stem": "resd",
@@ -478,10 +478,10 @@
   "m3_over_mbn": 2.4,
   "mt2_over_mbn": 2.4,
   "mpt_over_mbp": 2.0,
-  "alpha": 1.4,
+  "alpha": 1.5,
   "alpha_fingers": [
-   5,
-   7
+   4,
+   6
   ]
  },
  "cap_vref": {

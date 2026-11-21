@@ -11,7 +11,7 @@
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
     "m1": 27.16,
-    "m2": 12.18,
+    "m2": 12.1,
     "m3": 30.79
    }
   },
@@ -21,7 +21,7 @@
    "mos": {
     "nfet_03v3 w=4.75 l=0.5": 22,
     "nfet_03v3 w=2.5 l=1.0": 12,
-    "pfet_03v3 w=2.0 l=0.28": 14
+    "pfet_03v3 w=1.85 l=0.28": 14
    },
    "n_res": 0,
    "want_fingers": 48,
@@ -33,15 +33,17 @@
    "mag": {
     "total": 120,
     "rules": [
-     "RULE (120) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (136) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 120,
+    "allowed": 136,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -258,12 +260,12 @@
    "ok": true
   }
  },
- "started": "2026-11-14 23:56:34",
+ "started": "2026-11-21 02:12:47",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 23.6,
+ "wall_s": 27.3,
  "bbox_um": [
   53.6,
-  18.03
+  17.88
  ]
 }

@@ -2,36 +2,40 @@
  "pexc": {
   "renamed": 81,
   "mlc_fingers": [
-   "x3",
-   "x15",
-   "x54",
-   "x277",
-   "x500",
-   "x629",
-   "x755",
-   "x853",
-   "x881",
-   "x901"
+   "x21",
+   "x69",
+   "x103",
+   "x236",
+   "x272",
+   "x319",
+   "x482",
+   "x507",
+   "x638",
+   "x757",
+   "x861",
+   "x896"
   ],
   "source": "results/layout/lvds_rx_x3.pex_c.spice",
-  "source_sha256": "cd76eeecf31f2de60067b189789861a00053a4882b76698859c5ad29ced18d59"
+  "source_sha256": "7db28907b7cb44b4b7914705ecf2ca3586d9b96c08d923e9bd6a9761b115f2ed"
  },
  "pexrc": {
-  "renamed": 3832,
+  "renamed": 3829,
   "mlc_fingers": [
-   "x3",
-   "x15",
-   "x54",
-   "x277",
-   "x500",
-   "x629",
-   "x755",
-   "x853",
-   "x881",
-   "x901"
+   "x21",
+   "x69",
+   "x103",
+   "x236",
+   "x272",
+   "x319",
+   "x482",
+   "x507",
+   "x638",
+   "x757",
+   "x861",
+   "x896"
   ],
   "source": "results/layout/lvds_rx_x3.pex_rc.spice",
-  "source_sha256": "545ed89f51cfc07f2b8c3adef0cd37b0fff84f47af5e5574853911257d151840"
+  "source_sha256": "82aeb710c020baac992f8468c8e51cdaf5886b8b292c2c41bf34cb8216b0916f"
  },
  "core_sha256": "12b8123ca20db8679600e10ba1676027d46e39c3c76223967911f9096f415f85"
 }

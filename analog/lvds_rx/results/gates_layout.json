@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-15 06:10:53",
+ "generated": "2026-11-21 08:28:22",
  "tier": "full",
  "phases": [
   "layout"
  ],
  "git": {
-  "commit": "96c5c2e",
+  "commit": "e625402",
   "dirty": true
  },
  "gates_sha256": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
@@ -226,6 +226,14 @@
    "trigger": "T11 iteration 0: the extracted T10 macro fails TB2 and TB4 outright at ss/125C/3.0 V (tPD VID 0.35 4.57 -> 6.76 ns against 5 ns, VID 0.1 5.55 -> 8.22 ns against 8 ns; stage f3dB 0.84 -> 0.44 x DR, chain 56 -> 37 MHz) and gate TBL fails; cause: the pre-layout netlist carried no wiring capacitance and modelled junctions with 0.18 um of diffusion (the layout has 2.84 x that area), so the frozen sizing had 9.5 % tPD margin for none of the layout's load",
    "measured": "results/post_layout/iter0/TBL.md; calibration .scratch/t11/calib.py (36 TB4 points: the estimate at wiring scale 1.0 captures 87-90 % of the added delay everywhere, est = extraction at scale 1.14-1.21, at 1.2 the estimate is >= the extraction at 35 of 36 points, 7 ps short at the last); candidates in log/T11_notes.md",
    "gate_relaxed": "none (no limit changed; spec.yaml and gates.yaml untouched).  Sizing iteration (T11, block timing, results/iterations.jsonl): (1) the simulation netlist now carries the layout parasitic estimate (sizing/parasitic_estimate.json from sim/tbl/make_estimate.py: junction diffusion length ldiff 0.511 um in the ad/as/pd/ps formulas, one capacitor per net to VSS and one to VDD = the extracted wiring x 1.2, 31 nets; netlist/lvds_circuit.ESTIMATE, simulation netlist only, never in the LVS reference); (2) stage 2 re-sized: n_t2 5 -> 10, gmid_s2 12 -> 8, L_ld 0.40 -> 0.28 (mt2 nf 6 -> 12, ms nf 3 -> 2, mld/mlc/mp3 L 0.28, mn3 nf 1 -> 2, Rs 4573 -> 1690 ohm).  The sizing freeze re-opens: full regression, re-layout, PEX, TBL."
+  },
+  {
+   "id": "D-017",
+   "date": "2026-11-21",
+   "kind": "note",
+   "trigger": "T11 iteration-1 pre-layout regression (commit 5a78f0d): TB3_hmc FAIL, 17 of 600 Monte Carlo runs below the 6 mV hysteresis floor, all at ff/-40C/3.6 V (mean 8.3-8.6 mV, sd 1.4-1.6 mV, min 4.0 mV); ladder R3 is exhausted (rung 1, D-009), so the design changes.  TB3_trip FAIL: 4 of 270 runs time out in the first operating point of the DC sweep (sf, 27/125 C, VIC 2.35 V, VDD 0.3 V): solver, not design.",
+   "measured": ".scratch/t11/iter2/explore_vh.py (candidate sizing + the estimate core; trip at worst5 + sf/-40/3.0 + ff/125/3.6 + fs/-40/3.3; hysteresis Monte Carlo, 40 per group with the regression's runkey seeds, at extreme2 + fs/-40/3.3 + ff/125/3.6; TB4 and TB2 subsets).  The relative V_H error per relative alpha error is 2 alpha/(alpha^2-1).  alpha 1.25: MC sd 15-22 % of the mean.  alpha 1.5: 7-11 %, but with a drawable Rs (>= 1 um) V_H at ff/125C/3.6 V, VIC 0.05 V (the lowest A1) reaches 36-37 mV at +3 sd.  alpha 1.67 needs Rs < 0.  Chosen alpha 1.4 (5, 7), vh_scale 1.15, wf_ld 1.6: trip 10.1-24.5 mV, MC 6.5-31.7 mV at +-3 sd (0 of 480 outside 6-35 mV), tPD ss/125C/3.0 V VID 0.35 V 4.66 ns (iteration 1: 4.50 ns; wf_ld 2.0 gave 4.82 ns), VID 0.1 V 5.48 ns, A1 min 4.78, stage f3dB 1.00 x DR, chain 60.7 MHz.  Table: log/T11_notes.md.",
+   "gate_relaxed": "none (spec.yaml and gates.yaml untouched).  Sizing iteration (T11, block hysteresis): alpha_cands [(5, 7)], vh_scale 1.15 (new knob, the V_H target of the Rs solve: calibrates the large-signal trip model against simulation), wf_ld 2.0 -> 1.6; new assert: every ppolyf_u_1k at least 1.0 um long (Magic lmin).  Bench changes, no limit changed: TB3_trip and TB3_hmc carry the TB3_off retry variants (itl/gmin; circuit and stimulus untouched); their spec 'limits' (plot window and summary only; the gate reads spec.yaml) follow the 6-35 mV window in force (AUDIT_1 F6).  tools/run_full.sh runs tools/audit_hashes.py after the full tier (AUDIT_1 F4).  Re-freeze table: sizing/FROZEN.md."
   }
  ],
  "gates": {
@@ -372,7 +380,7 @@
      "agg": "value",
      "reasons": [],
      "n": 1,
-     "worst": 0.611,
+     "worst": 0.429,
      "limit": "-inf .. 2",
      "status": "PASS"
     }
@@ -381,7 +389,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/layout.json",
-   "results_sha256": "f8806533317699b04d5b88d842396e1fabdbf830c5467b48ffa38e2f0d5fe84b"
+   "results_sha256": "c203ddcfbabbf866d9f07cc2753ad951f8dc74fa67482250a9339c7ea4c4dad1"
   }
  }
 }

@@ -10,36 +10,38 @@
    "ok": true,
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
-    "m1": 21.34,
+    "m1": 22.94,
     "m2": 0.4,
-    "m3": 16.4
+    "m3": 18.0
    }
   },
   "selfcheck": {
    "ok": true,
-   "n_mos": 20,
+   "n_mos": 22,
    "mos": {
-    "pfet_03v3 w=2.0 l=0.28": 20
+    "pfet_03v3 w=1.85 l=0.28": 22
    },
    "n_res": 0,
-   "want_fingers": 20,
+   "want_fingers": 22,
    "n_diode": 0,
    "n_cap": 0
   },
   "magic_drc": {
    "ok": true,
    "mag": {
-    "total": 168,
+    "total": 184,
     "rules": [
-     "RULE (168) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (214) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 168,
+    "allowed": 214,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -65,8 +67,8 @@
    "port_errors": false,
    "pin_problems": [],
    "devices": [
-    6,
-    6
+    5,
+    5
    ],
    "nets": [
     3,
@@ -82,10 +84,9 @@
     {
      "row": "ld",
      "ok": true,
-     "symbols": "(dL)caabbccddddccbbaad(dR)",
+     "symbols": "(dL)aabbccddccddddccbbaa(dR)",
      "read_gate_order": [
       "VDD",
-      "D2B",
       "D2A",
       "D2A",
       "D2B",
@@ -94,20 +95,22 @@
       "D2B",
       "D2A",
       "D2A",
-      "D2A",
-      "D2A",
-      "D2B",
-      "D2B",
       "D2B",
       "D2B",
       "D2A",
+      "D2A",
+      "D2A",
+      "D2A",
+      "D2B",
+      "D2B",
+      "D2B",
+      "D2B",
       "D2A",
       "D2A",
       "VDD"
      ],
      "expected_gate_order": [
       "VDD",
-      "D2B",
       "D2A",
       "D2A",
       "D2B",
@@ -116,19 +119,22 @@
       "D2B",
       "D2A",
       "D2A",
-      "D2A",
-      "D2A",
-      "D2B",
-      "D2B",
       "D2B",
       "D2B",
       "D2A",
+      "D2A",
+      "D2A",
+      "D2A",
+      "D2B",
+      "D2B",
+      "D2B",
+      "D2B",
       "D2A",
       "D2A",
       "VDD"
      ],
-     "n_read": 20,
-     "n_expected": 20,
+     "n_read": 22,
+     "n_expected": 22,
      "mismatch": null
     }
    ]
@@ -139,8 +145,7 @@
     "detected": true,
     "why": [
      "Netlists match uniquely with property errors.",
-     "D2B                                        |D2A **Mismatch**",
-     "D2A                                        |D2B **Mismatch**",
+     "Property errors were found.",
      "The following cells had property errors:"
     ]
    },
@@ -148,14 +153,14 @@
     "detected": true,
     "net": "D2A",
     "at": [
-     3.39,
-     2.28,
-     16.59,
-     2.56
+     4.19,
+     2.85,
+     18.99,
+     3.12
     ],
     "why": [
-     "pfet_03v3 (20->8)                          |pfet_03v3 (6) **Mismatch**",
-     "Number of devices: 8 **Mismatch**          |Number of devices: 6 **Mismatch**",
+     "pfet_03v3 (22->7)                          |pfet_03v3 (6->5) **Mismatch**",
+     "Number of devices: 7 **Mismatch**          |Number of devices: 5 **Mismatch**",
      "Number of nets: 4 **Mismatch**             |Number of nets: 3 **Mismatch**",
      "NET mismatches: Class fragments follow (with fanout counts):",
      "Net: D2A.4                                 |(no matching net)"
@@ -177,12 +182,12 @@
    "ok": true
   }
  },
- "started": "2026-11-15 00:02:24",
+ "started": "2026-11-21 02:19:26",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.8,
+ "wall_s": 26.6,
  "bbox_um": [
-  21.66,
-  6.2
+  23.26,
+  6.05
  ]
 }

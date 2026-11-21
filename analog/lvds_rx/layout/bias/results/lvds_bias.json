@@ -11,7 +11,7 @@
    "pieces_over_cap": [],
    "longest_merged_polygon_um": {
     "m1": 33.97,
-    "m2": 121.5,
+    "m2": 123.6,
     "m3": 53.2
    }
   },
@@ -43,12 +43,14 @@
      "RULE (44) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
     "allowed": 44,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -357,9 +359,9 @@
     "net": "VBN",
     "at": [
      22.26,
-     -2.94,
+     -0.84,
      39.34,
-     -2.66
+     -0.56
     ],
     "why": [
      "Number of nets: 12 **Mismatch**            |Number of nets: 11 **Mismatch**",
@@ -408,8 +410,8 @@
   "lvs_reference": {
    "ok": true,
    "reference": "netlist/lvds_rx_lvs_ref.spice",
-   "sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
-   "frozen_sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+   "sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
+   "frozen_sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
    "frozen_sha256_ok": true,
    "flattened_subcells": [],
    "out": "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/t10/work/lvds_bias/lvs_reference.out",
@@ -478,14 +480,14 @@
    }
   }
  },
- "started": "2026-11-15 00:07:25",
+ "started": "2026-11-21 02:25:07",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 28.4,
- "python_build_s": 1.3,
+ "wall_s": 35.2,
+ "python_build_s": 1.6,
  "box_um": [
   53.2,
-  142.1
+  144.2
  ],
  "schematic": {
   "reference_devices": 17,
@@ -493,7 +495,7 @@
  },
  "routes": {
   "VDD": {
-   "m2_um": 121.61,
+   "m2_um": 124.41,
    "m3_um": 36.54,
    "vias": 12,
    "terminals": 6
@@ -505,13 +507,13 @@
    "terminals": 5
   },
   "nrb": {
-   "m2_um": 15.33,
+   "m2_um": 13.23,
    "m3_um": 16.79,
    "vias": 3,
    "terminals": 2
   },
   "vf": {
-   "m2_um": 13.87,
+   "m2_um": 11.77,
    "m3_um": 38.24,
    "vias": 5,
    "terminals": 2
@@ -529,31 +531,31 @@
    "terminals": 2
   },
   "VBN": {
-   "m2_um": 92.78,
+   "m2_um": 94.88,
    "m3_um": 51.15,
    "vias": 8,
    "terminals": 3
   },
   "VBP": {
-   "m2_um": 128.99,
+   "m2_um": 131.09,
    "m3_um": 57.0,
    "vias": 6,
    "terminals": 3
   },
   "VB2": {
-   "m2_um": 120.77,
+   "m2_um": 122.87,
    "m3_um": 55.33,
    "vias": 9,
    "terminals": 3
   },
   "enb": {
-   "m2_um": 102.37,
+   "m2_um": 104.47,
    "m3_um": 59.25,
    "vias": 14,
    "terminals": 5
   },
   "EN": {
-   "m2_um": 55.82,
+   "m2_um": 57.92,
    "m3_um": 61.58,
    "vias": 13,
    "terminals": 4

@@ -32,12 +32,14 @@
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": []
@@ -210,10 +212,10 @@
    "ok": true
   }
  },
- "started": "2026-11-15 00:02:01",
+ "started": "2026-11-21 02:18:59",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 23.0,
+ "wall_s": 26.7,
  "bbox_um": [
   64.94,
   9.2

@@ -19,7 +19,7 @@
    "ok": true,
    "n_mos": 18,
    "mos": {
-    "pfet_03v3 w=2.0 l=0.28": 18
+    "pfet_03v3 w=1.85 l=0.28": 18
    },
    "n_res": 0,
    "want_fingers": 18,
@@ -31,15 +31,17 @@
    "mag": {
     "total": 152,
     "rules": [
-     "RULE (152) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
+     "RULE (170) Metal1 overlap of contact < 0.055um in one direction (CO.6)"
     ],
-    "allowed": 152,
+    "allowed": 170,
+    "other": 0,
     "effective": 0
    },
    "gds_readback": {
     "total": 0,
     "rules": [],
     "allowed": 0,
+    "other": 0,
     "effective": 0
    },
    "allow": [
@@ -144,9 +146,9 @@
     "net": "n3a",
     "at": [
      3.39,
-     2.28,
+     2.21,
      16.59,
-     2.56
+     2.48
     ],
     "why": [
      "pfet_03v3 (18->6)                          |pfet_03v3 (4->3) **Mismatch**",
@@ -172,12 +174,12 @@
    "ok": true
   }
  },
- "started": "2026-11-15 00:02:47",
+ "started": "2026-11-21 02:19:53",
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 22.6,
+ "wall_s": 25.7,
  "bbox_um": [
   20.06,
-  6.2
+  6.05
  ]
 }
