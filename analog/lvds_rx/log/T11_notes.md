@@ -328,3 +328,37 @@ TB1, TB2 and TB3_trip had passed.  The hourly auto-resume cron was deleted.  Com
 restart continues from there.  To resume: start the iteration-2 full regression again (`python3 .scratch/t11/iter2/chain5.py`
 in the background; `queue.json` now holds only the full run, max 4 simulations), then apply D-019 (task list: re-run TB8 and
 the TBL power-up benches), AUDIT_2, T11 report, T12 package, T13.
+
+**Resumed 2026-11-22 00:30 (owner: "resume the LVDS work"); D-019 applied BEFORE restarting the full regression** (it had to
+restart anyway; this way it carries the new TB8 in one pass and no run mixes old and new definitions).  Code:
+`sim/lib_tb.py` pulses_norm (completed swings, timed at their last 50 % crossing); `sim/tb8_en/hooks.py` (cases 6 / 7 =
+EN = 0 on the 1 us / 100 us ramps, reltol 0.01; vout_off_v from 100 ns in cases 0-1, vout_off_all_v, vdd_at_peak_v,
+vdd_low_from_v; final_ok for the EN = 0 cases); `tb8_en.json` grid 0-7; `spec/gates.yaml` TB8 (vout_off_v cases 0, 1, 6, 7;
+early_high_v case 5; reports); `sim/tbl/make_benches.py` tbl_en grid 0-7 (regenerated: only tbl_en_pre / _pex.json changed);
+`sim/tbl/evaluate.py` (TB8 min_pulse_s of cases 3 / 5 worst against worst over 45 corners, incomplete coverage fails);
+`spec/decisions.yaml` D-019 (files_after gates.yaml ac4c7945...).  `flow/lint.py`: 0 findings (frozen ok).
+Checks: the new post-processing on the 270 stored TB8 waveforms reproduces the offline analysis (0.084 ns -> 3.0 ns, the
+runt; five case-5 runs 13.7-18.9 -> 17.9-20 ns; none shorter; cases 0-1 at most 3.7 uV from 100 ns).  rshunt of cases 6 / 7:
+1e13 (case 0's value) against 1e11 moves the peak at ss/-40C/3.6 V by 0.0 / 0.5 mV before layout and 0.1 / 2.2 mV extracted
+(`.scratch/tb8z`), so 1e11 stays.  TB8 (5001 s at 2 jobs): 356 / 360 ok; four case-7 runs time out in all three variants
+(ss/125C/3.6 V, fs/125C/3.6 V, sf/-40C/3.0 V, sf/27C/3.6 V; the scratch run had five, a slightly different set: chaotic);
+case 6 worst 0.262 V (45 / 45), case 7 worst 0.213 V (41 runs), shortest pulse 3.0 ns.  tbl_en_pre / _pex 24 / 24 ok each;
+at TBL's corners the layout uses 23.6 % (case 6, tt/27C/3.3 V), 9.5 % (case 7), 12.2 % (case 5 early_high_v), 0 % (cases
+0-1 from 100 ns).  The case-7 stalls (`.scratch/tb8s`, the four corners, first attempt cut at 5 s so the candidate runs at
+once): gear, tmax / 2, trtol 10 and rshunt 1e13 all time out at 300 s; with the settled tail cut from 10 us to 0.2 us all four
+finish in 15-17 s (peaks 0.017-0.174 V).  The stall sits in the settled tail, as in cases 1 / 3 / 4, so case 7 is now the
+100 us ramp plus 0.2 us (the gated peak falls mid-ramp at VDD about 0.8 V; final_ok reads the last 100 ns).  TB8 and
+tbl_en re-run with it.
+
+**D-019 result (2026-11-22 03:00):** TB8 360 / 360 ok, **gate TB8 PASS** (flow/gates.evaluate_gate): vout_off_v cases 0, 1, 6, 7
+worst 0.262 V (case 6, ss/-40C/3.6 V; cases 0-1 from 100 ns at most 3.7 uV; case 7 0.213 V), early_high_v 0.228 V, shortest
+pulse 3.0 ns (tt/125C/3.6 V case 3, the runt), idd_en0 133 nA, valid time 28.8 ns; reported vout_off_all_v 0.296 V and
+vdd_low_from_v up to 1.154 V.  Extracted evidence sets re-measured (94 runs ok; cases 3 / 5 cover 90 of 90 corner-case pairs,
+shortest extracted pulse 4.0 ns at ff/125C/3.0 V).  tbl_en 24 / 24 + 24 / 24 ok.  **Gate TBL PASS**: 178 pairs, 0 failed,
+largest margin use 23.6 % (vout_off_v case 6 at tt/27C/3.3 V), early_high_v 12.2 %, min_pulse_s per pair (cases 0-2, 4, 6, 7)
+19.6 %, worst against worst (cases 3 / 5) 3.0 -> 4.0 ns (a gain), D-012 met.
+Harness cache quirk (found today, not fixed): `runner._dep_hashes` adds `{run_dir}/body.inc` to the key only when that file
+exists, i.e. not on a run's first simulation, so a run simulated once gets a different key the next time and is simulated
+once more (identical deck, identical result).  This is why the evidence sets tbl_en_pexw_* re-simulated today (new on
+2026-11-21) while TB8 cases 0-5 and tbl_en (work dirs from earlier iterations) stayed cached; the 90 new TB8 runs will
+re-simulate once on TB8's next run.  Changing the key formula would invalidate the existing cache instead, so it stays.

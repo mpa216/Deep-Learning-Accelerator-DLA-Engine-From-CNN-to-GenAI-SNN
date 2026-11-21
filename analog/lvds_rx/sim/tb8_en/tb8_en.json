@@ -1,18 +1,61 @@
 {
  "name": "tb8_en",
- "description": "TB8: EN 0 -> 1 -> 0, EN = 0 supply current, VDD held below 2.0 V, supply ramps of 1 us and 100 us, EN rising mid-ramp, three lanes on one bias (two copies: inputs HIGH / LOW)",
+ "description": "TB8: EN 0 -> 1 -> 0, EN = 0 supply current, VDD held below 2.0 V, supply ramps of 1 us and 100 us (EN tied high, and EN = 0 throughout: cases 6, 7, decision D-019), EN rising mid-ramp, three lanes on one bias (two copies: inputs HIGH / LOW)",
  "deck": "tb8_en.spice",
  "corners": "full45",
- "grid": {"case": [0, 1, 2, 3, 4, 5]},
+ "grid": {
+  "case": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ]
+ },
  "prep": "hooks.py:prep",
  "post": "hooks.py:post",
  "limits": {
-  "min_pulse_s": {"min": 2e-9, "scale": 1e9, "unit": "ns"}
+  "min_pulse_s": {
+   "min": 2e-09,
+   "scale": 1000000000.0,
+   "unit": "ns"
+  }
  },
  "timeout": 240,
- "retry": {"timeout": 240, "variants": [
-  {"name": "step49p", "sub": [[".tran 50p ", ".tran 49p "]]},
-  {"name": "reltol0.05", "sub": [[".tran 50p ", ".option reltol=0.05\n.tran 50p "]]},
-  {"name": "reltol0.05_step47p", "sub": [[".tran 50p ", ".option reltol=0.05\n.tran 47p "]]}]},
+ "retry": {
+  "timeout": 240,
+  "variants": [
+   {
+    "name": "step49p",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".tran 49p "
+     ]
+    ]
+   },
+   {
+    "name": "reltol0.05",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".option reltol=0.05\n.tran 50p "
+     ]
+    ]
+   },
+   {
+    "name": "reltol0.05_step47p",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".option reltol=0.05\n.tran 47p "
+     ]
+    ]
+   }
+  ]
+ },
  "jobs": 6
 }

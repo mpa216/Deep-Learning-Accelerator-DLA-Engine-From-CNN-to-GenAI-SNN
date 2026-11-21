@@ -28,6 +28,11 @@ Added checks.
                     device area, which the layout keeps, so sigma is taken as unchanged).
   D-012             sizing/FROZEN.md freeze condition at ff/125C/3.6 V, VIC 0.05 V, extracted netlist: operating point,
                     A1 >= 4, every TB4 timing limit, the TB5 eye limits; failing it takes ladder R6 (re-opens the sizing).
+Worst against worst (decision D-019).  TB8 min_pulse_s in cases 3 and 5 (EN high, or rising, while the supply ramps): the
+                    wake-up pulse is a race between the output chain waking and the comparator settling and does not pair
+                    corner by corner, so the shortest pre-layout value over TB8's own 45 corners is set against the shortest
+                    extracted value over the 45-corner evidence runs (tbl_en_pex + tbl_en_pexw_pulse / _cold / _rest), the
+                    frozen 30 % rule applied to those two values; incomplete coverage fails the check.  Other cases: per pair.
 """
 import collections
 import json
@@ -51,6 +56,12 @@ D012 = "ff_125c_3v60"
 BENCHES = ["tbl_op", "tbl_ac", "tbl_trip", "tbl_pd", "tbl_pkg", "tbl_eye", "tbl_idle", "tbl_en", "tbl_lanes"]
 SOURCE = {"tbl_op": "TB1", "tbl_ac": "TB2", "tbl_trip": "TB3_trip", "tbl_pd": "TB4", "tbl_pkg": "TB12", "tbl_eye": "TB5",
           "tbl_idle": "TB7", "tbl_en": "TB8", "tbl_lanes": "TB10"}
+# D-019 (2026-11-22): pre-layout against extracted over the 45 corners, cases 3 and 5, the extracted pulse was longer in 62
+# pairs and shorter in 25 (.scratch/t11/iter2/tb8_45pairs.py); ss/125C: 148 -> 28, 12 -> 36, 23 -> 43 ns at 3.0 / 3.3 / 3.6 V.
+WVW = dict(bench="tbl_en", metric="min_pulse_s", cases=[3, 5], corners="full45",
+           pre=["sim/tb8_en/results/tb8_en/results.json"],
+           pex=["sim/tbl_en/results/tbl_en_pex/results.json", "sim/tbl_en/results/tbl_en_pexw_pulse/results.json",
+                "sim/tbl_en/results/tbl_en_pexw_cold/results.json", "sim/tbl_en/results/tbl_en_pexw_rest/results.json"])
 NOT_MEASURABLE = {
     "min_headroom_v": "per-device VDS - VDsat: the extracted netlist has layout fingers, not the schematic devices",
     "gmid_err": "per-device LUT comparison (fingers, not schematic devices)",
@@ -165,6 +176,47 @@ def check(chk, pre, pex, spec, origin):
                n_fail=sum(r["verdict"] in ("FAIL", "NODATA") for r in rr),
                n_favorable_large=sum(r["verdict"] == "FAVORABLE_LARGE" for r in rr),
                n_pre_outside=sum(r["verdict"] == "PRE_OUTSIDE" for r in rr))
+    res["status"] = "FAIL" if res["n_fail"] else "PASS"
+    return res
+
+
+def worst_vs_worst(chk, spec):
+    """D-019: one row, the shortest value of each side over the 45 corners x WVW cases; a missing corner or a run that is not
+    ok on either side fails the check (coverage is part of the claim)."""
+    lo, hi = G._limits(chk, spec)
+    corners = get_corner_set(WVW["corners"])
+    want = {"%s__case%d" % (c.name, k) for c in corners for k in WVW["cases"]}
+    side = {}
+    for var in ("pre", "pex"):
+        vals, notok, gone = {}, set(), []
+        for p in WVW[var]:
+            fp = os.path.join(ROOT, p)
+            if not os.path.isfile(fp):
+                gone.append(p)
+                continue
+            for r in C.load_json(fp)["runs"]:
+                if r["id"] not in want:
+                    continue
+                if r["status"] != "ok":
+                    notok.add(r["id"])
+                    continue
+                v = G._num(r["metrics"].get(chk["metric"]))
+                if v is not None:
+                    vals[r["id"]] = v
+        side[var] = dict(vals=vals, not_ok=sorted(notok - set(vals)), missing_files=gone, missing=sorted(want - set(vals)))
+    a, b = side["pre"]["vals"], side["pex"]["vals"]
+    ia = min(a, key=a.get) if a else None
+    ib = min(b, key=b.get) if b else None
+    lab = "worst of %d corners x cases %s: before layout %s, extracted %s" % (len(corners), WVW["cases"], ia, ib)
+    rows = judge([(lab, a.get(ia), b.get(ib))], lo, hi)
+    complete = all(not s["missing"] and not s["missing_files"] for s in side.values())
+    r0 = rows[0]
+    res = dict(origin="TB8 (D-019: worst against worst)", kind="per_run", metric=chk["metric"], where={"case": WVW["cases"]},
+               n=1, limit=G._fmt_limit(lo, hi), rows=rows, used_max=r0.get("used"), worst_id=r0["id"],
+               n_fail=int(r0["verdict"] in ("FAIL", "NODATA") or not complete),
+               n_favorable_large=int(r0["verdict"] == "FAVORABLE_LARGE"), n_pre_outside=int(r0["verdict"] == "PRE_OUTSIDE"),
+               coverage={v: dict(n=len(s["vals"]), expected=len(want), missing=s["missing"], not_ok=s["not_ok"],
+                                 missing_files=s["missing_files"], files=WVW[v]) for v, s in side.items()})
     res["status"] = "FAIL" if res["n_fail"] else "PASS"
     return res
 
@@ -317,6 +369,14 @@ def main():
                 continue
             if c["kind"] not in ("per_run", "spread", "report"):
                 continue
+            if b == WVW["bench"] and c["kind"] == "per_run" and c["metric"] == WVW["metric"]:
+                # D-019: the wake-up cases worst against worst over 45 corners, the other cases pair by pair
+                grid_cases = C.load_json(os.path.join(ROOT, "sim", b, f"{b}_pre.json"))["grid"]["case"]
+                rest = [k for k in grid_cases if k not in WVW["cases"]]
+                checks.append(check(dict(c, where=dict(c.get("where") or {}, case=rest)), okp, okx, spec, SOURCE[b]))
+                checks.append(worst_vs_worst(c, spec))
+                covered.add(c["metric"])
+                continue
             checks.append(check(c, okp, okx, spec, SOURCE[b]))
             covered.add(c["metric"])
         if b == "tbl_op":          # the supply-current split is not measurable; the total against the sum of the limits
@@ -343,7 +403,8 @@ def main():
     summ["margin_used_max"] = max(used_all) if used_all else None
     out = dict(generated=time.strftime("%Y-%m-%d %H:%M:%S"), git=C.git_state(), criterion=dict(
         used_max=USED_MAX, text="per pair: used = (margin_pre - margin_pex) / margin_pre <= 0.30; exact checks: extracted value "
-                                "within the limit; gains of margin > 30 % listed (favorable_large), not failed"),
+                                "within the limit; gains of margin > 30 % listed (favorable_large), not failed; TB8 min_pulse_s "
+                                "of cases 3 and 5 worst against worst over 45 corners (D-019)"),
         cores={"pre": "netlist/lvds_rx_core.spice", "pex": "sim/tbl/core_pexrc.spice"}, summary=summ, offset=off, d012=d012,
         benches=benches)
     out["status"] = "PASS" if (not summ["benches_missing"] and not summ["runs_not_ok"] and not summ["count_errors"]

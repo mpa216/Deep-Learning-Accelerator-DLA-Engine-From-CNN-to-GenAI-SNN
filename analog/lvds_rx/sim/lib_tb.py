@@ -169,21 +169,31 @@ def vdd_of(ctx):
     return ctx["corner"].vdd
 
 
+def _last_crossing(cr, tt):
+    """The last 50 % crossing time at or before tt (None if there is none); cr sorted."""
+    k = int(np.searchsorted(cr, tt, side="right")) - 1
+    return float(cr[k]) if k >= 0 else None
+
+
 def pulses_norm(t, v, vs, vmin=0.5, lo=0.1, hi=0.9):
     """Pulse bookkeeping of an output that has to be judged against its OWN supply (power-up ramps).  y = v / vs(t) is only defined where vs >= vmin
-    (below that the output is called LOW).  A level change is a completed swing: y leaves one rail zone (<= lo or >= hi) and reaches the other.
-    Returns (min_width_s of completed pulses between consecutive 50 % crossings of y (BIG if < 2 crossings),
+    (below that the output is called LOW).  A level change is a completed swing: y leaves one rail zone (<= lo or >= hi) and reaches the other; it is
+    timed at its last 50 % crossing before the other zone is reached.
+    Returns (min_width_s between consecutive completed level changes (BIG if fewer than 2),
              n_runt: excursions off a rail zone that return to it without reaching the other,
-             min_runt_width_s: their width measured at the departing threshold (BIG if none))."""
+             min_runt_width_s: their width measured at the departing threshold (BIG if none)).
+    Decision D-019 (2026-11-22): until then the widths were taken between EVERY pair of consecutive 50 % crossings, contrary to this docstring, so
+    a runt that grazed 50 % read as a pulse as narrow as its time above 50 % (TB8 tt/125C/3.6 V case 3: a 3 ns runt up to 51 % of the supply read
+    84 ps).  Runts are judged by their own width (min_runt_width_s), unchanged.  TB8 is the only user (sim/tb8_en/hooks.py; tbl_en reuses it)."""
     t = np.asarray(t, float)
     v = np.asarray(v, float)
     vs = np.asarray(vs, float)
     y = np.where(vs >= vmin, v / np.maximum(vs, vmin), 0.0)
-    cr = A.crossings(t, y, 0.5, "both")
-    mw = float(np.min(np.diff(cr))) if len(cr) >= 2 else BIG
+    cr = np.asarray(A.crossings(t, y, 0.5, "both"), float)
     state = "low" if y[0] <= lo else ("high" if y[0] >= hi else "mid")
     n = 0
     widths = []
+    trans = []                  # times of the completed level changes
     t_dep = None
     for i in range(len(t)):
         x = y[i]
@@ -193,6 +203,7 @@ def pulses_norm(t, v, vs, vmin=0.5, lo=0.1, hi=0.9):
         elif state == "up":
             if x >= hi:
                 state = "high"
+                trans.append(_last_crossing(cr, t[i]))
             elif x <= lo:
                 n += 1
                 widths.append(t[i] - t_dep)
@@ -203,10 +214,13 @@ def pulses_norm(t, v, vs, vmin=0.5, lo=0.1, hi=0.9):
         elif state == "down":
             if x <= lo:
                 state = "low"
+                trans.append(_last_crossing(cr, t[i]))
             elif x >= hi:
                 n += 1
                 widths.append(t[i] - t_dep)
                 state = "high"
         else:
             state = "low" if x <= lo else ("high" if x >= hi else "mid")
+    trans = [x for x in trans if x is not None]
+    mw = float(np.min(np.diff(trans))) if len(trans) >= 2 else BIG
     return mw, n, (float(min(widths)) if widths else BIG)

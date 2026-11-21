@@ -15,7 +15,10 @@
    "seed": null,
    "status": "ok",
    "metrics": {
-    "vout_off_v": 0.352148601,
+    "vout_off_all_v": 0.352148601,
+    "vout_off_v": 2.00259035e-06,
+    "vdd_at_peak_v": 1.08144,
+    "vdd_low_from_v": 1.14144,
     "idd_en0_a": 8.067349423754153e-08,
     "n_runt": 0.0,
     "min_pulse_all_s": 1.1000000000000001e-08,
@@ -27,9 +30,9 @@
     "end_b_v": 3.3213452477227722e-09
    },
    "errors": [],
-   "elapsed": 118.973,
+   "elapsed": 111.258,
    "cached": false,
-   "hash": "41d76cb370aedc9430ee675cc9eb07e0c6eed7333fb959f4fa297e228bca2c98",
+   "hash": "6d741d3bd5900fe9e0eb23ade04844f93b8a58e3ac9d6353f7b5ee095bcab23a",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_m40c_3v00__case0"
@@ -47,7 +50,10 @@
    "seed": null,
    "status": "ok",
    "metrics": {
-    "vout_off_v": 0.346202826,
+    "vout_off_all_v": 0.346202826,
+    "vout_off_v": 1.32384947e-06,
+    "vdd_at_peak_v": 1.064912,
+    "vdd_low_from_v": 1.102912,
     "vout_en1_v": 1.99523457,
     "en1_valid_ok": 1.0,
     "n_runt": 0.0,
@@ -60,9 +66,9 @@
     "end_b_v": 2.881920005445545e-09
    },
    "errors": [],
-   "elapsed": 119.676,
+   "elapsed": 121.284,
    "cached": false,
-   "hash": "37ad6ff1b77f1c5487defad19c9e3565a4c2a7b6e89d562e578f3d57b22c0d95",
+   "hash": "9cf519f8f03a539ebd4a889c141faf4d84d1205056f24f331dd714a6d2e4c9b6",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_m40c_3v00__case1"
@@ -80,7 +86,10 @@
    "seed": null,
    "status": "ok",
    "metrics": {
-    "vout_off_v": 0.362982792,
+    "vout_off_all_v": 0.362982792,
+    "vout_off_v": 2.76995267e-07,
+    "vdd_at_peak_v": 1.123584,
+    "vdd_low_from_v": 1.123584,
     "idd_en0_a": 4.715245350830565e-08,
     "n_runt": 0.0,
     "min_pulse_all_s": 1e-08,
@@ -92,9 +101,9 @@
     "end_b_v": 3.6078360833663365e-09
    },
    "errors": [],
-   "elapsed": 119.358,
+   "elapsed": 122.728,
    "cached": false,
-   "hash": "2b8364c8c4544af567e105a5da62f4308ed3fc41215474de3e71a274fc7ad8c9",
+   "hash": "cf2eef33d4395e66ecaa251e59606a7941d74df715b5251e336810037ebbae4c",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_m40c_3v30__case0"
@@ -112,7 +121,10 @@
    "seed": null,
    "status": "ok",
    "metrics": {
-    "vout_off_v": 0.346202825,
+    "vout_off_all_v": 0.346202825,
+    "vout_off_v": 1.32384327e-06,
+    "vdd_at_peak_v": 1.064912,
+    "vdd_low_from_v": 1.102912,
     "vout_en1_v": 1.9933619,
     "en1_valid_ok": 1.0,
     "n_runt": 0.0,
@@ -125,9 +137,9 @@
     "end_b_v": 2.8819199899999992e-09
    },
    "errors": [],
-   "elapsed": 119.929,
+   "elapsed": 127.496,
    "cached": false,
-   "hash": "4f31ebe453e95ad0746a3d3bc528b0e05d553e7bf4e810296db094c4d0b56d0b",
+   "hash": "c7a724a50a9a57940b8e6e4e7d3614aedb9a92004dd476d944322e1e319c94ee",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_m40c_3v30__case1"
@@ -145,7 +157,10 @@
    "seed": null,
    "status": "ok",
    "metrics": {
-    "vout_off_v": 0.352758349,
+    "vout_off_all_v": 0.352758349,
+    "vout_off_v": 1.92307731e-07,
+    "vdd_at_peak_v": 1.081728,
+    "vdd_low_from_v": 1.153728,
     "idd_en0_a": 5.459012301926911e-08,
     "n_runt": 0.0,
     "min_pulse_all_s": 1e-08,
@@ -157,9 +172,9 @@
     "end_b_v": 4.125207557920792e-09
    },
    "errors": [],
-   "elapsed": 86.788,
+   "elapsed": 122.396,
    "cached": false,
-   "hash": "f75fcb344c9904c922727912afa54e56b37d5995b5acd1a7609bfa15c9933dfb",
+   "hash": "42e32605719e86ab7c525909fdbbd363587e4d793a78e4f2e01a6efa0edc67dc",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_m40c_3v60__case0"
@@ -177,7 +192,10 @@
    "seed": null,
    "status": "ok",
    "metrics": {
-    "vout_off_v": 0.346202824,
+    "vout_off_all_v": 0.346202824,
+    "vout_off_v": 1.32383806e-06,
+    "vdd_at_peak_v": 1.064912,
+    "vdd_low_from_v": 1.102912,
     "vout_en1_v": 1.99330917,
     "en1_valid_ok": 1.0,
     "n_runt": 0.0,
@@ -190,9 +208,9 @@
     "end_b_v": 2.8819199125742577e-09
    },
    "errors": [],
-   "elapsed": 87.085,
+   "elapsed": 115.735,
    "cached": false,
-   "hash": "366aaa0e711e4a5ccadf6225f1005a1ff23fbbdc93cff4fe83805d729a5eeabd",
+   "hash": "214cb0f9a8c4e535a05609f3d5107e8a9bfa11a87cda10dd7b81003f7a32128b",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_m40c_3v60__case1"

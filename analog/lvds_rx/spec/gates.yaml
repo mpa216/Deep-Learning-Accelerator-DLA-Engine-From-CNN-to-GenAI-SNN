@@ -248,13 +248,16 @@ gates:
     spec: sim/tb8_en/tb8_en.json
     scope:
       corners: {full: full45, smoke: worst5}
-      grid: {case: 6}    # en0, vdd_below_2v, en_rise, ramp_1us, ramp_100us, en_rising_mid_ramp (3 lanes on one bias in every case)
+      grid: {case: 8}    # en0, vdd_below_2v, en_rise, ramp_1us, ramp_100us, en_rising_mid_ramp, ramp_1us_en0, ramp_100us_en0 (D-019) (3 lanes on one bias in every case)
     checks:
-      - {kind: per_run, metric: vout_off_v,   max: 0.33, where: {case: [0, 1]}}     # LOW = <= 0.1*VDD (3.3 V)
+      - {kind: per_run, metric: vout_off_v,   max: 0.33, where: {case: [0, 1, 6, 7]}}  # LOW = <= 0.1*VDD (3.3 V); cases 0-1 from 100 ns, 6-7 whole run (D-019)
+      - {kind: per_run, metric: early_high_v, max: 0.33, where: {case: 5}}             # D-019: EN = 0 on the 20 us ramp until VDD = 2.0 V
+      - {kind: report,  metric: vout_off_all_v, where: {case: [0, 1]}}                # D-019: whole-run value incl. the 50 ns setup ramp
+      - {kind: report,  metric: vdd_low_from_v, where: {case: [0, 1, 6, 7]}}           # D-019: supply from which the EN = 0 outputs stay <= 10 % of it
       - {kind: per_run, metric: idd_en0_a,    max: $spec.current.idd_en0_max_a.t27c, where: {case: 0, temp: [-40, 27]}}
       - {kind: per_run, metric: idd_en0_a,    max: $spec.current.idd_en0_max_a.t125c, where: {case: 0, temp: 125}}
       - {kind: per_run, metric: valid_time_s, max: $spec.en.valid_after_s, where: {case: 2}}
-      - {kind: per_run, metric: min_pulse_s,  min: $spec.en.min_pulse_s}
+      - {kind: per_run, metric: min_pulse_s,  min: $spec.en.min_pulse_s}           # completed swings only, runts by their own width (D-019)
       - {kind: report,  metric: min_pulse_all_s}                                  # D-011: whole-run value incl. the 50 ns setup ramp
 
   TB9:

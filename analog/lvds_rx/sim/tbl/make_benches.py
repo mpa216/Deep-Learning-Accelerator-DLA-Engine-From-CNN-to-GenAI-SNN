@@ -38,7 +38,7 @@ BENCHES = {
     "tbl_pkg":   ("tb12_pkg", "tb12_pkg", ["ss:125:3.0", "fs:27:3.3"], {"pkg": [0, 1, 2, 3], "rate": [1e8, 2e8]}, 10),
     "tbl_eye":   ("tb5_eye", "tb5_eye", [D012], {"vic": [0.05], "vid": [0.1, 0.35], "rate": [1e8, 2e8]}, 10),   # D-012 eye run
     "tbl_idle":  ("tb7_idle", "tb7_idle", "worst5", {"vic": [1.2], "term": [0, 1, 2]}, 10),
-    "tbl_en":    ("tb8_en", "tb8_en", [D012, "ss:125:3.0", "tt:27:3.3"], {"case": [0, 1, 2, 3, 4, 5]}, 10),
+    "tbl_en":    ("tb8_en", "tb8_en", [D012, "ss:125:3.0", "tt:27:3.3"], {"case": [0, 1, 2, 3, 4, 5, 6, 7]}, 10),   # 6, 7: D-019
     "tbl_lanes": ("tb10_lanes", "tb10_lanes", "tt", {"mc3s": [0]}, 10),
 }
 
