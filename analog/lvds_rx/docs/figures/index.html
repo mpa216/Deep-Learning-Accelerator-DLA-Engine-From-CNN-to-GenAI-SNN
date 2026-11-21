@@ -116,14 +116,14 @@
 
 <h2>4. The layout</h2>
 <figure><img src="layout_macro.png" alt="Layout of the whole macro">
-<figcaption>The whole macro, 650 &times; 192.1 &micro;m: three identical lanes (centred at 100, 300 and 500 &micro;m) and the shared bias block on the right. The inputs arrive at the top edge (pad side); the enable and the three outputs leave at the bottom edge (core side). Everything is drawn on Metal1 to Metal3, so the chip's own wiring can pass over it on Metal4 and Metal5.</figcaption></figure>
+<figcaption>The whole macro, 650 &times; 194.2 &micro;m: three identical lanes (centred at 100, 300 and 500 &micro;m) and the shared bias block on the right. The inputs arrive at the top edge (pad side); the enable and the three outputs leave at the bottom edge (core side). Everything is drawn on Metal1 to Metal3, so the chip's own wiring can pass over it on Metal4 and Metal5.</figcaption></figure>
 <div class="two">
 <figure><img src="layout_lane.png" alt="Layout of one lane">
-<figcaption>One lane, 142.8 &times; 124.3 &micro;m, rows from the top: the two protection cells and the PMOS tail; the PMOS input pair with its dump twins (the long block); the fold cascodes and sinks; the NMOS input pair with its tail and the stage-2 tail; the stage-1 load resistors with the stage-2 pair and its resistors; the stage-2 loads with the stage-3 mirror; the output gates. The hatched horizontal bands are the VDD and VSS power straps.</figcaption></figure>
+<figcaption>One lane, 142.8 &times; 126.4 &micro;m, rows from the top: the two protection cells and the PMOS tail; the PMOS input pair with its dump twins (the long block); the fold cascodes and sinks; the NMOS input pair with its tail and the stage-2 tail; the stage-1 load resistors with the stage-2 pair and its resistors; the stage-2 loads with the stage-3 mirror; the output gates. The hatched horizontal bands are the VDD and VSS power straps.</figcaption></figure>
 <figure><img src="layout_bias.png" alt="Layout of the bias block">
-<figcaption>The bias block, 53.2 &times; 139.0 &micro;m: the reference resistor and the other bias resistors, the NMOS and PMOS reference diodes and their mirrors, the Vref divider with its 2 pF decoupling capacitor, and the enable switches.</figcaption></figure>
+<figcaption>The bias block, 53.2 &times; 141.1 &micro;m: the reference resistor and the other bias resistors, the NMOS and PMOS reference diodes and their mirrors, the Vref divider with its 2 pF decoupling capacitor, and the enable switches.</figcaption></figure>
 </div>
-<p>All three pass the foundry design-rule deck, strict layout-versus-schematic, the antenna checks and the deliberate-fault tests (gate LAYOUT). These pictures show the layout after the stage-2 re-size of 2026-11-15 (decision D-016); the outline did not change. <code>docs/figures/make_layout_figures.py</code> renders them from the delivered GDS files.</p>
+<p>All three pass the foundry design-rule deck, strict layout-versus-schematic, the antenna checks and the deliberate-fault tests (gate LAYOUT). These pictures show the layout after the second stage-2 re-size (2026-11-21, decision D-018): the hysteresis loads got more fingers, so the lane grew 2.1 &micro;m in height and the macro became 650 &times; 194.2 &micro;m, still inside the 600 &times; 150 &micro;m core limit. <code>docs/figures/make_layout_figures.py</code> renders them from the delivered GDS files.</p>
 
 <h2>5. Where things stand</h2>
 <table>
