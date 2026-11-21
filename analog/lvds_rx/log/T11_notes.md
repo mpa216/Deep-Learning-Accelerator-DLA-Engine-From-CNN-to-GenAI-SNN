@@ -284,3 +284,16 @@ window) gives 0.000 V pre-layout and extracted; completed-swing pulse widths giv
 extracted runs unchanged.  A limit failed on the extraction, so the test-definition change (draft D-019,
 `.scratch/t11/iter2/D-019_draft.md`: the two measurement changes, the EN = 0 spec-ramp checks added, TBL's pulse check
 worst against worst) or a design change is the owner's decision; nothing is changed until then.
+
+Evidence, continued (2026-11-21 15:50-18:26; scheduler `.scratch/t11/iter2/chain5.py`, queue file, max 4 simulations):
+`tbl_en_pexw_cold` (-40 C) and `tbl_en_pexw_rest` (the 23 corners left) give the extracted macro all 45 corners on
+cases 3 / 5.  Pulse widths (completed-swing rule, offline): worst 4.0 ns extracted (ff/125C/3.0 V) against 3.0 ns
+pre-layout; per pair longer in 62 of 90, shorter in 25 (chaotic, `.scratch/t11/iter2/tb8_45pairs.py`).  EN = 0 off-state
+on the 20 us ramp (case 5 early_high_v): higher extracted at **all 45 corners**, worst 0.228 -> 0.275 V (46 % of the
+margin, ss/-40C): systematic.  Scratch bench `.scratch/tb8x/` (cases 6 / 7 = EN = 0 on the 1 us / 100 us spec ramps;
+`.option reltol=0.01` as the frozen bench gives cases 1 / 3 / 4, after 21 of the first 24 case-7 runs stalled to the
+reltol-0.05 retry): pre-layout 85 / 90 ok (5 case-7 runs stall in every variant), worst 0.262 V (1 us) / 0.213 V
+(100 us); extracted at the six worst corners 0.316 V / 0.254 V (ss/-40C): the layout uses 80 % / 35 % of the margin
+there and leaves 14 mV on the 1 us ramp; at TBL's own corners at most 24 %.  The EN = 0 off-state peak sits at VDD
+0.8-1.15 V at a third of the supply: the output is held LOW through a NAND and three inverters (`lvds_out`), none of
+which conducts fully below about 1 V.  Draft D-019 updated; the owner is asked (briefing page version 2).
