@@ -198,7 +198,7 @@ git push origin lvds-rx                     # publish the branch
 |---|---|
 | Full pre-layout regression, 4 jobs | 4 to 8 hours (the 15 000-run offset Monte Carlo is the biggest part) |
 | `make layout` | about 20 minutes (leaf tests 13) |
-| Post-layout suite, 4 jobs | 5 to 6 hours; the extracted three-lane TB10 run alone takes 5.3 hours on one job |
+| Post-layout suite, 4 jobs | set by the other benches on 3 workers (5.3 hours on 2 workers in iteration 0); the extracted three-lane TB10 run takes about 2.5 hours on one job (9046 s in iteration 1) |
 | One extracted run | 15 to 80 x its pre-layout time (TB4 about 4 min, TB12 about 15 min) |
 | `make package` | about 3 minutes |
 

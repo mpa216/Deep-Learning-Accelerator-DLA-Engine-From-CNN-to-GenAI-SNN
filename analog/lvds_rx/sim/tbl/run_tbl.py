@@ -33,6 +33,19 @@ def cmd(bench, var, jobs, force):
     return c + (["--force"] if force else [])
 
 
+def long_elapsed():
+    """The long run's own simulation time (sum of its runs' elapsed in results.json).  Its logged wall is taken when it is
+    joined, after the other benches: the 19207 s logged on 2026-11-14 was the other benches' time, not TB10's."""
+    p = os.path.join(ROOT, "sim", LONG[0], "results", "%s_%s" % LONG, "results.json")
+    try:
+        import json
+        with open(p) as f:
+            runs = json.load(f).get("runs", [])
+        return "%.0f s" % sum(float(r.get("elapsed") or 0) for r in runs)
+    except Exception:  # noqa: BLE001 - a missing or partial file only loses this note
+        return "unknown"
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--jobs", type=int, default=4)
@@ -62,7 +75,8 @@ def main():
     if long_p:
         p, t0 = long_p
         p.wait()
-        log("%s_%s rc %d wall %.0f s" % (LONG[0], LONG[1], p.returncode, time.time() - t0))
+        log("%s_%s rc %d joined after %.0f s, simulation %s" % (LONG[0], LONG[1], p.returncode, time.time() - t0,
+                                                                  long_elapsed()))
         rc = rc or (p.returncode not in (0, 1))
     if not a.no_eval:
         r = subprocess.run(["python3", os.path.join(HERE, "evaluate.py")], cwd=ROOT, capture_output=True, text=True)

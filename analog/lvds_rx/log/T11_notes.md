@@ -128,6 +128,8 @@ triggered by the freeze condition.  Failed (extracted against pre-layout):
   2 ns); 6 runt excursions appear at tt case 4 (13 ns wide).  Within the limit, over 30 % of the margin.
 Passed: TB1 subset, TB2 gain, TB3 V_H (DC), systematic offset (0.000 mV added), TB5 eye at the D-012 corner, TB7, TB10,
 TB12 (worst eye 0.929 -> 0.887 UI).  Extracted run cost: TB10 one run 5.3 h (76 x pre-layout), TB12 ~15 min, TB4 ~4 min.
+(Correction, 2026-11-21: the 5.3 h was the other benches' time.  run_tbl.py logged the parallel TB10 run's wall when it
+joined it after them; it now also logs the run's own simulation time.  The iteration-1 extracted TB10 took 9046 s.)
 
 ## Iteration 1: first post-layout number (2026-11-15)
 
