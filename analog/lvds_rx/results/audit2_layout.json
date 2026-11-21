@@ -1,13 +1,13 @@
 {
  "audit": "AUDIT_2 step (c): layout checks from the delivered GDS alone",
- "started": "2026-11-20 17:55:57",
+ "started": "2026-11-21 02:41:43",
  "gds": "results/layout/lvds_rx_x3.gds",
  "steps": {
   "identity": {
-   "gds_sha256": "a4d88aa55f6079d4f23155cfc3dc2cd6cc5577ff3afd60067faebfe1505cb473",
+   "gds_sha256": "892add3ba9d5678886b7c95fd525a1ce2fd3bd1663b6679324fd69c7b6b96f89",
    "pex_netlists_from": {
-    "lvds_rx_x3.pex_c.spice": "a4d88aa55f6079d4f23155cfc3dc2cd6cc5577ff3afd60067faebfe1505cb473",
-    "lvds_rx_x3.pex_rc.spice": "a4d88aa55f6079d4f23155cfc3dc2cd6cc5577ff3afd60067faebfe1505cb473"
+    "lvds_rx_x3.pex_c.spice": "892add3ba9d5678886b7c95fd525a1ce2fd3bd1663b6679324fd69c7b6b96f89",
+    "lvds_rx_x3.pex_rc.spice": "892add3ba9d5678886b7c95fd525a1ce2fd3bd1663b6679324fd69c7b6b96f89"
    },
    "frame": {
     "top_cells": [
@@ -18,7 +18,21 @@
      0.0,
      0.0,
      650.0,
-     192.1
+     194.2
+    ],
+    "recorded_fixed_bbox_um": [
+     0.0,
+     0.0,
+     650.0,
+     194.2
+    ],
+    "core_um": [
+     600.0,
+     144.2
+    ],
+    "spec_core_max_um": [
+     600,
+     150
     ],
     "ok": true
    },
@@ -39,6 +53,7 @@
    "total": 0,
    "rules": [],
    "allowed": 0,
+   "other": 0,
    "effective": 0,
    "ok": true
   },
@@ -55,14 +70,14 @@
    "violations": 0,
    "layers": {
     "Via1 design (SRAM IP excluded)": {
-     "cuts": 1585,
-     "clusters": 1585,
+     "cuts": 1588,
+     "clusters": 1588,
      "big": 0,
      "violations": 0
     },
     "Via1 incl. SRAM IP": {
-     "cuts": 1585,
-     "clusters": 1585,
+     "cuts": 1588,
+     "clusters": 1588,
      "big": 0,
      "violations": 0
     },
@@ -109,7 +124,7 @@
    "clean": true,
    "ok": true,
    "schematic": "layout/macro/results/lvds_rx_x3.spice",
-   "schematic_sha256": "30d05ae396e30be309b420822e8fbc1a0a03132036ba09cd4033d63469781176",
+   "schematic_sha256": "f60ba52f0c4b7d327bf6def078a85087d2a3e9b3747ed2cc5920affa23fe570a",
    "extraction_warnings": [
     "Warning: Calma reading is not undoable!  I hope that's OK.",
     "lvds_lane: 12 warnings",
@@ -135,8 +150,8 @@
    "counts_equal": true,
    "clean": true,
    "reference": "netlist/lvds_rx_lvs_ref.spice",
-   "sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
-   "frozen_sha256": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+   "sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
+   "frozen_sha256": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
    "frozen_ok": true,
    "flattened_subcells": [
     "lvds_esd2",
@@ -170,8 +185,8 @@
     "nets_delivered": 93,
     "nets_only_one_side": [],
     "total_fF": [
-     5672.358,
-     5672.358
+     5685.176,
+     5685.176
     ],
     "max_abs_diff_fF": 0.0,
     "worst_net": "VDD",
@@ -180,42 +195,42 @@
    "pex_rc": {
     "elements_fresh": {
      "X": 1047,
-     "C": 5798,
-     "R": 10604,
+     "C": 5813,
+     "R": 10601,
      "D": 12
     },
     "elements_delivered": {
      "X": 1047,
-     "C": 5798,
-     "R": 10604,
+     "C": 5813,
+     "R": 10601,
      "D": 12
     },
     "r_total_ohm": [
-     982562.359,
-     982562.359
+     3453739.01,
+     3453739.01
     ],
     "rc_repair": {
-     "pairs": 487,
-     "scaled": 5757,
+     "pairs": 475,
+     "scaled": 5775,
      "added": 24,
      "missing": [],
-     "max_rel_err": 4.106299599406638e-06,
+     "max_rel_err": 4.230261599405019e-06,
      "total_fF": {
-      "c_extraction": 2836.2,
-      "rc_before": 4283.4,
-      "rc_after": 2836.2
+      "c_extraction": 2842.6,
+      "rc_before": 4285.7,
+      "rc_after": 2842.6
      }
     },
     "ok": true
    },
    "ok": true,
    "extract_s": [
-    2.4,
-    10.9
+    2.2,
+    9.5
    ]
   }
  },
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 50.6
+ "wall_s": 73.9
 }

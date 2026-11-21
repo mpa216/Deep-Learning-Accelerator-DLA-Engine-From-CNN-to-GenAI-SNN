@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """run_checks.py -- T12 package checks (PLAN_V2 section 7).  Container: tools/cx python3 package/checks/run_checks.py
 
-  gds      DBU 0.001, top cell lvds_rx_x3, FIXED_BBOX boundary (layer 0/0) = 0,0 .. 650 x 192.1 um
+  gds      DBU 0.001, top cell lvds_rx_x3, FIXED_BBOX boundary (layer 0/0) = results/layout.json fixed_bbox_um
   lef      CLASS BLOCK, ORIGIN 0 0, SIZE = the GDS boundary; pins = spec/pins.yaml with the spec's layer, side (RX on the top
            edge, EN / RXk_O on the bottom edge) and x within 1 um of the inferred slot; VDD / VSS ports on Metal3 straps
   openroad the LEF loads with the gf180mcuD tech LEF (odb); width / height; antenna properties by the rules of LibreLane's
@@ -32,6 +32,13 @@ TECH_LEF = os.path.join(os.environ.get("PDK_ROOT", "/foss/pdks"), os.environ.get
 WD = os.path.join(ROOT, ".scratch", "t12", "checks")
 
 
+def frame():
+    """FIXED_BBOX and core of the delivered layout (results/layout.json, written by layout/macro/run_macro.py): the frame
+    follows the lane height (T11 iteration 2: 650 x 194.2 um)."""
+    lj = C.load_json(C.path("results", "layout.json"))
+    return lj["fixed_bbox_um"], lj["core_um"]
+
+
 def sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
@@ -51,7 +58,7 @@ def check_gds():
     bb = cell.bbox_per_layer(li) if li is not None else None
     box = None if bb is None or bb.empty() else [bb.left * ly.dbu, bb.bottom * ly.dbu, bb.right * ly.dbu, bb.top * ly.dbu]
     ok = abs(ly.dbu - 0.001) < 1e-12 and top == [CELL] and box is not None and \
-        all(abs(a - b) < 1e-6 for a, b in zip(box, [0.0, 0.0, 650.0, 192.1]))
+        all(abs(a - b) < 1e-6 for a, b in zip(box, frame()[0]))
     return dict(ok=ok, dbu=ly.dbu, top_cells=top, boundary_um=box)
 
 
@@ -148,7 +155,8 @@ def check_openroad():
     if not m:
         return dict(ok=False, error=out[-1500:])
     r = json.loads(m.group(1))
-    r["ok"] = bool(r.get("found") and abs(r["width_um"] - 650.0) < 1e-6 and abs(r["height_um"] - 192.1) < 1e-6
+    fb = frame()[0]
+    r["ok"] = bool(r.get("found") and abs(r["width_um"] - (fb[2] - fb[0])) < 1e-6 and abs(r["height_um"] - (fb[3] - fb[1])) < 1e-6
                    and not r["antenna_missing"])
     r["errors"] = [l for l in out.splitlines() if re.search(r"\[ERROR", l)][:5]
     r["ok"] = r["ok"] and not r["errors"]

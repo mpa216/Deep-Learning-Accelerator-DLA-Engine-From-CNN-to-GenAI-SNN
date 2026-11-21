@@ -1,14 +1,14 @@
 {
  "audit": "AUDIT_2 step (a): rebuild from sizing/ in a fresh copy",
- "started": "2026-11-20 17:57:08",
+ "started": "2026-11-21 02:42:57",
  "tree": ".scratch/audit2/rebuild",
  "steps": [
   {
    "cmd": "python3 sizing/lvds_rx_sizing.py",
    "rc": 0,
    "tail": [
-    "asserts: 127 total, 0 failed; sigma_total 3.58 mV; I_lane(tt) 757 uA, I_bias(tt) 166 uA",
-    "tt: Iref 52.4 uA, Itp 107.4, Itn 104.5, I3 123.9, VR 1.151, CM 2.149, A1p 7.48 A1n 7.85, f1 112 MHz fp2 0.60 GHz, alpha 4/5"
+    "asserts: 128 total, 0 failed; sigma_total 3.34 mV; I_lane(tt) 755 uA, I_bias(tt) 166 uA",
+    "tt: Iref 52.4 uA, Itp 107.4, Itn 104.5, I3 123.9, VR 1.151, CM 2.149, A1p 7.48 A1n 7.85, f1 112 MHz fp2 0.60 GHz, alpha 4/6"
    ]
   },
   {
@@ -29,17 +29,17 @@
  ],
  "files": {
   "sizing/sizes.spice": {
-   "committed": "366208be9582b0b307e8450291902285ff11501b08a665912376dc8ae721aa23",
-   "rebuilt": "366208be9582b0b307e8450291902285ff11501b08a665912376dc8ae721aa23",
+   "committed": "2549687c013a12cf82f57d1f8fc1da86038a919ca388123934116ce5fe9c6c74",
+   "rebuilt": "2549687c013a12cf82f57d1f8fc1da86038a919ca388123934116ce5fe9c6c74",
    "identical": true,
-   "frozen": "366208be9582b0b307e8450291902285ff11501b08a665912376dc8ae721aa23",
+   "frozen": "2549687c013a12cf82f57d1f8fc1da86038a919ca388123934116ce5fe9c6c74",
    "frozen_ok": true
   },
   "layout/device_table.json": {
-   "committed": "7fd7b43e6c6290b0a9ea9cc2b8f9d1a5b65d0d1d66a1468b77372ffc6fea57ae",
-   "rebuilt": "7fd7b43e6c6290b0a9ea9cc2b8f9d1a5b65d0d1d66a1468b77372ffc6fea57ae",
+   "committed": "bf3e986315b5dab740e73907c1a506005aceeb7559a2af84a2103753987c0d11",
+   "rebuilt": "bf3e986315b5dab740e73907c1a506005aceeb7559a2af84a2103753987c0d11",
    "identical": true,
-   "frozen": "7fd7b43e6c6290b0a9ea9cc2b8f9d1a5b65d0d1d66a1468b77372ffc6fea57ae",
+   "frozen": "bf3e986315b5dab740e73907c1a506005aceeb7559a2af84a2103753987c0d11",
    "frozen_ok": true
   },
   "netlist/lvds_rx_core.spice": {
@@ -50,41 +50,41 @@
    "frozen_ok": true
   },
   "netlist/lvds_rx_lvs_ref.spice": {
-   "committed": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
-   "rebuilt": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+   "committed": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
+   "rebuilt": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
    "identical": true,
-   "frozen": "be0d018006d36601bba1ed81c22c811a23320bf79bc6e6cc38be98ac733a7fbc",
+   "frozen": "e87902ae5471274bb1c62f05e42fc5ebb865eaa982bf160ad5a97e9635c3dd99",
    "frozen_ok": true
   },
   "netlist/lvds_rx_lvs_ref_flat.spice": {
-   "committed": "def2fcc4babd8d2ef99fbcd5af8f82f439a3d6b4dd3c614b199c3c184072ca01",
-   "rebuilt": "def2fcc4babd8d2ef99fbcd5af8f82f439a3d6b4dd3c614b199c3c184072ca01",
+   "committed": "2e34f904a22c7b6aea05affd9dfdb096e38c526a18a971cb0cf2b7261e026746",
+   "rebuilt": "2e34f904a22c7b6aea05affd9dfdb096e38c526a18a971cb0cf2b7261e026746",
    "identical": true,
-   "frozen": "def2fcc4babd8d2ef99fbcd5af8f82f439a3d6b4dd3c614b199c3c184072ca01",
+   "frozen": "2e34f904a22c7b6aea05affd9dfdb096e38c526a18a971cb0cf2b7261e026746",
    "frozen_ok": true
   },
   "results/sizing.json": {
-   "committed": "d56c45a25d0deff4ffe7f14fe128e68d500cd59dd5d62f2ed1670fd07d2e76d3",
-   "rebuilt": "d56c45a25d0deff4ffe7f14fe128e68d500cd59dd5d62f2ed1670fd07d2e76d3",
+   "committed": "533aee7e18ebdf152d61e3bbf6d644473013037e5a862ed182afadd4d548978f",
+   "rebuilt": "533aee7e18ebdf152d61e3bbf6d644473013037e5a862ed182afadd4d548978f",
    "identical": true,
    "frozen": null,
    "frozen_ok": null
   },
   "sizing/sizing_report.md": {
-   "committed": "ea13342df6417e11f16c2b85eed030dc1a22aa788fb22cf26ab3995180c7bc7c",
-   "rebuilt": "ea13342df6417e11f16c2b85eed030dc1a22aa788fb22cf26ab3995180c7bc7c",
+   "committed": "5ea6a3eab145eb2f9e37e62a56d76d90d161c0e14696e0fbfad8fa47beb0c9dd",
+   "rebuilt": "5ea6a3eab145eb2f9e37e62a56d76d90d161c0e14696e0fbfad8fa47beb0c9dd",
    "identical": true,
    "frozen": null,
    "frozen_ok": null
   }
  },
  "sizing_asserts": {
-  "total": 127,
+  "total": 128,
   "failed": 0,
   "tally_ok": 1,
   "nf_m_violations": 0
  },
  "all_ok": true,
  "verdict": "PASS",
- "wall_s": 53.6
+ "wall_s": 41.3
 }

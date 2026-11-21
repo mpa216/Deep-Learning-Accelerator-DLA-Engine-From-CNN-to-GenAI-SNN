@@ -6,7 +6,7 @@ and the reference netlists.  Run in the container (Magic writes the LEF, KLayout
   tools/cx python3 package/make_package.py    everything below
   tools/cx python3 package/checks/run_checks.py
 
-  gds/lvds_rx_x3.gds            copy of results/layout/lvds_rx_x3.gds (DBU 0.001, FIXED_BBOX boundary 0,0 .. 650 x 192.1)
+  gds/lvds_rx_x3.gds            copy of results/layout/lvds_rx_x3.gds (DBU 0.001, FIXED_BBOX boundary of results/layout.json)
   lef/lvds_rx_x3.lef            Magic `lef write -hide` of the GDS (signal pins, OBS on Nwell and Metal1-3, the antenna areas
                                 Magic computes for EN and RXk_O), then: VDD / VSS = every Metal3 strap and gap fill of the
                                 macro (layout database), carved out of the Metal3 OBS with a 0.3 um clearance; DIRECTION / USE
@@ -39,6 +39,13 @@ GDS = os.path.join(ROOT, "results", "layout", CELL + ".gds")
 CORNERS = [("tt_025C_3v30", "tt", 25.0, 3.3, 1.0), ("ss_125C_3v00", "ss", 125.0, 3.0, 1.0), ("ff_n40C_3v60", "ff", -40.0, 3.6, 1.0)]
 M3_CLEAR = 0.3                 # um between a power pin and the remaining Metal3 OBS (Metal3 spacing 0.28 um)
 WORK = os.path.join(ROOT, ".scratch", "t12", "work")
+
+
+def frame():
+    """FIXED_BBOX and core of the delivered layout (results/layout.json, written by layout/macro/run_macro.py): the frame
+    follows the lane height (T11 iteration 2: 650 x 194.2 um)."""
+    lj = C.load_json(C.path("results", "layout.json"))
+    return lj["fixed_bbox_um"], lj["core_um"]
 
 
 def sha(p):
@@ -174,7 +181,8 @@ def write_lef(path):
 def write_libs(d, caps):
     spec = C.load_yaml("spec/spec.yaml")
     ps = pins_spec()
-    area = 650.0 * 192.1
+    fb, _ = frame()
+    area = round((fb[2] - fb[0]) * (fb[3] - fb[1]), 3)
     cl = spec["output"]["load_f"] * 1e12                     # pF
     tr = spec["output"]["edge_10_90_max_s"] * 1e9            # ns
     files = []
