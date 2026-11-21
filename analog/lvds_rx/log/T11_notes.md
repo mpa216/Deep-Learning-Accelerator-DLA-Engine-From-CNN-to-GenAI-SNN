@@ -297,3 +297,18 @@ reltol-0.05 retry): pre-layout 85 / 90 ok (5 case-7 runs stall in every variant)
 there and leaves 14 mV on the 1 us ramp; at TBL's own corners at most 24 %.  The EN = 0 off-state peak sits at VDD
 0.8-1.15 V at a third of the supply: the output is held LOW through a NAND and three inverters (`lvds_out`), none of
 which conducts fully below about 1 V.  Draft D-019 updated; the owner is asked (briefing page version 2).
+
+Owner's decision (2026-11-21, about 19:50): the owner rules out on-chip resistors (area) and asked whether an external
+pull-up / pull-down could do the job.  Answer: no.  RX0_O-RX2_O and EN are core-side pins (`spec/pins.yaml`) that never
+reach a package pin; only the RX pairs do, and they already carry the off-chip 100 ohm termination (`spec.yaml`
+input.termination).  A resistor on the input side does not act on the output stage (the failing cases already hold the
+inputs at +-350 mV).  The owner then chose **option 1, waiver D-019** (`.scratch/t11/iter2/D-019_draft.md`), to be applied
+after the iteration-2 full regression (`tools/run_full.sh 4`, started 19:13 by chain5): TB8 post-processing is not part of
+the harness cache key, so editing `sim/tb8_en/hooks.py` or `sim/lib_tb.py` mid-run would mix definitions.
+`lib_tb.pulses_norm` is used only by TB8 (`sim/tb8_en/hooks.py`; the TBL power-up bench reuses those hooks), so the
+completed-swing fix touches no other bench.  Also done: `tb8x_pex_rt` (the six extracted corners with reltol 0.01) equals
+`tb8x_pex` within 0.1 mV at all 12 points; TB4b PASS (70 / 70, worst tPD 4.597 ns at ss/125C/3.0 V, VID 0.2 V); TB5 PASS
+(180 / 180, eye >= 0.926 UI, no bit errors).  Briefing page version 3 adds a plain-language guide (guide.html) and
+expected / actual for every check.  Note on the "1.15 V" level: `tb8_low_from.py` reports the supply at the last sample
+above 10 %; interpolated, the outputs come down at about 1.18 V on the worst run (ss/-40C/3.3 V, case 0), so the brief
+now says "about 1.2 V".
