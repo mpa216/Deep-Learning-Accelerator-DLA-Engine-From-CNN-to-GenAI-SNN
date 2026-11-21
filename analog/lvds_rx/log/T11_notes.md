@@ -248,3 +248,39 @@ least-margin corners, `sim/tbl_en/tbl_en_pexw_off.json` (ss/-40C x 3 supplies, c
 `sim/tbl_en/tbl_en_pexw_pulse.json` (every process at 125 C x 3 supplies, cases 3 and 5), then TB4 / TB4b / TB5 and the
 full regression.  If every absolute TB8 limit holds on the extraction, gate TBL's two checks go to a waiver entry with
 that evidence for AUDIT_2 to rule on (the owner can overrule); if not, a design or test-definition question for the owner.
+
+Iteration-2 pre-runs (simulations only, `run_all.py --stage sim`; gates evaluated into a scratch table): **TB3_hmc PASS**
+600 / 600 runs, V_H 7.30-24.20 mV (window 6-35 mV), mean +- 3 sd 6.96-24.70 mV; ff/-40C/3.6 V mean 9.8-10.1 mV, sd
+0.78-0.94 mV (iteration 1: mean 8.3-8.6, sd 1.4-1.6, min 4.0 mV, 17 runs below 6 mV).  **TB3_trip PASS** 270 / 270, V_H
+9.10-25.30 mV, no run needed a retry variant.
+
+## Iteration 2: TB8 power-up checks (2026-11-21)
+
+**TB8 pre-layout FAIL** (270 / 270 runs ok, `sim/tb8_en/results/tb8_en`): min_pulse_s 0.084 ns (limit 2 ns) at tt/125C/3.6 V,
+case 3 (1 us ramp, EN tied high).  Copy b (expected LOW) makes a runt from 9 % to 51 % of the supply (0.505 V at VDD
+0.99 V, 273-277 ns) and back; the 84 ps is the part above 50 %.  `lib_tb.pulses_norm` documents completed swings but takes
+every pair of consecutive 50 % crossings, so a runt grazing 50 % counts as a pulse; the runt's own width is 3 ns.  The
+other TB8 checks pass (vout_off_v 0.296 V, idd_en0, valid_time).  The wake-up runts arrived with iteration 1's stage-2
+re-size: case-3 runs with a runt 2 / 45 at iteration 0 (000897c), 34 at iteration 1 (5a78f0d), 35 now; outputs leave the
+LOW rail at 0.69 V at iteration 0, 0.94 V since.
+
+**Extracted evidence** (`sim/tbl_en/results/tbl_en_pexw_off`, `_pexw_pulse`): the pulse limit holds everywhere (worst
+4 ns, ff/125C/3.0 V, a runt); **vout_off_v exceeds 0.33 V** at ss/-40C (0.346-0.363 V), 15-28 ns into the 50 ns setup ramp
+of cases 0-1 at VDD 1.07-1.12 V, for 2-3 ns; 0.000 V once the supply settles.  With EN = 0 every output is <= 10 % of the
+instantaneous supply from VDD = 1.15 V on (case 0), 1.10 V (case 1), 0.85 V (20 us ramp, case 5), pre-layout and
+extracted alike (`.scratch/t11/iter2/tb8_low_from.py`).  The extracted 28 ns at ss/125C/3.0 V case 3 (TBL's 82 % pair) is a
+full-swing wrong-level pulse on copy b while the chain wakes (all six outputs rise at VDD 1.05 V, copy b falls at
+1.13 V); the wake-up width does not pair corner by corner (125 C: extracted longer in 13 of 30 pairs, shorter in 15).
+
+Not covered by the bench: the EN = 0 off-state on the spec ramps (1 us, 100 us; spec.yaml en.supply_ramps_s); only case
+5 (20 us ramp, EN low until 2.0 V; early_high_v pre-layout worst 0.228 V, reported) comes near it.  Scratch bench
+`.scratch/tb8x/` (frozen deck and hooks plus cases 6 / 7 = 1 us / 100 us ramp with EN = 0) runs pre-layout at 45 corners
+and extracted at the six worst; `sim/tbl_en/tbl_en_pexw_cold.json` (-40 C, cases 3 / 5) and `tbl_en_pexw_rest.json` (the
+23 corners left) give the extracted macro every corner on the spec-rate ramps.  Queue: `.scratch/t11/iter2/queue.json`,
+scheduler chain5.py.
+
+Offline re-measurement of the kept waveforms (`.scratch/t11/iter2/tb8_option_a.py`): vout_off_v from 100 ns (D-011's
+window) gives 0.000 V pre-layout and extracted; completed-swing pulse widths give pre-layout worst 3.0 ns (the runt), the
+extracted runs unchanged.  A limit failed on the extraction, so the test-definition change (draft D-019,
+`.scratch/t11/iter2/D-019_draft.md`: the two measurement changes, the EN = 0 spec-ramp checks added, TBL's pulse check
+worst against worst) or a design change is the owner's decision; nothing is changed until then.
