@@ -4,7 +4,7 @@
 
 TB3: trip points VTH+, VTH-, hysteresis V_H and centre offset of lane 0 by one continuous DC sweep (up then down, or down then up), hysteresis on, 3 VIC; supply sensitivity from repeats at VDD 3.0 and 3.6 V
 
-Runs: **270** (ok 270); 0 reused from cache.
+Runs: **270** (ok 270); 270 reused from cache.
 
 ## Worst case per metric
 

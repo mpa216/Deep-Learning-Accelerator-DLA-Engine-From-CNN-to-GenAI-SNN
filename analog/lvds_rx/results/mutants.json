@@ -1,10 +1,10 @@
 {
- "generated": "2026-11-20 20:59:54",
+ "generated": "2026-11-21 23:02:01",
  "git": {
-  "commit": "3c119e1",
+  "commit": "ac17072",
   "dirty": null
  },
- "seconds": 301.6,
+ "seconds": 296.4,
  "mutants": [
   {
    "id": "meas_failed",
@@ -76,7 +76,7 @@
    "desc": "input-pair area (mp1, mn1) divided by 4 must FAIL the TB3_off offset gate",
    "control": "PASS",
    "detected": true,
-   "detail": "control (real, N=1000) PASS sigma 3.46 mV; mutant (W/4 on 2 devices, N=100) FAIL sigma 6.09 mV worst 57.2 mV (limit 95) ['LIMIT']"
+   "detail": "control (real, N=1000) PASS sigma 3.21 mV; mutant (W/4 on 2 devices, N=100) FAIL sigma 5.52 mV worst 53.8 mV (limit 95) ['LIMIT']"
   },
   {
    "id": "polarity_swap",

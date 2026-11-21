@@ -4,7 +4,7 @@
 
 TB4: propagation delay, pulse skew, 10-90 % output edge (tr = 0.4 ns stimulus) and DCD at the named edge times (1 ns at VID 350 mV, 2 ns at VID 100 mV) of lane 0, stimulus at the RX pins, 7 VIC x VID {0.1, 0.35} (VID 0.1 with a +10 mV input-offset source)
 
-Runs: **630** (ok 630); 0 reused from cache.
+Runs: **630** (ok 630); 630 reused from cache.
 
 ## Worst case per metric
 

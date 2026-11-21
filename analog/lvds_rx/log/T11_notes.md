@@ -357,8 +357,26 @@ vdd_low_from_v up to 1.154 V.  Extracted evidence sets re-measured (94 runs ok; 
 shortest extracted pulse 4.0 ns at ff/125C/3.0 V).  tbl_en 24 / 24 + 24 / 24 ok.  **Gate TBL PASS**: 178 pairs, 0 failed,
 largest margin use 23.6 % (vout_off_v case 6 at tt/27C/3.3 V), early_high_v 12.2 %, min_pulse_s per pair (cases 0-2, 4, 6, 7)
 19.6 %, worst against worst (cases 3 / 5) 3.0 -> 4.0 ns (a gain), D-012 met.
-Harness cache quirk (found today, not fixed): `runner._dep_hashes` adds `{run_dir}/body.inc` to the key only when that file
-exists, i.e. not on a run's first simulation, so a run simulated once gets a different key the next time and is simulated
-once more (identical deck, identical result).  This is why the evidence sets tbl_en_pexw_* re-simulated today (new on
+
+## Iteration-2 full pre-layout regression (2026-11-22 02:54-05:02, `tools/run_full.sh 4`, 7681 s)
+
+18 PASS, 1 FAIL, TB11 not applicable (`results/gates.json`, `results/REPORT.md`); every gate at its expected run count;
+`tools/audit_hashes.py` 17 benches, 0 not current; mutants 11 of 11 detected.  TB1 987, TB2 315, TB3_trip 270, TB3_off 15000,
+TB3_hmc 600, TB4 630, TB4b 70, TB5 180, TB6 20, TB7 945, TB8 360 (with D-019), TB9 180, TB10 10, TB12 40: PASS.
+
+**TB7_mc FAIL: osc_flag 1 in 1 of 1500 runs**, fs_27c_3v30__vic1.2__s1793293142 (the same Monte Carlo sample as one of
+D-010's four).  Waveform (kept): lane 0 goes HIGH during the 50 ns power-up ramp (VDD/2 crossing at 32.9 ns), makes ONE clean
+falling flip with its VDD/2 crossing at 149.236 ns, 0.76 ns before the idle window opens (150 ns), and holds LOW (6e-8 V at
+600 ns); lanes 1-2 never move.  The window sees no crossing, only the end of that edge and its undershoot (0.079 V ->
+-0.057 V within the first ns), 0.136 V peak-to-peak, which D-010's rule reads as "> 0.1 V without a crossing" = oscillation.
+In D-010's analysis (iteration-0 sizing) this sample flipped at 217-275 ns, inside the window, and counted as the settling
+flip it is; the iteration-2 sizing moved the flip 70-125 ns earlier, onto the window edge.  Not an oscillation: a window-edge
+artefact of the measurement.  Offline (`.scratch/t11/iter2/tb7_window_guard.py`, all kept waveforms): counting a crossing
+up to 5 ns before the window as inside it changes exactly this run (osc 1 -> 0, one settling flip at 149.2 ns, within the
+500 ns limit of D-010) and no other of the 1500 TB7_mc and 945 TB7 runs.  That is a test-definition change: drafted as
+D-020 for the owner (asked; not applied).
+Harness cache quirk (AUDIT_1 finding F2, still open, seen in action today): `runner._dep_hashes` adds `{run_dir}/body.inc`
+to the key only when that file exists, i.e. not on a run's first simulation, so a run simulated once gets a different key
+the next time and is simulated once more (identical deck, identical result).  This is why the evidence sets tbl_en_pexw_* re-simulated today (new on
 2026-11-21) while TB8 cases 0-5 and tbl_en (work dirs from earlier iterations) stayed cached; the 90 new TB8 runs will
 re-simulate once on TB8's next run.  Changing the key formula would invalidate the existing cache instead, so it stays.

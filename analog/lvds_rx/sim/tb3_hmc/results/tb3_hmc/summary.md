@@ -4,7 +4,7 @@
 
 TB3_hmc: hysteresis V_H spread and functional check at VID = +-100 mV under device mismatch (Monte Carlo), extreme corners (ss/125C/3.0 V, ff/-40C/3.6 V), VIC 0.05 / 1.2 / 2.35 V. Uses the DC-sweep deck of tb3_trip (PLAN_V2 C5: the DC method is the one used inside Monte Carlo), up-first sweep
 
-Runs: **600** (ok 600); 0 reused from cache.
+Runs: **600** (ok 600); 600 reused from cache.
 
 ## Monte Carlo statistics (limits applied to mean +- 3 sigma; N valid / failed shown)
 

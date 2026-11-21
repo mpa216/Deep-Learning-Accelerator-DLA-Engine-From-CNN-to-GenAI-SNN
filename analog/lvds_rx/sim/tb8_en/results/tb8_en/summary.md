@@ -4,7 +4,7 @@
 
 TB8: EN 0 -> 1 -> 0, EN = 0 supply current, VDD held below 2.0 V, supply ramps of 1 us and 100 us (EN tied high, and EN = 0 throughout: cases 6, 7, decision D-019), EN rising mid-ramp, three lanes on one bias (two copies: inputs HIGH / LOW)
 
-Runs: **360** (ok 360); 270 reused from cache.
+Runs: **360** (ok 360); 315 reused from cache.
 
 ## Worst case per metric
 

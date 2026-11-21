@@ -4,7 +4,7 @@
 
 TB4b: delta tPD over VID 200-450 mV at fixed VIC (same deck and hooks as tb4_pd, VID grid {0.2, 0.45}, no offset source, 1 ns named edge), worst5 corners
 
-Runs: **70** (ok 70); 0 reused from cache.
+Runs: **70** (ok 70); 70 reused from cache.
 
 ## Worst case per metric
 

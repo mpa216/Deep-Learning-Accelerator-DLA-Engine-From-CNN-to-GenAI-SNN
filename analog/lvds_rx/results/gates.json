@@ -1,24 +1,24 @@
 {
- "generated": "2026-11-20 20:54:52",
+ "generated": "2026-11-21 22:56:55",
  "tier": "full",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "3c119e1",
+  "commit": "ac17072",
   "dirty": null
  },
- "gates_sha256": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
+ "gates_sha256": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245",
  "spec_sha256": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
  "summary": {
-  "PASS": 17,
-  "FAIL": 2,
+  "PASS": 18,
+  "FAIL": 1,
   "NOT_APPLICABLE": 1
  },
- "cpu_min": 1262.3,
+ "cpu_min": 1317.9,
  "flags": [
-  "full-tier CPU time 1262 min is over 2.0x the 180 min estimate"
+  "full-tier CPU time 1318 min is over 2.0x the 180 min estimate"
  ],
  "green": false,
  "waivers": [
@@ -231,6 +231,33 @@
    "trigger": "T11 iteration 0: the extracted T10 macro fails TB2 and TB4 outright at ss/125C/3.0 V (tPD VID 0.35 4.57 -> 6.76 ns against 5 ns, VID 0.1 5.55 -> 8.22 ns against 8 ns; stage f3dB 0.84 -> 0.44 x DR, chain 56 -> 37 MHz) and gate TBL fails; cause: the pre-layout netlist carried no wiring capacitance and modelled junctions with 0.18 um of diffusion (the layout has 2.84 x that area), so the frozen sizing had 9.5 % tPD margin for none of the layout's load",
    "measured": "results/post_layout/iter0/TBL.md; calibration .scratch/t11/calib.py (36 TB4 points: the estimate at wiring scale 1.0 captures 87-90 % of the added delay everywhere, est = extraction at scale 1.14-1.21, at 1.2 the estimate is >= the extraction at 35 of 36 points, 7 ps short at the last); candidates in log/T11_notes.md",
    "gate_relaxed": "none (no limit changed; spec.yaml and gates.yaml untouched).  Sizing iteration (T11, block timing, results/iterations.jsonl): (1) the simulation netlist now carries the layout parasitic estimate (sizing/parasitic_estimate.json from sim/tbl/make_estimate.py: junction diffusion length ldiff 0.511 um in the ad/as/pd/ps formulas, one capacitor per net to VSS and one to VDD = the extracted wiring x 1.2, 31 nets; netlist/lvds_circuit.ESTIMATE, simulation netlist only, never in the LVS reference); (2) stage 2 re-sized: n_t2 5 -> 10, gmid_s2 12 -> 8, L_ld 0.40 -> 0.28 (mt2 nf 6 -> 12, ms nf 3 -> 2, mld/mlc/mp3 L 0.28, mn3 nf 1 -> 2, Rs 4573 -> 1690 ohm).  The sizing freeze re-opens: full regression, re-layout, PEX, TBL."
+  },
+  {
+   "id": "D-017",
+   "date": "2026-11-21",
+   "kind": "note",
+   "trigger": "T11 iteration-1 pre-layout regression (commit 5a78f0d): TB3_hmc FAIL, 17 of 600 Monte Carlo runs below the 6 mV hysteresis floor, all at ff/-40C/3.6 V (mean 8.3-8.6 mV, sd 1.4-1.6 mV, min 4.0 mV); ladder R3 is exhausted (rung 1, D-009), so the design changes.  TB3_trip FAIL: 4 of 270 runs time out in the first operating point of the DC sweep (sf, 27/125 C, VIC 2.35 V, VDD 0.3 V): solver, not design.",
+   "measured": ".scratch/t11/iter2/explore_vh.py (candidate sizing + the estimate core; trip at worst5 + sf/-40/3.0 + ff/125/3.6 + fs/-40/3.3; hysteresis Monte Carlo, 40 per group with the regression's runkey seeds, at extreme2 + fs/-40/3.3 + ff/125/3.6; TB4 and TB2 subsets).  The relative V_H error per relative alpha error is 2 alpha/(alpha^2-1).  alpha 1.25: MC sd 15-22 % of the mean.  alpha 1.5: 7-11 %, but with a drawable Rs (>= 1 um) V_H at ff/125C/3.6 V, VIC 0.05 V (the lowest A1) reaches 36-37 mV at +3 sd.  alpha 1.67 needs Rs < 0.  Chosen alpha 1.4 (5, 7), vh_scale 1.15, wf_ld 1.6: trip 10.1-24.5 mV, MC 6.5-31.7 mV at +-3 sd (0 of 480 outside 6-35 mV), tPD ss/125C/3.0 V VID 0.35 V 4.66 ns (iteration 1: 4.50 ns; wf_ld 2.0 gave 4.82 ns), VID 0.1 V 5.48 ns, A1 min 4.78, stage f3dB 1.00 x DR, chain 60.7 MHz.  Table: log/T11_notes.md.",
+   "gate_relaxed": "none (spec.yaml and gates.yaml untouched).  Sizing iteration (T11, block hysteresis): alpha_cands [(5, 7)], vh_scale 1.15 (new knob, the V_H target of the Rs solve: calibrates the large-signal trip model against simulation), wf_ld 2.0 -> 1.6; new assert: every ppolyf_u_1k at least 1.0 um long (Magic lmin).  Bench changes, no limit changed: TB3_trip and TB3_hmc carry the TB3_off retry variants (itl/gmin; circuit and stimulus untouched); their spec 'limits' (plot window and summary only; the gate reads spec.yaml) follow the 6-35 mV window in force (AUDIT_1 F6).  tools/run_full.sh runs tools/audit_hashes.py after the full tier (AUDIT_1 F4).  Re-freeze table: sizing/FROZEN.md."
+  },
+  {
+   "id": "D-018",
+   "date": "2026-11-21",
+   "kind": "note",
+   "trigger": "The D-017 sizing (alpha 1.4 = (5, 7) load fingers, load fingers 1.6 um) cannot be built: make layout failed twice.  (1) leaves.mos_row: the interdigitated load row carries three S/D nets whose contact bars need 1.68 um, the row offers Wf - 0.13 um, so Wf >= 1.81 um (1.6 failed).  (2) leaves.mirror_interdig: at most two devices with an odd finger count (a single finger must sit at a row end), (5, 7) has four.",
+   "measured": ".scratch/t11/iter2/explore_vh.py round 5 and the final sizing: alpha 1.5 (4, 6) (both counts even) with Rs 5 um wide, so the small Rs that centres V_H is drawable; vh_scale 1.03 / 1.06 / 1.10: MC +-3 sd 6.31-30.32 / 6.54-31.15 / 6.87-32.07 mV.  Final (vh_scale 1.08, Rs about 365 ohm, 1.637 um; wf_ld 1.85): trip 9.3-25.3 mV at the 8 V_H-extreme corners, Monte Carlo 480 runs (40 per group, ff/-40C/3.6 V, fs/-40C/3.3 V, ss/125C/3.0 V, ff/125C/3.6 V x 3 VIC) 7.3-30.4 mV, +-3 sd 6.68-31.59 mV (11 % from either end of the 6-35 mV window); tPD ss/125C/3.0 V, VID 0.35 V 4.54 ns (iteration 1: 4.50 ns), VID 0.1 V 5.26 ns; A1 min 4.78, stage f3dB 0.99 x DR, chain 60.7 MHz.  make layout all green: frame 650 x 194.2 um (was 192.1; core 600 x 144.2 um within spec.yaml layout.macro_max_um 600 x 150), extracted wiring 2842.6 fF (2836.2 before, the estimate still applies), gate LAYOUT PASS.",
+   "gate_relaxed": "none (spec.yaml and gates.yaml untouched).  Sizing (T11, block hysteresis, iteration 2): alpha_cands [(4, 6)], vh_scale 1.08, new knob rw_rs 5.0 (Rs width; RL, Rb, Rf and the divider stay 2 um and keep their gain ratio), wf_ld 1.85.  Code: sizing res_len and layout passives.seg_len take the end resistance as 85 ohm x 2 um / W (the model's terminal resistors are 85.45 ohm/sq x 1 um / W; identical at 2 um, so no other resistor changed); check.magic_drc counts the boxes of the rules off the allow-list (Magic's total and its per-rule counts differ: t_block 144 vs 160 CO.6 boxes made total - allowed negative).  Supersedes the alpha / wf_ld choice of D-017; its bench changes stay.  Re-freeze table: sizing/FROZEN.md (iteration 2)."
+  },
+  {
+   "id": "D-019",
+   "date": "2026-11-22",
+   "kind": "waiver",
+   "trigger": "T11 iteration 2: TB8 FAIL, min_pulse_s 0.084 ns against 2 ns (tt/125C/3.6 V, case 3, 1 us ramp with EN tied high); gate TBL FAIL on two TB8 checks at ss/125C/3.0 V: vout_off_v case 0 0.236 -> 0.279 V (46 % of the margin) and min_pulse_s case 3 148 -> 28 ns (82 %); evidence runs on the extracted macro: vout_off_v 0.346-0.363 V against 0.33 V at ss/-40C in cases 0-1 (tbl_en_pexw_off).  All of it while the supply is below about 1.2 V, before the output chain conducts.  No rung covers it.  The criteria are frozen (PLAN_V2 rules 4 and 7); the owner was asked because the change comes after the results, and chose this option on 2026-11-21 (of: this waiver, a design change, leaving both gates failing), after an off-chip pull-down was ruled out (RXn_O and EN are core-side pins, spec/pins.yaml) and on-chip resistors were declined (area).",
+   "measured": "sim/tb8_en/results/tb8_en at commit 2f89592: the 0.084 ns 'pulse' is a 3 ns runt on the LOW-expected copy b that rises to 51 % of the supply at VDD 0.99 V; lib_tb.pulses_norm took every pair of consecutive 50 % crossings although its docstring defines a level change as a completed swing.  Cases 0-1: the outputs peak 15-28 ns into the 50 ns setup ramp at VDD 1.07-1.12 V and are 0.000 V once the supply settles; that ramp is not a spec ramp (spec.yaml en.supply_ramps_s: 1 us, 100 us), the reason D-011 starts min_pulse_s at 100 ns there.  Mechanism: with EN = 0 the output is held LOW through a NAND and three inverters (lvds_out), none of which conducts below about 1 V; leakage and the coupling of the rising supply float the outputs to about a third of the supply (ss/-40C/3.3 V extracted, case 0: every output back under 10 % of the supply at 1.12-1.19 V).  The bench never held EN = 0 on the spec ramps: scratch bench .scratch/tb8x (these runs are now cases 6 and 7): before layout at 45 corners worst 0.262 V (1 us) / 0.213 V (100 us); extracted at the six worst corners 0.316 V / 0.254 V (ss/-40C/3.6 V; the same with reltol 0.01 within 0.1 mV); the layout uses 80 % / 35 % of the margin there and at most 24 % at TBL's three corners.  rshunt 1e13 (case 0's value) instead of 1e11 moves these peaks by 0.0-0.5 mV before layout and 0.1-2.2 mV extracted (.scratch/tb8z).  Case 5 early_high_v (EN = 0 on the 20 us ramp until 2.0 V): 0.228 V before layout, 0.275 V extracted at ss/-40C (46 %), at most 12 % at TBL's corners, higher extracted at all 45 corners.  Wake-up pulses (cases 3, 5, EN high or rising during the ramp) over the 45 corners: before layout shortest 3.0 ns with the completed-swing rule, extracted shortest 4.0 ns (ff/125C/3.0 V); pair by pair the extracted pulse is longer in 62 of 90 pairs and shorter in 25 (.scratch/t11/iter2/tb8_45pairs.py): a race, not a layout loss.  Offline re-measurement of the 270 stored TB8 runs with the new code: 0.084 ns -> 3.0 ns (the runt), five case-5 runs 13.7-18.9 -> 17.9-20 ns, none shorter; vout_off_v of cases 0-1 from 100 ns at most 3.7 uV.",
+   "gate_relaxed": "TB8: vout_off_v of cases 0-1 is judged from 100 ns on (supply settled), as D-011 did for min_pulse_s; the whole-run value is reported (vout_off_all_v).  min_pulse_s counts completed swings only (lib_tb.pulses_norm as documented; TB8 is its only user); runts keep their own rule (width at the departing 10/90 % level >= 2 ns).  Tightened in exchange: new cases 6 / 7 (the 1 us / 100 us spec ramps with EN = 0 throughout, reltol 0.01 as cases 1 / 3 / 4; case 7 ends 0.2 us after its ramp, because with case 4's 10 us tail ngspice stalled at ss/125C/3.6 V, fs/125C/3.6 V, sf/-40C/3.0 V and sf/27C/3.6 V in every solver variant tried (the three retry variants, gear, tmax / 2, trtol 10, rshunt 1e13), while with 0.2 us all four finish in 15-17 s: the stall sits in the settled tail, as in cases 1 / 3 / 4; the gated peak falls mid-ramp at VDD about 0.8 V) gated vout_off_v <= 0.33 V over the whole run; case 5 early_high_v gated <= 0.33 V; vdd_low_from_v reported.  Gate TBL (sim/tbl/evaluate.py): TB8 min_pulse_s of cases 3 and 5 is judged worst against worst over the 45 corners (TB8 before layout against tbl_en_pex + tbl_en_pexw_pulse / _cold / _rest), the frozen 30 % rule applied to those two values, incomplete coverage failing; the other cases stay per pair; tbl_en runs cases 0-7 (sim/tbl/make_benches.py).  Limits unchanged.  Known limitation for the package: with EN = 0 and the supply below about 1.2 V the outputs float to about a third of the supply (0.363 V extracted on the bench's 50 ns ramp, 0.316 V on the 1 us spec ramp at ss/-40C, 14 mV under 0.33 V); the integrator keeps the logic that reads RXn_O in reset, and EN = 0, until VDD >= 2.0 V (D-008).",
+   "files_after": {
+    "spec/gates.yaml": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245"
+   }
   }
  ],
  "gates": {
@@ -346,7 +373,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/env.json",
-   "results_sha256": "16ff38d04dd8c23549059f7d9f3c7d59d44d69254d19666133a1326fd0f42fe8"
+   "results_sha256": "34c43b5f5d74672971e97080caf33babb7837892548e7f031d119417abe5e045"
   },
   "SELFTEST": {
    "id": "SELFTEST",
@@ -495,7 +522,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/sizing.json",
-   "results_sha256": "d56c45a25d0deff4ffe7f14fe128e68d500cd59dd5d62f2ed1670fd07d2e76d3"
+   "results_sha256": "533aee7e18ebdf152d61e3bbf6d644473013037e5a862ed182afadd4d548978f"
   },
   "TB0": {
    "id": "TB0",
@@ -649,9 +676,9 @@
      "limit": "-0.3 .. +inf",
      "n": 987,
      "reasons": [],
-     "worst": -2.32486e-06,
-     "worst_run": "sf_27c_3v30__vic0.05_vid0.1",
-     "margin": 0.29999767514,
+     "worst": 2.82793e-14,
+     "worst_run": "ss_m40c_3v00__vic0.05_vid-0.1",
+     "margin": 0.30000000000002824,
      "status": "PASS"
     },
     {
@@ -685,9 +712,9 @@
      "limit": "-inf .. 0.0015",
      "n": 987,
      "reasons": [],
-     "worst": 0.0010860154333333333,
-     "worst_run": "ff_125c_3v60__vic1.8_vid-0.1",
-     "margin": 0.00041398456666666677,
+     "worst": 0.0010754587666666666,
+     "worst_run": "ff_125c_3v60__vic2.35_vid-0.1",
+     "margin": 0.0004245412333333334,
      "status": "PASS"
     },
     {
@@ -709,8 +736,8 @@
     "ok": 987
    },
    "results_file": "sim/tb1_op/results/tb1_op/results.json",
-   "results_sha256": "bb091e084a7664ebd379b60c4b53d0c3306d45b8410c1bf4a70fb733028053ad",
-   "cpu_s": 589.8,
+   "results_sha256": "ad90f96e4ca00d1ef833db258e0de4aa0f9162061a0d7d79cbeacccbda215ef2",
+   "cpu_s": 335.4,
    "retried": []
   },
   "TB2": {
@@ -732,9 +759,9 @@
      "limit": "4 .. +inf",
      "n": 90,
      "reasons": [],
-     "worst": 4.77842682,
+     "worst": 4.77842259,
      "worst_run": "ff_125c_3v60__vic0.05",
-     "margin": 0.77842682,
+     "margin": 0.7784225899999999,
      "status": "PASS"
     },
     {
@@ -746,9 +773,9 @@
      "limit": "-inf .. 2.2",
      "n": 45,
      "reasons": [],
-     "worst": 1.592000437918185,
+     "worst": 1.5920004241399672,
      "worst_run": "('ff_125c_3v60',)",
-     "margin": 0.6079995620818153,
+     "margin": 0.607999575860033,
      "status": "PASS"
     },
     {
@@ -758,9 +785,9 @@
      "limit": "0.8 .. +inf",
      "n": 315,
      "reasons": [],
-     "worst": 0.9456521569951959,
-     "worst_run": "ss_m40c_3v00__vic1.2",
-     "margin": 0.14565215699519585,
+     "worst": 0.9195258097302211,
+     "worst_run": "ss_m40c_3v00__vic2.35",
+     "margin": 0.11952580973022109,
      "status": "PASS"
     },
     {
@@ -770,9 +797,9 @@
      "limit": "5e+07 .. +inf",
      "n": 315,
      "reasons": [],
-     "worst": 62803623.67231886,
+     "worst": 60684793.91792131,
      "worst_run": "ss_125c_3v00__vic0.05",
-     "margin": 12803623.67231886,
+     "margin": 10684793.917921312,
      "status": "PASS"
     },
     {
@@ -784,9 +811,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 42.7562125972681,
-     "max": 52.013736957791174,
-     "mean": 48.31166665078869
+     "min": 42.75619258807953,
+     "max": 52.0137254504028,
+     "mean": 48.31168375785843
     },
     {
      "kind": "report",
@@ -797,9 +824,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 12.689934915126058,
-     "max": 19.93630350880959,
-     "mean": 16.39797516998102
+     "min": 12.689958565251438,
+     "max": 19.93631686808133,
+     "mean": 16.398008482418035
     }
    ],
    "expected_runs": 315,
@@ -808,32 +835,27 @@
     "ok": 315
    },
    "results_file": "sim/tb2_ac/results/tb2_ac/results.json",
-   "results_sha256": "853f926b6e42379bf78fc075438417fccb85258debed9f979f73389d5c463d12",
-   "cpu_s": 171.4,
+   "results_sha256": "7cdf655a34224e0e0d9b7e8bdedddcedc980ed107fa72a029c654cab4689927e",
+   "cpu_s": 133.9,
    "retried": []
   },
   "TB3_trip": {
    "id": "TB3_trip",
    "title": "hysteresis by DC sweeps (up from -150 mV, down from +150 mV, continuation)",
    "phase": "prelayout",
-   "status": "FAIL",
-   "reasons": [
-    [
-     "STATUS",
-     "runs not ok: {'timeout': 4}"
-    ]
-   ],
+   "status": "PASS",
+   "reasons": [],
    "checks": [
     {
      "kind": "per_run",
      "metric": "vh_v",
      "where": null,
      "limit": "0.006 .. 0.035",
-     "n": 266,
+     "n": 270,
      "reasons": [],
-     "worst": 0.007899999999998995,
-     "worst_run": "sf_m40c_3v00__vic1.2_sweep1",
-     "margin": 0.0018999999999989945,
+     "worst": 0.009099999999999994,
+     "worst_run": "fs_m40c_3v60__vic2.35_sweep1",
+     "margin": 0.0030999999999999934,
      "status": "PASS"
     },
     {
@@ -841,37 +863,36 @@
      "metric": "dvh_dvdd",
      "where": null,
      "limit": "reported",
-     "n": 266,
+     "n": 270,
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": -0.0006666666672232487,
-     "max": 0.005333333333333414,
-     "mean": -3.383491218944412e-05
+     "min": -0.001666668450198324,
+     "max": 0.0073333333333333185,
+     "mean": -0.0008098745719604767
     },
     {
      "kind": "report",
      "metric": "dvtrip_dvdd",
      "where": null,
      "limit": "reported",
-     "n": 266,
+     "n": 270,
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": -8.333333323713664e-05,
-     "max": 2.601812654212665e-09,
-     "mean": -1.8798601941850532e-06
+     "min": -1.9402037581874496e-07,
+     "max": 2.0017523477920224e-07,
+     "mean": 9.692276859408018e-10
     }
    ],
    "expected_runs": 270,
    "actual_runs": 270,
    "status_counts": {
-    "ok": 266,
-    "timeout": 4
+    "ok": 270
    },
    "results_file": "sim/tb3_trip/results/tb3_trip/results.json",
-   "results_sha256": "f82e03e09ff6e9f07fccc19c6a3638345a32ea521ec2ebfdc87924d097233e1f",
-   "cpu_s": 4076.1,
+   "results_sha256": "2fc0f78c87657a1fc8eb5b974a59ed34ce2b52694ef16885c429a5418ca67cb8",
+   "cpu_s": 3229.0,
    "retried": []
   },
   "TB3_off": {
@@ -887,12 +908,12 @@
      "limit": "<= 0.095 (k=6, extra=0.0205)",
      "n": 15,
      "reasons": [],
-     "normality_p_min": 0.10637368898302862,
-     "worst": 0.04132820067570108,
-     "worst_run": "('ss_125c_3v00', ('vic', '1.2'))",
-     "margin": 0.05367179932429892,
-     "mean": -4.420444927705926e-05,
-     "sigma": 0.00346399937107067,
+     "normality_p_min": 0.19458362787375075,
+     "worst": 0.03985640195419165,
+     "worst_run": "('ss_125c_3v00', ('vic', '0.05'))",
+     "margin": 0.05514359804580835,
+     "mean": 7.511082831010627e-05,
+     "sigma": 0.0032135485209802564,
      "samples": 1000,
      "status": "PASS"
     },
@@ -905,9 +926,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": -0.014646001418561778,
-     "max": 0.012660476119071421,
-     "mean": 4.803735281141448e-05
+     "min": -0.013364781875645469,
+     "max": 0.010734892725855911,
+     "mean": 3.970925054098489e-05
     }
    ],
    "expected_runs": 15000,
@@ -916,24 +937,16 @@
     "ok": 15000
    },
    "results_file": "sim/tb3_off/results/tb3_off/results.json",
-   "results_sha256": "a42a406cc495639b5a0ed2c06c20ff040e7deebe4a53a389d49e2cadecb1142b",
-   "cpu_s": 29221.6,
-   "retried": [
-    "sf_27c_3v30__vic2.35__s217420337 (timeout -> itl_gmin1e-10)",
-    "sf_27c_3v30__vic2.35__s883221576 (timeout -> itl_gmin1e-10)"
-   ]
+   "results_sha256": "b7ec810a4a7769c5e273b22dc2a51adcb27acaaf6f05b907de785310caaa01e0",
+   "cpu_s": 28304.7,
+   "retried": []
   },
   "TB3_hmc": {
    "id": "TB3_hmc",
    "title": "transient hysteresis Monte Carlo: hysteresis spread, functional at VID = +-100 mV (N = 100)",
    "phase": "prelayout",
-   "status": "FAIL",
-   "reasons": [
-    [
-     "LIMIT",
-     "vh_v: 17 of 600 runs outside 0.006 .. 0.035 (first ff_m40c_3v60__vic0.05__s448325143 = 0.005899999999999993)"
-    ]
-   ],
+   "status": "PASS",
+   "reasons": [],
    "checks": [
     {
      "kind": "per_run",
@@ -941,17 +954,11 @@
      "where": null,
      "limit": "0.006 .. 0.035",
      "n": 600,
-     "reasons": [
-      [
-       "LIMIT",
-       "vh_v: 17 of 600 runs outside 0.006 .. 0.035 (first ff_m40c_3v60__vic0.05__s448325143 = 0.005899999999999993)"
-      ]
-     ],
-     "worst": 0.003999999999999993,
+     "reasons": [],
+     "worst": 0.007300000000000008,
      "worst_run": "ff_m40c_3v60__vic2.35__s578106990",
-     "margin": -0.002000000000000007,
-     "status": "FAIL",
-     "detail": "17 of 600 runs violate (first: ff_m40c_3v60__vic0.05__s448325143 = 0.005899999999999993)"
+     "margin": 0.0013000000000000077,
+     "status": "PASS"
     },
     {
      "kind": "per_run",
@@ -972,8 +979,8 @@
     "ok": 600
    },
    "results_file": "sim/tb3_hmc/results/tb3_hmc/results.json",
-   "results_sha256": "8b6ccbe36540119dd56b5652158ca4afbd4101612a6d9e0b1404dfbfcd304ffe",
-   "cpu_s": 4874.7,
+   "results_sha256": "b6128d88de85e54ad0409d086b342558c06b2e4ee59736937f57dbd486db6f1e",
+   "cpu_s": 8372.3,
    "retried": []
   },
   "TB4": {
@@ -992,9 +999,9 @@
      "limit": "-inf .. 5e-09",
      "n": 315,
      "reasons": [],
-     "worst": 4.6930746136982185e-09,
+     "worst": 4.54096729568891e-09,
      "worst_run": "ss_125c_3v00__vic0.05_vid0.35",
-     "margin": 3.069253863017816e-10,
+     "margin": 4.5903270431108983e-10,
      "status": "PASS"
     },
     {
@@ -1006,9 +1013,9 @@
      "limit": "-inf .. 8e-09",
      "n": 315,
      "reasons": [],
-     "worst": 5.5870081562443814e-09,
+     "worst": 5.257157467956378e-09,
      "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
-     "margin": 2.412991843755619e-09,
+     "margin": 2.7428425320436224e-09,
      "status": "PASS"
     },
     {
@@ -1020,9 +1027,9 @@
      "limit": "-inf .. 0.05",
      "n": 315,
      "reasons": [],
-     "worst": 0.009102169435098598,
+     "worst": 0.010370056765592547,
      "worst_run": "ss_27c_3v00__vic1.2_vid0.35",
-     "margin": 0.040897830564901407,
+     "margin": 0.03962994323440745,
      "status": "PASS"
     },
     {
@@ -1034,9 +1041,9 @@
      "limit": "-inf .. 0.1",
      "n": 315,
      "reasons": [],
-     "worst": 0.061689700109484644,
+     "worst": 0.05943442100698618,
      "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
-     "margin": 0.03831029989051536,
+     "margin": 0.04056557899301383,
      "status": "PASS"
     },
     {
@@ -1046,9 +1053,9 @@
      "limit": "-inf .. 1e-09",
      "n": 630,
      "reasons": [],
-     "worst": 1.4924974019545625e-10,
-     "worst_run": "ss_125c_3v00__vic1.8_vid0.35",
-     "margin": 8.507502598045438e-10,
+     "worst": 1.4875707917619514e-10,
+     "worst_run": "ss_125c_3v00__vic0.05_vid0.1",
+     "margin": 8.512429208238049e-10,
      "status": "PASS"
     },
     {
@@ -1062,9 +1069,9 @@
      "limit": "-inf .. 1e-09",
      "n": 45,
      "reasons": [],
-     "worst": 5.704539838898207e-10,
-     "worst_run": "('ss_125c_3v60', ('vid', '0.35'))",
-     "margin": 4.2954601611017933e-10,
+     "worst": 5.768314771772482e-10,
+     "worst_run": "('ss_125c_3v00', ('vid', '0.35'))",
+     "margin": 4.231685228227519e-10,
      "status": "PASS"
     }
    ],
@@ -1074,8 +1081,8 @@
     "ok": 630
    },
    "results_file": "sim/tb4_pd/results/tb4_pd/results.json",
-   "results_sha256": "be2383e55787eddaa7894f9c890f7245ebace20258a528fbd6d2c2a0027575ba",
-   "cpu_s": 6898.7,
+   "results_sha256": "4b8027ad9e9ac8c8a30a3f381d2536926ce11daafc3506cde1dc67026da20e16",
+   "cpu_s": 7547.3,
    "retried": []
   },
   "TB4b": {
@@ -1094,9 +1101,9 @@
      "limit": "-inf .. 1e-09",
      "n": 35,
      "reasons": [],
-     "worst": 3.8261268516851e-10,
+     "worst": 3.0062428436533337e-10,
      "worst_run": "('ss_125c_3v00', ('vic', '1.2'))",
-     "margin": 6.173873148314901e-10,
+     "margin": 6.993757156346667e-10,
      "status": "PASS"
     }
    ],
@@ -1106,8 +1113,8 @@
     "ok": 70
    },
    "results_file": "sim/tb4b_pd_vid/results/tb4b_pd_vid/results.json",
-   "results_sha256": "982d9d5616c6e77db6d3034ff2989c744919d6750a81a486cd9c35c097158bf8",
-   "cpu_s": 783.1,
+   "results_sha256": "af929c37f36acf05936204bdd328dc1cf7bb7c9cad86103c3bc89f0c99071913",
+   "cpu_s": 840.9,
    "retried": []
   },
   "TB5": {
@@ -1150,9 +1157,9 @@
      "limit": "0.6 .. +inf",
      "n": 90,
      "reasons": [],
-     "worst": 0.9716906354885599,
+     "worst": 0.9726519553456139,
      "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate100000000.0",
-     "margin": 0.37169063548855996,
+     "margin": 0.3726519553456139,
      "status": "PASS"
     },
     {
@@ -1166,9 +1173,9 @@
      "limit": "0.7 .. +inf",
      "n": 3,
      "reasons": [],
-     "worst": 0.9964460888553784,
-     "worst_run": "tt_27c_3v30__vic0.05_vid0.1_rate100000000.0",
-     "margin": 0.2964460888553785,
+     "worst": 0.9943362184785222,
+     "worst_run": "tt_27c_3v30__vic1.2_vid0.1_rate100000000.0",
+     "margin": 0.2943362184785222,
      "status": "PASS"
     },
     {
@@ -1185,9 +1192,9 @@
      "limit": "0.5 .. +inf",
      "n": 6,
      "reasons": [],
-     "worst": 0.9201742482344416,
+     "worst": 0.9259638673790227,
      "worst_run": "ss_125c_3v00__vic1.2_vid0.35_rate200000000.0",
-     "margin": 0.4201742482344416,
+     "margin": 0.4259638673790227,
      "status": "PASS"
     },
     {
@@ -1199,9 +1206,9 @@
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 4.3824824832168596e-05,
-     "max": 0.016235184078331737,
-     "mean": 0.004032994040974965
+     "min": 0.00021992020617181928,
+     "max": 0.019319448728512895,
+     "mean": 0.006206390349068192
     }
    ],
    "expected_runs": 180,
@@ -1210,8 +1217,8 @@
     "ok": 180
    },
    "results_file": "sim/tb5_eye/results/tb5_eye/results.json",
-   "results_sha256": "ed31ff387e6f87407a88ed2f3e344ac38b0fb9a6574f3f99a99d45f532c49779",
-   "cpu_s": 5695.0,
+   "results_sha256": "d81e23c6f8ac6b65d1c431e4cef057f1e2fc523eafcff4e28be06b894d8e8c8d",
+   "cpu_s": 5872.0,
    "retried": []
   },
   "TB6": {
@@ -1240,9 +1247,9 @@
      "limit": "-inf .. 0.1",
      "n": 20,
      "reasons": [],
-     "worst": 0.013645320957903032,
+     "worst": 0.011740456343894144,
      "worst_run": "ff_m40c_3v60__case2",
-     "margin": 0.08635467904209697,
+     "margin": 0.08825954365610586,
      "status": "PASS"
     }
    ],
@@ -1252,8 +1259,8 @@
     "ok": 20
    },
    "results_file": "sim/tb6_cm_supply/results/tb6_cm_supply/results.json",
-   "results_sha256": "6342aaf9b9ca7d41e97280b492709df6973fda703875a389018d71c89d519e5d",
-   "cpu_s": 1589.1,
+   "results_sha256": "70f24e68b3faad46d8484a4a80681741525769c3fb4a41125d531dff936bf728",
+   "cpu_s": 1575.4,
    "retried": []
   },
   "TB7": {
@@ -1282,9 +1289,9 @@
      "limit": "2e-09 .. +inf",
      "n": 945,
      "reasons": [],
-     "worst": 4.998249058173242e-07,
-     "worst_run": "ff_125c_3v60__vic1.2_term1",
-     "margin": 4.978249058173242e-07,
+     "worst": 4.999264872730531e-07,
+     "worst_run": "sf_m40c_3v60__vic1.8_term1",
+     "margin": 4.97926487273053e-07,
      "status": "PASS"
     },
     {
@@ -1332,16 +1339,21 @@
     "ok": 945
    },
    "results_file": "sim/tb7_idle/results/tb7_idle/results.json",
-   "results_sha256": "5682d7973f98c229bc69339aee8bad2614f203cb8596dbec105acc004cd1ca95",
-   "cpu_s": 6707.0,
+   "results_sha256": "bb6641fcfeedbd47d8b7bf44867590481527ddef4b98f96510acab240a315860",
+   "cpu_s": 6580.7,
    "retried": []
   },
   "TB7_mc": {
    "id": "TB7_mc",
    "title": "idle inputs under mismatch (N = 100)",
    "phase": "prelayout",
-   "status": "PASS",
-   "reasons": [],
+   "status": "FAIL",
+   "reasons": [
+    [
+     "LIMIT",
+     "osc_flag: 1 of 1500 runs outside -inf .. 0 (first fs_27c_3v30__vic1.2__s1793293142 = 1.0)"
+    ]
+   ],
    "checks": [
     {
      "kind": "per_run",
@@ -1349,11 +1361,17 @@
      "where": null,
      "limit": "-inf .. 0",
      "n": 1500,
-     "reasons": [],
-     "worst": 0.0,
-     "worst_run": "tt_27c_3v30__vic0.05__s1897236530",
-     "margin": 0.0,
-     "status": "PASS"
+     "reasons": [
+      [
+       "LIMIT",
+       "osc_flag: 1 of 1500 runs outside -inf .. 0 (first fs_27c_3v30__vic1.2__s1793293142 = 1.0)"
+      ]
+     ],
+     "worst": 1.0,
+     "worst_run": "fs_27c_3v30__vic1.2__s1793293142",
+     "margin": -1.0,
+     "status": "FAIL",
+     "detail": "1 of 1500 runs violate (first: fs_27c_3v30__vic1.2__s1793293142 = 1.0)"
     },
     {
      "kind": "per_run",
@@ -1377,8 +1395,8 @@
      "status": "PASS",
      "worst": null,
      "min": 0.0,
-     "max": 1.0,
-     "mean": 0.005333333333333333
+     "max": 0.0,
+     "mean": 0.0
     },
     {
      "kind": "per_run",
@@ -1387,9 +1405,9 @@
      "limit": "-inf .. 5e-07",
      "n": 1500,
      "reasons": [],
-     "worst": 2.2739179871849986e-07,
-     "worst_run": "tt_27c_3v30__vic0.05__s971138191",
-     "margin": 2.726082012815001e-07,
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05__s1897236530",
+     "margin": 5e-07,
      "status": "PASS"
     }
    ],
@@ -1399,8 +1417,8 @@
     "ok": 1500
    },
    "results_file": "sim/tb7_idle_mc/results/tb7_idle_mc/results.json",
-   "results_sha256": "630236ebc6a31a9a0b8095fe479f3a9973b74de6e58e3ba31d632b6ac8d1b5a2",
-   "cpu_s": 6984.7,
+   "results_sha256": "45779fbe23d0ac47e8acaf4350f75103d1916fe2af1229ab16e60ce4f6fd13f3",
+   "cpu_s": 6895.8,
    "retried": []
   },
   "TB8": {
@@ -1416,16 +1434,70 @@
      "where": {
       "case": [
        0,
-       1
+       1,
+       6,
+       7
       ]
      },
      "limit": "-inf .. 0.33",
+     "n": 180,
+     "reasons": [],
+     "worst": 0.261872016,
+     "worst_run": "ss_m40c_3v60__case6",
+     "margin": 0.06812798400000003,
+     "status": "PASS"
+    },
+    {
+     "kind": "per_run",
+     "metric": "early_high_v",
+     "where": {
+      "case": 5
+     },
+     "limit": "-inf .. 0.33",
+     "n": 45,
+     "reasons": [],
+     "worst": 0.227790197,
+     "worst_run": "ss_m40c_3v30__case5",
+     "margin": 0.10220980300000002,
+     "status": "PASS"
+    },
+    {
+     "kind": "report",
+     "metric": "vout_off_all_v",
+     "where": {
+      "case": [
+       0,
+       1
+      ]
+     },
+     "limit": "reported",
      "n": 90,
      "reasons": [],
-     "worst": 0.295702219,
-     "worst_run": "ss_m40c_3v30__case0",
-     "margin": 0.03429778100000003,
-     "status": "PASS"
+     "status": "PASS",
+     "worst": null,
+     "min": 0.132794088,
+     "max": 0.295673769,
+     "mean": 0.21778918218888887
+    },
+    {
+     "kind": "report",
+     "metric": "vdd_low_from_v",
+     "where": {
+      "case": [
+       0,
+       1,
+       6,
+       7
+      ]
+     },
+     "limit": "reported",
+     "n": 180,
+     "reasons": [],
+     "status": "PASS",
+     "worst": null,
+     "min": 0.0,
+     "max": 1.153728,
+     "mean": 0.7156360149333333
     },
     {
      "kind": "per_run",
@@ -1440,9 +1512,9 @@
      "limit": "-inf .. 1e-06",
      "n": 30,
      "reasons": [],
-     "worst": 1.3308110543853822e-07,
+     "worst": 1.3300382195083057e-07,
      "worst_run": "ss_m40c_3v60__case0",
-     "margin": 8.669188945614618e-07,
+     "margin": 8.669961780491694e-07,
      "status": "PASS"
     },
     {
@@ -1455,9 +1527,9 @@
      "limit": "-inf .. 5e-06",
      "n": 15,
      "reasons": [],
-     "worst": 1.1016323485614618e-07,
+     "worst": 1.095137487551495e-07,
      "worst_run": "ff_125c_3v60__case0",
-     "margin": 4.889836765143855e-06,
+     "margin": 4.890486251244851e-06,
      "status": "PASS"
     },
     {
@@ -1469,9 +1541,9 @@
      "limit": "-inf .. 1e-06",
      "n": 45,
      "reasons": [],
-     "worst": 2.9813243830917495e-08,
+     "worst": 2.8813253902520063e-08,
      "worst_run": "ss_m40c_3v00__case2",
-     "margin": 9.701867561690825e-07,
+     "margin": 9.711867460974798e-07,
      "status": "PASS"
     },
     {
@@ -1479,11 +1551,11 @@
      "metric": "min_pulse_s",
      "where": null,
      "limit": "2e-09 .. +inf",
-     "n": 270,
+     "n": 360,
      "reasons": [],
-     "worst": 3.0000000000000136e-09,
-     "worst_run": "ss_125c_3v00__case3",
-     "margin": 1.0000000000000135e-09,
+     "worst": 2.9999999999999607e-09,
+     "worst_run": "tt_125c_3v60__case3",
+     "margin": 9.999999999999606e-10,
      "status": "PASS"
     },
     {
@@ -1491,41 +1563,41 @@
      "metric": "min_pulse_all_s",
      "where": null,
      "limit": "reported",
-     "n": 270,
+     "n": 360,
      "reasons": [],
      "status": "PASS",
      "worst": null,
-     "min": 2.9999999999999996e-09,
+     "min": 2.9999999999999607e-09,
      "max": 1.0,
-     "mean": 0.007408458355207427
+     "mean": 0.06111218487629805
     }
    ],
-   "expected_runs": 270,
-   "actual_runs": 270,
+   "expected_runs": 360,
+   "actual_runs": 360,
    "status_counts": {
-    "ok": 270
+    "ok": 360
    },
    "results_file": "sim/tb8_en/results/tb8_en/results.json",
-   "results_sha256": "bd1866bb03bc4d1885cbd774b65e21ca894c1800230027b1a587092f201546a5",
-   "cpu_s": 2230.1,
+   "results_sha256": "1a0a91a4e92836938e08aac4e2e5de0c92718448f719aed179494a0b3cab0347",
+   "cpu_s": 3441.8,
    "retried": [
-    "ff_125c_3v60__case3 (timeout -> reltol0.05)",
-    "ff_m40c_3v30__case5 (timeout -> reltol0.05)",
-    "ff_m40c_3v60__case3 (timeout -> reltol0.05_step47p)",
-    "ff_m40c_3v60__case5 (timeout -> step49p)",
-    "fs_125c_3v00__case3 (timeout -> step49p)",
-    "fs_125c_3v00__case5 (timeout -> reltol0.05)",
+    "ff_125c_3v60__case3 (timeout -> step49p)",
+    "ff_m40c_3v60__case3 (timeout -> reltol0.05)",
     "fs_125c_3v30__case3 (timeout -> step49p)",
     "fs_125c_3v30__case4 (timeout -> reltol0.05)",
     "fs_125c_3v30__case5 (timeout -> reltol0.05)",
-    "fs_m40c_3v60__case5 (timeout -> reltol0.05)",
-    "ss_125c_3v30__case5 (timeout -> reltol0.05)",
+    "fs_27c_3v30__case5 (timeout -> reltol0.05)",
+    "sf_125c_3v00__case5 (timeout -> reltol0.05)",
+    "sf_125c_3v30__case5 (timeout -> reltol0.05)",
+    "sf_125c_3v60__case5 (timeout -> reltol0.05)",
+    "sf_m40c_3v30__case5 (timeout -> step49p)",
+    "sf_m40c_3v60__case5 (timeout -> reltol0.05)",
     "ss_125c_3v60__case5 (timeout -> reltol0.05)",
-    "ss_m40c_3v00__case5 (timeout -> reltol0.05)",
-    "ss_m40c_3v60__case5 (timeout -> step49p)",
-    "tt_125c_3v30__case5 (timeout -> reltol0.05)",
-    "tt_125c_3v60__case3 (timeout -> step49p)",
-    "tt_27c_3v30__case5 (timeout -> reltol0.05)"
+    "ss_27c_3v00__case5 (timeout -> reltol0.05)",
+    "ss_27c_3v30__case5 (timeout -> reltol0.05)",
+    "ss_27c_3v60__case5 (timeout -> reltol0.05)",
+    "ss_m40c_3v30__case5 (timeout -> reltol0.05)",
+    "tt_125c_3v60__case3 (timeout -> reltol0.05)"
    ]
   },
   "TB9": {
@@ -1542,9 +1614,9 @@
      "limit": "-inf .. 2e-05",
      "n": 180,
      "reasons": [],
-     "worst": 2.930749042574257e-09,
+     "worst": 2.922409835643565e-09,
      "worst_run": "ss_125c_3v00__vin2.4",
-     "margin": 1.9997069250957428e-05,
+     "margin": 1.9997077590164357e-05,
      "status": "PASS"
     },
     {
@@ -1554,9 +1626,9 @@
      "limit": "-inf .. 6e-06",
      "n": 180,
      "reasons": [],
-     "worst": 5.5736564334012856e-15,
+     "worst": 5.3996059394949895e-15,
      "worst_run": "ss_m40c_3v60__vin2.35",
-     "margin": 5.999999994426344e-06,
+     "margin": 5.999999994600394e-06,
      "status": "PASS"
     }
    ],
@@ -1566,8 +1638,8 @@
     "ok": 180
    },
    "results_file": "sim/tb9_input/results/tb9_input/results.json",
-   "results_sha256": "af985e0801253191b5f5cbdd50e2606b587845b4bbb676f0a4f08e722ee2243a",
-   "cpu_s": 523.3,
+   "results_sha256": "36331566b77bcb17328f0799f6e517893869ddb3953a50b9b64d790b56294394",
+   "cpu_s": 517.1,
    "retried": []
   },
   "TB10": {
@@ -1586,9 +1658,9 @@
      "limit": "-inf .. 1e-09",
      "n": 5,
      "reasons": [],
-     "worst": 2.165100238506252e-11,
+     "worst": 4.6401179864135635e-11,
      "worst_run": "fs_27c_3v30__mc3s0",
-     "margin": 9.783489976149375e-10,
+     "margin": 9.535988201358644e-10,
      "status": "PASS"
     },
     {
@@ -1598,9 +1670,9 @@
      "limit": "-inf .. 0.05",
      "n": 10,
      "reasons": [],
-     "worst": 0.0012728089247580991,
-     "worst_run": "tt_27c_3v30__mc3s0",
-     "margin": 0.048727191075241906,
+     "worst": 0.0012964443548925209,
+     "worst_run": "sf_27c_3v30__mc3s0",
+     "margin": 0.048703555645107484,
      "status": "PASS"
     },
     {
@@ -1612,9 +1684,9 @@
      "limit": "-inf .. 5e-10",
      "n": 5,
      "reasons": [],
-     "worst": 2.1341649235614234e-10,
+     "worst": 1.7986620276575929e-10,
      "worst_run": "fs_27c_3v30__mc3s1",
-     "margin": 2.865835076438577e-10,
+     "margin": 3.2013379723424075e-10,
      "status": "PASS"
     }
    ],
@@ -1624,8 +1696,8 @@
     "ok": 10
    },
    "results_file": "sim/tb10_lanes/results/tb10_lanes/results.json",
-   "results_sha256": "9e9909e1573abffa2ca231fb94a61da7442e2fb7d2e576e63e037a148d931efe",
-   "cpu_s": 4192.5,
+   "results_sha256": "c2b8618ae9f031bc95a7b1a3f23d2444370bfe4df1e79e7ee74aba71fee6349c",
+   "cpu_s": 4243.4,
    "retried": []
   },
   "TB11": {
@@ -1670,9 +1742,9 @@
      "limit": "0.5 .. +inf",
      "n": 40,
      "reasons": [],
-     "worst": 0.9196910148612238,
+     "worst": 0.9252867415855931,
      "worst_run": "ss_125c_3v00__pkg3_rate200000000.0",
-     "margin": 0.41969101486122384,
+     "margin": 0.4252867415855931,
      "status": "PASS"
     }
    ],
@@ -1682,8 +1754,8 @@
     "ok": 40
    },
    "results_file": "sim/tb12_pkg/results/tb12_pkg/results.json",
-   "results_sha256": "7a02530fc178e3c5729b11b2a47ed46122ebdf2521a16472046ae7bf399a9963",
-   "cpu_s": 1193.0,
+   "results_sha256": "b5d6fe6daf5d8adc36697ffcf54ae5c71fc9452fd6a2c6ab403f975aa21b39af",
+   "cpu_s": 1176.5,
    "retried": []
   }
  }

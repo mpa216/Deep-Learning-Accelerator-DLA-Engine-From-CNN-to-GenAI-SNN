@@ -4,7 +4,7 @@
 
 TB5: PRBS7 eye, BER at the delayed mid-UI and toggle count of lane 0 at 100 and 200 Mb/s, VID 100 and 350 mV, VIC {0.05, 1.2, 2.35}, through the full input network (50 ohm source, package L 3 nH / C 0.7 pF, asig_5p0 pad, 100 ohm termination), output load 30 fF
 
-Runs: **180** (ok 180); 0 reused from cache.
+Runs: **180** (ok 180); 180 reused from cache.
 
 ## Worst case per metric
 

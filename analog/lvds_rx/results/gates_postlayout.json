@@ -1,21 +1,21 @@
 {
- "generated": "2026-11-21 13:53:19",
+ "generated": "2026-11-22 02:54:27",
  "tier": "full",
  "phases": [
   "postlayout"
  ],
  "git": {
-  "commit": "f8dce90",
+  "commit": "ac17072",
   "dirty": true
  },
- "gates_sha256": "c1edcf199101b794b361d453581fc79094bab7600df9bc38a77c4adbf4fadc9f",
+ "gates_sha256": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245",
  "spec_sha256": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
  "summary": {
-  "FAIL": 1
+  "PASS": 1
  },
  "cpu_min": 0.0,
  "flags": [],
- "green": false,
+ "green": true,
  "waivers": [
   {
    "id": "D-001",
@@ -242,6 +242,17 @@
    "trigger": "The D-017 sizing (alpha 1.4 = (5, 7) load fingers, load fingers 1.6 um) cannot be built: make layout failed twice.  (1) leaves.mos_row: the interdigitated load row carries three S/D nets whose contact bars need 1.68 um, the row offers Wf - 0.13 um, so Wf >= 1.81 um (1.6 failed).  (2) leaves.mirror_interdig: at most two devices with an odd finger count (a single finger must sit at a row end), (5, 7) has four.",
    "measured": ".scratch/t11/iter2/explore_vh.py round 5 and the final sizing: alpha 1.5 (4, 6) (both counts even) with Rs 5 um wide, so the small Rs that centres V_H is drawable; vh_scale 1.03 / 1.06 / 1.10: MC +-3 sd 6.31-30.32 / 6.54-31.15 / 6.87-32.07 mV.  Final (vh_scale 1.08, Rs about 365 ohm, 1.637 um; wf_ld 1.85): trip 9.3-25.3 mV at the 8 V_H-extreme corners, Monte Carlo 480 runs (40 per group, ff/-40C/3.6 V, fs/-40C/3.3 V, ss/125C/3.0 V, ff/125C/3.6 V x 3 VIC) 7.3-30.4 mV, +-3 sd 6.68-31.59 mV (11 % from either end of the 6-35 mV window); tPD ss/125C/3.0 V, VID 0.35 V 4.54 ns (iteration 1: 4.50 ns), VID 0.1 V 5.26 ns; A1 min 4.78, stage f3dB 0.99 x DR, chain 60.7 MHz.  make layout all green: frame 650 x 194.2 um (was 192.1; core 600 x 144.2 um within spec.yaml layout.macro_max_um 600 x 150), extracted wiring 2842.6 fF (2836.2 before, the estimate still applies), gate LAYOUT PASS.",
    "gate_relaxed": "none (spec.yaml and gates.yaml untouched).  Sizing (T11, block hysteresis, iteration 2): alpha_cands [(4, 6)], vh_scale 1.08, new knob rw_rs 5.0 (Rs width; RL, Rb, Rf and the divider stay 2 um and keep their gain ratio), wf_ld 1.85.  Code: sizing res_len and layout passives.seg_len take the end resistance as 85 ohm x 2 um / W (the model's terminal resistors are 85.45 ohm/sq x 1 um / W; identical at 2 um, so no other resistor changed); check.magic_drc counts the boxes of the rules off the allow-list (Magic's total and its per-rule counts differ: t_block 144 vs 160 CO.6 boxes made total - allowed negative).  Supersedes the alpha / wf_ld choice of D-017; its bench changes stay.  Re-freeze table: sizing/FROZEN.md (iteration 2)."
+  },
+  {
+   "id": "D-019",
+   "date": "2026-11-22",
+   "kind": "waiver",
+   "trigger": "T11 iteration 2: TB8 FAIL, min_pulse_s 0.084 ns against 2 ns (tt/125C/3.6 V, case 3, 1 us ramp with EN tied high); gate TBL FAIL on two TB8 checks at ss/125C/3.0 V: vout_off_v case 0 0.236 -> 0.279 V (46 % of the margin) and min_pulse_s case 3 148 -> 28 ns (82 %); evidence runs on the extracted macro: vout_off_v 0.346-0.363 V against 0.33 V at ss/-40C in cases 0-1 (tbl_en_pexw_off).  All of it while the supply is below about 1.2 V, before the output chain conducts.  No rung covers it.  The criteria are frozen (PLAN_V2 rules 4 and 7); the owner was asked because the change comes after the results, and chose this option on 2026-11-21 (of: this waiver, a design change, leaving both gates failing), after an off-chip pull-down was ruled out (RXn_O and EN are core-side pins, spec/pins.yaml) and on-chip resistors were declined (area).",
+   "measured": "sim/tb8_en/results/tb8_en at commit 2f89592: the 0.084 ns 'pulse' is a 3 ns runt on the LOW-expected copy b that rises to 51 % of the supply at VDD 0.99 V; lib_tb.pulses_norm took every pair of consecutive 50 % crossings although its docstring defines a level change as a completed swing.  Cases 0-1: the outputs peak 15-28 ns into the 50 ns setup ramp at VDD 1.07-1.12 V and are 0.000 V once the supply settles; that ramp is not a spec ramp (spec.yaml en.supply_ramps_s: 1 us, 100 us), the reason D-011 starts min_pulse_s at 100 ns there.  Mechanism: with EN = 0 the output is held LOW through a NAND and three inverters (lvds_out), none of which conducts below about 1 V; leakage and the coupling of the rising supply float the outputs to about a third of the supply (ss/-40C/3.3 V extracted, case 0: every output back under 10 % of the supply at 1.12-1.19 V).  The bench never held EN = 0 on the spec ramps: scratch bench .scratch/tb8x (these runs are now cases 6 and 7): before layout at 45 corners worst 0.262 V (1 us) / 0.213 V (100 us); extracted at the six worst corners 0.316 V / 0.254 V (ss/-40C/3.6 V; the same with reltol 0.01 within 0.1 mV); the layout uses 80 % / 35 % of the margin there and at most 24 % at TBL's three corners.  rshunt 1e13 (case 0's value) instead of 1e11 moves these peaks by 0.0-0.5 mV before layout and 0.1-2.2 mV extracted (.scratch/tb8z).  Case 5 early_high_v (EN = 0 on the 20 us ramp until 2.0 V): 0.228 V before layout, 0.275 V extracted at ss/-40C (46 %), at most 12 % at TBL's corners, higher extracted at all 45 corners.  Wake-up pulses (cases 3, 5, EN high or rising during the ramp) over the 45 corners: before layout shortest 3.0 ns with the completed-swing rule, extracted shortest 4.0 ns (ff/125C/3.0 V); pair by pair the extracted pulse is longer in 62 of 90 pairs and shorter in 25 (.scratch/t11/iter2/tb8_45pairs.py): a race, not a layout loss.  Offline re-measurement of the 270 stored TB8 runs with the new code: 0.084 ns -> 3.0 ns (the runt), five case-5 runs 13.7-18.9 -> 17.9-20 ns, none shorter; vout_off_v of cases 0-1 from 100 ns at most 3.7 uV.",
+   "gate_relaxed": "TB8: vout_off_v of cases 0-1 is judged from 100 ns on (supply settled), as D-011 did for min_pulse_s; the whole-run value is reported (vout_off_all_v).  min_pulse_s counts completed swings only (lib_tb.pulses_norm as documented; TB8 is its only user); runts keep their own rule (width at the departing 10/90 % level >= 2 ns).  Tightened in exchange: new cases 6 / 7 (the 1 us / 100 us spec ramps with EN = 0 throughout, reltol 0.01 as cases 1 / 3 / 4; case 7 ends 0.2 us after its ramp, because with case 4's 10 us tail ngspice stalled at ss/125C/3.6 V, fs/125C/3.6 V, sf/-40C/3.0 V and sf/27C/3.6 V in every solver variant tried (the three retry variants, gear, tmax / 2, trtol 10, rshunt 1e13), while with 0.2 us all four finish in 15-17 s: the stall sits in the settled tail, as in cases 1 / 3 / 4; the gated peak falls mid-ramp at VDD about 0.8 V) gated vout_off_v <= 0.33 V over the whole run; case 5 early_high_v gated <= 0.33 V; vdd_low_from_v reported.  Gate TBL (sim/tbl/evaluate.py): TB8 min_pulse_s of cases 3 and 5 is judged worst against worst over the 45 corners (TB8 before layout against tbl_en_pex + tbl_en_pexw_pulse / _cold / _rest), the frozen 30 % rule applied to those two values, incomplete coverage failing; the other cases stay per pair; tbl_en runs cases 0-7 (sim/tbl/make_benches.py).  Limits unchanged.  Known limitation for the package: with EN = 0 and the supply below about 1.2 V the outputs float to about a third of the supply (0.363 V extracted on the bench's 50 ns ramp, 0.316 V on the 1 us spec ramp at ss/-40C, 14 mV under 0.33 V); the integrator keeps the logic that reads RXn_O in reset, and EN = 0, until VDD >= 2.0 V (D-008).",
+   "files_after": {
+    "spec/gates.yaml": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245"
+   }
   }
  ],
  "gates": {
@@ -249,17 +260,8 @@
    "id": "TBL",
    "title": "post-layout re-simulation: same metrics as TB1,TB2,TB3,TB4,TB5,TB7,TB8,TB10 on PEX netlists",
    "phase": "postlayout",
-   "status": "FAIL",
-   "reasons": [
-    [
-     "LIMIT",
-     "value(summary.checks_failed) = 2 outside == 0"
-    ],
-    [
-     "LIMIT",
-     "value(summary.margin_used_max) = 0.820294 outside -inf .. 0.3"
-    ]
-   ],
+   "status": "PASS",
+   "reasons": [],
    "checks": [
     {
      "kind": "json_value",
@@ -297,7 +299,7 @@
      "agg": "value",
      "reasons": [],
      "n": 1,
-     "worst": 172.0,
+     "worst": 178.0,
      "limit": "100 .. +inf",
      "status": "PASS"
     },
@@ -305,33 +307,21 @@
      "kind": "json_value",
      "metric": "summary.checks_failed",
      "agg": "value",
-     "reasons": [
-      [
-       "LIMIT",
-       "value(summary.checks_failed) = 2 outside == 0"
-      ]
-     ],
+     "reasons": [],
      "n": 1,
-     "worst": 2.0,
+     "worst": 0.0,
      "limit": "== 0",
-     "status": "FAIL",
-     "detail": "value(summary.checks_failed) = 2 outside == 0"
+     "status": "PASS"
     },
     {
      "kind": "json_value",
      "metric": "summary.margin_used_max",
      "agg": "value",
-     "reasons": [
-      [
-       "LIMIT",
-       "value(summary.margin_used_max) = 0.820294 outside -inf .. 0.3"
-      ]
-     ],
+     "reasons": [],
      "n": 1,
-     "worst": 0.8202935715041422,
+     "worst": 0.2361154446356803,
      "limit": "-inf .. 0.3",
-     "status": "FAIL",
-     "detail": "value(summary.margin_used_max) = 0.820294 outside -inf .. 0.3"
+     "status": "PASS"
     },
     {
      "kind": "json_value",
@@ -348,7 +338,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/post_layout/tbl.json",
-   "results_sha256": "0fba5aca69b5c0f4f6f56126c425225d16d82738b90872c79f65e5d62886256e"
+   "results_sha256": "59c385116711d2650c2051a86b22ff87dbf2917a6c70fc9e9eeb042596b149a6"
   }
  }
 }
