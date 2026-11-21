@@ -25,7 +25,7 @@ schematic device is several layout fingers).
 | C | the runs (detached, 4 jobs) | iteration 0 done (c9190a5): TBL FAIL -> iteration 1 |
 | D | evaluator (post vs pre, 30 % of margin) and gate TBL | done (evaluate.py, D-015) |
 | I1 | iteration 1 (D-016): estimate in the sim netlist + stage-2 re-size; full regression; re-layout (lane, bias, macro); PEX; TBL again | design 96c5c2e, layout 9a957e2; regression 5a78f0d: TB3_hmc FAIL (hysteresis spread) -> iteration 2 |
-| I2 | iteration 2 (D-017): stage-2 alpha / Rs for the hysteresis Monte Carlo; TB3_trip / TB3_hmc solver retries | exploring (2026-11-21) |
+| I2 | iteration 2 (D-017, corrected by D-018): stage-2 alpha / Rs for the hysteresis Monte Carlo; TB3_trip / TB3_hmc solver retries | design + layout 29faf2c (alpha 1.5 = (4, 6), Rs 5 um wide); post-layout suite and full regression running (2026-11-21, `.scratch/t11/iter2/chain_after_tbl.py` fills freed slots, max 4 simulations) |
 | E | AUDIT_2, REPORT, DESIGN_LOG, make check; report to the owner and wait | open |
 
 ## Piece B findings (2026-11-14, after the owner's "keep going without waiting for my approval")
