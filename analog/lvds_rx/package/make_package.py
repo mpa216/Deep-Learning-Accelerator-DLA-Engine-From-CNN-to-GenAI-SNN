@@ -335,6 +335,10 @@ def known_limits():
         "parasitic_estimate": "the pre-layout netlist carries a layout parasitic estimate calibrated on the T10 extraction (decision "
                               "D-016); the delivered layout is checked against it by gate TBL",
         "timing_arcs": "none in the Liberty (v1): RXk_O are asynchronous and must be captured through synchronizers",
+        "integration_open": "UNVERIFIED items of the handoff (section 16) that only chip integration can close (PLAN_V2 P7/P8, "
+                            "owner-gated; PLAN_V2 section 9): (15) OpenSTA / OpenROAD handling of clocks and input delays defined "
+                            "on macro output pins, (16) whether RSZ_DONT_TOUCH_RX stops port buffering of the RX inputs, (17) the "
+                            "analog template geometry and slot assignment, (18) the semantics of the LVS keys (organizer items)",
         "decisions_on_record": sorted(dec),
     }
 
