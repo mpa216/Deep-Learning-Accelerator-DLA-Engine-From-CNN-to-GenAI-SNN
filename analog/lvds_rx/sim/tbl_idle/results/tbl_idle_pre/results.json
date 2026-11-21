@@ -23,12 +23,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 9.16200219776e-10
+    "out_final_v": 9.143988789759999e-10
    },
    "errors": [],
-   "elapsed": 5.241,
+   "elapsed": 4.939,
    "cached": false,
-   "hash": "771722509824ed6c4f9b9a3f68d7ef2706742f50b132fe1cbe7e1abbe02739c8",
+   "hash": "13a8bfddf2c2b5f751094e9a26c9306818b204b141dfa42a167d97a2191733e5",
    "retry": null,
    "first_status": null,
    "run_dir": "work/tt_27c_3v30__vic1.2_term0"
@@ -48,20 +48,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.001958372353389e-07,
+    "min_pulse_s": 5.00044019071211e-07,
     "held_state": 0.0,
     "n_high": 0.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 9.165251158605578e-10,
+    "out_final_v": 9.143651417131475e-10,
     "drift_toggles": 2.0,
-    "out_end_v": 9.14082839e-10
+    "out_end_v": 9.14406426e-10
    },
    "errors": [],
-   "elapsed": 12.164,
+   "elapsed": 13.985,
    "cached": false,
-   "hash": "d594abc2088c2e14d72e2cf0c5875a807a83328dbf30322d1c4bfa9ffface69d",
+   "hash": "73356d87c008db6c9cc0c2cd9cc34a3fbf55f15c7f35ed9957d1f0015d40b5a6",
    "retry": null,
    "first_status": null,
    "run_dir": "work/tt_27c_3v30__vic1.2_term1"
@@ -87,12 +87,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 9.16220866844e-10
+    "out_final_v": 9.143989501080001e-10
    },
    "errors": [],
-   "elapsed": 5.185,
+   "elapsed": 4.983,
    "cached": false,
-   "hash": "1aae7a022c30fc3b4e31a5d45ae4d491a4fe114b0c3138b682a7fe7433bd4dc7",
+   "hash": "fb2b1d3032195a6f826b5bc93f648fd17e67482bab7731cf18428697b55059d2",
    "retry": null,
    "first_status": null,
    "run_dir": "work/tt_27c_3v30__vic1.2_term2"
@@ -118,12 +118,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.9043190353200004e-09
+    "out_final_v": 4.97919824592e-09
    },
    "errors": [],
-   "elapsed": 4.937,
+   "elapsed": 6.456,
    "cached": false,
-   "hash": "5960d771764bc112390a5e3e6e33f55dcd75e747c98a6a9114f9d84e3f193061",
+   "hash": "f61c35da53bd674a543ca249945e987348a4bcb242a1a13a661d4b74d542ef69",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_125c_3v00__vic1.2_term0"
@@ -143,20 +143,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.003989053768664e-07,
+    "min_pulse_s": 5.00185369123508e-07,
     "held_state": 0.0,
     "n_high": 0.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.904456590956176e-09,
+    "out_final_v": 4.979207192191236e-09,
     "drift_toggles": 2.0,
-    "out_end_v": 4.90426432e-09
+    "out_end_v": 4.97922263e-09
    },
    "errors": [],
-   "elapsed": 11.806,
+   "elapsed": 16.271,
    "cached": false,
-   "hash": "0ff0f5c7d20ed3b4abd759e0ab66a3da10caf29b96986fc461ffbe06b5a0207c",
+   "hash": "0af07df7ced3612966452747f43efe1d5b4ddb4549946fc1f82cc000061c3f5b",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_125c_3v00__vic1.2_term1"
@@ -182,12 +182,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.904319448520001e-09
+    "out_final_v": 4.97919831044e-09
    },
    "errors": [],
-   "elapsed": 5.084,
+   "elapsed": 7.251,
    "cached": false,
-   "hash": "4eabba05fe9c7181a75924232bed006078b232d2d1908886c42d2ea6e50ee59f",
+   "hash": "30122dee4bed81dc3c3e5409c000aa92caeec20ea7d6a85e1c30394b337f35db",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_125c_3v00__vic1.2_term2"
@@ -213,12 +213,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.35915198964e-09
+    "out_final_v": 1.3594167084399999e-09
    },
    "errors": [],
-   "elapsed": 5.088,
+   "elapsed": 7.22,
    "cached": false,
-   "hash": "396ab03deb02c18bd291ea637839382ea7b1097672a23d274d2ebb4260b52f81",
+   "hash": "0e08d0f9d537640be12b93520ac8ea6207308054d4f179f97e9ed900591c314b",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ff_m40c_3v60__vic1.2_term0"
@@ -238,20 +238,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.000035529084722e-07,
+    "min_pulse_s": 4.999637316162413e-07,
     "held_state": 0.0,
     "n_high": 0.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.358546404501992e-09,
+    "out_final_v": 1.3592522675298805e-09,
     "drift_toggles": 2.0,
-    "out_end_v": 1.35915947e-09
+    "out_end_v": 1.3594113e-09
    },
    "errors": [],
-   "elapsed": 12.162,
+   "elapsed": 17.622,
    "cached": false,
-   "hash": "b7042783928a30571592084939c86ad321a74e28a6ac21b1395c9ab0405989c2",
+   "hash": "8e179ee3ef039954c3fda4e2457e8448a50e35ede54dfb3e4cf0ce1b666c304c",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ff_m40c_3v60__vic1.2_term1"
@@ -277,12 +277,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.35915223672e-09
+    "out_final_v": 1.3594167672e-09
    },
    "errors": [],
-   "elapsed": 5.143,
+   "elapsed": 7.117,
    "cached": false,
-   "hash": "02657db982a26061e69db902c1d0e0a9dabd688019b285713ad72fbe58741386",
+   "hash": "adb7baac68f3be2c196ac0227e5f7fc5365ec262581c97c24a88af211ad495ce",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ff_m40c_3v60__vic1.2_term2"
@@ -308,12 +308,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 7.89359792672e-10
+    "out_final_v": 7.87992302628e-10
    },
    "errors": [],
-   "elapsed": 5.236,
+   "elapsed": 7.296,
    "cached": false,
-   "hash": "633c98f119baffd013774bbca70cd34f357999558653488442ee6848f4fc84ea",
+   "hash": "ede1df5c287a860fedac9f7703849bec52b092692d50853eaa00c7a09637c443",
    "retry": null,
    "first_status": null,
    "run_dir": "work/fs_27c_3v30__vic1.2_term0"
@@ -333,20 +333,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.002508504475272e-07,
+    "min_pulse_s": 5.000170119549208e-07,
     "held_state": 0.0,
     "n_high": 0.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 7.877407453346614e-10,
+    "out_final_v": 7.879587495776892e-10,
     "drift_toggles": 2.0,
-    "out_end_v": 7.87682944e-10
+    "out_end_v": 7.87945945e-10
    },
    "errors": [],
-   "elapsed": 11.899,
+   "elapsed": 17.264,
    "cached": false,
-   "hash": "8015781601500ad91e304b6b1df3f8419278e910bb705a4f652e4ac61e580e0b",
+   "hash": "a02168fa76e90f516d119259266b7c94fbde0cabbc3ec698be4532ac3f9b4ad5",
    "retry": null,
    "first_status": null,
    "run_dir": "work/fs_27c_3v30__vic1.2_term1"
@@ -372,12 +372,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 7.876848731199999e-10
+    "out_final_v": 7.87992314704e-10
    },
    "errors": [],
-   "elapsed": 5.092,
+   "elapsed": 7.213,
    "cached": false,
-   "hash": "74333882edbcd0f0e9364ca8d6ca70e274a9a7d916473dd7e57c82df486b4977",
+   "hash": "3b93d4269b3149db8c2bbd23abbb8c6450ff78bac5df1a6bb3d99f63497d2f77",
    "retry": null,
    "first_status": null,
    "run_dir": "work/fs_27c_3v30__vic1.2_term2"
@@ -403,12 +403,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.3505872171599999e-09
+    "out_final_v": 1.3509308939599998e-09
    },
    "errors": [],
-   "elapsed": 5.042,
+   "elapsed": 7.053,
    "cached": false,
-   "hash": "25213b7b3f9efe5f5f2f3c7a4e79e7f03dbcc0bc465e0b82f2536ad5b12d5bd2",
+   "hash": "791733aa2255f51747583f84832df4f81142d6be1337e94103952c9a63a03c11",
    "retry": null,
    "first_status": null,
    "run_dir": "work/sf_27c_3v30__vic1.2_term0"
@@ -428,20 +428,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.001646700636713e-07,
+    "min_pulse_s": 5.000422724287002e-07,
     "held_state": 0.0,
     "n_high": 0.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.350369834183267e-09,
+    "out_final_v": 1.3508979995219123e-09,
     "drift_toggles": 2.0,
-    "out_end_v": 1.35057673e-09
+    "out_end_v": 1.35091634e-09
    },
    "errors": [],
-   "elapsed": 11.108,
+   "elapsed": 15.187,
    "cached": false,
-   "hash": "c7ed7cd3dc4017abf61763aff2181b5bfbb0a65378dbfd322e27aa398ca634c1",
+   "hash": "75370f31aa9e9a77374420c2f82f6d52a7dc8c49783ce1d9073a1da634d24b45",
    "retry": null,
    "first_status": null,
    "run_dir": "work/sf_27c_3v30__vic1.2_term1"
@@ -467,12 +467,12 @@
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.3505876916e-09
+    "out_final_v": 1.35093112684e-09
    },
    "errors": [],
-   "elapsed": 5.142,
+   "elapsed": 6.505,
    "cached": false,
-   "hash": "912d75fa5b460e69828b08587afd8f4e3c3405c96f3e92881ef751f30357cf70",
+   "hash": "d544c44a68eebdfaaf97dcd8e9637d9f132b92605d0892a7aadcddaa7b6510f8",
    "retry": null,
    "first_status": null,
    "run_dir": "work/sf_27c_3v30__vic1.2_term2"

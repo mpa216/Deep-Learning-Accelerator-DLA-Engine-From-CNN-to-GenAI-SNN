@@ -18,17 +18,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.31458087512e-09
+    "out_final_v": 3.2999998549999994
    },
    "errors": [],
-   "elapsed": 104.927,
+   "elapsed": 154.581,
    "cached": false,
-   "hash": "9b512c6600c70a6280a67830bbac81d5e63b1609d64a0b1c10902e19adbfd8b1",
+   "hash": "bf56fa654ef8ea60c231bff95c3b37cfd3430c879d49cea3122f9eafaccd6a77",
    "retry": null,
    "first_status": null,
    "run_dir": "work/tt_27c_3v30__vic1.2_term0"
@@ -48,20 +48,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 4.999844778525098e-07,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.314580211713147e-09,
-    "drift_toggles": 2.0,
-    "out_end_v": 4.31458009e-09
+    "out_final_v": 3.29999985501992,
+    "drift_toggles": 1.0,
+    "out_end_v": 4.31459827e-09
    },
    "errors": [],
-   "elapsed": 260.476,
+   "elapsed": 348.292,
    "cached": false,
-   "hash": "0aea9e1911a5724b6dfe18b0a13bffed21e4c14a49560633b21bf20923a25e94",
+   "hash": "902fa25482fd87a15841cff1034026f64a35cf160099fd00bdbf4c31c1fae349",
    "retry": null,
    "first_status": null,
    "run_dir": "work/tt_27c_3v30__vic1.2_term1"
@@ -82,17 +82,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.31458101412e-09
+    "out_final_v": 3.2999998549999994
    },
    "errors": [],
-   "elapsed": 105.779,
+   "elapsed": 152.346,
    "cached": false,
-   "hash": "72386c4fc32982797340f9b0b49f99ceee4ef0e1b85ea0d606db1e1559083c46",
+   "hash": "0c8cdd9cdaf7d4048010cd43283062568e7513dd89138d845320fe2efbcf86d0",
    "retry": null,
    "first_status": null,
    "run_dir": "work/tt_27c_3v30__vic1.2_term2"
@@ -113,17 +113,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.14791706116e-08
+    "out_final_v": 2.99999971
    },
    "errors": [],
-   "elapsed": 105.156,
+   "elapsed": 146.182,
    "cached": false,
-   "hash": "8f2df51acb2f7906b84d2453f716edded4287baee6c829c02cb2df15bf835fd7",
+   "hash": "262e26771fdce22dd41217ddfa308274b614fc484d329e33e6606c054785d049",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_125c_3v00__vic1.2_term0"
@@ -143,20 +143,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.001780791116127e-07,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.1479177412350597e-08,
-    "drift_toggles": 2.0,
-    "out_end_v": 1.14790731e-08
+    "out_final_v": 2.99999970498008,
+    "drift_toggles": 1.0,
+    "out_end_v": 1.14793894e-08
    },
    "errors": [],
-   "elapsed": 266.68,
+   "elapsed": 329.966,
    "cached": false,
-   "hash": "8bf4d1088da66742a145bbfe4617b8de4aa916302be29d5be895a833169111d9",
+   "hash": "baa10eeeba568d8e5654e43719b4bb40955092c714026f736ea42074e7ea2277",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_125c_3v00__vic1.2_term1"
@@ -177,17 +177,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 1.1479170186799998e-08
+    "out_final_v": 2.999999705
    },
    "errors": [],
-   "elapsed": 106.177,
+   "elapsed": 140.384,
    "cached": false,
-   "hash": "b8a8159f78ddf1d96769a5023ccf9d5dbab8183241e53beaacd9728337340a3f",
+   "hash": "91c4bfe88e0be73ee0f7e17a4061abf3d1fa26b0f271ced09532d6cd428ed968",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ss_125c_3v00__vic1.2_term2"
@@ -208,17 +208,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.46674932516e-09
+    "out_final_v": 3.59999989
    },
    "errors": [],
-   "elapsed": 105.49,
+   "elapsed": 140.992,
    "cached": false,
-   "hash": "5183814c366ee60b712f051c1ddd54dd4fdc30f2624bcdbfc92f5f93ae1b1bba",
+   "hash": "c2aa53d0dc9c6d3bea6bf8c870a772cb60399fdb09fb58869a37773a0806e183",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ff_m40c_3v60__vic1.2_term0"
@@ -238,20 +238,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 4.998198079998652e-07,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.46674154438247e-09,
-    "drift_toggles": 2.0,
-    "out_end_v": 4.46678215e-09
+    "out_final_v": 3.59999989,
+    "drift_toggles": 1.0,
+    "out_end_v": 4.4666734e-09
    },
    "errors": [],
-   "elapsed": 258.513,
+   "elapsed": 327.32,
    "cached": false,
-   "hash": "52fe2b54e3a14d9247e057c5b9d2ee2fbb621136c6259d35882dddc2b41ca4e1",
+   "hash": "d0fec57a05c92425acf1f39372706762abba1eba4836d8dda977ea8c17711a8e",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ff_m40c_3v60__vic1.2_term1"
@@ -272,17 +272,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 4.4667493296000005e-09
+    "out_final_v": 3.59999989
    },
    "errors": [],
-   "elapsed": 105.424,
+   "elapsed": 122.137,
    "cached": false,
-   "hash": "287810f4f464644394a29a778797f15d9bbc206b3be336f5e365a2e302690e44",
+   "hash": "47119d66d35b159974c73f2227ac29eee04524dad2d4c646517b951dc206ddd1",
    "retry": null,
    "first_status": null,
    "run_dir": "work/ff_m40c_3v60__vic1.2_term2"
@@ -303,17 +303,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 3.97299647124e-09
+    "out_final_v": 3.2999998172400002
    },
    "errors": [],
-   "elapsed": 103.159,
+   "elapsed": 123.436,
    "cached": false,
-   "hash": "8ad91a63108a85c46a0d9a939f37902ae7e9856b90910c4b3df2f5ef39c15eb8",
+   "hash": "97a4ab0f75aaef7930bc6f62a277a997c57c4a97d42e10d02b09b27bac271bf6",
    "retry": null,
    "first_status": null,
    "run_dir": "work/fs_27c_3v30__vic1.2_term0"
@@ -333,20 +333,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 5.000465354946409e-07,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 3.972993286972112e-09,
-    "drift_toggles": 2.0,
-    "out_end_v": 3.97297952e-09
+    "out_final_v": 3.29999981501992,
+    "drift_toggles": 1.0,
+    "out_end_v": 3.97300291e-09
    },
    "errors": [],
-   "elapsed": 254.115,
+   "elapsed": 350.671,
    "cached": false,
-   "hash": "ee9b722306ac1129377eddd422d7fae417f48cbbb711669baa446ca1b23b5688",
+   "hash": "9a1c7051320d7abc0d987280a8623a9fea33736019e7dc9f662bc0b3236a825e",
    "retry": null,
    "first_status": null,
    "run_dir": "work/fs_27c_3v30__vic1.2_term1"
@@ -367,17 +367,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 3.97299643904e-09
+    "out_final_v": 3.299999815
    },
    "errors": [],
-   "elapsed": 95.71,
+   "elapsed": 141.626,
    "cached": false,
-   "hash": "40e023a514a7087a42a546902637ea20c2601a9930cefe4fec7b35e044fb227b",
+   "hash": "348304034f29c76838eb7d9110edd5d8f864e5c2e32d3cf9906cdc77eb6919ab",
    "retry": null,
    "first_status": null,
    "run_dir": "work/fs_27c_3v30__vic1.2_term2"
@@ -398,17 +398,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 5.136440416159999e-09
+    "out_final_v": 3.29999987
    },
    "errors": [],
-   "elapsed": 105.286,
+   "elapsed": 144.451,
    "cached": false,
-   "hash": "314522328d0ceab0333aa1fa7eb6d1f7508aaa5385264334596f0137c20950bd",
+   "hash": "0f9db7c96adb9b9abe60266aea91d73537e532c06a8031cc98970bea3e41d786",
    "retry": null,
    "first_status": null,
    "run_dir": "work/sf_27c_3v30__vic1.2_term0"
@@ -428,20 +428,20 @@
    "status": "ok",
    "metrics": {
     "osc_flag": 0.0,
-    "min_pulse_s": 4.998394258737188e-07,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "min_pulse_s": 1.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 5.136438123027888e-09,
-    "drift_toggles": 2.0,
-    "out_end_v": 5.13648706e-09
+    "out_final_v": 3.29999987,
+    "drift_toggles": 1.0,
+    "out_end_v": 5.13647107e-09
    },
    "errors": [],
-   "elapsed": 230.032,
+   "elapsed": 298.653,
    "cached": false,
-   "hash": "da0464535f119c6ed3243f5d46015607a2080cdb167844b04e18a692c1326292",
+   "hash": "c7d3cad4da36770bc02196f11b1af4e65e266519f196e8355482f0b6f3e2b59d",
    "retry": null,
    "first_status": null,
    "run_dir": "work/sf_27c_3v30__vic1.2_term1"
@@ -462,17 +462,17 @@
    "metrics": {
     "osc_flag": 0.0,
     "min_pulse_s": 1.0,
-    "held_state": 0.0,
-    "n_high": 0.0,
+    "held_state": 1.0,
+    "n_high": 3.0,
     "n_mid": 0.0,
     "n_settle_flip": 0.0,
     "t_last_flip_s": 0.0,
-    "out_final_v": 5.13644044364e-09
+    "out_final_v": 3.29999987
    },
    "errors": [],
-   "elapsed": 103.773,
+   "elapsed": 114.165,
    "cached": false,
-   "hash": "c3ff7c4deda3c1273cf17d357b8ae8e102c21c423ed3d10dfd527939b05da923",
+   "hash": "c63c6990516ce2684a9d62aab270a5081e98ede1ca07e197c21001e0006f8166",
    "retry": null,
    "first_status": null,
    "run_dir": "work/sf_27c_3v30__vic1.2_term2"

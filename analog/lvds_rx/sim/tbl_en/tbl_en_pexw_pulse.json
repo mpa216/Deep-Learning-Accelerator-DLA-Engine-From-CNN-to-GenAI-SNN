@@ -1,0 +1,74 @@
+{
+ "description": "T11 iteration 2, evidence for gate TBL's TB8 checks: tb8_en on the extracted macro (core = sim/tbl/core_pexrc.spice) at the shortest pre-layout power-up pulses (125 C, cases 3 / 5: 3.0-19 ns against 2 ns).  Not a gate.",
+ "limits": {
+  "min_pulse_s": {
+   "min": 2e-09,
+   "scale": 1000000000.0,
+   "unit": "ns"
+  }
+ },
+ "name": "tbl_en_pexw_pulse",
+ "deck": "tbl_en.spice",
+ "corners": [
+  "tt:125:3.0",
+  "tt:125:3.3",
+  "tt:125:3.6",
+  "ss:125:3.0",
+  "ss:125:3.3",
+  "ss:125:3.6",
+  "ff:125:3.0",
+  "ff:125:3.3",
+  "ff:125:3.6",
+  "fs:125:3.0",
+  "fs:125:3.3",
+  "fs:125:3.6",
+  "sf:125:3.0",
+  "sf:125:3.3",
+  "sf:125:3.6"
+ ],
+ "grid": {
+  "case": [
+   3,
+   5
+  ]
+ },
+ "jobs": 4,
+ "vars": {
+  "core": "sim/tbl/core_pexrc.spice"
+ },
+ "timeout": 2400,
+ "prep": "../tb8_en/hooks.py:prep",
+ "post": "../tb8_en/hooks.py:post",
+ "retry": {
+  "timeout": 2400,
+  "variants": [
+   {
+    "name": "step49p",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".tran 49p "
+     ]
+    ]
+   },
+   {
+    "name": "reltol0.05",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".option reltol=0.05\n.tran 50p "
+     ]
+    ]
+   },
+   {
+    "name": "reltol0.05_step47p",
+    "sub": [
+     [
+      ".tran 50p ",
+      ".option reltol=0.05\n.tran 47p "
+     ]
+    ]
+   }
+  ]
+ }
+}

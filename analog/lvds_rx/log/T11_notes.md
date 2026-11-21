@@ -218,3 +218,33 @@ Final AC: A1 min 4.78, stage f3dB 0.99 x DR, chain 60.7 MHz; 128 sizing asserts 
 lane, bias block and macro PASS; frame 650 x 194.2 um (+2.1 um: core 600 x 144.2 um, spec limit 600 x 150); extracted
 wiring 2842.6 fF (2836.2 before); gate LAYOUT PASS.  TBL cores regenerated (lane-0 MLC fingers 12).  Next: the post-layout
 suite (TBL) first, then the full pre-layout regression.
+
+## Iteration 2: post-layout suite, gate TBL (2026-11-21)
+
+`results/post_layout/` (TBL.md, tbl.json), `results/gates_postlayout.json`: **gate TBL FAIL**, 172 pairs, every run ok,
+counts exact, 2 checks failed (iteration 0: 7), largest margin use 0.82 (iteration 0: 11.0), D-012 condition MET
+(ff/125C/3.6 V, VIC 0.05 V: A1 4.779, tPD 2.48 / 3.10 ns, edge 0.12 ns, eye 0.996 UI, no bit errors).  Every timing,
+gain, eye, hysteresis, idle and package check is within 30 % of its margin (tPD ss/125C/3.0 V, VID 0.35 V: 8.3 %; chain
+f3dB at ss/125C gains 6 %); systematic offset added by the layout 0.000 mV.  Extracted three-lane TB10: lane delays
+3.498 / 3.498 / 3.507 ns at tt (iteration 1: 3.71 ns), no missed edges, crosstalk 0.0008 UI, 10686 s on one job.
+Suite wall time 5.1 h (other benches on 3 workers); `run_tbl.py` is still the old copy in that run (joined after 18305 s).
+
+The two failed checks are both TB8 (EN and supply ramps), both power-up transients, both within their absolute limits at
+the TBL corners:
+- vout_off_v, cases 0-1 (EN = 0): 0.23 -> 0.28 V at ss/125C and tt (limit 0.33 V), 39-46 % of the margin; ff/125C 12-15 %.
+  The maximum is reached 13-23 ns into the bench's 50 ns setup ramp at VDD 0.53-0.93 V, before any device can hold the
+  outputs: capacitive coupling to VDD.  From 100 ns on the outputs are 0.000 V in both netlists.  The same setup ramp
+  is the reason D-011 starts min_pulse_s at 100 ns for cases 0-2; vout_off_v still takes the whole run.
+- min_pulse_s, case 3 (1 us supply ramp, a spec ramp): ss/125C 148 -> 28 ns, ff/125C 16 -> 8 ns (limit 2 ns), 82 % and
+  57 % of the margin.  The pulses are the copy-b outputs going HIGH for 22-49 ns at VDD 0.75-1.06 V while the chain wakes
+  up.  The metric is chaotic: other points gain as much (tt case 3 40 -> 49 ns, ss/125C case 4 0.54 -> 8.4 us).
+Risk the 30 % rule points at: the iteration-1 pre-layout TB8 (45 corners) has vout_off_v up to 0.296 V at ss/-40C, a
+temperature TBL does not run (+40-45 mV would be about 0.34 V, still inside the setup ramp), and min_pulse_s down to
+3.0 ns at ss/125C case 3.  No ladder rung covers TB8 or TBL.
+
+Next (evidence before any decision; `.scratch/t11/iter2/chain2.py` replaced the first scheduler and adopted its running
+pre-runs, max 4 simulations): TB8 pre-layout on the iteration-2 sizing (45 corners), then the extracted macro at the
+least-margin corners, `sim/tbl_en/tbl_en_pexw_off.json` (ss/-40C x 3 supplies, cases 0-1) and
+`sim/tbl_en/tbl_en_pexw_pulse.json` (every process at 125 C x 3 supplies, cases 3 and 5), then TB4 / TB4b / TB5 and the
+full regression.  If every absolute TB8 limit holds on the extraction, gate TBL's two checks go to a waiver entry with
+that evidence for AUDIT_2 to rule on (the owner can overrule); if not, a design or test-definition question for the owner.

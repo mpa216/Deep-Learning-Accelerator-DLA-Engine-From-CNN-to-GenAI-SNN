@@ -1,2 +1,2 @@
 id,corner,process,temp,vdd,mc3s,seed,status,delay_lane0_ps,delay_lane1_ps,delay_lane2_ps,n_missed_a0,n_missed_a1,n_missed_a2,skew_s,xtalk_jitter_ui,xtalk_lane0_ui,xtalk_lane1_ui,xtalk_lane2_ui
-tt_27c_3v30__mc3s0,tt_27c_3v30,tt,27,3.3,0,,ok,3658.58589,3641.16943,3652.06484,0,0,0,1.74164554e-11,0.000626312475,0.000626312475,0.000455082987,0.000527828069
+tt_27c_3v30__mc3s0,tt_27c_3v30,tt,27,3.3,0,,ok,3502.26766,3475.26958,3489.86811,0,0,0,2.69980833e-11,0.00118778214,0.00118778214,0.000629999859,0.000772537135
