@@ -1,0 +1,128 @@
+{
+ "gds": {
+  "ok": true,
+  "dbu": 0.001,
+  "top_cells": [
+   "lvds_rx_x3"
+  ],
+  "boundary_um": [
+   0.0,
+   0.0,
+   650.0,
+   194.20000000000002
+  ]
+ },
+ "lef": {
+  "ok": true,
+  "problems": [],
+  "size": [
+   650.0,
+   194.2
+  ],
+  "power_rects": {
+   "VDD": 3,
+   "VSS": 5
+  },
+  "antenna": {
+   "RX0_P": {
+    "ANTENNADIFFAREA": 80.0,
+    "ANTENNAGATEAREA": 65.99
+   },
+   "RX0_N": {
+    "ANTENNADIFFAREA": 80.0,
+    "ANTENNAGATEAREA": 65.99
+   },
+   "RX1_P": {
+    "ANTENNADIFFAREA": 80.0,
+    "ANTENNAGATEAREA": 65.99
+   },
+   "RX1_N": {
+    "ANTENNADIFFAREA": 80.0,
+    "ANTENNAGATEAREA": 65.99
+   },
+   "RX2_P": {
+    "ANTENNADIFFAREA": 80.0,
+    "ANTENNAGATEAREA": 65.99
+   },
+   "RX2_N": {
+    "ANTENNADIFFAREA": 80.0,
+    "ANTENNAGATEAREA": 65.99
+   },
+   "EN": {
+    "ANTENNAGATEAREA": 17.18
+   },
+   "RX0_O": {
+    "ANTENNADIFFAREA": 11.96
+   },
+   "RX1_O": {
+    "ANTENNADIFFAREA": 11.96
+   },
+   "RX2_O": {
+    "ANTENNADIFFAREA": 11.96
+   }
+  }
+ },
+ "openroad": {
+  "found": true,
+  "width_um": 650.0,
+  "height_um": 194.2,
+  "cls": "BLOCK",
+  "dbu_per_um": 2000,
+  "antenna_missing": [],
+  "ok": true,
+  "errors": []
+ },
+ "sta": {
+  "ok": true,
+  "files": {
+   "lvds_rx_x3__ff_n40C_3v60.lib": {
+    "ok": true,
+    "pins": 10,
+    "errors": [],
+    "warnings": []
+   },
+   "lvds_rx_x3__ss_125C_3v00.lib": {
+    "ok": true,
+    "pins": 10,
+    "errors": [],
+    "warnings": []
+   },
+   "lvds_rx_x3__tt_025C_3v30.lib": {
+    "ok": true,
+    "pins": 10,
+    "errors": [],
+    "warnings": []
+   }
+  }
+ },
+ "names": {
+  "ok": true,
+  "problems": []
+ },
+ "spice": {
+  "ok": true,
+  "same_as_reference": true,
+  "ports": [
+   "VDD",
+   "VSS",
+   "RX0_P",
+   "RX0_N",
+   "RX1_P",
+   "RX1_N",
+   "RX2_P",
+   "RX2_N",
+   "EN",
+   "RX0_O",
+   "RX1_O",
+   "RX2_O"
+  ]
+ },
+ "model": {
+  "ok": true,
+  "output": [
+   "PASS lvds_rx_model_tb",
+   "/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/package/tb/lvds_rx_model_tb.sv:38: $finish called at 81000 (1ps)"
+  ]
+ },
+ "all_ok": true
+}

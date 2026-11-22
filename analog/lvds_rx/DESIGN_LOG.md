@@ -524,3 +524,10 @@ said, and showed it only when a re-size made the wake-up runts common. And a re-
 
 **Next.** T12: the package (built, `make package` PACKAGE CHECKS PASS, all_ok) is committed next. T13: the closing
 regression, `make layout`, the report; pushing the branch needs the owner's yes.
+
+## 2026-11-22 T12: the integration package
+
+`make package` after D-020: PACKAGE CHECKS PASS, `package/checks/report.json` all_ok (gds, lef, openroad, sta, names,
+spice, model). The packaged GDS is the audited one (sha256 `892add3b...`); `KNOWN_LIMITS.json` carries D-001 to D-020,
+the D-019 low-supply off-state and the chip-integration items 15-18; the README reports the regression green. The optional
+generated xschem view (PLAN_V2 1.2 A9) is skipped. Details: `log/T12_report.md`. Next: T13, the closing regression.

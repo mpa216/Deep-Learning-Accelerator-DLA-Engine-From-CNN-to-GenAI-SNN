@@ -1,0 +1,18 @@
+{
+ "gds_sha256": "892add3ba9d5678886b7c95fd525a1ce2fd3bd1663b6679324fd69c7b6b96f89",
+ "lef": {
+  "power_rects": {
+   "VDD": 3,
+   "VSS": 5
+  },
+  "obs_m3_rects": 19,
+  "rx_antenna_diff": 80.0,
+  "rx_antenna_gate": 65.99,
+  "magic_lef": ".scratch/t12/work/lvds_rx_x3.magic.lef"
+ },
+ "libs": [
+  "package/lib/lvds_rx_x3__tt_025C_3v30.lib",
+  "package/lib/lvds_rx_x3__ss_125C_3v00.lib",
+  "package/lib/lvds_rx_x3__ff_n40C_3v60.lib"
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "method": "Each pin is biased through 1 Mohm (EN at VDD, RXk at VIC 1.2 V +- 175 mV, the other lanes the same) and gets a 1 A AC current one at a time; C = Im(1/v) / omega at 100 MHz (the data rate) at the DC operating point.  An RX pin sees its wiring, the 151 ohm ESD resistor and behind it the clamp diodes and the input pair; EN sees its wiring and the gates of 3 lanes + bias. Writes package/pin_caps.json (with the sha256 of the GDS the extraction came from).",
+ "freq_hz": 100000000.0,
+ "core": "sim/tbl/core_pexrc.spice",
+ "gds_sha256": "892add3ba9d5678886b7c95fd525a1ce2fd3bd1663b6679324fd69c7b6b96f89",
+ "corners": {
+  "tt_025C_3v30": {
+   "RX0_P": 2.54152e-13,
+   "RX0_N": 2.00282e-13,
+   "RX1_P": 2.54161e-13,
+   "RX1_N": 2.00282e-13,
+   "RX2_P": 2.54161e-13,
+   "RX2_N": 2.00282e-13,
+   "EN": 1.79389e-13
+  },
+  "ss_125C_3v00": {
+   "RX0_P": 2.80432e-13,
+   "RX0_N": 2.54051e-13,
+   "RX1_P": 2.80441e-13,
+   "RX1_N": 2.54051e-13,
+   "RX2_P": 2.80441e-13,
+   "RX2_N": 2.54051e-13,
+   "EN": 1.81001e-13
+  },
+  "ff_n40C_3v60": {
+   "RX0_P": 2.37183e-13,
+   "RX0_N": 1.64649e-13,
+   "RX1_P": 2.37192e-13,
+   "RX1_N": 1.64649e-13,
+   "RX2_P": 2.37192e-13,
+   "RX2_N": 1.64648e-13,
+   "EN": 1.7746e-13
+  }
+ }
+}
