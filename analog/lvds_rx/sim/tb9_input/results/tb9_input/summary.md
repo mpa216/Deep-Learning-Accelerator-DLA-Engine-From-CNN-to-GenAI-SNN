@@ -4,7 +4,7 @@
 
 TB9: TIA/EIA-644-A 4.2.1 input current (one pin swept 0.05 .. 2.4 V, the other at 1.25 V) and balance (both pins at the same level) of lane 0 incl. the primary ESD pad, powered with EN = 1
 
-Runs: **180** (ok 180); 0 reused from cache.
+Runs: **180** (ok 180); 180 reused from cache.
 
 ## Worst case per metric
 

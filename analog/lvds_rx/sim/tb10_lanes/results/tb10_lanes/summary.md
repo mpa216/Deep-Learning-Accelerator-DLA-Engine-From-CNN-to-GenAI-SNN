@@ -4,7 +4,7 @@
 
 TB10: lvds_rx_x3 with CLK (1010), D0 (PRBS7), D1 (PRBS7 shifted) at 100 Mb/s, VID 100 mV, full input network per lane; mc3s = 0: nominal lane skew and crosstalk jitter (lane k active alone as reference); mc3s = 1: additionally 4 mismatch copies (12 lane samples) for the 3-sigma lane-to-lane delay spread
 
-Runs: **10** (ok 10); 0 reused from cache.
+Runs: **10** (ok 10); 10 reused from cache.
 
 ## Worst case per metric
 

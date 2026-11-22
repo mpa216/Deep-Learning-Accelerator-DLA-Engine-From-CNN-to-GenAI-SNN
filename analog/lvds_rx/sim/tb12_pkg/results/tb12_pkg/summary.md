@@ -4,7 +4,7 @@
 
 TB12: eye and BER of lane 0 over the package sweep L {1, 5} nH x C {0.5, 1.5} pF (grid index pkg 0..3) at 100 Mb/s (VID 100 mV) and 200 Mb/s (VID 350 mV), VIC 1.2 V, full input network, worst5 corners
 
-Runs: **40** (ok 40); 0 reused from cache.
+Runs: **40** (ok 40); 40 reused from cache.
 
 ## Worst case per metric
 

@@ -1,6 +1,6 @@
 # LVDS RX macro: verification report (generated)
 
-Generated 2026-11-22 09:52:32 by flow/report.py from results/gates.json. Tier **full**, phases env, prelayout, commit `fafecfe` (dirty). Criteria: spec/gates.yaml sha256 `ac4c79459159...`.
+Generated 2026-11-22 04:08:06 by flow/report.py from results/gates.json. Tier **full**, phases env, prelayout, commit `4d96256` (dirty flag unavailable: no working git in the container). Criteria: spec/gates.yaml sha256 `ac4c79459159...`.
 
 ## Waivers and fallback-ladder rungs
 
@@ -152,7 +152,7 @@ Status **PASS**. Runs 270 of 270 expected; run status counts {'ok': 270}; result
 
 ### TB3_off: DC input-referred offset Monte Carlo, hysteresis off (N = 1000)
 
-Status **PASS**. Runs 15000 of 15000 expected; run status counts {'ok': 15000}; results `sim/tb3_off/results/tb3_off/results.json` (sha256 `b7ec810a4a77...`).
+Status **PASS**. Runs 15000 of 15000 expected; run status counts {'ok': 15000}; results `sim/tb3_off/results/tb3_off/results.json` (sha256 `1fa52980cb33...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -204,7 +204,7 @@ Status **PASS**. Runs 180 of 180 expected; run status counts {'ok': 180}; result
 
 ### TB6: CM step, supply ripple, current spikes
 
-Status **PASS**. Runs 20 of 20 expected; run status counts {'ok': 20}; results `sim/tb6_cm_supply/results/tb6_cm_supply/results.json` (sha256 `70f24e68b3fa...`).
+Status **PASS**. Runs 20 of 20 expected; run status counts {'ok': 20}; results `sim/tb6_cm_supply/results/tb6_cm_supply/results.json` (sha256 `f101015b00b9...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -236,7 +236,7 @@ Status **PASS**. Runs 1500 of 1500 expected; run status counts {'ok': 1500}; res
 
 ### TB8: EN and supply ramps
 
-Status **PASS**. Runs 360 of 360 expected; run status counts {'ok': 360}; results `sim/tb8_en/results/tb8_en/results.json` (sha256 `1a0a91a4e928...`).
+Status **PASS**. Runs 360 of 360 expected; run status counts {'ok': 360}; results `sim/tb8_en/results/tb8_en/results.json` (sha256 `074dfce0e666...`).
 
 - RETRIED: 17 run(s) stalled or did not converge on the first attempt and passed with a solver-option variant (circuit and stimulus unchanged): ff_125c_3v60__case3 (timeout -> step49p); ff_m40c_3v60__case3 (timeout -> reltol0.05); fs_125c_3v30__case3 (timeout -> step49p); fs_125c_3v30__case4 (timeout -> reltol0.05); fs_125c_3v30__case5 (timeout -> reltol0.05); fs_27c_3v30__case5 (timeout -> reltol0.05); sf_125c_3v00__case5 (timeout -> reltol0.05); sf_125c_3v30__case5 (timeout -> reltol0.05); sf_125c_3v60__case5 (timeout -> reltol0.05); sf_m40c_3v30__case5 (timeout -> step49p); sf_m40c_3v60__case5 (timeout -> reltol0.05); ss_125c_3v60__case5 (timeout -> reltol0.05)
 
@@ -254,7 +254,7 @@ Status **PASS**. Runs 360 of 360 expected; run status counts {'ok': 360}; result
 
 ### TB9: input leakage and balance
 
-Status **PASS**. Runs 180 of 180 expected; run status counts {'ok': 180}; results `sim/tb9_input/results/tb9_input/results.json` (sha256 `36331566b77b...`).
+Status **PASS**. Runs 180 of 180 expected; run status counts {'ok': 180}; results `sim/tb9_input/results/tb9_input/results.json` (sha256 `abe50f33e959...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -263,7 +263,7 @@ Status **PASS**. Runs 180 of 180 expected; run status counts {'ok': 180}; result
 
 ### TB10: three lanes: skew and crosstalk
 
-Status **PASS**. Runs 10 of 10 expected; run status counts {'ok': 10}; results `sim/tb10_lanes/results/tb10_lanes/results.json` (sha256 `c2b8618ae9f0...`).
+Status **PASS**. Runs 10 of 10 expected; run status counts {'ok': 10}; results `sim/tb10_lanes/results/tb10_lanes/results.json` (sha256 `8df17631f0fd...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -279,7 +279,7 @@ Status **NOT_APPLICABLE**.
 
 ### TB12: package sweep L {1,5} nH x C {0.5,1.5} pF at the worst corners
 
-Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `sim/tb12_pkg/results/tb12_pkg/results.json` (sha256 `b5d6fe6daf5d...`).
+Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `sim/tb12_pkg/results/tb12_pkg/results.json` (sha256 `f1413fa307ef...`).
 
 | metric | kind | where | limit | n | worst | status |
 |---|---|---|---|---|---|---|
@@ -325,4 +325,4 @@ Status **PASS**. Runs 40 of 40 expected; run status counts {'ok': 40}; results `
 
 ## Manifest
 
-Wall time 7284 s; sizes.spice sha256 `2549687c013a12cf82f57d1f8fc1da86038a919ca388123934116ce5fe9c6c74`; LUT hash `ed294bfa2ea3...`.
+Wall time 290.6 s; sizes.spice sha256 `2549687c013a12cf82f57d1f8fc1da86038a919ca388123934116ce5fe9c6c74`; LUT hash `ed294bfa2ea3...`.

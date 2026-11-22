@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-21 22:56:55",
+ "generated": "2026-11-22 04:08:06",
  "tier": "full",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "ac17072",
+  "commit": "4d96256",
   "dirty": null
  },
  "harness_version": "1.3",
@@ -19,7 +19,7 @@
    "spec/gates.yaml": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245",
    "spec/pins.yaml": "5ca543fef49af490b128dd4a19a317f2255f645ab0a974723420ccb138514c4a",
    "spec/paths.yaml": "ec337f9a876119a4db979683a2fb47a1e5c392d3817aa2e81ae77238d61ac26a",
-   "spec/decisions.yaml": "c2e19942ca20e12ef2f4e721184c1f12ba44dfb7b2cb305b5b60a3524e7acc98"
+   "spec/decisions.yaml": "ea8a336fe63ed8871c787d42a0cc4127ff32c5bf8eafbbd99fd6b22e51599a2a"
   }
  },
  "netlists": {
@@ -125,7 +125,7 @@
    "gate": "TB1",
    "expected": 987,
    "spec_exists": true,
-   "wall_s": 90.4,
+   "wall_s": 134.4,
    "actual": 987,
    "gate_status": "PASS"
   },
@@ -133,7 +133,7 @@
    "gate": "TB2",
    "expected": 315,
    "spec_exists": true,
-   "wall_s": 0.4,
+   "wall_s": 0.5,
    "actual": 315,
    "gate_status": "PASS"
   },
@@ -141,7 +141,7 @@
    "gate": "TB3_trip",
    "expected": 270,
    "spec_exists": true,
-   "wall_s": 2.6,
+   "wall_s": 3.0,
    "actual": 270,
    "gate_status": "PASS"
   },
@@ -149,7 +149,7 @@
    "gate": "TB3_off",
    "expected": 15000,
    "spec_exists": true,
-   "wall_s": 1367.5,
+   "wall_s": 58.4,
    "actual": 15000,
    "gate_status": "PASS"
   },
@@ -157,7 +157,7 @@
    "gate": "TB3_hmc",
    "expected": 600,
    "spec_exists": true,
-   "wall_s": 4.8,
+   "wall_s": 6.1,
    "actual": 600,
    "gate_status": "PASS"
   },
@@ -165,7 +165,7 @@
    "gate": "TB4",
    "expected": 630,
    "spec_exists": true,
-   "wall_s": 9.4,
+   "wall_s": 10.7,
    "actual": 630,
    "gate_status": "PASS"
   },
@@ -173,7 +173,7 @@
    "gate": "TB4b",
    "expected": 70,
    "spec_exists": true,
-   "wall_s": 1.1,
+   "wall_s": 1.2,
    "actual": 70,
    "gate_status": "PASS"
   },
@@ -181,7 +181,7 @@
    "gate": "TB5",
    "expected": 180,
    "spec_exists": true,
-   "wall_s": 16.6,
+   "wall_s": 21.2,
    "actual": 180,
    "gate_status": "PASS"
   },
@@ -189,7 +189,7 @@
    "gate": "TB6",
    "expected": 20,
    "spec_exists": true,
-   "wall_s": 408.7,
+   "wall_s": 3.5,
    "actual": 20,
    "gate_status": "PASS"
   },
@@ -197,7 +197,7 @@
    "gate": "TB7",
    "expected": 945,
    "spec_exists": true,
-   "wall_s": 1659.6,
+   "wall_s": 10.0,
    "actual": 945,
    "gate_status": "PASS"
   },
@@ -205,15 +205,15 @@
    "gate": "TB7_mc",
    "expected": 1500,
    "spec_exists": true,
-   "wall_s": 1740.3,
+   "wall_s": 16.3,
    "actual": 1500,
-   "gate_status": "FAIL"
+   "gate_status": "PASS"
   },
   {
    "gate": "TB8",
    "expected": 360,
    "spec_exists": true,
-   "wall_s": 184.4,
+   "wall_s": 7.8,
    "actual": 360,
    "gate_status": "PASS"
   },
@@ -221,7 +221,7 @@
    "gate": "TB9",
    "expected": 180,
    "spec_exists": true,
-   "wall_s": 139.9,
+   "wall_s": 0.7,
    "actual": 180,
    "gate_status": "PASS"
   },
@@ -229,7 +229,7 @@
    "gate": "TB10",
    "expected": 10,
    "spec_exists": true,
-   "wall_s": 1342.3,
+   "wall_s": 3.5,
    "actual": 10,
    "gate_status": "PASS"
   },
@@ -245,12 +245,12 @@
    "gate": "TB12",
    "expected": 40,
    "spec_exists": true,
-   "wall_s": 313.0,
+   "wall_s": 10.4,
    "actual": 40,
    "gate_status": "PASS"
   }
  ],
- "wall_s": 7283.8,
+ "wall_s": 290.6,
  "measured_vs_plan_5_3": {
   "SELFTEST": {
    "cpu_min_measured": 0.1,
@@ -261,91 +261,91 @@
   "TB1": {
    "cpu_min_measured": 5.6,
    "cpu_min_plan": 3,
-   "wall_s": 90.4,
+   "wall_s": 134.4,
    "retried_runs": 0
   },
   "TB2": {
    "cpu_min_measured": 2.2,
    "cpu_min_plan": 3,
-   "wall_s": 0.4,
+   "wall_s": 0.5,
    "retried_runs": 0
   },
   "TB3_trip": {
    "cpu_min_measured": 53.8,
    "cpu_min_plan": 2,
-   "wall_s": 2.6,
+   "wall_s": 3.0,
    "retried_runs": 0
   },
   "TB3_off": {
    "cpu_min_measured": 471.7,
    "cpu_min_plan": 75,
-   "wall_s": 1367.5,
+   "wall_s": 58.4,
    "retried_runs": 0
   },
   "TB3_hmc": {
    "cpu_min_measured": 139.5,
    "cpu_min_plan": 40,
-   "wall_s": 4.8,
+   "wall_s": 6.1,
    "retried_runs": 0
   },
   "TB4": {
    "cpu_min_measured": 125.8,
    "cpu_min_plan": 4,
-   "wall_s": 9.4,
+   "wall_s": 10.7,
    "retried_runs": 0
   },
   "TB4b": {
    "cpu_min_measured": 14.0,
    "cpu_min_plan": null,
-   "wall_s": 1.1,
+   "wall_s": 1.2,
    "retried_runs": 0
   },
   "TB5": {
    "cpu_min_measured": 97.9,
    "cpu_min_plan": 24,
-   "wall_s": 16.6,
+   "wall_s": 21.2,
    "retried_runs": 0
   },
   "TB6": {
    "cpu_min_measured": 26.3,
    "cpu_min_plan": null,
-   "wall_s": 408.7,
+   "wall_s": 3.5,
    "retried_runs": 0
   },
   "TB7": {
    "cpu_min_measured": 109.7,
    "cpu_min_plan": null,
-   "wall_s": 1659.6,
+   "wall_s": 10.0,
    "retried_runs": 0
   },
   "TB7_mc": {
    "cpu_min_measured": 114.9,
    "cpu_min_plan": null,
-   "wall_s": 1740.3,
+   "wall_s": 16.3,
    "retried_runs": 0
   },
   "TB8": {
    "cpu_min_measured": 57.4,
    "cpu_min_plan": null,
-   "wall_s": 184.4,
+   "wall_s": 7.8,
    "retried_runs": 17
   },
   "TB9": {
    "cpu_min_measured": 8.6,
    "cpu_min_plan": null,
-   "wall_s": 139.9,
+   "wall_s": 0.7,
    "retried_runs": 0
   },
   "TB10": {
    "cpu_min_measured": 70.7,
    "cpu_min_plan": null,
-   "wall_s": 1342.3,
+   "wall_s": 3.5,
    "retried_runs": 0
   },
   "TB12": {
    "cpu_min_measured": 19.6,
    "cpu_min_plan": null,
-   "wall_s": 313.0,
+   "wall_s": 10.4,
    "retried_runs": 0
   }
  },
