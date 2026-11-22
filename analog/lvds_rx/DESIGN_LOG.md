@@ -486,3 +486,41 @@ matched the list; checking a flattened copy gives one honest number. And `getcel
 unless the child's origin is named explicitly (`child 0 0 parent X Y`).
 
 **Next.** Report to the owner and wait for the go-ahead for T11 (post-layout re-simulation and the second audit).
+
+## 2026-11-22 T11: post-layout re-simulation and the second audit (main session, no agents, small committed pieces)
+
+**What was done.** The pre-layout benches re-run on the extracted macro and compared with the pre-layout design (gate TBL:
+every metric within 30 % of its margin), three design iterations to get there, a full pre-layout regression on the final
+sizing, and the second audit. Details: `log/T11_report.md`; history: `log/T11_notes.md`; audit: `results/AUDIT_2.md`.
+
+**Iterations.** 0: the T10 macro missed tPD after extraction (6.76 ns against 5 ns at ss/125C/3.0 V); the pre-layout
+netlist had no wiring capacitance and junctions 2.84 x too small. 1 (D-016): a layout parasitic estimate calibrated on
+the extraction went into the simulation netlist and stage 2 was re-sized; the hysteresis Monte Carlo then failed at
+ff/-40C/3.6 V (17 of 600 runs under 6 mV). 2 (D-017, D-018): stage-2 feedback alpha 1.5 = (4, 6) fingers, Rs 5 um wide;
+hysteresis 7.30-24.20 mV inside 6-35 mV; macro 650 x 194.2 um.
+
+**Result.**
+
+| Check | Result |
+|---|---|
+| full pre-layout regression (iteration 2) | 19 PASS, TB11 not applicable, every run count as expected (TB3_off 15000, TB7_mc 1500, ...) |
+| gate TBL (extracted against pre-layout) | PASS: 178 pairs, largest margin use 23.6 %; D-012 met (A1 4.78, tPD 2.48 / 3.10 ns at ff/125C/3.6 V, VIC 0.05 V) |
+| layout from the GDS alone | KLayout 0 / 0, Magic DRC 0, via arrays 0, LVS unique against both references, PEX reproduced |
+| AUDIT_2 | PASS with findings: rebuild byte-identical, hash audit 0 not current, mutants 11 / 11, every decision accepted |
+| `make check` | green |
+
+**Two test-definition decisions by the owner.** D-019: TB8 judged the EN = 0 off-state on the bench's 50 ns setup ramp and
+counted a runt that grazed 50 % as a 0.084 ns pulse; the off-state is now judged after the supply settles, pulses are
+completed swings (as documented), and the spec ramps are tested with EN = 0 (new cases 6 / 7, gated). D-020: a settling
+flip 0.76 ns before TB7's idle window read as an oscillation; crossings are now counted from 5 ns before the window. In
+both the owner chose from laid-out options; no limit changed. Known limitation for the integrator: with EN = 0 and the
+supply below about 1.2 V the outputs float to about a third of the supply (hold the reading logic in reset and EN low
+until VDD >= 2.0 V).
+
+**What surprised me.** Three measurement lessons more than circuit ones. A pre-layout netlist without wiring capacitance
+under-estimated every delay by a third (the extraction added 46-49 %). A pulse rule that had passed for weeks did not do what its own docstring
+said, and showed it only when a re-size made the wake-up runts common. And a re-size moved one settling flip by about
+100 ns, exactly onto a hard window edge: hard-edged measurement windows need a guard band.
+
+**Next.** T12: the package (built, `make package` PACKAGE CHECKS PASS, all_ok) is committed next. T13: the closing
+regression, `make layout`, the report; pushing the branch needs the owner's yes.

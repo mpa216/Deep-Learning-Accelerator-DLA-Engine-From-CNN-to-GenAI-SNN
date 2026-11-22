@@ -22,11 +22,11 @@ schematic device is several layout fingers).
 | 0 | `results/layout.json` for gate LAYOUT (T10 left it out), evaluated with `flow/gates.py --phases layout --out results/gates_layout.json` | done: PASS |
 | A | PEX node names = pre-layout hierarchical paths (probe-compatible macro netlists) | done (b91c4d2) |
 | B | `sim/tbl_*` specs (the pre-layout benches with the PEX include, the 6.5 corner / grid subset) + cost of one run each | done (8893ac1); RC repair ccff3ff |
-| C | the runs (detached, 4 jobs) | iteration 0 done (c9190a5): TBL FAIL -> iteration 1 |
+| C | the runs (detached, 4 jobs) | iteration 0 done (c9190a5): TBL FAIL -> iteration 1; iteration 2 done: TBL PASS with D-019 (ac17072) |
 | D | evaluator (post vs pre, 30 % of margin) and gate TBL | done (evaluate.py, D-015) |
 | I1 | iteration 1 (D-016): estimate in the sim netlist + stage-2 re-size; full regression; re-layout (lane, bias, macro); PEX; TBL again | design 96c5c2e, layout 9a957e2; regression 5a78f0d: TB3_hmc FAIL (hysteresis spread) -> iteration 2 |
-| I2 | iteration 2 (D-017, corrected by D-018): stage-2 alpha / Rs for the hysteresis Monte Carlo; TB3_trip / TB3_hmc solver retries | design + layout 29faf2c (alpha 1.5 = (4, 6), Rs 5 um wide); post-layout suite and full regression running (2026-11-21, `.scratch/t11/iter2/chain_after_tbl.py` fills freed slots, max 4 simulations) |
-| E | AUDIT_2, REPORT, DESIGN_LOG, make check; report to the owner and wait | open |
+| I2 | iteration 2 (D-017, corrected by D-018): stage-2 alpha / Rs for the hysteresis Monte Carlo; TB3_trip / TB3_hmc solver retries | design + layout 29faf2c (alpha 1.5 = (4, 6), Rs 5 um wide); done: gate TBL PASS with D-019 (ac17072); full regression 76d4236 (18 PASS, TB7_mc 1 of 1500) green with D-020 (260264a): 19 PASS, TB11 not applicable |
+| E | AUDIT_2, REPORT, DESIGN_LOG, make check; report to the owner and wait | done 2026-11-22: `results/AUDIT_2.md` PASS with findings, REPORT regenerated, DESIGN_LOG entry, `make check` green (its smoke-tier records restored from git); the owner decided D-019 and D-020 and asked to continue |
 
 ## Piece B findings (2026-11-14, after the owner's "keep going without waiting for my approval")
 
