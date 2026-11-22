@@ -397,3 +397,17 @@ to the key only when that file exists, i.e. not on a run's first simulation, so 
 the next time and is simulated once more (identical deck, identical result).  This is why the evidence sets tbl_en_pexw_* re-simulated today (new on
 2026-11-21) while TB8 cases 0-5 and tbl_en (work dirs from earlier iterations) stayed cached; the 90 new TB8 runs will
 re-simulate once on TB8's next run.  Changing the key formula would invalidate the existing cache instead, so it stays.
+
+## D-020 applied (2026-11-22, the owner's choice)
+
+Resumed 2026-11-22 09:50; the owner chose D-020 ("go with D-020").  The container had stopped while paused (exit 137) and was
+started again; the hourly auto-resume cron is back.  `sim/tb7_idle/hooks.py` post counts the idle window's VDD/2 crossings
+from 145 ns (T_IDLE0 - T_GUARD, T_GUARD = 5 ns); the > 0.1 V excursion is still judged in [150, 600] ns and min_pulse_s from
+150 ns; `spec/gates.yaml` unchanged; `spec/decisions.yaml` D-020 (waiver, no files_after).  Re-run with the new post hook
+(cached, post only, about 30 s): of 2475 runs (TB7 945, TB7_mc 1500, tbl_idle_pre / _pex 15 each) exactly one changed,
+fs_27c_3v30__vic1.2__s1793293142: osc_flag 1 -> 0, n_settle_flip 0 -> 1, t_last_flip_s 149.2 ns (limit 500 ns); no run
+hash changed (`.scratch/t11/iter2/` offline prediction confirmed, including the drift runs it had skipped).
+`flow/gates.py --tier full`: 19 PASS, TB11 not applicable, green; gate TBL PASS (178 pairs, largest margin use 23.6 %,
+D-012 met); `tools/audit_hashes.py --tier full` 17 benches, 0 not current; `flow/lint.py` 0 findings; `results/REPORT.md`
+regenerated.  `results/manifest.json` stays the record of the regression run (commit ac17072); it differs from the tree only
+in `spec/decisions.yaml` (D-020 appended); T13's regression rewrites it.

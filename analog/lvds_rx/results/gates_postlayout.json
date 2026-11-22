@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-22 02:54:27",
+ "generated": "2026-11-22 09:52:37",
  "tier": "full",
  "phases": [
   "postlayout"
  ],
  "git": {
-  "commit": "ac17072",
+  "commit": "fafecfe",
   "dirty": true
  },
  "gates_sha256": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245",
@@ -253,6 +253,14 @@
    "files_after": {
     "spec/gates.yaml": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245"
    }
+  },
+  {
+   "id": "D-020",
+   "date": "2026-11-22",
+   "kind": "waiver",
+   "trigger": "T11 iteration 2 full pre-layout regression (commit 76d4236): TB7_mc FAIL, osc_flag = 1 in 1 of 1500 runs (fs_27c_3v30__vic1.2__s1793293142, one of D-010's four samples).  No rung covers a measurement-window artefact.  The criteria are frozen (PLAN_V2 rules 4 and 7); the owner was asked because the change comes after the results, and chose this option on 2026-11-22 (of: this guard, leaving TB7_mc failing with the explanation in the report, starting the window later).",
+   "measured": "sim/tb7_idle_mc/results/tb7_idle_mc at commit 76d4236, waveform kept: lane 0 goes HIGH during the 50 ns supply ramp (VDD/2 crossing at 32.9 ns), makes ONE clean falling transition with its VDD/2 crossing at 149.236 ns, 0.76 ns before the idle window opens (150 ns), and holds LOW to 600 ns (6e-8 V); lanes 1-2 never move.  The window holds no crossing, only the end of that edge and its undershoot (0.079 V -> -0.057 V within the first ns), 0.136 V peak-to-peak, which D-010's '> 0.1 V without a crossing' clause reads as an oscillation.  In D-010's analysis (iteration-0 sizing) this sample flipped at 217-275 ns, inside the window; the iteration-2 sizing moved the flip 70-125 ns earlier, onto the window edge.  Offline (.scratch/t11/iter2/tb7_window_guard.py, every kept waveform): counting a crossing up to 5 ns before the window as inside it changes exactly this run.  Re-run with the new post hook (cached, post only, 2026-11-22): of 2475 runs (TB7 945, TB7_mc 1500, tbl_idle_pre / _pex 15 each) exactly this run changes: osc_flag 1 -> 0, n_settle_flip 0 -> 1, t_last_flip_s 0 -> 149.2 ns (limit 500 ns); no run hash changed.",
+   "gate_relaxed": "TB7 and TB7_mc (sim/tb7_idle/hooks.py post): the VDD/2 crossings of the idle window are counted from 145 ns (T_IDLE0 - 5 ns), so a settling flip whose edge straddles the window start is the lane's one settling flip (n_settle_flip reported, t_last_flip_s <= 500 ns gated, D-010) instead of a crossing-free excursion; the > 0.1 V excursion is still judged in [150, 600] ns and min_pulse_s from 150 ns.  Two crossings in [145, 600] ns are an oscillation, as before in [150, 600] ns.  Limits and spec/gates.yaml unchanged (no files_after)."
   }
  ],
  "gates": {
@@ -338,7 +346,7 @@
    "actual_runs": null,
    "status_counts": {},
    "results_file": "results/post_layout/tbl.json",
-   "results_sha256": "59c385116711d2650c2051a86b22ff87dbf2917a6c70fc9e9eeb042596b149a6"
+   "results_sha256": "5866d498d55373e14f50c0b477c8d3004ac689d2d78f3d2e54ebbfff67ece3ae"
   }
  }
 }

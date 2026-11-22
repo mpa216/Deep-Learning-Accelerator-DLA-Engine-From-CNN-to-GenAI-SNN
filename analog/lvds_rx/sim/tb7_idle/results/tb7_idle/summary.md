@@ -4,7 +4,7 @@
 
 TB7: idle inputs on all three lanes: open (driver removed, 1 Mohm to the common mode), terminated (VID = 0, 50 ohm source + 100 ohm termination), shorted (P = N), 7 VIC; terminated runs also drift the source +-100 mV slowly. v0: no failsafe guarantee, the held state is reported
 
-Runs: **945** (ok 945); 0 reused from cache.
+Runs: **945** (ok 945); 945 reused from cache.
 
 ## Worst case per metric
 

@@ -8,8 +8,10 @@ Phases: supply ramps 0 -> VDD in 50 ns (inputs and EN ramp with it); idle from 1
 differential then drifts 0 -> +100 -> -100 -> 0 mV at 0.5 mV/ns (100 ns holds at the ends) to see a clean, chatter-free pass through both trip points.
 
 Metrics (contract with spec/gates.yaml TB7 / TB7_mc), worst over the three lanes:
-  osc_flag      1 if an output crossing of VDD/2 happens in the idle window, or the output moves by more than 0.1 V (p-p) in it, or the drift phase shows
-                more than 2 crossings (one up through V_TH+, one down through V_TH- is the clean maximum); else 0
+  osc_flag      1 if an output crosses VDD/2 two or more times in the idle window (decision D-010; crossings counted from T_IDLE0 - T_GUARD,
+                decision D-020), or moves by more than 0.1 V (p-p) in [T_IDLE0, T_END_IDLE] without a crossing, or the drift phase shows more than
+                2 crossings (one up through V_TH+, one down through V_TH- is the clean maximum); else 0
+  n_settle_flip lanes with exactly one crossing (a power-up settling flip, D-010); t_last_flip_s the latest such crossing (0 if none)
   min_pulse_s   shortest interval between consecutive 50 % crossings from 150 ns on (1 s when there are fewer than two)
   held_state    lane 0 at the end of the idle window: 1 = HIGH (> 0.9 VDD), 0 = LOW (< 0.1 VDD), -1 = intermediate level
   n_high        number of lanes (of 3) held HIGH
@@ -27,6 +29,7 @@ import lib_tb as L  # noqa: E402
 from harness import analysis as A  # noqa: E402
 
 T_IDLE0 = 150e-9
+T_GUARD = 5e-9             # decision D-020: a VDD/2 crossing up to 5 ns before the idle window counts as inside it
 T_DRIFT0 = 600e-9
 SLOPE = 0.5e-3 / 1e-9      # V/s
 VD = 0.1
@@ -97,12 +100,16 @@ def post(ctx):
     dt_max = 0
     n_flip, t_flip = 0, 0.0
     for o in (o0, o1, o2):
-        # idle window: [T_IDLE0, T_END_IDLE]
+        # idle window: [T_IDLE0, T_END_IDLE]; its VDD/2 crossings are counted from T_IDLE0 - T_GUARD (decision D-020)
         w = (t >= T_IDLE0) & (t <= T_END_IDLE)
-        tt, _ = L.crossings_with_sense(t[w], o[w], th)
+        wc = (t >= T_IDLE0 - T_GUARD) & (t <= T_END_IDLE)
+        tt, _ = L.crossings_with_sense(t[wc], o[wc], th)
         # T5 (decision D-010): ONE crossing in the idle window is a power-up settling flip (the lane's total offset sits inside the bias
         # settling excursion; 4 of 4500 lane-runs at N = 100, flips at 217-275 ns, one clean transition to a rail), not an oscillation.
         # osc_flag = 2 or more crossings, or an output that moves > 0.1 V without a crossing.  Single flips are counted in n_settle_flip.
+        # D-020 (T11 iteration 2): a settling flip whose edge straddles the window start (VDD/2 crossing at 149.24 ns, fs/27C/3.3 V, VIC 1.2 V,
+        # seed 1793293142) left only its tail and undershoot in the window (0.136 V p-p, no crossing) and read as an oscillation.  The guard
+        # counts that crossing as the lane's settling flip; the > 0.1 V excursion is still judged in [T_IDLE0, T_END_IDLE], min_pulse_s from T_IDLE0.
         if len(tt) >= 2 or (len(tt) == 0 and (o[w].max() - o[w].min()) > 0.1):
             osc = 1
         if len(tt) == 1:

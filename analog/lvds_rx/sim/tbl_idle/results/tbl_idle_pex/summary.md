@@ -4,7 +4,7 @@
 
 post-layout gate TBL (pex): tb7_idle with core = sim/tbl/core_pexrc.spice
 
-Runs: **15** (ok 15); 0 reused from cache.
+Runs: **15** (ok 15); 15 reused from cache.
 
 ## Worst case per metric
 

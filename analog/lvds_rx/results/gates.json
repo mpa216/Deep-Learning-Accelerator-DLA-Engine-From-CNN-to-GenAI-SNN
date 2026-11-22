@@ -1,26 +1,25 @@
 {
- "generated": "2026-11-21 22:56:55",
+ "generated": "2026-11-22 09:52:32",
  "tier": "full",
  "phases": [
   "env",
   "prelayout"
  ],
  "git": {
-  "commit": "ac17072",
-  "dirty": null
+  "commit": "fafecfe",
+  "dirty": true
  },
  "gates_sha256": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245",
  "spec_sha256": "675bef0e692055a27889048e3ad8f372ba50b505a1a4d5f9a531e165053ce857",
  "summary": {
-  "PASS": 18,
-  "FAIL": 1,
+  "PASS": 19,
   "NOT_APPLICABLE": 1
  },
  "cpu_min": 1317.9,
  "flags": [
   "full-tier CPU time 1318 min is over 2.0x the 180 min estimate"
  ],
- "green": false,
+ "green": true,
  "waivers": [
   {
    "id": "D-001",
@@ -258,6 +257,14 @@
    "files_after": {
     "spec/gates.yaml": "ac4c79459159ad6c0ce564064fdf0ac02543d72d75bfc1b181c149bfa7a29245"
    }
+  },
+  {
+   "id": "D-020",
+   "date": "2026-11-22",
+   "kind": "waiver",
+   "trigger": "T11 iteration 2 full pre-layout regression (commit 76d4236): TB7_mc FAIL, osc_flag = 1 in 1 of 1500 runs (fs_27c_3v30__vic1.2__s1793293142, one of D-010's four samples).  No rung covers a measurement-window artefact.  The criteria are frozen (PLAN_V2 rules 4 and 7); the owner was asked because the change comes after the results, and chose this option on 2026-11-22 (of: this guard, leaving TB7_mc failing with the explanation in the report, starting the window later).",
+   "measured": "sim/tb7_idle_mc/results/tb7_idle_mc at commit 76d4236, waveform kept: lane 0 goes HIGH during the 50 ns supply ramp (VDD/2 crossing at 32.9 ns), makes ONE clean falling transition with its VDD/2 crossing at 149.236 ns, 0.76 ns before the idle window opens (150 ns), and holds LOW to 600 ns (6e-8 V); lanes 1-2 never move.  The window holds no crossing, only the end of that edge and its undershoot (0.079 V -> -0.057 V within the first ns), 0.136 V peak-to-peak, which D-010's '> 0.1 V without a crossing' clause reads as an oscillation.  In D-010's analysis (iteration-0 sizing) this sample flipped at 217-275 ns, inside the window; the iteration-2 sizing moved the flip 70-125 ns earlier, onto the window edge.  Offline (.scratch/t11/iter2/tb7_window_guard.py, every kept waveform): counting a crossing up to 5 ns before the window as inside it changes exactly this run.  Re-run with the new post hook (cached, post only, 2026-11-22): of 2475 runs (TB7 945, TB7_mc 1500, tbl_idle_pre / _pex 15 each) exactly this run changes: osc_flag 1 -> 0, n_settle_flip 0 -> 1, t_last_flip_s 0 -> 149.2 ns (limit 500 ns); no run hash changed.",
+   "gate_relaxed": "TB7 and TB7_mc (sim/tb7_idle/hooks.py post): the VDD/2 crossings of the idle window are counted from 145 ns (T_IDLE0 - 5 ns), so a settling flip whose edge straddles the window start is the lane's one settling flip (n_settle_flip reported, t_last_flip_s <= 500 ns gated, D-010) instead of a crossing-free excursion; the > 0.1 V excursion is still judged in [150, 600] ns and min_pulse_s from 150 ns.  Two crossings in [145, 600] ns are an oscillation, as before in [150, 600] ns.  Limits and spec/gates.yaml unchanged (no files_after)."
   }
  ],
  "gates": {
@@ -813,7 +820,7 @@
      "worst": null,
      "min": 42.75619258807953,
      "max": 52.0137254504028,
-     "mean": 48.31168375785843
+     "mean": 48.31168375785841
     },
     {
      "kind": "report",
@@ -869,7 +876,7 @@
      "worst": null,
      "min": -0.001666668450198324,
      "max": 0.0073333333333333185,
-     "mean": -0.0008098745719604767
+     "mean": -0.0008098745719604776
     },
     {
      "kind": "report",
@@ -882,7 +889,7 @@
      "worst": null,
      "min": -1.9402037581874496e-07,
      "max": 2.0017523477920224e-07,
-     "mean": 9.692276859408018e-10
+     "mean": 9.69227685940801e-10
     }
    ],
    "expected_runs": 270,
@@ -908,12 +915,12 @@
      "limit": "<= 0.095 (k=6, extra=0.0205)",
      "n": 15,
      "reasons": [],
-     "normality_p_min": 0.19458362787375075,
+     "normality_p_min": null,
      "worst": 0.03985640195419165,
      "worst_run": "('ss_125c_3v00', ('vic', '0.05'))",
      "margin": 0.05514359804580835,
-     "mean": 7.511082831010627e-05,
-     "sigma": 0.0032135485209802564,
+     "mean": 7.511082831010668e-05,
+     "sigma": 0.003213548520980257,
      "samples": 1000,
      "status": "PASS"
     },
@@ -928,7 +935,7 @@
      "worst": null,
      "min": -0.013364781875645469,
      "max": 0.010734892725855911,
-     "mean": 3.970925054098489e-05
+     "mean": 3.9709250540984384e-05
     }
    ],
    "expected_runs": 15000,
@@ -1208,7 +1215,7 @@
      "worst": null,
      "min": 0.00021992020617181928,
      "max": 0.019319448728512895,
-     "mean": 0.006206390349068192
+     "mean": 0.006206390349068194
     }
    ],
    "expected_runs": 180,
@@ -1339,7 +1346,7 @@
     "ok": 945
    },
    "results_file": "sim/tb7_idle/results/tb7_idle/results.json",
-   "results_sha256": "bb6641fcfeedbd47d8b7bf44867590481527ddef4b98f96510acab240a315860",
+   "results_sha256": "22226714bd634b98a484e3fc9e77e7b23f74c92066a7cb2328b41e0f3f3a3cba",
    "cpu_s": 6580.7,
    "retried": []
   },
@@ -1347,13 +1354,8 @@
    "id": "TB7_mc",
    "title": "idle inputs under mismatch (N = 100)",
    "phase": "prelayout",
-   "status": "FAIL",
-   "reasons": [
-    [
-     "LIMIT",
-     "osc_flag: 1 of 1500 runs outside -inf .. 0 (first fs_27c_3v30__vic1.2__s1793293142 = 1.0)"
-    ]
-   ],
+   "status": "PASS",
+   "reasons": [],
    "checks": [
     {
      "kind": "per_run",
@@ -1361,17 +1363,11 @@
      "where": null,
      "limit": "-inf .. 0",
      "n": 1500,
-     "reasons": [
-      [
-       "LIMIT",
-       "osc_flag: 1 of 1500 runs outside -inf .. 0 (first fs_27c_3v30__vic1.2__s1793293142 = 1.0)"
-      ]
-     ],
-     "worst": 1.0,
-     "worst_run": "fs_27c_3v30__vic1.2__s1793293142",
-     "margin": -1.0,
-     "status": "FAIL",
-     "detail": "1 of 1500 runs violate (first: fs_27c_3v30__vic1.2__s1793293142 = 1.0)"
+     "reasons": [],
+     "worst": 0.0,
+     "worst_run": "tt_27c_3v30__vic0.05__s1897236530",
+     "margin": 0.0,
+     "status": "PASS"
     },
     {
      "kind": "per_run",
@@ -1395,8 +1391,8 @@
      "status": "PASS",
      "worst": null,
      "min": 0.0,
-     "max": 0.0,
-     "mean": 0.0
+     "max": 1.0,
+     "mean": 0.0006666666666666666
     },
     {
      "kind": "per_run",
@@ -1405,9 +1401,9 @@
      "limit": "-inf .. 5e-07",
      "n": 1500,
      "reasons": [],
-     "worst": 0.0,
-     "worst_run": "tt_27c_3v30__vic0.05__s1897236530",
-     "margin": 5e-07,
+     "worst": 1.492357320390623e-07,
+     "worst_run": "fs_27c_3v30__vic1.2__s1793293142",
+     "margin": 3.5076426796093767e-07,
      "status": "PASS"
     }
    ],
@@ -1417,7 +1413,7 @@
     "ok": 1500
    },
    "results_file": "sim/tb7_idle_mc/results/tb7_idle_mc/results.json",
-   "results_sha256": "45779fbe23d0ac47e8acaf4350f75103d1916fe2af1229ab16e60ce4f6fd13f3",
+   "results_sha256": "d40e72d543b8792035c8cb034e2a5266d887db0b9f5f79faafa5e71672184a3b",
    "cpu_s": 6895.8,
    "retried": []
   },
@@ -1477,7 +1473,7 @@
      "worst": null,
      "min": 0.132794088,
      "max": 0.295673769,
-     "mean": 0.21778918218888887
+     "mean": 0.21778918218888904
     },
     {
      "kind": "report",
@@ -1497,7 +1493,7 @@
      "worst": null,
      "min": 0.0,
      "max": 1.153728,
-     "mean": 0.7156360149333333
+     "mean": 0.7156360149333335
     },
     {
      "kind": "per_run",
@@ -1569,7 +1565,7 @@
      "worst": null,
      "min": 2.9999999999999607e-09,
      "max": 1.0,
-     "mean": 0.06111218487629805
+     "mean": 0.0611121848762981
     }
    ],
    "expected_runs": 360,

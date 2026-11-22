@@ -1,10 +1,10 @@
 # tb7_idle_mc
 
-**Overall: FAIL**
+**Overall: PASS**
 
 TB7 Monte Carlo: terminated idle inputs (VID = 0) on three lanes with device mismatch (each lane draws its own offset), VIC 0.05 / 1.2 / 2.35 V; the output must hold a stable state (no oscillation, no pulse < 2 ns); the fraction of lanes held HIGH shows where the random offset puts the idle state. Deck, prep and post are those of tb7_idle (drift off).
 
-Runs: **1500** (ok 1500); 0 reused from cache.
+Runs: **1500** (ok 1500); 1500 reused from cache.
 
 ## Monte Carlo statistics (limits applied to mean +- 3 sigma; N valid / failed shown)
 
@@ -18,11 +18,11 @@ Runs: **1500** (ok 1500); 0 reused from cache.
 | ss_125c_3v00 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | ss_125c_3v00 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | ss_125c_3v00 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
-| ff_m40c_3v60 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
+| **ff_m40c_3v60 vic=0.05** (worst) | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | ff_m40c_3v60 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | ff_m40c_3v60 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | fs_27c_3v30 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
-| **fs_27c_3v30 vic=1.2** (worst) | 100 | 0 | 0.01 | 0.1 | 0 | 1 | -0.29 | 0.31 | -0.59 .. 0.61 | FAIL |
+| fs_27c_3v30 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | fs_27c_3v30 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | sf_27c_3v30 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
 | sf_27c_3v30 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | PASS |
@@ -129,7 +129,7 @@ Histograms: [tt_27c_3v30 vic=0.05](plots/hist_min_pulse_s__tt_27c_3v30_vic_0.05.
 | ff_m40c_3v60 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | ff_m40c_3v60 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | fs_27c_3v30 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
-| fs_27c_3v30 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
+| fs_27c_3v30 vic=1.2 | 100 | 0 | 0.01 | 0.1 | 0 | 1 | -0.29 | 0.31 | -0.59 .. 0.61 | - |
 | fs_27c_3v30 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | sf_27c_3v30 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | sf_27c_3v30 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
@@ -171,7 +171,7 @@ Histograms: [tt_27c_3v30 vic=0.05](plots/hist_min_pulse_s__tt_27c_3v30_vic_0.05.
 | ff_m40c_3v60 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | ff_m40c_3v60 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | fs_27c_3v30 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
-| fs_27c_3v30 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
+| fs_27c_3v30 vic=1.2 | 100 | 0 | 1.492e-09 | 1.492e-08 | 0 | 1.492e-07 | -4.328e-08 | 4.626e-08 | -8.805e-08 .. 9.103e-08 | - |
 | fs_27c_3v30 vic=2.35 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | sf_27c_3v30 vic=0.05 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
 | sf_27c_3v30 vic=1.2 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 .. 0 | - |
