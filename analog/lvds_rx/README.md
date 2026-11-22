@@ -8,7 +8,8 @@ Scope is the macro only. Nothing here touches `main`, `info.yaml`, the padframe 
 
 | File | What it is |
 |---|---|
-| `DESIGN_LOG.md` | Dated, plain-language log of what was done and what the numbers mean. Read this first. |
+| `LVDS_RX_DESIGN_RECORD.md` | The complete design record (2026-11-22): what the macro is, requirements against results, how it was made, the sizing iterations, every bug and error, decisions, limits, lessons. Read this first. |
+| `DESIGN_LOG.md` | Dated, plain-language log of what was done and what the numbers mean, task by task. |
 | `PLAN_V2.md` | The plan being executed (spec, architecture, verification, layout, task list T0-T13). |
 | `HANDOFF_FOR_CLAUDE.md`, `GUIDE_FOR_YOU.md` | The original plan (2026-10-06). PLAN_V2 supersedes it where they differ. |
 | `docs/ENV_REPORT.md` | Verified PDK and tool facts, with a ready-to-paste simulation header. |
