@@ -375,6 +375,23 @@ artefact of the measurement.  Offline (`.scratch/t11/iter2/tb7_window_guard.py`,
 up to 5 ns before the window as inside it changes exactly this run (osc 1 -> 0, one settling flip at 149.2 ns, within the
 500 ns limit of D-010) and no other of the 1500 TB7_mc and 945 TB7 runs.  That is a test-definition change: drafted as
 D-020 for the owner (asked; not applied).
+
+T12 started early while D-020 waits (2026-11-22): `package/make_package.py` known_limits gains `low_supply_off_state` (D-019:
+RXk_O float to about a third of VDD below about 1.2 V with EN = 0; the reading logic in reset and EN low until VDD >= 2.0 V).
+`make package`: PACKAGE CHECKS PASS, `package/checks/report.json` all_ok true (gds, lef, openroad, sta, names, spice, model);
+the README reports the regression NOT GREEN (TB7_mc) until D-020 is decided, then `make_readme.py` runs again.  `package/`
+is committed with the T11 close.
+
+**PAUSED 2026-11-22 at the owner's request**, waiting for the owner's TB7_mc decision (D-020 yes / leave it failing / open the
+window later; briefing page version 5).  Nothing running; the hourly auto-resume cron was deleted.  To resume:
+1. Apply the owner's choice.  For D-020: in `sim/tb7_idle/hooks.py` post, count VDD/2 crossings from T_IDLE0 - 5 ns (the rule
+   of `.scratch/t11/iter2/tb7_window_guard.py`); a `spec/decisions.yaml` D-020 waiver (gates.yaml untouched, no files_after);
+   re-run TB7, TB7_mc (cached, post only) and tbl_idle_pre / _pex; `python3 sim/tbl/evaluate.py`; `flow/gates.py --tier full`;
+   `flow/lint.py`; commit.
+2. Finalize `results/AUDIT_2.md` from `.scratch/t11/iter2/AUDIT_2_draft.md` and `log/T11_report.md` from
+   `.scratch/t11/iter2/T11_report_draft.md`; DESIGN_LOG entry; tick the piece table; `package/make_readme.py`; commit with
+   `package/` (T12).
+3. T13 (CARRY_ON_GUIDE section 6); push only with the owner's yes.
 Harness cache quirk (AUDIT_1 finding F2, still open, seen in action today): `runner._dep_hashes` adds `{run_dir}/body.inc`
 to the key only when that file exists, i.e. not on a run's first simulation, so a run simulated once gets a different key
 the next time and is simulated once more (identical deck, identical result).  This is why the evidence sets tbl_en_pexw_* re-simulated today (new on

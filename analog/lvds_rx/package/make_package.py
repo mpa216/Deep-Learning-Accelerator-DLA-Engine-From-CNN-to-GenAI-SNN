@@ -325,6 +325,11 @@ def known_limits():
                                      "the macro does not defend unpowered inputs",
         "en_and_supply": "no under-voltage lockout: 'VDD < 2.0 V -> outputs LOW' holds only with EN = 0; the integrator must hold EN "
                          "low until VDD >= 2.0 V (decision D-008)",
+        "low_supply_off_state": "with EN = 0 and VDD below about 1.2 V no stage of the output chain (a NAND and three inverters) "
+                                "conducts and RXk_O float to about a third of VDD: up to 0.363 V extracted on a 50 ns supply ramp, "
+                                "0.316 V on the 1 us spec ramp at ss/-40C (14 mV under the 0.33 V LOW limit), 0.254 V on the 100 us "
+                                "ramp (decision D-019; TB8 cases 0, 6, 7); every output is back under 10 % of VDD from about 1.2 V on. "
+                                "The logic that reads RXk_O must be held in reset, and EN low, until VDD >= 2.0 V (D-008)",
         "package": "assumed package and board: source 50 ohm per side, L 3 nH, C 0.7 pF per pin, swept L {1, 5} nH x C {0.5, 1.5} pF "
                    "in TB12 (netlist/input_network.spice); not measured",
         "pad_slot_x": "inferred pad-slot x positions (spec/pins.yaml, UNVERIFIED organizer item): a different slot moves only the "
