@@ -29,7 +29,7 @@
 <body>
 <main>
 <h1>LVDS receiver <code>lvds_rx_x3</code>: circuit and simulation gallery</h1>
-<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-15: layout of the whole macro done and checked; stage 2 re-sized after the first post-layout simulation; final verification under way (section 5).</p>
+<p class="sub">Three-lane LVDS receiver macro in GF180MCU 3.3 V devices. State on 2026-11-22: verification complete. The macro passes every check before and after layout, the final audit passed, and the package for chip integration is built (section 5).</p>
 
 <p class="note">The schematics below were drawn by hand (by script) from the netlist <code>netlist/lvds_rx_core.spice</code>; they are not generated from it. The waveform plots are single runs at the typical corner (27 &deg;C, 3.3 V) with ideal sources, made as illustrations. The pass/fail record of the design is the regression in <code>results/</code>, not these pictures.</p>
 
@@ -100,18 +100,18 @@
 <h3>From the regression: eye diagrams</h3>
 <div class="two">
 <figure><img src="eye_tt_200Mbps_vid100mV.png" alt="Eye diagram typical">
-<figcaption>Typical corner, 200 Mb/s, &plusmn;100 mV. All bits overlaid: the edges land in the same place (about 50 ps spread), so the "eye" is wide open.</figcaption></figure>
+<figcaption>Typical corner, 200 Mb/s, &plusmn;100 mV. All bits overlaid: the edges land in the same place (78 ps spread), so the "eye" is wide open: 98 % of the bit time, no bit errors.</figcaption></figure>
 <figure><img src="eye_ss125c_200Mbps_vid100mV.png" alt="Eye diagram slow hot">
-<figcaption>Slow transistors, 125 &deg;C, 3.0 V: the hardest corner for speed. The edges spread over about 250 ps and the eye is still 95 % open, with no bit errors.</figcaption></figure>
+<figcaption>Slow transistors, 125 &deg;C, 3.0 V: the hardest corner for speed. The edges spread over 238 ps and the eye is still 95 % open, with no bit errors.</figcaption></figure>
 </div>
-<p>Both eye diagrams are from the full regression on the first frozen sizing (2026-11-14), before the post-layout re-size.</p>
+<p>Both eye diagrams are from the closing full regression on the final sizing (2026-11-22).</p>
 
-<h3>From the regression: Monte Carlo histograms (first sizing, before the 2026-11-15 re-size)</h3>
+<h3>From the regression: Monte Carlo histograms (final sizing)</h3>
 <div class="two">
 <figure><img src="hist_offset_tt.png" alt="Offset histogram">
-<figcaption>Input offset of 1,000 randomly mismatched copies at the typical corner: spread (sigma) 3.1 mV. Green lines are the &plusmn;95 mV budget.</figcaption></figure>
+<figcaption>Input offset of 1,000 randomly mismatched copies at the typical corner, 1.2 V common mode: spread (sigma) 3.0 mV. Green lines are the &plusmn;95 mV budget.</figcaption></figure>
 <figure><img src="hist_hysteresis_ff_m40c.png" alt="Hysteresis histogram">
-<figcaption>Hysteresis of 100 copies at the fast, cold, 3.6 V corner. The green lines are the original 8 to 25 mV window; a few copies fall just under 8 mV, which is why the window was widened to 6 to 35 mV (decision D-009, accepted in the audit).</figcaption></figure>
+<figcaption>Hysteresis of 100 copies at the fast, cold, 3.6 V corner, 1.2 V common mode: mean 9.8 mV, spread (sigma) 0.88 mV, every copy inside the 6 to 35 mV window (green lines; decision D-009). This corner failed in iteration 1 (17 of 600 copies under 6 mV); the second stage-2 re-size (D-018) halved how much mismatch moves the hysteresis.</figcaption></figure>
 </div>
 
 <h2>4. The layout</h2>
@@ -127,13 +127,13 @@
 
 <h2>5. Where things stand</h2>
 <table>
-<tr><th>Item</th><th>State on 2026-11-15</th></tr>
-<tr><td>Schematic (netlist) and sizing</td><td>Re-sized once after layout (decision D-016): stage 2 runs faster, and the simulations now include the layout's wiring capacitance. Frozen again (<code>sizing/FROZEN.md</code>)</td></tr>
-<tr><td>Pre-layout regression</td><td>Passed on the first sizing (2026-11-14, 21,017 runs); re-running on the new sizing</td></tr>
-<tr><td>Pre-layout audit</td><td>Pass with findings (<code>results/AUDIT_1.md</code>); the final audit (<code>results/AUDIT_2.md</code>) follows the post-layout runs</td></tr>
-<tr><td>Layout</td><td>Done: lane, bias block and macro, every layout check passes; redrawn for the new sizing</td></tr>
-<tr><td>Post-layout simulation</td><td>The first run on the extracted layout missed the delay limit at the slow, hot, 3.0 V corner (6.8 ns against 5 ns), which led to the re-size; the new layout is being verified</td></tr>
-<tr><td>Package (LEF, Liberty, Verilog model)</td><td>Generators written and dry-run checked; built after the post-layout runs</td></tr>
+<tr><th>Item</th><th>State on 2026-11-22</th></tr>
+<tr><td>Schematic (netlist) and sizing</td><td>Re-sized twice after layout: stage 2 faster with the layout's wiring capacitance in every simulation (D-016), then its hysteresis made less sensitive to mismatch (D-017, D-018). Frozen (<code>sizing/FROZEN.md</code>)</td></tr>
+<tr><td>Pre-layout regression</td><td>Passed on the final sizing: 19 gates, about 21,000 runs (closing run 2026-11-22); two test definitions settled by the owner (D-019 power-up, D-020 idle window)</td></tr>
+<tr><td>Audits</td><td>Both pass with findings (<code>results/AUDIT_1.md</code>, <code>results/AUDIT_2.md</code>); the open findings are minor</td></tr>
+<tr><td>Layout</td><td>Done: lane, bias block and macro, 650 &times; 194.2 &micro;m; every layout check passes, also re-checked from the GDS alone and re-run in the closing task</td></tr>
+<tr><td>Post-layout simulation</td><td>Passed (gate TBL): every timing, gain, eye, hysteresis, offset and package check of the extracted layout within 30 % of its margin; delay at the slow corner with a 350 mV input 4.57 ns against 5 ns</td></tr>
+<tr><td>Package (GDS, LEF, Liberty, SPICE, Verilog model)</td><td>Built and checked (7 of 7); placing it on the chip (integration) is the next step and needs the owner's go-ahead</td></tr>
 </table>
 <p class="sub">Files: <code>docs/figures/draw_schematic.py</code> draws the schematics, <code>docs/figures/make_waveforms.py</code> runs and plots the three illustration simulations, <code>docs/figures/make_layout_figures.py</code> renders the layout pictures. More detail: <code>DESIGN_GUIDE.md</code> and <code>CARRY_ON_GUIDE.md</code> in the project folder.</p>
 </main>

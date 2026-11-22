@@ -261,23 +261,25 @@ Two more lessons:
 
 ## 6. Verification: what is checked and where it stands
 
-| Gate | Testbench (sim/...) | What it proves | Status 2026-11-15 |
+| Gate | Testbench (sim/...) | What it proves | Status 2026-11-22 (T13, final sizing) |
 |---|---|---|---|
-| TB1 | tb1_op | headroom, LUT vs SPICE, stage-1 CM, currents, node range | iteration-1 regression running |
-| TB2 | tb2_ac | A1 >= 4, gain spread over VIC, stage and chain bandwidth | with the estimate: stage 1.05 x DR, chain 66 MHz |
-| TB3 | tb3_trip, tb3_off, tb3_hmc | hysteresis window, offset Monte Carlo, functional MC | with the estimate: V_H 8.3-14.3 mV (worst5) |
-| TB4 / TB4b | tb4_pd, tb4b_pd_vid | delay, DCD, edge, delay spread | with the estimate: 4.50 ns (VID 0.35) / 5.35 ns (VID 0.1) at ss |
-| TB5 / TB12 | tb5_eye, tb12_pkg | eye and BER through the input network and package | regression running |
-| TB6 to TB10 | tb6 ... tb10 | CM steps and ripple, idle inputs, EN and supply ramps, input leakage, three lanes | regression running |
-| LAYOUT | results/layout.json | DRC (Magic, KLayout deck), strict LVS, antenna, via arrays, negative controls | PASS (iteration-1 layout) |
-| TBL | sim/tbl_* | the extracted macro against pre-layout, 30 % of margin | iteration 0 FAIL; iteration 1 pending |
+| TB1 | tb1_op | headroom, LUT vs SPICE, stage-1 CM, currents, node range | PASS, 987 runs (D-012: headroom waiver at the fast / hot common-mode extremes) |
+| TB2 | tb2_ac | A1 >= 4, gain spread over VIC, stage and chain bandwidth | PASS: A1 >= 4.78, spread 1.59 (<= 2.2), stage 0.92 x DR (>= 0.8), chain 60.7 MHz (>= 50) |
+| TB3 | tb3_trip, tb3_off, tb3_hmc | hysteresis window, offset Monte Carlo, functional MC | PASS: V_H >= 9.1 mV by DC sweep, 7.3-24.2 mV in the Monte Carlo (window 6-35 mV); offset window 39.9 mV (<= 95 mV) |
+| TB4 / TB4b | tb4_pd, tb4b_pd_vid | delay, DCD, edge, delay spread | PASS: tPD 4.54 ns at VID 0.35 (<= 5), 5.26 ns at VID 0.1 (<= 8); change over VID 200-450 mV 0.30 ns (<= 1) |
+| TB5 / TB12 | tb5_eye, tb12_pkg | eye and BER through the input network and package | PASS: eye >= 0.926 UI at 200 Mb/s, >= 0.973 at 100 Mb/s; package sweep >= 0.925 UI; no bit errors |
+| TB6 to TB10 | tb6 ... tb10 | CM steps and ripple, idle inputs, EN and supply ramps, input leakage, three lanes | PASS (TB7 / TB7_mc with D-010 and D-020; TB8 with D-019: EN = 0 output <= 0.262 V, shortest wake-up pulse 3.0 ns) |
+| LAYOUT | results/layout.json | DRC (Magic, KLayout deck), strict LVS, antenna, via arrays, negative controls | PASS (iteration-2 layout; re-run in T13: the same layout, only the GDS date stamps differ) |
+| TBL | sim/tbl_* | the extracted macro against pre-layout, 30 % of margin | PASS (iteration 2, with D-019): 178 pairs, at most 23.6 % of a margin used |
 
-Earlier full-tier records: `results/full_2026-11-14/` (the frozen sizing before T11) and
-`results/post_layout/iter0/` (the failed post-layout run). Decisions on record that shape the gates: D-007 (TB6
-jitter window, waiver), D-008 (EN with low supply, waiver), D-009 (hysteresis window, ladder R3 rung 1), D-010 /
-D-011 (idle and EN pulse definitions), D-012 (triode corner, waiver with a post-layout condition), D-014 (offset
-gate tightened), D-015 (gate TBL defined), D-016 (iteration 1), D-017 / D-018 (iteration 2: stage-2 hysteresis,
-retry variants for TB3_trip / TB3_hmc).
+Final records: `results/gates.json` and `results/REPORT.md` (closing regression of T13, 2026-11-22),
+`results/post_layout/TBL.md`, `results/AUDIT_2.md`, `package/`. Earlier full-tier records: `results/full_2026-11-14/`
+(the frozen sizing before T11) and `results/post_layout/iter0/` (the failed post-layout run). Decisions on record that
+shape the gates: D-007 (TB6 jitter window, waiver), D-008 (EN with low supply, waiver), D-009 (hysteresis window, ladder
+R3 rung 1), D-010 / D-011 (idle and EN pulse definitions), D-012 (triode corner, waiver with a post-layout condition,
+met), D-014 (offset gate tightened), D-015 (gate TBL defined), D-016 (iteration 1), D-017 / D-018 (iteration 2: stage-2
+hysteresis, retry variants for TB3_trip / TB3_hmc), D-019 (TB8 power-up checks, waiver chosen by the owner), D-020 (TB7
+idle-window guard, waiver chosen by the owner).
 
 ---
 

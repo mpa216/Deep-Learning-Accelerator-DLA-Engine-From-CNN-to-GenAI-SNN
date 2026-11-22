@@ -531,3 +531,25 @@ regression, `make layout`, the report; pushing the branch needs the owner's yes.
 spice, model). The packaged GDS is the audited one (sha256 `892add3b...`); `KNOWN_LIMITS.json` carries D-001 to D-020,
 the D-019 low-supply off-state and the chip-integration items 15-18; the README reports the regression green. The optional
 generated xschem view (PLAN_V2 1.2 A9) is skipped. Details: `log/T12_report.md`. Next: T13, the closing regression.
+
+## 2026-11-22 T13: closing regression, layout re-run, project close
+
+**Result.** The closing regression passed: 19 PASS, TB11 not applicable, 21,201 gated runs, every stored result equal to
+the T11 record; hash audit clean; mutants 11 / 11. `make layout` all green and gate LAYOUT PASS; the re-run reproduced the
+delivered layout (every GDS record identical apart from date stamps, the C extraction identical, the RC extraction the
+same element counts), so the delivered files, the GDS `892add3b...` that was audited, extracted and packaged, stay on
+record. Gate TBL PASS; package all_ok. Details: `log/T13_report.md`.
+
+**The macro in one paragraph.** `lvds_rx_x3`: three LVDS receiver lanes in GF180MCU 3.3 V devices for 100 Mb/s (eye
+checked at 200 Mb/s), common mode 0.05-2.35 V, hysteresis 6-35 mV, delay 4.57 ns after layout at the slow, hot, 3.0 V
+corner with a 350 mV input (limit 5 ns), 650 x 194.2 um on Metal1-Metal3, verified at 45 corners and under Monte Carlo
+mismatch before and after layout, with 20 decisions on record (two test definitions chosen by the owner in T11).
+
+**Open items, each needing the owner.** Push the branch; chip integration (PLAN_V2 P7/P8: placement, chip DRC / LVS, the
+handoff's items 15-18); ESD qualification of the secondary cell; failsafe for v1 (the idle state is undefined in v0);
+latch-up beyond the foundry DRC; AUDIT_2 findings F2, F8, F13.
+
+**What surprised me.** "The re-run passes" and "the re-run made the same layout" are different claims. Magic stamps the
+time into every GDS and numbers RC nodes in a different order each run, so byte equality never holds; equality had to be
+defined (GDS records apart from dates, netlist element sets) and checked with a small tool before the re-run meant
+anything.

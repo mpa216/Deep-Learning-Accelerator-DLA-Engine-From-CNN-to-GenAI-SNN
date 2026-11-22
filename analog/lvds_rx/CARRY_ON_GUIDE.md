@@ -1,6 +1,6 @@
 # LVDS RX macro: how to carry on (T11 to T13)
 
-Written 2026-11-15. Complements `LVDS/GUIDE_FOR_YOU.md` (the 2026-11-07 background guide).
+Written 2026-11-15, brought up to date 2026-11-22 (T13 closed). Complements `LVDS/GUIDE_FOR_YOU.md` (the 2026-11-07 background guide).
 This file lives in the project folder `~/Desktop/APIC_Return/.claude/worktrees/lvds-rx/analog/lvds_rx`
 (the same folder as `LVDS/lvds_rx_work/`). All paths below are relative to it unless they start with `~` or `/`.
 
@@ -71,21 +71,23 @@ Read first: PLAN_V2 sections 3.2, 5.2, 6.4, 7 and 8, then the top of `log/T11_no
 
 ---
 
-## 4. Current state (2026-11-15)
+## 4. Current state (2026-11-22): T11, T12 and T13 done
 
-T11 found that the frozen sizing missed its timing once the layout's real loads were included. Iteration 1
-re-sized stage 2 and was being re-verified when the work paused.
+The macro is verified before and after layout, audited and packaged. What is left needs the owner: pushing the branch,
+and chip integration (PLAN_V2 P7/P8). Sections 5 and 6 below are done; they stay as the record of how, and as the recipe
+to run everything again.
 
 | Step | Result | Commit |
 |---|---|---|
-| Post-layout benches + gate TBL defined (decision D-015) | `sim/tbl/evaluate.py`: every metric within 30 % of its pre-layout margin | `8893ac1` |
-| RC extraction bug | Magic 8.3.636 `extresist` counted every coupling twice; repaired by `check.rc_repair` | `ccff3ff` |
-| Iteration 0 (the T10 layout) | TBL FAIL: tPD 6.76 ns against 5 ns at ss/125C/3.0 V (VID 350 mV), 8.22 ns against 8 ns (VID 100 mV); stage bandwidth 0.44 against 0.8 x data rate | `c9190a5` |
-| D-012 freeze condition | met at ff/125C/3.6 V (gain 4.78, timing ok), so ladder R6 was not taken | (same) |
-| Iteration 1 design (D-016) | layout parasitic estimate in the simulation netlist (calibrated on 36 extracted points, within about 1 %) + stage 2 re-sized (`n_t2` 10, `gmid_s2` 8, `L_ld` 0.28): tPD 4.50 ns with the estimate; I_lane 757 uA at tt (limit 1.5 mA) | `96c5c2e` |
-| Iteration 1 layout | `make layout` all green, same 650 x 192.1 um; PEX regenerated | `9a957e2` |
-| T12 package generators | written; LEF, OpenROAD and model checks pass in a dry run | `66d34d0` |
-| Running at the pause | full pre-layout regression (log `results/full_run.log`) and the extracted three-lane TB10 run (`sim/tbl_lanes/results/tbl_lanes_pex/`) | committed after they end |
+| Iteration 0 (the T10 layout) | gate TBL FAIL: tPD 6.76 ns against 5 ns at ss/125C/3.0 V; the pre-layout netlist had no wiring capacitance | `c9190a5` |
+| Iteration 1 (D-016) | layout parasitic estimate in the simulation netlist, stage 2 re-sized; the hysteresis Monte Carlo then failed (17 of 600 under 6 mV) | `96c5c2e`, `5a78f0d` |
+| Iteration 2 (D-017, D-018) | stage-2 feedback alpha 1.5 = (4, 6) fingers, Rs 5 um wide; macro 650 x 194.2 um | `29faf2c` |
+| Gate TBL | PASS with D-019 (the owner's choice): 178 pairs, at most 23.6 % of a margin used; D-012 met | `ac17072` |
+| Full pre-layout regression | 19 PASS, TB11 not applicable, with D-020 (the owner's choice) | `76d4236`, `260264a` |
+| T11 close | `results/AUDIT_2.md` PASS with findings; `log/T11_report.md`; `make check` green | `218b3e6` |
+| T12 | `make package`: 7 of 7 checks, all_ok | `4d96256` |
+| T13 | closing regression 19 PASS, every stored result unchanged; `make layout` all green, the same layout; report | `40bbfa7`, the T13 close commit |
+| Open | push of branch `lvds-rx` (the owner's yes); chip integration P7/P8 (owner-gated); AUDIT_2 findings F2, F8, F13 | |
 
 Root cause of iteration 0, in one line: the pre-layout netlist had no wiring capacitance and about a third of the
 real junction area, so the frozen design had 9.5 % delay margin for none of the layout's load.
