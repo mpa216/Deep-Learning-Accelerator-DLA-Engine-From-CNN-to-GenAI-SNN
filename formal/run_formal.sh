@@ -4,7 +4,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 rc=0
-for t in dla_controller dla_serial_bridge; do
+for t in dla_controller dla_serial_bridge dla_link_sel; do
   echo "############################################################"
   echo "# sby prove: $t"
   echo "############################################################"

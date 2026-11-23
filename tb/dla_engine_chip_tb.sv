@@ -45,7 +45,10 @@ module dla_engine_chip_tb;
         .done_IN(done_IN), .done_OUT(done_OUT), .done_OE(done_OE), .done_IE(done_IE),
         .done_CS(done_CS), .done_SL(done_SL), .done_PU(done_PU), .done_PD(done_PD),
         .wb_done_IN(wb_done_IN), .wb_done_OUT(wb_done_OUT), .wb_done_OE(wb_done_OE), .wb_done_IE(wb_done_IE),
-        .wb_done_CS(wb_done_CS), .wb_done_SL(wb_done_SL), .wb_done_PU(wb_done_PU), .wb_done_PD(wb_done_PD)
+        .wb_done_CS(wb_done_CS), .wb_done_SL(wb_done_SL), .wb_done_PU(wb_done_PU), .wb_done_PD(wb_done_PD),
+        // LVDS integration (branch lvds-integration): strap low = the CMOS serial pins, as the
+        // LINK_SEL pad pull-down does on silicon; the LVDS lanes stay unconnected (floating).
+        .LINK_SEL(1'b0)
     );
 
     initial begin
@@ -60,6 +63,8 @@ module dla_engine_chip_tb;
         integer i;
         begin
             for (i = 0; i < n; i = i + 1) @(posedge clk);
+            #1;   // act 1 ns after the edge, never on it: no race with the DUT flops (the zero-delay
+                  // order otherwise decides whether a pin change is seen this clock or the next)
         end
     endtask
 

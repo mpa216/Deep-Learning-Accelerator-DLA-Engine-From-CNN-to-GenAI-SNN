@@ -2,13 +2,15 @@
 
 A learning project: a three-lane LVDS receiver hard macro in gf180mcuD 3.3 V devices, designed with the
 gm/ID lookup-table method (Jespers & Murmann, reference folder `Analog/` in the main checkout).
-Scope is the macro only. Nothing here touches `main`, `info.yaml`, the padframe or the signed-off A56 chip.
+Scope of this folder is the macro only. Its integration into the A56 chip lives on branch `lvds-integration`
+(`LVDS_INTEGRATION.md`); `main` and the signed-off chip stay untouched.
 
 ## Where to start reading
 
 | File | What it is |
 |---|---|
 | `LVDS_RX_DESIGN_RECORD.md` | The complete design record (2026-11-22): what the macro is, requirements against results, how it was made, the sizing iterations, every bug and error, decisions, limits, lessons. Read this first. |
+| `LVDS_INTEGRATION.md` | The macro in the A56 / ACV chip (branch `lvds-integration`): hookup, the floorplan cut, pads and the provisional frame template, verification, open items, the request to the organizers. |
 | `DESIGN_LOG.md` | Dated, plain-language log of what was done and what the numbers mean, task by task. |
 | `PLAN_V2.md` | The plan being executed (spec, architecture, verification, layout, task list T0-T13). |
 | `HANDOFF_FOR_CLAUDE.md`, `GUIDE_FOR_YOU.md` | The original plan (2026-10-06). PLAN_V2 supersedes it where they differ. |

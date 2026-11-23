@@ -1,0 +1,21 @@
+[tasks]
+prove
+cover
+
+[options]
+prove: mode prove
+prove: depth 70
+cover: mode cover
+cover: depth 80
+
+[engines]
+smtbmc yices
+
+[script]
+read -sv dla_link_sel.v
+read -sv dla_link_sel_props.sv
+prep -top dla_link_sel_props
+
+[files]
+../rtl/dla_link_sel.v
+dla_link_sel_props.sv

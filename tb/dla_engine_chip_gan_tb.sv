@@ -55,6 +55,14 @@ module dla_engine_chip_gan_tb;
     // --- output-pad feedback inputs (unused by host; tie low) ---
     reg MISO_IN, busy_IN, done_IN, wb_done_IN;
 
+    // --- LVDS link (branch lvds-integration). Default: strap low, lanes floating ---
+    reg link_sel = 1'b0;
+    reg use_lvds = 1'b0;        // host pin writes go to the LVDS pairs
+    reg lsclk_p = 1'bz, lsclk_n = 1'bz, lmosi_p = 1'bz, lmosi_n = 1'bz, lcsn_p = 1'bz, lcsn_n = 1'bz;
+    wire LVDS_SCLK_P = lsclk_p, LVDS_SCLK_N = lsclk_n;
+    wire LVDS_MOSI_P = lmosi_p, LVDS_MOSI_N = lmosi_n;
+    wire LVDS_CSN_P  = lcsn_p,  LVDS_CSN_N  = lcsn_n;
+
     // --- all chip outputs (signal + pad-control terminals); only *_OUT are read ---
     wire clk_PU, clk_PD, rst_n_PU, rst_n_PD;
     wire SCLK_OUT, SCLK_OE, SCLK_IE, SCLK_CS, SCLK_SL, SCLK_PU, SCLK_PD;
@@ -81,7 +89,14 @@ module dla_engine_chip_gan_tb;
         .done_IN(done_IN), .done_OUT(done_OUT), .done_OE(done_OE), .done_IE(done_IE),
         .done_CS(done_CS), .done_SL(done_SL), .done_PU(done_PU), .done_PD(done_PD),
         .wb_done_IN(wb_done_IN), .wb_done_OUT(wb_done_OUT), .wb_done_OE(wb_done_OE), .wb_done_IE(wb_done_IE),
-        .wb_done_CS(wb_done_CS), .wb_done_SL(wb_done_SL), .wb_done_PU(wb_done_PU), .wb_done_PD(wb_done_PD)
+        .wb_done_CS(wb_done_CS), .wb_done_SL(wb_done_SL), .wb_done_PU(wb_done_PU), .wb_done_PD(wb_done_PD),
+        // LVDS integration (branch lvds-integration). Default: strap low = the CMOS serial pins
+        // (the LINK_SEL pad pull-down on silicon), LVDS lanes floating. +define+LVDS_LINK: the
+        // host switches LINK_SEL high after reset and talks over the three LVDS lanes.
+        .LINK_SEL(link_sel),
+        .LVDS_SCLK_P(LVDS_SCLK_P), .LVDS_SCLK_N(LVDS_SCLK_N),
+        .LVDS_MOSI_P(LVDS_MOSI_P), .LVDS_MOSI_N(LVDS_MOSI_N),
+        .LVDS_CSN_P(LVDS_CSN_P),   .LVDS_CSN_N(LVDS_CSN_N)
     );
 
     initial begin
@@ -96,14 +111,31 @@ module dla_engine_chip_gan_tb;
         integer i;
         begin
             for (i = 0; i < n; i = i + 1) @(posedge clk);
+            #1;   // act 1 ns after the edge, never on it: no race with the DUT flops (the zero-delay
+                  // order otherwise decides whether a pin change is seen this clock or the next)
         end
     endtask
 
+    // pin writes go to the link in use: the CMOS pins, or an LVDS pair (P = value, N = complement)
+    task automatic set_sclk(input logic v);
+        if (use_lvds) begin lsclk_p = v; lsclk_n = ~v; end else SCLK_IN = v;
+    endtask
+    task automatic set_mosi(input logic v);
+        if (use_lvds) begin lmosi_p = v; lmosi_n = ~v; end else MOSI_IN = v;
+    endtask
+    task automatic set_cs_n(input logic v);
+        if (use_lvds) begin lcsn_p = v; lcsn_n = ~v; end else CS_N_IN = v;
+    endtask
+`ifdef LVDS_LINK
+    // while the host uses LVDS, the CMOS serial pins carry garbage: the source mux must ignore them
+    always #17 if (use_lvds) {SCLK_IN, MOSI_IN, CS_N_IN} = $urandom;
+`endif
+
     task automatic sclk_pulse;
         begin
-            SCLK_IN = 1'b0;
+            set_sclk(1'b0);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
-            SCLK_IN = 1'b1;
+            set_sclk(1'b1);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
         end
     endtask
@@ -112,7 +144,7 @@ module dla_engine_chip_gan_tb;
         integer i;
         begin
             for (i = nbits - 1; i >= 0; i = i - 1) begin
-                MOSI_IN = val[i];
+                set_mosi(val[i]);
                 sclk_pulse();
             end
         end
@@ -133,25 +165,25 @@ module dla_engine_chip_gan_tb;
 
     task automatic do_write(input [1:0] cmd, input [9:0] addr, input [7:0] data);
         begin
-            CS_N_IN = 1'b0;
+            set_cs_n(1'b0);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
             shift_out_bits(2, cmd);
             shift_out_bits(10, addr);
             shift_out_bits(8, data);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
-            CS_N_IN = 1'b1;
+            set_cs_n(1'b1);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
         end
     endtask
 
     task automatic do_start;
         begin
-            CS_N_IN = 1'b0;
+            set_cs_n(1'b0);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
             shift_out_bits(2, 2'b10);
             shift_out_bits(10, 10'd0);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
-            CS_N_IN = 1'b1;
+            set_cs_n(1'b1);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
         end
     endtask
@@ -159,14 +191,14 @@ module dla_engine_chip_gan_tb;
     task automatic do_read(input [3:0] addr, output logic signed [23:0] data);
         logic [31:0] raw;
         begin
-            CS_N_IN = 1'b0;
+            set_cs_n(1'b0);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
             shift_out_bits(2, 2'b11);
             shift_out_bits(10, {6'd0, addr});
             clk_wait(2 * SCLK_HALF_PERIOD_CLKS);   // READ_C turnaround
             shift_in_bits(24, raw);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
-            CS_N_IN = 1'b1;
+            set_cs_n(1'b1);
             clk_wait(SCLK_HALF_PERIOD_CLKS);
             data = raw[23:0];
         end
@@ -315,6 +347,18 @@ module dla_engine_chip_gan_tb;
         rst_n = 1'b1;
         clk_wait(5);
 
+`ifdef LVDS_LINK
+        // Switch the link to LVDS (host rule: both links idle with CS_N high): raise the strap,
+        // wait for the receiver enable plus the 64-clock wake time, then talk over the lanes.
+        lsclk_p = 1'b0; lsclk_n = 1'b1; lmosi_p = 1'b0; lmosi_n = 1'b1; lcsn_p = 1'b1; lcsn_n = 1'b0;
+        link_sel = 1'b1;
+        wait (dut.u_lvds.EN === 1'b1);
+        clk_wait(64 + 8);
+        use_lvds = 1'b1;
+        $display("link: LVDS lanes (receiver EN = %b); CMOS serial pins now carry garbage", dut.u_lvds.EN);
+`else
+        $display("link: CMOS serial pins (LINK_SEL low, LVDS lanes floating)");
+`endif
         $display("=== Full MNIST-GAN through the serial bridge on dla_engine_chip ===");
         run_layer(0);   // 64  -> 256, ReLU  -> h0q
         $display("layer 0 done (t=%0t)", $time);
