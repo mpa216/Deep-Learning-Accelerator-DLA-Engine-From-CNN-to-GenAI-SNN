@@ -2,7 +2,7 @@
 <report-database>
  <description>DRC Run Report at</description>
  <original-file/>
- <generator>drc: script='/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/integ/kdrc_acv_lvds2/main/main.drc'</generator>
+ <generator>drc: script='/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/integ/kdrc_acv_lvds5b/main/main.drc'</generator>
  <top-cell>dla_engine_chip</top-cell>
  <tags>
  </tags>

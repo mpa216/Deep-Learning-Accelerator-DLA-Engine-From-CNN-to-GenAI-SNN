@@ -1,5 +1,5 @@
 {
- "odb": "librelane/runs/acv_lvds2/final/odb/_connected.odb",
+ "odb": "librelane/runs/acv_lvds5b/final/odb/_connected.odb",
  "checks": {
   "macro_placed": {
    "ok": true,
@@ -24,7 +24,7 @@
   "cut_respected": {
    "ok": true,
    "expected": "no standard cell inside the macro + 10 um halo, x 111.05-781.05, y 865.80-1080.00 um",
-   "actual": "0 of 80121 cells inside"
+   "actual": "0 of 80317 cells inside"
   },
   "macro_outputs_buffered": {
    "ok": true,
@@ -150,41 +150,45 @@
   },
   "over_macro_routing": {
    "ok": true,
-   "expected": "no foreign signal wire inside the receiver's LEF obstructions (Metal1-3 over its core), and none on Metal1-3 in its top margin beside the six RX input strips; other crossings (the bottom and side margins, Metal4/5) are allowed and only reported",
+   "expected": "no foreign signal wire inside the receiver's LEF obstructions (Metal1-3 over its core), and no switching net on Metal1-3 in its top margin beside the six RX input strips (the static link-select nets LINK_SEL / lvds_en are listed, not graded); other crossings (the bottom and side margins, Metal4/5) are allowed and only reported",
    "actual": {
     "inside_obstructions": [],
     "metal1_3_top_margin": [],
+    "static_nets_in_top_margin_um": {
+     "lvds_en Metal3": 22.0
+    },
     "crossings_by_layer_and_side": {
      "Metal2 bottom": {
-      "um": 126.6,
+      "um": 99.6,
       "nets": [
-       "_04068_",
-       "clknet_leaf_9_clk_regs",
+       "cs_n_src",
        "net310",
-       "net424",
-       "net556"
+       "net556",
+       "net564",
+       "sclk_src"
       ]
      },
      "Metal2 left": {
-      "um": 51.8,
+      "um": 58.6,
       "nets": [
        "net424"
       ]
      },
      "Metal2 right": {
-      "um": 145.6,
+      "um": 203.3,
       "nets": [
-       "_04068_"
+       "_04068_",
+       "cs_n_src"
       ]
      },
      "Metal3 bottom": {
-      "um": 1840.0,
+      "um": 1379.1,
       "nets": [
        "_04068_",
        "_04302_",
-       "clknet_leaf_9_clk_regs",
-       "net310",
-       "net556"
+       "cs_n_src",
+       "net556",
+       "net564"
       ]
      },
      "Metal3 left": {
@@ -194,53 +198,51 @@
       ]
      },
      "Metal3 right": {
-      "um": 32.5,
+      "um": 97.9,
       "nets": [
        "_04068_",
+       "cs_n_src",
+       "net310",
        "net556",
-       "net564"
+       "sclk_src"
+      ]
+     },
+     "Metal3 top": {
+      "um": 22.0,
+      "nets": [
+       "lvds_en"
       ]
      },
      "Metal4 bottom": {
-      "um": 23.7,
+      "um": 47.5,
       "nets": [
+       "_04068_",
        "_04302_",
-       "net310"
+       "u_dla.c_bus\\[141\\]",
+       "u_dla.c_bus\\[143\\]"
       ]
      },
      "Metal4 core": {
-      "um": 172.2,
+      "um": 168.7,
       "nets": [
        "lvds_en"
       ]
      },
-     "Metal4 right": {
-      "um": 58.9,
+     "Metal4 top": {
+      "um": 3.0,
       "nets": [
-       "cs_n_src"
+       "lvds_en"
       ]
      },
      "Metal5 bottom": {
-      "um": 1057.3,
+      "um": 1090.1,
       "nets": [
-       "net310",
-       "net6"
-      ]
-     },
-     "Metal5 core": {
-      "um": 557.4,
-      "nets": [
-       "lvds_en"
-      ]
-     },
-     "Metal5 right": {
-      "um": 19.2,
-      "nets": [
-       "cs_n_src"
+       "u_dla.c_bus\\[141\\]",
+       "u_dla.c_bus\\[143\\]"
       ]
      },
      "Metal5 top": {
-      "um": 97.6,
+      "um": 628.0,
       "nets": [
        "lvds_en"
       ]

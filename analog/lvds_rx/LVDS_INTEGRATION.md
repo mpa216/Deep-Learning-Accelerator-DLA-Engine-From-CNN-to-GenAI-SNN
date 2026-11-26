@@ -1,15 +1,17 @@
 # LVDS receiver: integration into the A56 / ACV chip
 
 Branch `lvds-integration` (cut from `lvds-rx` at 8145d91, which is `main` 9be761d plus the finished
-macro). `main` and the signed-off chip are untouched; nothing is pushed.
+macro). `main` and the signed-off chip are untouched; this branch is pushed as `origin/lvds-integration`
+(2026-11-26).
 
 **Status 2026-11-26: phases 1 and 2 of 3 done.** Phase 1 (2026-11-23): RTL, verification, frame template,
 flow configuration, placement dry run. Phase 2 (2026-11-26): the full layout. The block with the receiver
-hardens, its power pins weld, and it signs off clean in Magic DRC, the KLayout foundry deck, via arrays, LVS, XOR,
-9-corner timing and gate-level simulation over both links, with one open item: two digital nets over the Metal3
-antenna limit (1.24 x and 1.004 x), to be closed in the phase-3 run (section 5, phase 2; reports in
-`signoff/A56_lvds_phase2/`). The GDS is `librelane/runs/acv_lvds2/final/gds/dla_engine_chip.gds` (SHA-256
-`51323bd9...`). Same day, at the owner's request, the branch was **prepared to replace `main`** (its
+hardens, its power pins weld, and it signs off clean: Magic DRC, the KLayout foundry deck, antenna (0), via
+arrays, LVS, XOR, 9-corner timing and gate-level simulation over both links (section 5, phase 2; reports in
+`signoff/A56_lvds_phase2/`). The layout of record is run `acv_lvds5b`, built from `config_acv_lvds.yaml` as
+committed (antenna repair margin 80; the first complete run, `acv_lvds2`, at the signed-off 75, left two nets just
+over the antenna limit, section 6). Its GDS is `gds/dla_engine_chip.gds` on this branch (SHA-256 `70e9a199...`).
+Same day, at the owner's request, the branch was **prepared to replace `main`** (its
 submission files are now the LVDS version, README and TEST_PLAN updated) and **pushed as
 `origin/lvds-integration`**; `main` is untouched (section 7). Phase 3 waits for the organizers' official
 template (section 8).
@@ -134,13 +136,15 @@ organizers give eight fingers, see section 8, question 2).
 
 `librelane/lvds/check_integration.py <odb>` repeats the last seven rows on any later run.
 
-### Phase 2 (the full layout, run `acv_lvds2`, 2026-11-26)
+### Phase 2 (the full layout, run `acv_lvds5b`, 2026-11-26)
 
 What phase 2 does, in plain words: the flow turns the design into the finished chip layout. It builds the
 clock tree, draws every wire (including the six pad-to-receiver drops), joins the frame's power pins to the
 block's power ring (the "weld"), and writes the GDS, the file a foundry manufactures from. Then every check runs
-on that file. Built with `bash librelane/lvds/build_acv_lvds_connected.sh acv_lvds2` (about 45 min; the first
-attempt, `acv_lvds1`, stopped in routing on the multi-pin analog pins, section 6). The reports are in
+on that file. Built with `bash librelane/lvds/build_acv_lvds_connected.sh acv_lvds5b` (about 45 min) from
+`config_acv_lvds.yaml` as committed, which now carries its two settings: antenna repair margin 80 and 4 routing
+threads. Earlier runs: `acv_lvds1` stopped in routing on the multi-pin analog pins; `acv_lvds2` (margin 75) was
+clean except two antenna nets (section 6). The reports are in
 `signoff/A56_lvds_phase2/` (README there has the files and commands). "Signed-off" = the chip without the receiver.
 
 | Check | Expected | Actual |
@@ -149,22 +153,22 @@ attempt, `acv_lvds1`, stopped in routing on the multi-pin analog pins, section 6
 | Magic DRC | 0 | 0 |
 | KLayout foundry deck (660 rule categories) | 0 | 0 |
 | Via arrays (rule Vn.2b, not in the open deck) | 0 | 0, the receiver included |
-| Netgen LVS | "Circuits match uniquely" | match uniquely: 26,167 devices and 14,131 nets each side, 0 errors; the receiver is a black box with its 12 pins (like the SRAMs; its own transistor-level LVS was done standalone) |
+| Netgen LVS | "Circuits match uniquely" | match uniquely: 26,905 devices and 14,131 nets each side, 0 errors; the receiver is a black box with its 12 pins (like the SRAMs; its own transistor-level LVS was done standalone) |
 | Magic vs KLayout GDS XOR | 0 | 0 |
-| Antenna (OpenROAD and the foundry deck agree) | 0 (signed-off 0) | **2 nets over the Metal3 limit: 1.24 x and 1.004 x (open, section 6)** |
+| Antenna (OpenROAD and the foundry deck) | 0 (signed-off 0) | 0 and 0 (`acv_lvds2`, at margin 75: 2 nets, section 6) |
 | Density (whole die, no fill in the block) | the signed-off findings | the same 6 |
-| Timing, 9 corners with extracted wires (SPEF), 40 ns clock | no violation; signed-off +14.98 / +0.117 ns | setup +14.78 ns, hold +0.115 ns, no violation |
+| Timing, 9 corners with extracted wires (SPEF), 40 ns clock | no violation; signed-off +14.98 / +0.117 ns | setup +14.78 ns, hold +0.116 ns, no violation |
 | Power | about 125 mW | 125.4 mW, plus about 8 mW for the receiver when it is on (2.4 mA typical; its timing model carries no power) |
 | Power weld | every DVDD/DVSS finger joined, 0 refusals | 12 fingers, 89 via stacks, at least 1.575 um from other metal |
-| Integration checks (`check_integration.py`, now 8) | 8 / 8 | 8 / 8; each pad-to-receiver drop is 39.9-43.4 um, one via, under its own pad; no foreign wire in the receiver's core or beside its inputs |
+| Integration checks (`check_integration.py`, now 8) | 8 / 8 | 8 / 8; each pad-to-receiver drop is 39.9-43.4 um, one via, under its own pad; no foreign wire in the receiver's core, no switching net beside its inputs (the static enable `lvds_en` is listed, section 6) |
 | Gate-level simulation, routed netlist: LVDS testbench | 12 / 12 rows bit-exact | 12 / 12 (CMOS, LVDS, CMOS on one chip) |
 | Gate-level simulation, routed netlist: signed-off pad testbench | PASS at the same instant as RTL | PASS at 1,664,076 ns |
 | Disconnected pins | 0 critical | 0 critical; 4 harmless (the output pads' unused feedback inputs, as signed-off) |
 
-Pictures (`librelane/lvds/render/`): `acv_lvds2_block.png` (whole block), `acv_lvds2_lvds_strip.png` (the receiver,
-its power straps and the cells around it), `acv_lvds2_pads_to_pins.png` (two analog pin bars and their straight
-drops into the receiver), `acv_lvds2_weld_linksel.png` (the west power weld; the LINK_SEL wire comes down from the
-top edge and turns east above it).
+Pictures (`librelane/lvds/render/`): `acv_lvds5b_block.png` (whole block), `acv_lvds5b_lvds_strip.png` (the
+receiver, its power straps and the cells around it), `acv_lvds5b_pads_to_pins.png` (two analog pin bars and their
+straight drops into the receiver), `acv_lvds5b_weld_linksel.png` (the west power weld; the LINK_SEL wire comes down
+from the top edge and turns east above it).
 
 ## 6. Things found on the way
 
@@ -217,7 +221,7 @@ foundry deck reports exactly the same two gates with the same ratios (494.2 and 
 not help the worse one: at the Metal3 stage its diode is not yet connected (the router joined it through a higher
 layer), so it protects nothing while Metal3 is etched.
 
-Three ways to close them were tried in phase 2, each against `acv_lvds2`; none worked:
+Three ways to close them without touching the margin were tried, each against `acv_lvds2`; none worked:
 
 | Attempt | Idea | Result |
 |---|---|---|
@@ -225,10 +229,20 @@ Three ways to close them were tried in phase 2, each against `acv_lvds2`; none w
 | heuristic diodes off, margin 75, 5 repair passes | let the margin-protected repair handle every net | the repair cleared all 421 violations it saw before routing, but after detailed routing 6 nets were over, up to 2.39 x: worse. The final wires differ from the estimate by more than any margin; the early diodes do help (as the 2026-06 notes say) |
 | the detailed router's own antenna repair (`DRT_ANTENNA_REPAIR_ITERS 2`, jumpers only), restarted from `acv_lvds2`'s state just before routing | fix exactly the nets that fail after routing | the first routing pass reproduced `acv_lvds2` exactly (0 routing errors, the same 2 antenna nets); the repair then put in its jumpers, and the re-route crashed: `DRT-0073 No access point` for clock buffers and diodes, the dead end recorded in 2026-06, still there in OpenROAD 26Q1 |
 
-The lever that closed the signed-off chip remains: sweep the repair margin (25 -> 50 -> 75 there, three runs, each
-about an hour). It only re-rolls the routing, and the phase-3 run on the official template re-rolls it anyway,
-so the sweep belongs in phase 3 (section 7). Evidence kept in `.scratch/integ/` (`acv_lvds3b_margin100_repair.log`,
-`acv_lvds3a_heuristic_off_antenna.rpt`, `acv_lvds4_drt_repair_DRT0073.log`); the variant runs are deleted.
+Then the lever that closed the signed-off chip, the repair-margin sweep (25 -> 50 -> 75 there), run as two
+full builds side by side with the heuristic diodes on:
+
+| Margin | Antenna after detailed routing |
+|---|---|
+| 50 (`acv_lvds5a`) | 1 net, `dla_wr_addr[4]` at 1.15 x (stopped) |
+| 75 (`acv_lvds2`) | 2 nets, 1.24 x and 1.004 x |
+| **80 (`acv_lvds5b`)** | **0**, and clean in every other check (section 5, phase 2) |
+
+80 is now in `config_acv_lvds.yaml`, with `ROUTING_CORES: 4` (the router's result can depend on the thread count),
+so the committed config reproduces the layout of record. Antenna is a property of one particular route: the
+phase-3 run on the official template re-rolls the routing, so check it again there. Evidence kept in
+`.scratch/integ/` (`acv_lvds3b_margin100_repair.log`, `acv_lvds3a_heuristic_off_antenna.rpt`,
+`acv_lvds4_drt_repair_DRT0073.log`, `acv_lvds5a_margin50_antenna.rpt`); the variant runs are deleted.
 
 **`final/odb/` holds two databases; the welded one is `_connected.odb`.** The build writes the power weld into
 `_connected.odb` and resumes the flow from it; LibreLane's "save views" copies the state's file under its own
@@ -239,12 +253,16 @@ the unwelded one (the first render did). `render_layout.tcl` reads `_connected.o
 
 **Digital wires cross the receiver's margin, not its circuit.** The macro's LEF blocks Metal1-Metal3 over its
 600 x 144 um core only; the 25 um margin around it is a standard-cell-free margin (handoff sections 12 and 14.2) and open to
-routing. After routing nothing lies inside the blocked core, and nothing runs on Metal1-Metal3 in the top margin
-where the six input strips go up to the pads. Wires do use the bottom margin (the digital side, where EN and the
-outputs are: about 1,840 um of Metal3 from 7 nets, one of them a clock leaf) and the side margins, and one net
-crosses over the core on Metal4/Metal5: `lvds_en`, the receiver's own enable before its buffer, which only
-changes when the link switches. `check_integration.py` check 8 grades the two things that matter and lists the
-rest. If the owner wants the receiver's surroundings quieter, a Metal4/Metal5 routing obstruction over it (the
+routing. After routing (`acv_lvds5b`) nothing lies inside the blocked core, and no switching net runs on
+Metal1-Metal3 in the top margin where the six input strips go up to the pads. Wires do use the bottom margin (the
+digital side, where EN and the outputs are: about 1,380 um of Metal3 from 6 nets) and the side margins. One net
+does cross the top: `lvds_en`, the receiver's own enable before its buffer, with 22 um of Metal3 in the top margin
+(more than 5 um from every input strip), 169 um of Metal4 over the core and a 628 um Metal5 run two layers above
+all six input strips (in `acv_lvds2` it crossed one). It only changes when the host flips LINK_SEL, and the bridge
+ignores the LVDS lanes for 64 clocks after every switch, so it cannot put noise on a received bit; each Metal5
+crossing adds well under 1 fF to a pad that already carries about 0.2 pF. `check_integration.py` check 8 grades
+the two things that matter (nothing inside the blocked core; no switching net beside the inputs), lists the
+static link-select nets by name and length instead of grading them, and reports the rest. If the owner wants the receiver's surroundings quieter, a Metal4/Metal5 routing obstruction over it (the
 handoff's optional item) can go into the phase-3 run.
 
 ## 7. Open items
@@ -253,27 +271,27 @@ handoff's optional item) can go into the phase-3 run.
   re-run, and compare with `check_integration.py`; if their pins differ from ours, only the template changes
   (the macro's x position is tuned to the finger positions and may move with it). If their analog pins come as
   eight fingers, the router stops (section 6); then either they change it or our flow has to merge the fingers.
-- **Phase 2: done 2026-11-26** (section 5, phase 2), one item left open:
-- **Antenna closure, in the phase-3 run:** two nets over the Metal3 limit in `acv_lvds2` (1.24 x, 1.004 x).
-  Sweep `GRT_ANTENNA_REPAIR_MARGIN` below 100 (for example 50 and 90 next to 75), keep the heuristic diodes on, and
-  take the run with antenna 0 that is also clean everywhere else; `build_acv_lvds_connected.sh <tag> -c
-  GRT_ANTENNA_REPAIR_MARGIN=<m>` does one run. Not to retry: margin 100 (switches the repair off), heuristic diodes
-  off (worse), `DRT_ANTENNA_REPAIR_ITERS` > 0 (`DRT-0073` crash).
+- **Phase 2: done 2026-11-26** (section 5, phase 2), clean in every check, antenna included (margin 80).
+- **Antenna in the phase-3 run:** the official template re-rolls the routing, so check antenna again. If it is not
+  0 at margin 80, sweep around it (`build_acv_lvds_connected.sh <tag> -c GRT_ANTENNA_REPAIR_MARGIN=<m>`, one run each;
+  two runs side by side with `-c ROUTING_CORES=4` fit this machine). Not to retry: margin 100 (switches the repair
+  off), heuristic diodes off (worse), `DRT_ANTENNA_REPAIR_ITERS` > 0 (`DRT-0073` crash).
 - **Optional, the owner's choice:** a Metal4/Metal5 routing obstruction over the receiver (the handoff's optional
-  item) to keep digital wires off it entirely. Today only the static `lvds_en` crosses its core (Metal4/5) and
-  the bottom margin carries digital wires, nothing beside the inputs (section 6). Costs routing room; decide
-  before the phase-3 run.
+  item) to keep digital wires off it entirely. Today only the static `lvds_en` crosses the receiver (Metal4
+  over the core; Metal3 and Metal5 in the top margin, two layers above the input strips) and the bottom margin
+  carries digital wires; no switching net runs beside the inputs (section 6). Costs routing room; decide before the
+  phase-3 run.
 - **Branch prepared to replace `main` (2026-11-26, the owner's request), pushed as `origin/lvds-integration`;
   `main` untouched.** The submission files on this branch are the LVDS version: `gds/` and `verilog/` (run
-  `acv_lvds2`), `info.yaml` (18 pins, the description; `drc_ready: false` until the antenna nets are closed,
-  `lvs_ready: true`), `lvs_config.json` (+ the receiver's SPICE `macros/lvds_rx_x3/spice/lvds_rx_x3.spice`,
+  `acv_lvds5b`; the first push carried `acv_lvds2` with `drc_ready: false`), `info.yaml` (18 pins, the
+  description; `drc_ready` and `lvs_ready` true), `lvs_config.json` (+ the receiver's SPICE `macros/lvds_rx_x3/spice/lvds_rx_x3.spice`,
   following the SRAM's pattern: no flatten keys; the organizers' semantics are still question 4 of section 8),
   README (sections I, II.E, V, VII, VIII) and TEST_PLAN (the 7 pads, the LVDS driver and termination, bring-up
   T14-T18). Merging the branch replaces the all-digital submission; leaving `LINK_SEL` unbonded keeps the
   all-digital behaviour on the new chip.
-- **Phase 3** (after the official template): drop it in, re-run phase 2 with it and the antenna sweep, copy the
-  new `gds/` and `verilog/` if the layout changes, set `drc_ready: true` once antenna is 0, learning notes.
-  Disk: about 8 GB free; one full run is 1.4 GB.
+- **Phase 3** (after the official template): drop it in, re-run phase 2 with it (check antenna again), copy
+  the new `gds/` and `verilog/` if the layout changes, learning notes. Disk: about 9 GB free; one full run is
+  1.4 GB (delete `runs/acv_lvds2` and `runs/lvds_fp2` when no longer needed).
 - **Export control:** the signed form describes a "fixed-function digital ASIC" with a "digital clock DC to
   25 MHz only". The link still runs at the bridge's rate, but the chip now contains an analog receiver; the
   wording may need revising and re-signing.

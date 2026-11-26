@@ -20,6 +20,8 @@
 #   * PDN_MACRO_CONNECTIONS: u_lvds VDD/VSS -> DVDD/DVSS (shared supply, handoff 14.7 v1);
 #     its Metal3 straps take via3 from the Metal4 stripes like the SRAM pins.
 #   * RSZ_DONT_TOUCH_RX: no resizer buffering on the analog pad nets (LVDS_*).
+#   * GRT_ANTENNA_REPAIR_MARGIN 80 (antenna 0 on the LVDS layout) and ROUTING_CORES 4: together they
+#     reproduce run acv_lvds5b, the layout in gds/ on this branch.
 #
 #
 # Hardens dla_engine_chip: the eight-macro accelerator core (dla_engine_top,
@@ -213,6 +215,9 @@ PDN_CFG: dir::pdn_cfg.tcl
 
 # --- Routing / signoff -------------------------------------------------------
 RT_MAX_LAYER: Metal5
+# LVDS: the layout of record (acv_lvds5b) was routed with 4 threads; the detailed router's result
+# can depend on the thread count, so this pins it for an exact re-run.
+ROUTING_CORES: 4
 
 # Block-level IR-drop analysis is skipped: FP_TEMPLATE_COPY_POWER_PINS relocates
 # the DVDD/DVSS pins to the template's Metal2 edge positions (where the shared
@@ -229,7 +234,11 @@ RUN_HEURISTIC_DIODE_INSERTION: true
 # on more near-limit nets pre-detailed-route.  25->5 nets, 50->3 nets (acv_ring2/3);
 # 75 targets the two ~1.1x marginals to land at just net5 (the structural net the prior
 # submission also shipped with).
-GRT_ANTENNA_REPAIR_MARGIN: 75
+# LVDS: 80 (2026-11-26). At 75 the LVDS layout (run acv_lvds2) kept 2 Metal3 nets over the limit
+# (1.24x, 1.004x; both carried heuristic diodes, which this repair skips); 50 left 1 net (1.15x);
+# 80 routes with antenna 0 (run acv_lvds5b, the layout of record). Do not use 100: OpenROAD scales
+# each limit by (1 - margin/100), and a limit of 0 means "no rule", so 100 switches the repair off.
+GRT_ANTENNA_REPAIR_MARGIN: 80
 DRT_ANTENNA_REPAIR_ITERS: 0
 DRT_ANTENNA_REPAIR_JUMPER_ONLY: true
 DIODE_ON_PORTS: in

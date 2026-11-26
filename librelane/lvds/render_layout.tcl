@@ -2,8 +2,8 @@
 # Run headless in apic_headless, from the worktree root:
 #   QT_QPA_PLATFORM=offscreen XDG_RUNTIME_DIR=/tmp/runtime-default \
 #     openroad-librelane -no_init -exit librelane/lvds/render_layout.tcl
-# The run tag comes from the environment (RUN_TAG, default acv_lvds2).
-set tag acv_lvds2
+# The run tag comes from the environment (RUN_TAG, default acv_lvds5b, the layout of record).
+set tag acv_lvds5b
 if {[info exists ::env(RUN_TAG)]} { set tag $::env(RUN_TAG) }
 # final/odb/_connected.odb is the WELDED database; final/odb/dla_engine_chip.odb is a stale pre-weld
 # copy left by the first librelane call (save-views keeps the state file's own name)

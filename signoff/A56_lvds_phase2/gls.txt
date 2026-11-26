@@ -1,4 +1,4 @@
-netlist: librelane/runs/acv_lvds2/53-openroad-fillinsertion/dla_engine_chip.nl.v  sha256 5f9d8625c34b6959
+netlist: librelane/runs/acv_lvds5b/53-openroad-fillinsertion/dla_engine_chip.nl.v  sha256 d51ed1866206f2e9
 ######## dla_engine_chip_lvds_tb (GLS)
   phase 1 CMOS (LVDS lanes = garbage) row 0: got -34139 = expected -34139
   phase 1 CMOS (LVDS lanes = garbage) row 1: got 59877 = expected 59877
@@ -17,7 +17,7 @@ phase 2 LVDS (CMOS pins = garbage): PASS (4 rows bit-exact)
 phase 3 CMOS (LVDS lanes floating): PASS (4 rows bit-exact)
 PASS: d3004n4 bit-exact over CMOS, LVDS and CMOS again; EN, wake time, switch-over and pad pulls as specified
 tb/dla_engine_chip_lvds_tb.sv:327: $finish called at 4992996000 (1ps)
->> dla_engine_chip_lvds_tb rc=0 (390 s)
+>> dla_engine_chip_lvds_tb rc=0 (283 s)
 ######## dla_engine_chip_tb (GLS)
 row 0: got -34139 matches expected (ACV chip top)
 row 1: got 59877 matches expected (ACV chip top)

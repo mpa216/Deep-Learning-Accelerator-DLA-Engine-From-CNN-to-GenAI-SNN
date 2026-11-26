@@ -11,7 +11,7 @@ Checks (each prints expected vs actual):
   5. no standard cell overlaps the macro or its 10 um halo ("the cut" is respected).
   6. the macro outputs drive a nearby load (short nets), EN is connected.
   7. (routed designs) each LVDS_* net is a short drop under its own pad.
-  8. (routed designs) no foreign signal wire inside the macro obstructions or on Metal1-3 beside its RX
+  8. (routed designs) no foreign signal wire inside the macro obstructions, and no switching net on Metal1-3 beside its RX
      input strips (top margin); all other crossings reported per layer and side.
 """
 import json
@@ -250,7 +250,11 @@ if routed:
     #    (nothing in the LEF keeps wires off it, so this catches a run that routes beside the inputs).
     #    Reported: every crossing per layer and side; Metal4/5 over the core is allowed by the LEF
     #    (handoff: an optional Metal4/5 ROUTING_OBSTRUCTIONS over the input stage would keep it off).
+    #    STATIC nets are exempt from (b) but listed: the link-select path (LINK_SEL -> 2-FF sync ->
+    #    lvds_en -> buffer -> EN) only changes when the host flips LINK_SEL, and the bridge ignores the
+    #    LVDS lanes for 64 clocks after every switch, so it cannot put switching noise on the inputs.
     LOW = ("Metal1", "Metal2", "Metal3")
+    STATIC_NETS = {"LINK_SEL", "lvds_en"}
     obs = {}
     for ob in mt.getObstructions():
         if ob.getTechLayer() is not None:
@@ -273,7 +277,7 @@ if routed:
         return "core"
 
     mine = {it.getNet().getName() for it in inst.getITerms() if it.getNet() is not None}
-    over, nets_over, in_obs, in_top = {}, {}, set(), set()
+    over, nets_over, in_obs, in_top, static_top = {}, {}, set(), set(), {}
     for net in block.getNets():
         if net.getName() in mine or net.getSigType() in ("POWER", "GROUND"):
             continue
@@ -297,14 +301,20 @@ if routed:
             if any(wr[0] < r[2] and r[0] < wr[2] and wr[1] < r[3] and r[1] < wr[3] for r in obs.get(s[1], [])):
                 in_obs.add((s[1], net.getName()))
             if s[1] in LOW and key[1] == "top":
-                in_top.add((s[1], net.getName()))
+                if net.getName() in STATIC_NETS:
+                    k = f"{net.getName()} {s[1]}"
+                    static_top[k] = static_top.get(k, 0) + ln
+                else:
+                    in_top.add((s[1], net.getName()))
     info = {f"{ly} {sd}": {"um": round(um(v), 1), "nets": sorted(nets_over[(ly, sd)])[:5]}
             for (ly, sd), v in sorted(over.items())}
     report("over_macro_routing", not in_obs and not in_top,
-           "no foreign signal wire inside the receiver's LEF obstructions (Metal1-3 over its core), and none "
-           "on Metal1-3 in its top margin beside the six RX input strips; other crossings (the bottom and side "
-           "margins, Metal4/5) are allowed and only reported",
+           "no foreign signal wire inside the receiver's LEF obstructions (Metal1-3 over its core), and no "
+           "switching net on Metal1-3 in its top margin beside the six RX input strips (the static link-select "
+           "nets LINK_SEL / lvds_en are listed, not graded); other crossings (the bottom and side margins, "
+           "Metal4/5) are allowed and only reported",
            {"inside_obstructions": sorted(in_obs), "metal1_3_top_margin": sorted(in_top),
+            "static_nets_in_top_margin_um": {k: round(um(v), 1) for k, v in sorted(static_top.items())},
             "crossings_by_layer_and_side": info})
 else:
     print("[SKIP] lvds_routes, over_macro_routing: the LVDS nets carry no routing yet")

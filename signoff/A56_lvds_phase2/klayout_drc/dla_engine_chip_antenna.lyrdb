@@ -5,22 +5,6 @@
  <generator>drc: script='/foss/pdks/ciel/gf180mcu/versions/7b70722e33c03fcb5dabcf4d479fb0822d9251c9/gf180mcuD/libs.tech/klayout/tech/drc/rule_decks/antenna.drc'</generator>
  <top-cell>dla_engine_chip</top-cell>
  <tags>
-  <tag>
-   <name>GATE_AREA</name>
-   <description/>
-  </tag>
-  <tag>
-   <name>ANT_PERIMETER</name>
-   <description/>
-  </tag>
-  <tag>
-   <name>DIODES_AREA</name>
-   <description/>
-  </tag>
-  <tag>
-   <name>RATIO</name>
-   <description/>
-  </tag>
  </tags>
  <categories>
   <category>
@@ -101,69 +85,5 @@
   </cell>
  </cells>
  <items>
-  <item>
-   <tags/>
-   <category>'ANT.16_i_ANT.4'</category>
-   <cell>dla_engine_chip</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment/>
-   <image/>
-   <values>
-    <value>polygon: (806.98,827.46;806.98,828.46;807.26,828.46;807.26,827.46)</value>
-    <value>[#GATE_AREA] float: 0.6664</value>
-    <value>[#ANT_PERIMETER] float: 329.3352</value>
-    <value>[#DIODES_AREA] float: 0</value>
-    <value>[#RATIO] float: 494.200480192</value>
-   </values>
-  </item>
-  <item>
-   <tags/>
-   <category>'ANT.16_i_ANT.4'</category>
-   <cell>dla_engine_chip</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment/>
-   <image/>
-   <values>
-    <value>polygon: (806.98,829.32;806.98,830.7;807.26,830.7;807.26,829.32)</value>
-    <value>[#GATE_AREA] float: 0.6664</value>
-    <value>[#ANT_PERIMETER] float: 329.3352</value>
-    <value>[#DIODES_AREA] float: 0</value>
-    <value>[#RATIO] float: 494.200480192</value>
-   </values>
-  </item>
-  <item>
-   <tags/>
-   <category>'ANT.16_i_ANT.4'</category>
-   <cell>dla_engine_chip</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment/>
-   <image/>
-   <values>
-    <value>polygon: (912.82,835.3;912.82,836.3;913.1,836.3;913.1,835.3)</value>
-    <value>[#GATE_AREA] float: 0.6664</value>
-    <value>[#ANT_PERIMETER] float: 619.6392</value>
-    <value>[#DIODES_AREA] float: 0.4385</value>
-    <value>[#RATIO] float: 401.476739666</value>
-   </values>
-  </item>
-  <item>
-   <tags/>
-   <category>'ANT.16_i_ANT.4'</category>
-   <cell>dla_engine_chip</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment/>
-   <image/>
-   <values>
-    <value>polygon: (912.82,837.16;912.82,838.54;913.1,838.54;913.1,837.16)</value>
-    <value>[#GATE_AREA] float: 0.6664</value>
-    <value>[#ANT_PERIMETER] float: 619.6392</value>
-    <value>[#DIODES_AREA] float: 0.4385</value>
-    <value>[#RATIO] float: 401.476739666</value>
-   </values>
-  </item>
  </items>
 </report-database>

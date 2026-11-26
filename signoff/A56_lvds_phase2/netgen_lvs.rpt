@@ -1029,8 +1029,8 @@ Cell dla_engine_chip (1) disconnected node: MISO_IN
 Cell dla_engine_chip (1) disconnected node: busy_IN
 Cell dla_engine_chip (1) disconnected node: done_IN
 Cell dla_engine_chip (1) disconnected node: wb_done_IN
-Class dla_engine_chip (0):  Merged 16247 parallel devices.
-Class dla_engine_chip (1):  Merged 16247 parallel devices.
+Class dla_engine_chip (0):  Merged 16182 parallel devices.
+Class dla_engine_chip (1):  Merged 16182 parallel devices.
 Cell dla_engine_chip (0) disconnected node: MISO_IN
 Cell dla_engine_chip (0) disconnected node: busy_IN
 Cell dla_engine_chip (0) disconnected node: done_IN
@@ -1042,17 +1042,17 @@ Cell dla_engine_chip (1) disconnected node: wb_done_IN
 Subcircuit summary:
 Circuit 1: dla_engine_chip                 |Circuit 2: dla_engine_chip                 
 -------------------------------------------|-------------------------------------------
-gf180mcu_as_sc_mcu7t3v3__diode_2 (12105)   |gf180mcu_as_sc_mcu7t3v3__diode_2 (12105)   
-gf180mcu_as_sc_mcu7t3v3__fillcap_8 (4463-> |gf180mcu_as_sc_mcu7t3v3__fillcap_8 (4463-> 
+gf180mcu_as_sc_mcu7t3v3__diode_2 (12843)   |gf180mcu_as_sc_mcu7t3v3__diode_2 (12843)   
+gf180mcu_as_sc_mcu7t3v3__fillcap_8 (4441-> |gf180mcu_as_sc_mcu7t3v3__fillcap_8 (4441-> 
 gf180mcu_as_sc_mcu7t3v3__and2_2 (996)      |gf180mcu_as_sc_mcu7t3v3__and2_2 (996)      
 gf180mcu_as_sc_mcu7t3v3__ao211_2 (58)      |gf180mcu_as_sc_mcu7t3v3__ao211_2 (58)      
-gf180mcu_as_sc_mcu7t3v3__fillcap_16 (4494- |gf180mcu_as_sc_mcu7t3v3__fillcap_16 (4494- 
+gf180mcu_as_sc_mcu7t3v3__fillcap_16 (4480- |gf180mcu_as_sc_mcu7t3v3__fillcap_16 (4480- 
 gf180mcu_as_sc_mcu7t3v3__ao22_2 (689)      |gf180mcu_as_sc_mcu7t3v3__ao22_2 (689)      
 gf180mcu_as_sc_mcu7t3v3__xnor2_2 (2252)    |gf180mcu_as_sc_mcu7t3v3__xnor2_2 (2252)    
 gf180mcu_as_sc_mcu7t3v3__dfsrtp_2 (507)    |gf180mcu_as_sc_mcu7t3v3__dfsrtp_2 (507)    
 gf180mcu_as_sc_mcu7t3v3__nand2_2 (880)     |gf180mcu_as_sc_mcu7t3v3__nand2_2 (880)     
 gf180mcu_as_sc_mcu7t3v3__nor2_2 (385)      |gf180mcu_as_sc_mcu7t3v3__nor2_2 (385)      
-gf180mcu_as_sc_mcu7t3v3__fillcap_4 (7293-> |gf180mcu_as_sc_mcu7t3v3__fillcap_4 (7293-> 
+gf180mcu_as_sc_mcu7t3v3__fillcap_4 (7264-> |gf180mcu_as_sc_mcu7t3v3__fillcap_4 (7264-> 
 gf180mcu_as_sc_mcu7t3v3__xor2_2 (1193)     |gf180mcu_as_sc_mcu7t3v3__xor2_2 (1193)     
 gf180mcu_as_sc_mcu7t3v3__buff_2 (1012)     |gf180mcu_as_sc_mcu7t3v3__buff_2 (1012)     
 gf180mcu_as_sc_mcu7t3v3__mux2_2 (854)      |gf180mcu_as_sc_mcu7t3v3__mux2_2 (854)      
@@ -1085,13 +1085,13 @@ gf180mcu_as_sc_mcu7t3v3__inv_6 (13)        |gf180mcu_as_sc_mcu7t3v3__inv_6 (13)
 gf180mcu_as_sc_mcu7t3v3__inv_4 (6)         |gf180mcu_as_sc_mcu7t3v3__inv_4 (6)         
 gf180mcu_as_sc_mcu7t3v3__dlybuff_2 (60)    |gf180mcu_as_sc_mcu7t3v3__dlybuff_2 (60)    
 lvds_rx_x3 (1)                             |lvds_rx_x3 (1)                             
-Number of devices: 26167                   |Number of devices: 26167                   
+Number of devices: 26905                   |Number of devices: 26905                   
 Number of nets: 14131                      |Number of nets: 14131                      
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
 Resolving symmetries by net name.
-Netlists match with 1654 symmetries.
+Netlists match with 1653 symmetries.
 
 Subcircuit pins:
 Circuit 1: dla_engine_chip                 |Circuit 2: dla_engine_chip                 
@@ -1149,20 +1149,20 @@ LINK_SEL_PD                                |LINK_SEL_PD
 CS_N_IE                                    |CS_N_IE                                    
 MISO_OUT                                   |MISO_OUT                                   
 busy_OUT                                   |busy_OUT                                   
-wb_done_OUT                                |wb_done_OUT                                
 done_OUT                                   |done_OUT                                   
+wb_done_OUT                                |wb_done_OUT                                
 LVDS_SCLK_P                                |LVDS_SCLK_P                                
 LVDS_SCLK_N                                |LVDS_SCLK_N                                
 LVDS_MOSI_P                                |LVDS_MOSI_P                                
 LVDS_MOSI_N                                |LVDS_MOSI_N                                
 LVDS_CSN_P                                 |LVDS_CSN_P                                 
 LVDS_CSN_N                                 |LVDS_CSN_N                                 
-clk                                        |clk                                        
 CS_N_IN                                    |CS_N_IN                                    
 LINK_SEL                                   |LINK_SEL                                   
 MOSI_IN                                    |MOSI_IN                                    
 SCLK_IN                                    |SCLK_IN                                    
 rst_n                                      |rst_n                                      
+clk                                        |clk                                        
 DVDD                                       |DVDD                                       
 DVSS                                       |DVSS                                       
 MISO_IN                                    |MISO_IN                                    

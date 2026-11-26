@@ -17,5 +17,9 @@ After a phase-2 run, the power-welded database is `runs/<tag>/final/odb/_connect
 each state file's own name; the signed-off `acv_ring6` has the same pair). Every sign-off step reads the welded
 one. Timing on the welded design: resume the same run tag `--from OpenROAD.RCX --to OpenROAD.STAPostPNR`.
 
+The layout of record on this branch is run `acv_lvds5b` (in `gds/`, `verilog/`, `signoff/A56_lvds_phase2/`):
+`config_acv_lvds.yaml` as committed (antenna repair margin 80, 4 routing threads) reproduces it with
+`bash lvds/build_acv_lvds_connected.sh <tag>`.
+
 Dry run used for phase 1: `librelane config_acv_lvds.yaml --run-tag lvds_fp2 --to OpenROAD.DetailedPlacement`
 (92 s; runs/ is not tracked; it predates the one-bar analog pins).

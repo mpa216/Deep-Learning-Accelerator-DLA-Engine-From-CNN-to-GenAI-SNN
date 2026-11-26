@@ -12,10 +12,10 @@ serial host bridge.
 > repo under `analog/lvds_rx/`) on six analog pads, selected by a new `LINK_SEL` strap, for **18 pad
 > terminals** (the 11 below + 7). With `LINK_SEL` low or unconnected (pad pull-down) the chip is
 > exactly the all-digital chip, so the LVDS link is an extra, never a dependency. Layout (run
-> `acv_lvds2`, on a provisional template derived from the ACV frame until the organizers regenerate
-> it for 18 pins): Magic DRC 0, KLayout foundry deck 0, Netgen LVS "Circuits match uniquely", XOR 0,
-> 9-corner timing +14.78 / +0.115 ns at 40 ns, gate-level simulation bit-exact over both links;
-> **open: 2 antenna nets** (1.24× and 1.004× the Metal3 limit). Reports in
+> `acv_lvds5b`, on a provisional template derived from the ACV frame until the organizers regenerate
+> it for 18 pins): Magic DRC 0, KLayout foundry deck 0, **antenna 0**, Netgen LVS "Circuits match
+> uniquely", XOR 0, 9-corner timing +14.78 / +0.116 ns at 40 ns, gate-level simulation bit-exact over
+> both links. Reports in
 > [`signoff/A56_lvds_phase2/`](signoff/A56_lvds_phase2/), record in
 > [`analog/lvds_rx/LVDS_INTEGRATION.md`](analog/lvds_rx/LVDS_INTEGRATION.md), details in section VIII.
 
@@ -189,7 +189,7 @@ APIC_A/
 │   ├── g300_pipeline_top.v         #   GAN orchestrator (sim-only verification harness)
 │   └── g300_quant_params.vh        #   GENERATED requant constants
 ├── librelane/                      # Physical flow: config_acv.yaml → run acv_ring6 (all-digital);
-│                                   #   config_acv_lvds.yaml + lvds/ → run acv_lvds2 (LVDS version);
+│                                   #   config_acv_lvds.yaml + lvds/ → run acv_lvds5b (LVDS version);
 │                                   #   connect_power.py (power-pin connector) · A56_ACV{,_lvds}.def templates
 ├── macros/lvds_rx_x3/              # LVDS receiver hard macro (GDS/LEF/LIB/SPICE/Verilog)
 ├── analog/lvds_rx/                 # Its design: gm/ID sizing, simulations, layout, records
@@ -368,7 +368,7 @@ hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config
 `librelane/config_acv_lvds.yaml` (= `config_acv.yaml` + the LVDS deltas) on
 `librelane/A56_ACV_lvds.def`, a **provisional** 18-pin template derived from the ACV frame by
 `librelane/lvds/make_template.py` (which first regenerates all 64 pins of the organizers' template
-exactly), run **`acv_lvds2`** (reports in [`signoff/A56_lvds_phase2/`](signoff/A56_lvds_phase2/)).
+exactly), run **`acv_lvds5b`** (reports in [`signoff/A56_lvds_phase2/`](signoff/A56_lvds_phase2/)).
 The receiver sits in a strip of the core that held only standard cells (7.7 % of the core), each input
 directly under its pad, so each pad-to-receiver wire is a straight ~40 µm drop:
 
@@ -376,16 +376,18 @@ directly under its pad, so each pad-to-receiver wire is a straight ~40 µm drop:
 |---|---|
 | Magic DRC | 0 |
 | KLayout foundry deck (variant D) | 0 (660 categories); via-array Vn.2b 0; density: the same whole-die findings as the all-digital chip (no fill) |
-| Netgen LVS / GDS XOR | 0 / 0 — "Circuits match uniquely" (26,167 devices; the receiver is a black box like the SRAMs, its own transistor-level LVS matched standalone) |
-| Antenna | **2 nets open** — Metal3, 1.24× and 1.004× the limit (OpenROAD and the KLayout deck agree) |
-| Setup / hold ws (worst of 9 corners, 40 ns, SPEF) | +14.78 ns / +0.115 ns |
+| Netgen LVS / GDS XOR | 0 / 0 — "Circuits match uniquely" (26,905 devices; the receiver is a black box like the SRAMs, its own transistor-level LVS matched standalone) |
+| Antenna | 0 nets / 0 pins (OpenROAD; KLayout antenna deck 0) |
+| Setup / hold ws (worst of 9 corners, 40 ns, SPEF) | +14.78 ns / +0.116 ns |
 | Power (tt, SPEF) | ≈ 125 mW, + ≈ 8 mW while the LVDS receiver is on |
 | Gate-level simulation (routed netlist) | bit-exact over CMOS, LVDS and CMOS again; the original pad test passes at the same instant as at RTL |
 
-Two things the LVDS version needed (details in `analog/lvds_rx/LVDS_INTEGRATION.md`): each analog
+Three things the LVDS version needed (details in `analog/lvds_rx/LVDS_INTEGRATION.md`): each analog
 pin is given as **one rectangle** spanning its pad's eight ASIG5V fingers — LibreLane turns every
 template rectangle into its own pin, and the detailed router rejects a signal pin made of several
-(`DRT-0302`); and a routing obstruction keeps the new N01 pin's wire out of the power-weld zone.
+(`DRT-0302`); a routing obstruction keeps the new N01 pin's wire out of the power-weld zone; and
+**antenna repair margin 80** — at the signed-off 75 the cut's busier channel left two marginal Metal3
+nets (1.24×, 1.004×), 50 left one, 80 closes all (never 100: it switches the repair off).
 
 **Power-pin connector — the fix that closed sign-off.** The gf180 I/O cells deliver a block's power
 as **Metal2 pins in the die margin** (the ACV template puts DVDD and DVSS on the west edge), but
