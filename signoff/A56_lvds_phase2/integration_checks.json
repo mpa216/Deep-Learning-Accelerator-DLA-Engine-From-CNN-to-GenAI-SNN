@@ -1,0 +1,252 @@
+{
+ "odb": "librelane/runs/acv_lvds2/final/odb/_connected.odb",
+ "checks": {
+  "macro_placed": {
+   "ok": true,
+   "expected": "origin (121.05, 875.8) um, R0, fixed, 650 x 194.2 um",
+   "actual": "origin (121.050, 875.800) um, R0, FIRM, 650.0 x 194.2 um, master lvds_rx_x3"
+  },
+  "template_pins": {
+   "ok": true,
+   "expected": "all 73 template pins present; the 9 new ones with the template's boxes (1 per pin; an analog pin is one bar under its pad's 8 fingers)",
+   "actual": "73 present (missing []); new-pin geometry mismatches []; boxes per analog pin [1, 1, 1, 1, 1, 1]"
+  },
+  "analog_nets_clean": {
+   "ok": true,
+   "expected": "each LVDS_* net = its port + exactly one u_lvds pin (RX0_P..RX2_N), nothing else",
+   "actual": "all six clean"
+  },
+  "macro_power": {
+   "ok": true,
+   "expected": "VDD->DVDD, VSS->DVSS, PDN vias landing on the macro's Metal3 straps for both nets",
+   "actual": "pins {'VDD': 'DVDD', 'VSS': 'DVSS'}; Metal3 straps VDD 3 / VSS 5; PDN vias on them: VDD 44, VSS 64"
+  },
+  "cut_respected": {
+   "ok": true,
+   "expected": "no standard cell inside the macro + 10 um halo, x 111.05-781.05, y 865.80-1080.00 um",
+   "actual": "0 of 80121 cells inside"
+  },
+  "macro_outputs_buffered": {
+   "ok": true,
+   "expected": "each RXk_O net: >= 1 load, half-perimeter < 120 um (about 30 fF with the load); EN connected",
+   "actual": {
+    "EN": {
+     "net": "net861",
+     "other_pins": 1,
+     "cells": [
+      "clkbuff_12"
+     ],
+     "hpwl_um": 47.3
+    },
+    "RX0_O": {
+     "net": "rx_sclk",
+     "other_pins": 1,
+     "cells": [
+      "mux2_2"
+     ],
+     "hpwl_um": 37.3
+    },
+    "RX1_O": {
+     "net": "rx_mosi",
+     "other_pins": 1,
+     "cells": [
+      "mux2_2"
+     ],
+     "hpwl_um": 95.8
+    },
+    "RX2_O": {
+     "net": "rx_cs_n",
+     "other_pins": 1,
+     "cells": [
+      "mux2_2"
+     ],
+     "hpwl_um": 43.6
+    }
+   }
+  },
+  "lvds_routes": {
+   "ok": true,
+   "expected": "each LVDS_* net routed as a short drop (< 100 um; the pad row is 39 um above the macro top) that stays under its own pad (x within the pad's pin span +- 5 um)",
+   "actual": {
+    "LVDS_SCLK_P": {
+     "length_um": 43.4,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      167.72,
+      171.36
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_SCLK_N": {
+     "length_um": 42.0,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      268.52,
+      270.76
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_MOSI_P": {
+     "length_um": 41.7,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      369.32,
+      371.28
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_MOSI_N": {
+     "length_um": 40.9,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      469.56,
+      470.68
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_CSN_P": {
+     "length_um": 40.2,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      570.92,
+      571.35
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_CSN_N": {
+     "length_um": 39.9,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      670.6,
+      670.75
+     ],
+     "under_own_pad": true
+    }
+   }
+  },
+  "over_macro_routing": {
+   "ok": true,
+   "expected": "no foreign signal wire inside the receiver's LEF obstructions (Metal1-3 over its core), and none on Metal1-3 in its top margin beside the six RX input strips; other crossings (the bottom and side margins, Metal4/5) are allowed and only reported",
+   "actual": {
+    "inside_obstructions": [],
+    "metal1_3_top_margin": [],
+    "crossings_by_layer_and_side": {
+     "Metal2 bottom": {
+      "um": 126.6,
+      "nets": [
+       "_04068_",
+       "clknet_leaf_9_clk_regs",
+       "net310",
+       "net424",
+       "net556"
+      ]
+     },
+     "Metal2 left": {
+      "um": 51.8,
+      "nets": [
+       "net424"
+      ]
+     },
+     "Metal2 right": {
+      "um": 145.6,
+      "nets": [
+       "_04068_"
+      ]
+     },
+     "Metal3 bottom": {
+      "um": 1840.0,
+      "nets": [
+       "_04068_",
+       "_04302_",
+       "clknet_leaf_9_clk_regs",
+       "net310",
+       "net556"
+      ]
+     },
+     "Metal3 left": {
+      "um": 5.2,
+      "nets": [
+       "net424"
+      ]
+     },
+     "Metal3 right": {
+      "um": 32.5,
+      "nets": [
+       "_04068_",
+       "net556",
+       "net564"
+      ]
+     },
+     "Metal4 bottom": {
+      "um": 23.7,
+      "nets": [
+       "_04302_",
+       "net310"
+      ]
+     },
+     "Metal4 core": {
+      "um": 172.2,
+      "nets": [
+       "lvds_en"
+      ]
+     },
+     "Metal4 right": {
+      "um": 58.9,
+      "nets": [
+       "cs_n_src"
+      ]
+     },
+     "Metal5 bottom": {
+      "um": 1057.3,
+      "nets": [
+       "net310",
+       "net6"
+      ]
+     },
+     "Metal5 core": {
+      "um": 557.4,
+      "nets": [
+       "lvds_en"
+      ]
+     },
+     "Metal5 right": {
+      "um": 19.2,
+      "nets": [
+       "cs_n_src"
+      ]
+     },
+     "Metal5 top": {
+      "um": 97.6,
+      "nets": [
+       "lvds_en"
+      ]
+     }
+    }
+   }
+  }
+ }
+}

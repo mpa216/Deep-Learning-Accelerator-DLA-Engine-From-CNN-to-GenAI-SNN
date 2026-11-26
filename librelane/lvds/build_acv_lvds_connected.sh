@@ -12,14 +12,18 @@
 #
 # Run inside apic_headless:
 #   docker exec apic_headless bash -lc 'cd /foss/designs/.claude/worktrees/lvds-rx/librelane && bash lvds/build_acv_lvds_connected.sh acv_lvds1'
+# Any further arguments go to BOTH librelane calls (e.g. -c KEY=VALUE overrides), so the harden and
+# the sign-off resume always run with the same settings.
 # ---------------------------------------------------------------------------
 set -euo pipefail
 cd "$(dirname "$0")/.."
 TAG=${1:-acv_lvds}
+shift || true
+EXTRA=("$@")
 CFG=config_acv_lvds.yaml
 
 # 1) everything up to fill insertion + cell tables; stop BEFORE streamout
-librelane "$CFG" --run-tag "$TAG" --to Odb.CellFrequencyTables
+librelane "$CFG" --run-tag "$TAG" --to Odb.CellFrequencyTables "${EXTRA[@]}"
 
 RUN="runs/$TAG"
 CLEAN_ODB=$(ls "$RUN"/*-odb-cellfrequencytables/dla_engine_chip.odb)   # pristine, pre-streamout
@@ -34,6 +38,6 @@ librelane "$CFG" --run-tag "$TAG" --from Magic.StreamOut \
     -e odb="$(realpath "$RUN/_connected.odb")" \
     -e def="$(realpath "$RUN/_connected.def")" \
     -e pnl="$(realpath "$FILL"/dla_engine_chip.pnl.v)" \
-    -e nl="$(realpath "$FILL"/dla_engine_chip.nl.v)"
+    -e nl="$(realpath "$FILL"/dla_engine_chip.nl.v)" "${EXTRA[@]}"
 
 echo "Done. Power-connected views in $RUN/final/ (gds/def/nl)."

@@ -14,7 +14,9 @@
 #   * FP_DEF_TEMPLATE: A56_ACV_lvds.def = the auditor's A56_ACV.def + 9 pins for
 #     N01 (LINK_SEL, in_c) and N02-N07 (asig_5p0), derived from the existing frame
 #     by librelane/lvds/make_template.py (PROVISIONAL until the organizers
-#     regenerate the template from the updated info.yaml).
+#     regenerate the template from the updated info.yaml). Each analog pin is ONE bar over its pad's
+#     eight ASIG5V fingers: LibreLane makes one pin per template rectangle and the detailed router
+#     rejects a signal terminal with several pins (DRT-0302, run acv_lvds1).
 #   * PDN_MACRO_CONNECTIONS: u_lvds VDD/VSS -> DVDD/DVSS (shared supply, handoff 14.7 v1);
 #     its Metal3 straps take via3 from the Metal4 stripes like the SRAM pins.
 #   * RSZ_DONT_TOUCH_RX: no resizer buffering on the analog pad nets (LVDS_*).

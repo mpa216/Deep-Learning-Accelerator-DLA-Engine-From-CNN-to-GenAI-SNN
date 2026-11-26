@@ -14,6 +14,14 @@ in the block's coordinates (origin = the block's lower-left corner in the padrin
   2. Append the pins that info.yaml lists after the signed-off ones, on the free
      north slots N01, N02, ... in order (the frame already holds asig_5p0 pads
      there), and write librelane/A56_ACV_lvds.def plus a pin report.
+  3. ONE deviation from the rule, for the new analog pins only (see merge_comb):
+     a signal terminal with several fingers on the core edge (asig_5p0 ASIG5V: 8)
+     is written as ONE rectangle, the bounding box of its finger projections.
+     LibreLane's relocate_pins turns every template rectangle into its own pin,
+     and the detailed router rejects a signal terminal with several pins
+     (TritonRoute DRT-0302 "Unsupported multiple pins on bterm", run acv_lvds1,
+     2026-11-26). The organizers' A56_ACV.def has no such pin (only DVDD/DVSS
+     have several rectangles, and power pins are allowed several).
 
 Run inside apic_headless (needs the PDK LEFs), from anywhere:
     python3 librelane/lvds/make_template.py
@@ -37,6 +45,7 @@ INFO = ROOT / "info.yaml"
 LEFDIR = pathlib.Path("/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/lef")
 DBU = 200            # template DEF units per micron
 EXTEND_UM = 1.0      # the auditor projects each terminal 1 um into the block
+M2_SPACING = 0.28    # gf180mcu Metal2 minimum spacing (M2.2a), um
 
 CELL = {
     "input_cmos": "gf180mcu_fd_io__in_c",
@@ -60,13 +69,22 @@ FLIP_DIR = {"INPUT": "OUTPUT", "OUTPUT": "INPUT", "INOUT": "INOUT"}
 
 
 def parse_lef(path):
-    """-> {pin: {'dir':..., 'use':..., 'rects': [(layer, x1, y1, x2, y2)]}}, size (w, h)"""
-    pins, cur, layer, size = {}, None, None, None
+    """-> {pin: {'dir':..., 'use':..., 'rects': [(layer, x1, y1, x2, y2)]}}, size (w, h),
+    obstructions [(layer, x1, y1, x2, y2)]"""
+    pins, cur, layer, size, obs, in_obs = {}, None, None, None, [], False
     for raw in path.read_text().splitlines():
         t = raw.split()
         if not t:
             continue
-        if t[0] == "SIZE":
+        if t[0] == "OBS":
+            in_obs, layer = True, None
+        elif in_obs and t[0] == "END":
+            in_obs = False
+        elif in_obs and t[0] == "LAYER":
+            layer = t[1]
+        elif in_obs and t[0] == "RECT":
+            obs.append((layer, *map(float, t[1:5])))
+        elif t[0] == "SIZE":
             size = (float(t[1]), float(t[3]))
         elif t[0] == "PIN":
             cur = t[1]
@@ -82,7 +100,7 @@ def parse_lef(path):
         elif cur and t[0] == "RECT":
             x1, y1, x2, y2 = map(float, t[1:5])
             pins[cur]["rects"].append((layer, x1, y1, x2, y2))
-    return pins, size
+    return pins, size, obs
 
 
 def parse_padring(path):
@@ -131,7 +149,7 @@ def build_pins(pin_list, slots, padring, lefs, origin, block_h):
         if place[0] != cell and io_type != "analog":
             # the frame holds an asig_5p0 filler on free slots; a digital pin changes that pad
             pass
-        lefpins, size = lefs[cell]
+        lefpins, size, _ = lefs[cell]
         for term, pat in TERMS[io_type]:
             lp = lefpins[term]
             rects = pin_rects(lp, size, place, origin, block_h)
@@ -142,6 +160,38 @@ def build_pins(pin_list, slots, padring, lefs, origin, block_h):
                 "direction": FLIP_DIR[lp["dir"]], "use": lp["use"], "rects": rects,
             })
     return pins
+
+
+def merge_comb(p, lefs):
+    """A signal pin with several finger rectangles -> ONE rectangle, the bounding box
+    of the fingers (a 1 um bar along the block edge under the whole comb).
+
+    Why: LibreLane's relocate_pins creates one pin (dbBPin) per template rectangle,
+    and TritonRoute accepts several pins on one terminal only for power nets
+    (DRT-0302). Electrically the same node: the fingers are one terminal, joined
+    inside the pad. The bar also keeps every foreign wire of the block off all the
+    fingers. It is safe at chip level only if no other Metal2 of the pad comes within
+    M2_SPACING of it; that is checked here from the pad LEF (other pins + OBS), in
+    cell coordinates, where the bar starts at the core edge y = h."""
+    if p["use"] != "SIGNAL" or len(p["rects"]) < 2:
+        return p
+    assert {r[0] for r in p["rects"]} == {"Metal2"}
+    lefpins, (w, h), obs = lefs[p["cell"]]
+    fingers = [r for r in lefpins[p["terminal"]]["rects"] if r[0] == "Metal2" and abs(r[4] - h) < 1e-6]
+    xa, xb = min(r[1] for r in fingers), max(r[3] for r in fingers)
+    others = [r for r in obs if r[0] == "Metal2"]
+    others += [r for n, lp in lefpins.items() if n != p["terminal"] for r in lp["rects"] if r[0] == "Metal2"]
+    clear = float("inf")
+    for _, x1, y1, x2, y2 in others:
+        dx = max(0.0, x1 - xb, xa - x2)
+        dy = max(0.0, h - y2)
+        clear = min(clear, (dx * dx + dy * dy) ** 0.5)
+    if clear < M2_SPACING:
+        raise RuntimeError(f"{p['name']}: other pad Metal2 {clear:.2f} um from the comb bar (< {M2_SPACING})")
+    rs = p["rects"]
+    return p | {"fingers": rs, "pad_metal_clearance_um": round(clear, 3),
+                "rects": [("Metal2", min(r[1] for r in rs), min(r[2] for r in rs),
+                           max(r[3] for r in rs), max(r[4] for r in rs))]}
 
 
 def parse_def_pins(text):
@@ -203,13 +253,15 @@ def main():
         sys.exit("info.yaml no longer starts with the signed-off pins in the pad-map order")
     new = all_pins[len(signed):]
     new_slots = free[:len(new)]
-    added = build_pins(new, new_slots, padring, lefs, origin, block_h)
+    added = [merge_comb(p, lefs) for p in build_pins(new, new_slots, padring, lefs, origin, block_h)]
 
     header = ("# PROVISIONAL block template for the LVDS integration (branch lvds-integration).\n"
               "# Derived by librelane/lvds/make_template.py from the existing ACV frame: the signed-off\n"
               f"# {len(auditor)} pins are byte-for-byte the auditor's A56_ACV.def (self-check: exact match);\n"
               f"# {len(added)} pins appended for {', '.join(n for n, _ in new)}\n"
-              f"# on slots {', '.join(new_slots)}. Replace with the organizers' regenerated template.\n")
+              f"# on slots {', '.join(new_slots)}. Each analog pin is ONE rectangle spanning its pad's 8 ASIG5V\n"
+              "# fingers (LibreLane makes one pin per rectangle; the router rejects multi-pin signal\n"
+              "# terminals, DRT-0302). Replace with the organizers' regenerated template.\n")
     out = base_text.replace(f"PINS {len(auditor)} ;", f"PINS {len(auditor) + len(added)} ;", 1)
     out = out.replace("END PINS", "\n".join(def_text(p) for p in added) + "\nEND PINS", 1)
     OUT_DEF.write_text(header + out)
@@ -220,13 +272,19 @@ def main():
         rep.append({k: p[k] for k in ("name", "user_pin", "slot", "cell", "terminal", "direction", "use")}
                    | {"n_rects": len(p["rects"]), "x_um": [min(xs), max(xs)],
                       "y_um": [p["rects"][0][2] / DBU, p["rects"][0][4] / DBU],
-                      "rects_um": [[r[1] / DBU, r[2] / DBU, r[3] / DBU, r[4] / DBU] for r in p["rects"]]})
+                      "rects_um": [[r[1] / DBU, r[2] / DBU, r[3] / DBU, r[4] / DBU] for r in p["rects"]]}
+                   | ({"merged_from_fingers_um": [[r[1] / DBU, r[2] / DBU, r[3] / DBU, r[4] / DBU]
+                                                  for r in p["fingers"]],
+                       "pad_metal_clearance_um": p["pad_metal_clearance_um"]} if "fingers" in p else {}))
     OUT_REPORT.write_text(json.dumps({"base": str(BASE_DEF.relative_to(ROOT)), "self_check": "exact match",
                                       "signed_off_pins": len(auditor), "added_pins": rep}, indent=1))
     print(f"wrote {OUT_DEF.relative_to(ROOT)} ({len(auditor) + len(added)} pins) and {OUT_REPORT.relative_to(ROOT)}")
     for r in rep:
+        merged = (f"  (bar over {len(r['merged_from_fingers_um'])} fingers, pad Metal2 "
+                  f"{r['pad_metal_clearance_um']:.2f} um away)" if "merged_from_fingers_um" in r else "")
         print(f"  {r['slot']}  {r['name']:<12} {r['cell'].split('__')[1]:<9} {r['terminal']:<6} "
-              f"{r['direction']:<6} {r['n_rects']} rect(s)  x {r['x_um'][0]:.2f}-{r['x_um'][1]:.2f}  y {r['y_um'][0]:.0f}-{r['y_um'][1]:.0f} um")
+              f"{r['direction']:<6} {r['n_rects']} rect(s)  x {r['x_um'][0]:.2f}-{r['x_um'][1]:.2f}  "
+              f"y {r['y_um'][0]:.0f}-{r['y_um'][1]:.0f} um{merged}")
 
 
 if __name__ == "__main__":

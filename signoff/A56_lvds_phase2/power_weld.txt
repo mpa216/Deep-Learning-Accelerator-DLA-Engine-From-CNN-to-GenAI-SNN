@@ -1,0 +1,16 @@
+net   edge  finger(um along edge)   stacks  bridge  min-clear(um)
+DVDD     W  [   906.36,    915.86]       8          1.875  OK
+DVDD     W  [   918.76,    929.01]       8          1.875  OK
+DVDD     W  [   930.61,    940.86]       8          1.875  OK
+DVDD     W  [   944.14,    954.39]       8          1.875  OK
+DVDD     W  [   955.99,    966.24]       5          1.575  OK
+DVDD     W  [   969.14,    978.64]       8          1.829  OK
+DVSS     W  [  1006.36,   1015.86]       8          1.875  OK
+DVSS     W  [  1018.76,   1029.01]       8          1.875  OK
+DVSS     W  [  1030.61,   1040.86]       7          1.575  OK
+DVSS     W  [  1044.14,   1054.39]       8          1.875  OK
+DVSS     W  [  1055.99,   1066.24]       8          1.875  OK
+DVSS     W  [  1069.14,   1078.64]       5          1.575  OK
+
+fingers=12  via_stacks=89  failures=0
+WROTE runs/acv_lvds2/_connected.odb

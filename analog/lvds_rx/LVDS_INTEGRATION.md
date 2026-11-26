@@ -3,9 +3,13 @@
 Branch `lvds-integration` (cut from `lvds-rx` at 8145d91, which is `main` 9be761d plus the finished
 macro). `main` and the signed-off chip are untouched; nothing is pushed.
 
-**Status 2026-11-23: phase 1 of 3 done** (RTL, verification, frame template, flow configuration,
-placement dry run). Phase 2 (full harden + power weld + sign-off) waits for the owner's go-ahead.
-Phase 3 (submission files) waits for the organizers' official template.
+**Status 2026-11-26: phases 1 and 2 of 3 done.** Phase 1 (2026-11-23): RTL, verification, frame template,
+flow configuration, placement dry run. Phase 2 (2026-11-26): the full layout. The block with the receiver
+hardens, its power pins weld, and it signs off clean in Magic DRC, the KLayout foundry deck, via arrays, LVS, XOR,
+9-corner timing and gate-level simulation over both links, with one open item: two digital nets over the Metal3
+antenna limit (1.24 x and 1.004 x), to be closed in the phase-3 run (section 5, phase 2; reports in
+`signoff/A56_lvds_phase2/`). The GDS is `librelane/runs/acv_lvds2/final/gds/dla_engine_chip.gds` (SHA-256
+`51323bd9...`). Phase 3 (submission files) waits for the organizers' official template (section 8).
 
 ## 1. What the integration does, in plain words
 
@@ -69,9 +73,22 @@ The block's floorplan template normally comes from the organizers. Until they re
 `librelane/lvds/make_template.py`, which reproduces their rule (each pin = the Metal2 shapes of its pad
 terminal at the pad's core edge, projected 1 um into the block). **Self-check: the script regenerates all
 64 pins of the organizers' current A56_ACV.def exactly** (order, names, directions, every rectangle), then
-adds 9 pins: the in_c terminals of N01 and the eight ASIG5V Metal2 fingers of each analog pad
-(x 145.34-189.66 um for N02, +100 um per slot, y 1109-1110 um). When the official template arrives, drop it
-in as `librelane/A56_ACV_lvds.def` and re-run phase 2; `check_integration.py` compares the pins.
+adds 9 pins: the three in_c terminals of N01, and one pin per analog pad.
+
+**The analog pins are one rectangle each, not eight (changed in phase 2).** An `asig_5p0` pad hands its
+ASIG5V terminal to the block as a comb of eight 2.54 um Metal2 fingers, so the organizers' rule gives eight
+rectangles per analog pin; the first template did exactly that. LibreLane's pin copy (`Odb.ApplyDEFTemplate`)
+turns every rectangle into a separate pin, and the detailed router stops on a signal terminal with more than
+one pin: `[DRT-0302] Unsupported multiple pins on bterm LVDS_CSN_N` (run `acv_lvds1`, 2026-11-26; only power
+pins may have several, which is why DVDD/DVSS with six fingers each never hit it). In the organizers' current
+template every one of the 62 signal pins has exactly one rectangle, so this is new ground for them too. Each
+analog pin is now ONE rectangle: the bounding box of its eight fingers, a 44.32 x 1 um bar along the block's
+top edge under the whole comb (x 145.34-189.66 um for N02, +100 um per slot, y 1109-1110 um). Electrically it is
+the same node (the fingers are one terminal, joined inside the pad), and it keeps every other wire of the block
+off all eight fingers. It is safe at chip level: the pad's other Metal2 stops 1.61 um short of its core edge
+(read from the pad LEF by the script; the Metal2 spacing rule is 0.28 um). When the official template arrives,
+drop it in as `librelane/A56_ACV_lvds.def` and re-run phase 2; `check_integration.py` compares the pins (if the
+organizers give eight fingers, see section 8, question 2).
 
 ## 4. Files
 
@@ -83,12 +100,15 @@ in as `librelane/A56_ACV_lvds.def` and re-run phase 2; `check_integration.py` co
 | `info.yaml` | 7 pins appended (N01-N07) |
 | `librelane/config_acv_lvds.yaml` | `config_acv.yaml` + the LVDS deltas (config_acv.yaml untouched) |
 | `librelane/A56_ACV_lvds.def` | provisional template (section 3) |
-| `librelane/lvds/` | make_template.py, check_integration.py, build_acv_lvds_connected.sh (phase 2), pin report |
+| `librelane/lvds/` | make_template.py, check_integration.py, build_acv_lvds_connected.sh (phase 2), render_layout.tcl, pin report, pictures in `render/` |
+| `signoff/A56_lvds_phase2/` | the phase-2 reports (DRC, LVS, XOR, antenna, timing, foundry deck, weld, integration checks, gate-level simulation) with a README |
 | `tb/dla_engine_chip_lvds_tb.sv` | NEW: d3004n4 over CMOS, LVDS, CMOS again on one chip |
 | `tb/dla_engine_chip_{,gan_,wave_}tb.sv` | LINK_SEL tied low (= the pad pull-down); race-free stimulus (section 6); GAN TB gains `+define+LVDS_LINK` |
 | `formal/dla_link_sel{.sby,_props.sv}` | NEW proof of the link select |
 
 ## 5. Verification, expected against actual
+
+### Phase 1 (RTL, template, placement dry run)
 
 | Check | Expected | Actual |
 |---|---|---|
@@ -102,7 +122,7 @@ in as `librelane/A56_ACV_lvds.def` and re-run phase 2; `check_integration.py` co
 | Template self-check | the 64 pins of the organizers' A56_ACV.def regenerated exactly | EXACT MATCH |
 | Dry run, synthesis to detailed placement (no routing), `runs/lvds_fp2` | runs clean, warnings as in the signed-off run | exit 0 in 92 s; the same warnings as `acv_ring6` (core-origin snap, SRAM antenna info, 12 PDN-0110 at SRAM edges, LibreLane's template-area units message) |
 | Macro placement | (121.05, 875.80) um, R0, fixed | as expected, FIRM |
-| Pins | 73, the 9 new ones identical to the template | 73; identical; 8 finger boxes per analog pin |
+| Pins | 73, the 9 new ones identical to the template | 73; identical; 8 finger boxes per analog pin (the first template; the router rejects that, so phase 2 uses one bar per analog pin, section 3) |
 | Analog nets | each `LVDS_*` net = its pad + one macro pin, no buffer or diode | all six clean, also after the resizer's repair pass |
 | Macro power | VDD on DVDD, VSS on DVSS, grid vias landing on its Metal3 straps | 44 vias on the VDD straps, 64 on the VSS straps |
 | The cut | no standard cell inside the macro + 10 um halo | 0 of 21,087 |
@@ -111,7 +131,41 @@ in as `librelane/A56_ACV_lvds.def` and re-run phase 2; `check_integration.py` co
 
 `librelane/lvds/check_integration.py <odb>` repeats the last seven rows on any later run.
 
-## 6. Two things found on the way
+### Phase 2 (the full layout, run `acv_lvds2`, 2026-11-26)
+
+What phase 2 does, in plain words: the flow turns the design into the finished chip layout. It builds the
+clock tree, draws every wire (including the six pad-to-receiver drops), joins the frame's power pins to the
+block's power ring (the "weld"), and writes the GDS, the file a foundry manufactures from. Then every check runs
+on that file. Built with `bash librelane/lvds/build_acv_lvds_connected.sh acv_lvds2` (about 45 min; the first
+attempt, `acv_lvds1`, stopped in routing on the multi-pin analog pins, section 6). The reports are in
+`signoff/A56_lvds_phase2/` (README there has the files and commands). "Signed-off" = the chip without the receiver.
+
+| Check | Expected | Actual |
+|---|---|---|
+| Routing DRC (detailed router) | 0 | 0 |
+| Magic DRC | 0 | 0 |
+| KLayout foundry deck (660 rule categories) | 0 | 0 |
+| Via arrays (rule Vn.2b, not in the open deck) | 0 | 0, the receiver included |
+| Netgen LVS | "Circuits match uniquely" | match uniquely: 26,167 devices and 14,131 nets each side, 0 errors; the receiver is a black box with its 12 pins (like the SRAMs; its own transistor-level LVS was done standalone) |
+| Magic vs KLayout GDS XOR | 0 | 0 |
+| Antenna (OpenROAD and the foundry deck agree) | 0 (signed-off 0) | **2 nets over the Metal3 limit: 1.24 x and 1.004 x (open, section 6)** |
+| Density (whole die, no fill in the block) | the signed-off findings | the same 6 |
+| Timing, 9 corners with extracted wires (SPEF), 40 ns clock | no violation; signed-off +14.98 / +0.117 ns | setup +14.78 ns, hold +0.115 ns, no violation |
+| Power | about 125 mW | 125.4 mW, plus about 8 mW for the receiver when it is on (2.4 mA typical; its timing model carries no power) |
+| Power weld | every DVDD/DVSS finger joined, 0 refusals | 12 fingers, 89 via stacks, at least 1.575 um from other metal |
+| Integration checks (`check_integration.py`, now 8) | 8 / 8 | 8 / 8; each pad-to-receiver drop is 39.9-43.4 um, one via, under its own pad; no foreign wire in the receiver's core or beside its inputs |
+| Gate-level simulation, routed netlist: LVDS testbench | 12 / 12 rows bit-exact | 12 / 12 (CMOS, LVDS, CMOS on one chip) |
+| Gate-level simulation, routed netlist: signed-off pad testbench | PASS at the same instant as RTL | PASS at 1,664,076 ns |
+| Disconnected pins | 0 critical | 0 critical; 4 harmless (the output pads' unused feedback inputs, as signed-off) |
+
+Pictures (`librelane/lvds/render/`): `acv_lvds2_block.png` (whole block), `acv_lvds2_lvds_strip.png` (the receiver,
+its power straps and the cells around it), `acv_lvds2_pads_to_pins.png` (two analog pin bars and their straight
+drops into the receiver), `acv_lvds2_weld_linksel.png` (the west power weld; the LINK_SEL wire comes down from the
+top edge and turns east above it).
+
+## 6. Things found on the way
+
+### Phase 1
 
 **A race in the chip testbenches (testbench only, the design is fine).** The pad-level testbenches changed
 the serial pins at the same instant as the clock edge. In a zero-delay simulation the order of events then
@@ -136,19 +190,79 @@ needs either an `ifdef FORMAL` block inside the signed-off `dla_serial_bridge.v`
 properties: a decision for the owner. The integration does not depend on it (the bridge is unchanged and
 the simulations above exercise it).
 
+### Phase 2
+
+**The router cannot take a pin made of eight fingers.** The first full run (`acv_lvds1`) stopped in detailed
+routing with `[DRT-0302] Unsupported multiple pins on bterm LVDS_CSN_N`. LibreLane's pin copy makes one pin
+per template rectangle, and the router accepts several pins on one terminal only for power nets. Fixed in the
+template (one bar per analog pin, section 3); the same question goes to the organizers (section 8, question 2).
+A check that would have caught it 40 minutes earlier: count the pins per signal terminal right after
+`Odb.ApplyDEFTemplate` (every one must be 1).
+
+**Two antenna violations, and why the usual knob does not reach them.** The first complete layout
+(`acv_lvds2`) was clean in DRC, LVS and XOR, but the antenna check after detailed routing found two nets over
+the Metal3 limit: `net792` at 1.24 times the limit and `_08355_` at 1.004 times. Both are digital nets that
+run 370 and 570 um along Metal3 through the 73 um channel between the receiver and the SRAM row below it, the
+area the cut made busier. (In plain words: a long wire collects charge during manufacturing, and if it is
+connected only to a small transistor gate at that moment, the charge can damage the gate; the limit is a ratio of
+wire area to gate area, and a small protection diode on the wire raises what is allowed.) The flow fixes
+antennas in two places: early "heuristic" diodes on every long net, and a repair after global routing that
+adds jumpers (a short hop to another metal layer) or diodes, with a 75 % safety margin because the final
+wires come out longer than the global-route estimate. That repair leaves nets that already carry diodes
+(`GRT-0243 Unable to repair antennas on net with diodes`), and the final route pushed these two over. The
+foundry deck reports exactly the same two gates with the same ratios (494.2 and 401.48), and shows why a diode did
+not help the worse one: at the Metal3 stage its diode is not yet connected (the router joined it through a higher
+layer), so it protects nothing while Metal3 is etched.
+
+Three ways to close them were tried in phase 2, each against `acv_lvds2`; none worked:
+
+| Attempt | Idea | Result |
+|---|---|---|
+| repair margin 100 (heuristic diodes on) | over-fix harder | the repair switched itself OFF: OpenROAD scales each limit by (1 - margin/100), a limit of 0 means "no rule", so it found 0 violations to fix; stopped |
+| heuristic diodes off, margin 75, 5 repair passes | let the margin-protected repair handle every net | the repair cleared all 421 violations it saw before routing, but after detailed routing 6 nets were over, up to 2.39 x: worse. The final wires differ from the estimate by more than any margin; the early diodes do help (as the 2026-06 notes say) |
+| the detailed router's own antenna repair (`DRT_ANTENNA_REPAIR_ITERS 2`, jumpers only), restarted from `acv_lvds2`'s state just before routing | fix exactly the nets that fail after routing | the first routing pass reproduced `acv_lvds2` exactly (0 routing errors, the same 2 antenna nets); the repair then put in its jumpers, and the re-route crashed: `DRT-0073 No access point` for clock buffers and diodes, the dead end recorded in 2026-06, still there in OpenROAD 26Q1 |
+
+The lever that closed the signed-off chip remains: sweep the repair margin (25 -> 50 -> 75 there, three runs, each
+about an hour). It only re-rolls the routing, and the phase-3 run on the official template re-rolls it anyway,
+so the sweep belongs in phase 3 (section 7). Evidence kept in `.scratch/integ/` (`acv_lvds3b_margin100_repair.log`,
+`acv_lvds3a_heuristic_off_antenna.rpt`, `acv_lvds4_drt_repair_DRT0073.log`); the variant runs are deleted.
+
+**`final/odb/` holds two databases; the welded one is `_connected.odb`.** The build writes the power weld into
+`_connected.odb` and resumes the flow from it; LibreLane's "save views" copies the state's file under its own
+name, so `final/odb/dla_engine_chip.odb` is a stale copy from before the weld (the same is true of the signed-off
+`acv_ring6`). Every sign-off step read `_connected.odb` (checked in each step's `state_in.json`), so the GDS,
+DRC, LVS and timing are of the welded design; only a tool pointed at `final/odb/dla_engine_chip.odb` by hand sees
+the unwelded one (the first render did). `render_layout.tcl` reads `_connected.odb`.
+
+**Digital wires cross the receiver's margin, not its circuit.** The macro's LEF blocks Metal1-Metal3 over its
+600 x 144 um core only; the 25 um margin around it is a standard-cell-free margin (handoff sections 12 and 14.2) and open to
+routing. After routing nothing lies inside the blocked core, and nothing runs on Metal1-Metal3 in the top margin
+where the six input strips go up to the pads. Wires do use the bottom margin (the digital side, where EN and the
+outputs are: about 1,840 um of Metal3 from 7 nets, one of them a clock leaf) and the side margins, and one net
+crosses over the core on Metal4/Metal5: `lvds_en`, the receiver's own enable before its buffer, which only
+changes when the link switches. `check_integration.py` check 8 grades the two things that matter and lists the
+rest. If the owner wants the receiver's surroundings quieter, a Metal4/Metal5 routing obstruction over it (the
+handoff's optional item) can go into the phase-3 run.
+
 ## 7. Open items
 
 - **Official template** (the owner asks the organizers, section 8): put it in as `librelane/A56_ACV_lvds.def`,
   re-run, and compare with `check_integration.py`; if their pins differ from ours, only the template changes
-  (the macro's x position is tuned to the finger positions and may move with it).
-- **Phase 2, needs the owner's go-ahead** (`bash librelane/lvds/build_acv_lvds_connected.sh <tag>` in the
-  container): full harden (about 45 min) -> power-pin weld -> Magic DRC, Netgen LVS (the macro is a black box
-  there, like the SRAMs; its own LVS was done standalone), XOR, antenna (the 2026-08 re-closure needed a
-  repair-margin sweep; budget one), SPEF 9-corner STA, the KLayout foundry deck (about 16 min), the via-array
-  check, gate-level simulation of the hardened netlist over both links, and the integration checks. Disk:
-  13 GB free; a full run is a few GB, stripped to `final/` afterwards.
-- **Phase 3** (after the official template): `gds/`, `verilog/`, `lvs_config.json` (add the macro's SPICE,
-  `macros/lvds_rx_x3/spice/lvds_rx_x3.spice`), a TEST_PLAN section for the LVDS link, README and learning notes.
+  (the macro's x position is tuned to the finger positions and may move with it). If their analog pins come as
+  eight fingers, the router stops (section 6); then either they change it or our flow has to merge the fingers.
+- **Phase 2: done 2026-11-26** (section 5, phase 2), one item left open:
+- **Antenna closure, in the phase-3 run:** two nets over the Metal3 limit in `acv_lvds2` (1.24 x, 1.004 x).
+  Sweep `GRT_ANTENNA_REPAIR_MARGIN` below 100 (for example 50 and 90 next to 75), keep the heuristic diodes on, and
+  take the run with antenna 0 that is also clean everywhere else; `build_acv_lvds_connected.sh <tag> -c
+  GRT_ANTENNA_REPAIR_MARGIN=<m>` does one run. Not to retry: margin 100 (switches the repair off), heuristic diodes
+  off (worse), `DRT_ANTENNA_REPAIR_ITERS` > 0 (`DRT-0073` crash).
+- **Optional, the owner's choice:** a Metal4/Metal5 routing obstruction over the receiver (the handoff's optional
+  item) to keep digital wires off it entirely. Today only the static `lvds_en` crosses its core (Metal4/5) and
+  the bottom margin carries digital wires, nothing beside the inputs (section 6). Costs routing room; decide
+  before the phase-3 run.
+- **Phase 3** (after the official template): re-run phase 2 with it (and the antenna sweep), then `gds/`,
+  `verilog/`, `lvs_config.json` (add the macro's SPICE, `macros/lvds_rx_x3/spice/lvds_rx_x3.spice`), a TEST_PLAN
+  section for the LVDS link, README and learning notes. Disk: about 11 GB free; one full run is 1.4 GB.
 - **Export control:** the signed form describes a "fixed-function digital ASIC" with a "digital clock DC to
   25 MHz only". The link still runs at the bridge's rate, but the chip now contains an analog receiver; the
   wording may need revising and re-signing.
@@ -168,14 +282,23 @@ Draft to edit and send (it reuses `GUIDE_FOR_YOU.md` section 8, now with concret
 > Hi [organizer],
 >
 > For project A56 (block ACV, top `dla_engine_chip`) we have integrated an LVDS receiver hard macro behind
-> analog pads. Our updated `info.yaml` appends 7 pins after DVSS, so W12-W22 are unchanged:
+> analog pads, and hardened the block on a provisional template we derived from the current frame (Magic and
+> KLayout DRC, LVS and XOR clean; timing met at all 9 corners). Our updated `info.yaml` appends 7 pins after
+> DVSS, so W12-W22 are unchanged:
 > `LINK_SEL` (input_cmos), then `LVDS_SCLK_P`, `LVDS_SCLK_N`, `LVDS_MOSI_P`, `LVDS_MOSI_N`, `LVDS_CSN_P`,
 > `LVDS_CSN_N` (all `analog`). We expect them on N01-N07 (pin count 11 -> 18 of the block's 27 slots).
 > Could you regenerate our block DEF template and pad map from it? Questions:
 >
 > 1. Do appended pins land on N01, N02, ... in order, and is 18 pins acceptable for the shuttle?
-> 2. For the `analog` pins we assumed the template shows the eight ASIG5V Metal2 fingers projected 1 um
->    into the block (as for our DVDD/DVSS today). Is that right?
+> 2. Analog pin geometry. Each `asig_5p0` pad presents ASIG5V as eight Metal2 fingers on its core edge, so
+>    your rule (pad-terminal Metal2 at the core edge, projected 1 um into the block) would give eight
+>    rectangles per analog pin. In LibreLane 3.0.2 that does not route: `Odb.ApplyDEFTemplate` makes each
+>    rectangle a separate pin and the detailed router then stops with `[DRT-0302] Unsupported multiple pins on
+>    bterm` (power pins are exempt, which is why DVDD/DVSS work). In our provisional template we therefore used
+>    ONE rectangle per analog pin, the bounding box of the eight fingers (a 44.32 x 1 um bar, e.g.
+>    x 145.34-189.66 um, y 1109-1110 um for N02); the pad's other Metal2 stays 1.61 um away from it. With that
+>    the block hardens and signs off (DRC, LVS, XOR clean). Could the official template use the same single
+>    rectangle (or tell us which shape you want)?
 > 3. The ring break `BRK_AFTER_ACV` is after W22 today. Will it move after our last pin, so the analog
 >    pads' clamp diodes and the in_c pad sit on our DVDD/DVSS segment?
 > 4. Integration LVS: should `lvs_config.json` list the macro's SPICE in `LVS_SPICE_FILES` (and the macro in

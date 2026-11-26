@@ -89,7 +89,7 @@
    "terminal": "ASIG5V",
    "direction": "INOUT",
    "use": "SIGNAL",
-   "n_rects": 8,
+   "n_rects": 1,
    "x_um": [
     145.34,
     189.66
@@ -99,6 +99,14 @@
     1110.0
    ],
    "rects_um": [
+    [
+     145.34,
+     1109.0,
+     189.66,
+     1110.0
+    ]
+   ],
+   "merged_from_fingers_um": [
     [
      187.12,
      1109.0,
@@ -147,7 +155,8 @@
      147.88,
      1110.0
     ]
-   ]
+   ],
+   "pad_metal_clearance_um": 1.61
   },
   {
    "name": "LVDS_SCLK_N",
@@ -157,7 +166,7 @@
    "terminal": "ASIG5V",
    "direction": "INOUT",
    "use": "SIGNAL",
-   "n_rects": 8,
+   "n_rects": 1,
    "x_um": [
     245.34,
     289.66
@@ -167,6 +176,14 @@
     1110.0
    ],
    "rects_um": [
+    [
+     245.34,
+     1109.0,
+     289.66,
+     1110.0
+    ]
+   ],
+   "merged_from_fingers_um": [
     [
      287.12,
      1109.0,
@@ -215,7 +232,8 @@
      247.88,
      1110.0
     ]
-   ]
+   ],
+   "pad_metal_clearance_um": 1.61
   },
   {
    "name": "LVDS_MOSI_P",
@@ -225,7 +243,7 @@
    "terminal": "ASIG5V",
    "direction": "INOUT",
    "use": "SIGNAL",
-   "n_rects": 8,
+   "n_rects": 1,
    "x_um": [
     345.34,
     389.66
@@ -235,6 +253,14 @@
     1110.0
    ],
    "rects_um": [
+    [
+     345.34,
+     1109.0,
+     389.66,
+     1110.0
+    ]
+   ],
+   "merged_from_fingers_um": [
     [
      387.12,
      1109.0,
@@ -283,7 +309,8 @@
      347.88,
      1110.0
     ]
-   ]
+   ],
+   "pad_metal_clearance_um": 1.61
   },
   {
    "name": "LVDS_MOSI_N",
@@ -293,7 +320,7 @@
    "terminal": "ASIG5V",
    "direction": "INOUT",
    "use": "SIGNAL",
-   "n_rects": 8,
+   "n_rects": 1,
    "x_um": [
     445.34,
     489.66
@@ -303,6 +330,14 @@
     1110.0
    ],
    "rects_um": [
+    [
+     445.34,
+     1109.0,
+     489.66,
+     1110.0
+    ]
+   ],
+   "merged_from_fingers_um": [
     [
      487.12,
      1109.0,
@@ -351,7 +386,8 @@
      447.88,
      1110.0
     ]
-   ]
+   ],
+   "pad_metal_clearance_um": 1.61
   },
   {
    "name": "LVDS_CSN_P",
@@ -361,7 +397,7 @@
    "terminal": "ASIG5V",
    "direction": "INOUT",
    "use": "SIGNAL",
-   "n_rects": 8,
+   "n_rects": 1,
    "x_um": [
     545.34,
     589.66
@@ -371,6 +407,14 @@
     1110.0
    ],
    "rects_um": [
+    [
+     545.34,
+     1109.0,
+     589.66,
+     1110.0
+    ]
+   ],
+   "merged_from_fingers_um": [
     [
      587.12,
      1109.0,
@@ -419,7 +463,8 @@
      547.88,
      1110.0
     ]
-   ]
+   ],
+   "pad_metal_clearance_um": 1.61
   },
   {
    "name": "LVDS_CSN_N",
@@ -429,7 +474,7 @@
    "terminal": "ASIG5V",
    "direction": "INOUT",
    "use": "SIGNAL",
-   "n_rects": 8,
+   "n_rects": 1,
    "x_um": [
     645.34,
     689.66
@@ -439,6 +484,14 @@
     1110.0
    ],
    "rects_um": [
+    [
+     645.34,
+     1109.0,
+     689.66,
+     1110.0
+    ]
+   ],
+   "merged_from_fingers_um": [
     [
      687.12,
      1109.0,
@@ -487,7 +540,8 @@
      647.88,
      1110.0
     ]
-   ]
+   ],
+   "pad_metal_clearance_um": 1.61
   }
  ]
 }
