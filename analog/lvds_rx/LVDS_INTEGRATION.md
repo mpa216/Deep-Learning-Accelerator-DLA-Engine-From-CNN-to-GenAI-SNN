@@ -267,10 +267,17 @@ handoff's optional item) can go into the phase-3 run.
 
 ## 7. Open items
 
-- **Official template** (the owner asks the organizers, section 8): put it in as `librelane/A56_ACV_lvds.def`,
-  re-run, and compare with `check_integration.py`; if their pins differ from ours, only the template changes
-  (the macro's x position is tuned to the finger positions and may move with it). If their analog pins come as
-  eight fingers, the router stops (section 6); then either they change it or our flow has to merge the fingers.
+- **Official template: arrived 2026-11-26** (`A56.def.tgz` from the organizers, generated from the 18-pin
+  `info.yaml` on main). Against ours: all 73 pins identical in name, order and position (67 rectangle for
+  rectangle; the 6 analog pins come as their 8 ASIG5V fingers, whose bounding box is exactly our bar, so the flow
+  merges them with `make_template.merge_comb`'s rule, otherwise DRT-0302); N01 is now an `in_c` pad, the ring break
+  moved from after W22 to after N07 (questions 1 and 3 of section 8 answered), and the NE-corner Metal2 keep-out is
+  gone. **The block is 55 um narrower: 1620 x 1110 um** (same origin), ending just before pad N17 (the old block
+  reached under it, which was the reason for the keep-out). The layout reaches x = 1645.5 um with its power ring,
+  1634.6 um with its cells and 1615.1 um with the SRAMs (the organizers' own measurement of main's GDS: 1634.36 um).
+  Phase 3 therefore starts with a re-floorplan: DIE_AREA 1620, CORE_AREA to about 1580, the SRAM grid about 40-45 um
+  west, then the full build and every check again; the receiver and the pads do not move. The all-digital layout on
+  main has the same east side, so it does not fit the new block either.
 - **Phase 2: done 2026-11-26** (section 5, phase 2), clean in every check, antenna included (margin 80).
 - **Antenna in the phase-3 run:** the official template re-rolls the routing, so check antenna again. If it is not
   0 at margin 80, sweep around it (`build_acv_lvds_connected.sh <tag> -c GRT_ANTENNA_REPAIR_MARGIN=<m>`, one run each;
