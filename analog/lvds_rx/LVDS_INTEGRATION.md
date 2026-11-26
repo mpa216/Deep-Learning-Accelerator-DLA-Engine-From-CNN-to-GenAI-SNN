@@ -311,3 +311,29 @@ Draft to edit and send (it reuses `GUIDE_FOR_YOU.md` section 8, now with concret
 >
 > Thank you!
 > [your name], team FindingSRAM (A56)
+
+### Short version for a GitHub issue (2026-11-26)
+
+The first three questions above, ready to paste. Title: **A56 / ACV: request for an updated block DEF template
+(7 extra pins for an LVDS receiver)**
+
+```markdown
+Hi organizers,
+
+For project **A56** (block **ACV**, top `dla_engine_chip`, team FindingSRAM) we have added a small LVDS receiver to the chip. Could you regenerate our block DEF template (and pad map) with the extra pins?
+
+**What changed**
+- New hard macro `lvds_rx_x3`: a 3-lane LVDS receiver (gf180mcuD, 3.3 V, 650 x 194 um, Metal1-Metal3 only), placed in a strip of the core that held only standard cells. No other macro moved.
+- Its three lanes carry the existing serial link's SCLK, MOSI and CS_N as LVDS pairs into the unchanged serial bridge. A strap pin, `LINK_SEL`, picks CMOS or LVDS; its pad pull-down keeps the original CMOS link when it is left unbonded.
+- The 11 existing pins (W12-W22) are unchanged. 7 pins are appended after DVSS in `info.yaml` (11 -> 18 pins), expected on N01-N07:
+  - `LINK_SEL` (`input_cmos`)
+  - `LVDS_SCLK_P`, `LVDS_SCLK_N`, `LVDS_MOSI_P`, `LVDS_MOSI_N`, `LVDS_CSN_P`, `LVDS_CSN_N` (`analog`)
+- On a provisional template we derived from the current ACV frame, the block hardens with Magic/KLayout DRC and LVS clean and timing met at all 9 corners (two antenna nets left to close in the final run).
+
+**Questions**
+1. Can you regenerate the A56/ACV template with these 18 pins, and do appended pins land on N01, N02, ... in order?
+2. Analog pin shape: the `asig_5p0` ASIG5V terminal has 8 Metal2 fingers. If the template gives an analog pin 8 rectangles, LibreLane's `Odb.ApplyDEFTemplate` makes 8 pins and detailed routing stops with `[DRT-0302] Unsupported multiple pins on bterm`. We used one rectangle per analog pin (the bounding box of the 8 fingers, 44.32 x 1 um), which routes cleanly. Could the official template do the same?
+3. Our main branch still holds the signed-off 11-pin GDS. Should we put the updated `info.yaml` on main now, or share it another way until the new GDS is ready?
+
+Thank you!
+```
