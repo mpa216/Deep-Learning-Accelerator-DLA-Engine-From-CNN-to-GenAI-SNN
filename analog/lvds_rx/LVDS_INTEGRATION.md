@@ -9,7 +9,10 @@ hardens, its power pins weld, and it signs off clean in Magic DRC, the KLayout f
 9-corner timing and gate-level simulation over both links, with one open item: two digital nets over the Metal3
 antenna limit (1.24 x and 1.004 x), to be closed in the phase-3 run (section 5, phase 2; reports in
 `signoff/A56_lvds_phase2/`). The GDS is `librelane/runs/acv_lvds2/final/gds/dla_engine_chip.gds` (SHA-256
-`51323bd9...`). Phase 3 (submission files) waits for the organizers' official template (section 8).
+`51323bd9...`). Same day, at the owner's request, the branch was **prepared to replace `main`** (its
+submission files are now the LVDS version, README and TEST_PLAN updated) and **pushed as
+`origin/lvds-integration`**; `main` is untouched (section 7). Phase 3 waits for the organizers' official
+template (section 8).
 
 ## 1. What the integration does, in plain words
 
@@ -260,9 +263,17 @@ handoff's optional item) can go into the phase-3 run.
   item) to keep digital wires off it entirely. Today only the static `lvds_en` crosses its core (Metal4/5) and
   the bottom margin carries digital wires, nothing beside the inputs (section 6). Costs routing room; decide
   before the phase-3 run.
-- **Phase 3** (after the official template): re-run phase 2 with it (and the antenna sweep), then `gds/`,
-  `verilog/`, `lvs_config.json` (add the macro's SPICE, `macros/lvds_rx_x3/spice/lvds_rx_x3.spice`), a TEST_PLAN
-  section for the LVDS link, README and learning notes. Disk: about 11 GB free; one full run is 1.4 GB.
+- **Branch prepared to replace `main` (2026-11-26, the owner's request), pushed as `origin/lvds-integration`;
+  `main` untouched.** The submission files on this branch are the LVDS version: `gds/` and `verilog/` (run
+  `acv_lvds2`), `info.yaml` (18 pins, the description; `drc_ready: false` until the antenna nets are closed,
+  `lvs_ready: true`), `lvs_config.json` (+ the receiver's SPICE `macros/lvds_rx_x3/spice/lvds_rx_x3.spice`,
+  following the SRAM's pattern: no flatten keys; the organizers' semantics are still question 4 of section 8),
+  README (sections I, II.E, V, VII, VIII) and TEST_PLAN (the 7 pads, the LVDS driver and termination, bring-up
+  T14-T18). Merging the branch replaces the all-digital submission; leaving `LINK_SEL` unbonded keeps the
+  all-digital behaviour on the new chip.
+- **Phase 3** (after the official template): drop it in, re-run phase 2 with it and the antenna sweep, copy the
+  new `gds/` and `verilog/` if the layout changes, set `drc_ready: true` once antenna is 0, learning notes.
+  Disk: about 8 GB free; one full run is 1.4 GB.
 - **Export control:** the signed form describes a "fixed-function digital ASIC" with a "digital clock DC to
   25 MHz only". The link still runs at the bridge's rate, but the chip now contains an analog receiver; the
   wording may need revising and re-signing.

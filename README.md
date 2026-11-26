@@ -2,10 +2,24 @@
 
 **APIC_A** — a tapeout-oriented Deep Learning Accelerator (DLA) that runs a quantized
 MNIST GAN generator on a structural INT8 matrix engine, backed by physical GlobalFoundries
-180nm (GF180MCU) SRAM macros. The current submission is the **bridge-wrapped chip `dla_engine_chip`**,
+180nm (GF180MCU) SRAM macros. The submission is the **bridge-wrapped chip `dla_engine_chip`**,
 hardened into the Chipathon 2026 **A56 / ACV project block** (1675 × 1110 µm): the eight-macro DLA
 core (A×4 + B×4 SRAM, with the 24-bit result buffer moved out of SRAM into flip-flops) plus a 4-wire
-serial host bridge, presenting the block's 11 pad terminals. It is **signed off** — Magic DRC = 0,
+serial host bridge.
+
+> **This branch (`lvds-integration`) is the LVDS version, prepared to replace `main`.** It adds an
+> **optional LVDS host link**: a three-lane LVDS receiver hard macro (`lvds_rx_x3`, designed in this
+> repo under `analog/lvds_rx/`) on six analog pads, selected by a new `LINK_SEL` strap, for **18 pad
+> terminals** (the 11 below + 7). With `LINK_SEL` low or unconnected (pad pull-down) the chip is
+> exactly the all-digital chip, so the LVDS link is an extra, never a dependency. Layout (run
+> `acv_lvds2`, on a provisional template derived from the ACV frame until the organizers regenerate
+> it for 18 pins): Magic DRC 0, KLayout foundry deck 0, Netgen LVS "Circuits match uniquely", XOR 0,
+> 9-corner timing +14.78 / +0.115 ns at 40 ns, gate-level simulation bit-exact over both links;
+> **open: 2 antenna nets** (1.24× and 1.004× the Metal3 limit). Reports in
+> [`signoff/A56_lvds_phase2/`](signoff/A56_lvds_phase2/), record in
+> [`analog/lvds_rx/LVDS_INTEGRATION.md`](analog/lvds_rx/LVDS_INTEGRATION.md), details in section VIII.
+
+The **all-digital version** (on `main`, 11 pad terminals) is **signed off** — Magic DRC = 0,
 the PDK's KLayout foundry deck = 0 (598 rules, plus antenna), Netgen LVS "Circuits match uniquely",
 XOR = 0, **antenna = 0**, and 9-corner timing closure at 25 MHz on a single 3.3 V supply (setup
 +14.98 ns / hold +0.117 ns @ 40 ns, SPEF), ≈ 125 mW. The padframe's Metal2 DVDD/DVSS power pins are
@@ -108,6 +122,17 @@ commands: `WRITE_A`/`WRITE_B` (2-bit cmd + 10-bit addr + 8-bit data), `START`, a
 (24-bit result shifted out on MISO). `busy`/`done`/`wb_done` are additionally wired straight
 to pads for scope-visible bring-up.
 
+**E. Optional LVDS Host Link (`lvds_rx_x3`, `dla_link_sel.v`; this branch)**
+The three host→chip wires (`SCLK`, `MOSI`, `CS_N`) can also arrive as LVDS pairs (pads N02–N07),
+each through one lane of the `lvds_rx_x3` receiver macro (650 × 194 µm, Metal1–Metal3 only;
+100–450 mV differential at a common mode of 0.05–2.35 V, ≤ 5 ns delay). A strap pin, `LINK_SEL`
+(N01, pad pull-down on), picks the link: low or unconnected = the original CMOS pins and the
+receiver switched off; high = the receiver switched on (through a 2-flop synchroniser), and 64
+clocks later, once it has woken up, the bridge reads the LVDS lanes through a 3-input mux; back to
+low = the CMOS pins again on the next clock. The bridge and the core are unchanged, and `MISO` and
+the status outputs stay on their CMOS pads in both modes. It runs at the CMOS link's speed (a
+de-risking step); a faster burst link can reuse the same pads and macro later.
+
 ---
 
 ## III. Software-to-Hardware Co-Design
@@ -159,15 +184,20 @@ APIC_A/
 │   ├── dla_{a,b,c}_buffer_bank.v   #   A/B SRAM-backed (8 macros: A4/B4); C in flip-flops
 │   ├── gf180_sram_1rw_{256,64}x8.v #   SRAM macro wrappers (behavioral/blackbox)
 │   ├── dla_serial_bridge.v         #   4-wire serial host link
-│   ├── dla_engine_chip.sv          #   ◄── ACV SUBMISSION TOP: serial bridge + DLA core
+│   ├── dla_link_sel.v, lvds_rx_x3.v#   LVDS link select + the receiver macro's Verilog view
+│   ├── dla_engine_chip.sv          #   ◄── ACV SUBMISSION TOP: serial bridge + DLA core (+ LVDS link)
 │   ├── g300_pipeline_top.v         #   GAN orchestrator (sim-only verification harness)
 │   └── g300_quant_params.vh        #   GENERATED requant constants
-├── librelane/                      # Physical flow: config_acv.yaml → run acv_ring4;
-│                                   #   connect_power.py (power-pin connector) · A56_ACV.def template
+├── librelane/                      # Physical flow: config_acv.yaml → run acv_ring6 (all-digital);
+│                                   #   config_acv_lvds.yaml + lvds/ → run acv_lvds2 (LVDS version);
+│                                   #   connect_power.py (power-pin connector) · A56_ACV{,_lvds}.def templates
+├── macros/lvds_rx_x3/              # LVDS receiver hard macro (GDS/LEF/LIB/SPICE/Verilog)
+├── analog/lvds_rx/                 # Its design: gm/ID sizing, simulations, layout, records
 ├── 3V3lib/                         # Third-party 3.3 V std-cell lib (AS 7t3v3) + fixes
 ├── gf180mcu_ocd_ip_sram__sram256x8m8wm1/   # Hardened 256×8 SRAM IP (GDS/LEF/LIB/SPICE)
 ├── SRAM_MACRO/                     # OCD SRAM IP family (incl. the folded-C 64×8 macro)
-├── gds/ , verilog/                 # Signed-off dla_engine_chip GDS + netlist (ACV submission)
+├── gds/ , verilog/                 # dla_engine_chip GDS + netlist (ACV submission; LVDS version here)
+├── signoff/                        # Curated reports: A56 (all-digital), A56_lvds_phase2 (LVDS)
 ├── info.yaml , lvs_config.json     # Chipathon submission (LVS targets dla_engine_chip)
 ├── Papers/                         # APSIPA 2026 papers (tiny / longtin / GAN variants)
 ├── weights/mnist_gan_mlp/          # Original PyTorch checkpoints
@@ -185,6 +215,7 @@ APIC_A/
 │   ├── g300_pipeline_tb.sv         #   Full GAN-on-DLA image test
 │   ├── chip_core_dla_tb.sv         #   Serial bridge → DLA, driven pad-level
 │   ├── dla_engine_chip_tb.sv       #   ACV chip at the pad terminals (directed, bit-exact)
+│   ├── dla_engine_chip_lvds_tb.sv  #   CMOS → LVDS → CMOS on one chip (RTL + gate level)
 │   ├── uvm/dla_uvm.py              #   pyuvm/cocotb UVM env for the DLA core
 │   └── dla_engine_top_gls_tb.sv    #   Post-layout gate-level sim of the routed netlist
 └── sim/run_iverilog.ps1            # Compile + run all testbenches (Icarus Verilog)
@@ -254,11 +285,17 @@ levels — RTL, pad-level (through the serial bridge), and post-layout gate-leve
 | `chip_core_dla_tb` | Pad-level | Serial bridge → DLA, driven exactly like an external host |
 | `dla_engine_top_gls_tb` | **Gate-level** | The routed Stage-1 netlist (`.nl.v`) vs the d3004n4 goldens |
 | `dla_engine_chip_gan_tb` | Pad-level + **Gate-level** | **Full 784-px GAN image driven through the serial bridge** — bit-exact at RTL *and* on the hardened netlist |
+| `dla_engine_chip_lvds_tb` | Pad-level + **Gate-level** | LVDS version: d3004n4 over CMOS, then LVDS, then CMOS on one chip, the unused link driven with garbage or floating; link-switch timing — 12/12 bit-exact at RTL and on the routed netlist |
 
 The full-GAN pipeline test also runs at gate level (`-DGLS`), rendering the complete MNIST
 digit through the routed netlist bit-exactly (~11 min) — closing the gap between "RTL matches
 golden" and "what was taped out matches golden". (Timing signoff is 9-corner STA; the GLS is
 functional/zero-delay, as the cell models carry no `specify` blocks.)
+
+On the LVDS version the full-GAN test also runs over the LVDS link (`+define+LVDS_LINK`, 784/784 at
+RTL, with garbage on the CMOS serial pins), `formal/dla_link_sel.sby` proves the link select
+(k-induction, non-vacuous), and the receiver itself is verified over 45 corners and Monte Carlo,
+before and after layout (`analog/lvds_rx/LVDS_RX_DESIGN_RECORD.md`).
 
 Beyond these directed vectors, the DLA core is exercised by a **pyuvm / cocotb UVM** environment
 (`tb/uvm/`) — constrained-random matmul transactions checked by a golden scoreboard — and the ACV
@@ -311,7 +348,7 @@ Single-supply **3.3 V** **LibreLane** flow on GF180MCU (`gf180mcuD`): logic in t
 
 Chipathon 2026 moved to **per-project blocks**: the auditor generates the padframe and hands back a
 DEF template (`librelane/A56_ACV.def`), and the participant hardens their design *into* that block.
-Our submission is the bridge-wrapped **`dla_engine_chip`** (serial bridge + eight-macro DLA core),
+The all-digital submission (`main`) is the bridge-wrapped **`dla_engine_chip`** (serial bridge + eight-macro DLA core),
 hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config_acv.yaml`, run
 **`acv_ring6`** — **signed off** (curated reports in [`signoff/A56/`](signoff/A56/)):
 
@@ -326,6 +363,29 @@ hardened against the A56 / ACV template (1675 × 1110 µm) via `librelane/config
 | Power (tt, SPEF) | ≈ 125 mW |
 | Block IR-drop (PSM, connected design) | DVDD 54.8 mV / DVSS 70.6 mV (≤3.8% of 3.3 V) |
 | SRAM macros · die | 8 · 1675 × 1110 µm (1.859 mm²) |
+
+**The LVDS version (this branch).** `dla_engine_chip` with the `lvds_rx_x3` receiver, hardened via
+`librelane/config_acv_lvds.yaml` (= `config_acv.yaml` + the LVDS deltas) on
+`librelane/A56_ACV_lvds.def`, a **provisional** 18-pin template derived from the ACV frame by
+`librelane/lvds/make_template.py` (which first regenerates all 64 pins of the organizers' template
+exactly), run **`acv_lvds2`** (reports in [`signoff/A56_lvds_phase2/`](signoff/A56_lvds_phase2/)).
+The receiver sits in a strip of the core that held only standard cells (7.7 % of the core), each input
+directly under its pad, so each pad-to-receiver wire is a straight ~40 µm drop:
+
+| Metric | Value |
+|---|---|
+| Magic DRC | 0 |
+| KLayout foundry deck (variant D) | 0 (660 categories); via-array Vn.2b 0; density: the same whole-die findings as the all-digital chip (no fill) |
+| Netgen LVS / GDS XOR | 0 / 0 — "Circuits match uniquely" (26,167 devices; the receiver is a black box like the SRAMs, its own transistor-level LVS matched standalone) |
+| Antenna | **2 nets open** — Metal3, 1.24× and 1.004× the limit (OpenROAD and the KLayout deck agree) |
+| Setup / hold ws (worst of 9 corners, 40 ns, SPEF) | +14.78 ns / +0.115 ns |
+| Power (tt, SPEF) | ≈ 125 mW, + ≈ 8 mW while the LVDS receiver is on |
+| Gate-level simulation (routed netlist) | bit-exact over CMOS, LVDS and CMOS again; the original pad test passes at the same instant as at RTL |
+
+Two things the LVDS version needed (details in `analog/lvds_rx/LVDS_INTEGRATION.md`): each analog
+pin is given as **one rectangle** spanning its pad's eight ASIG5V fingers — LibreLane turns every
+template rectangle into its own pin, and the detailed router rejects a signal pin made of several
+(`DRT-0302`); and a routing obstruction keeps the new N01 pin's wire out of the power-weld zone.
 
 **Power-pin connector — the fix that closed sign-off.** The gf180 I/O cells deliver a block's power
 as **Metal2 pins in the die margin** (the ACV template puts DVDD and DVSS on the west edge), but
@@ -392,8 +452,10 @@ cell library carries no `specify` timing blocks, so SDF-annotated dynamic gate-l
 possible in this open toolset — a library, not a toolset, limitation. Functional equivalence of the
 routed netlist is covered by zero-delay GLS instead.
 
-The **submission** (`info.yaml`, `lvs_config.json`, `gds/dla_engine_chip.gds`,
-`verilog/dla_engine_chip.nl.v`) points LVS at the signed-off `dla_engine_chip`. Predecessors are
+The **submission** files (`info.yaml`, `lvs_config.json`, `gds/dla_engine_chip.gds`,
+`verilog/dla_engine_chip.nl.v`) are, on this branch, the LVDS version: 18 pins in `info.yaml`, and
+`lvs_config.json` also lists the receiver's SPICE (`macros/lvds_rx_x3/spice/lvds_rx_x3.spice`, the
+netlist its layout matched in strict LVS). On `main` they are the signed-off all-digital chip. Predecessors are
 preserved for reference: the nine-macro *tiny* chip (`config_tiny1.yaml` → `c9_tiny1`) and the
 eleven-macro chip with its full Stage-2 padring (`chip_top`, chip-level LVS 0 over 71,668 devices, on
 the `main-eleven-macro` branch).
@@ -405,7 +467,9 @@ in-margin ODB power-pin connector (`connect_power.py`).
 
 **Post-silicon bring-up** targets a 3.3 V MCU (ESP32 / Pi Pico) bit-banging the 4-wire serial
 protocol: power-on current check → status pins after reset → zero-fill + null START → replay
-the d3004n4 golden vectors → stream the full GAN schedule and render a digit.
+the d3004n4 golden vectors → stream the full GAN schedule and render a digit. The optional LVDS
+link is tested only after that, with an LVDS driver and 100 Ω terminations on the board
+(`TEST_PLAN.md`, T14–T18); `LINK_SEL` left unconnected keeps the all-digital chip.
 
 ---
 

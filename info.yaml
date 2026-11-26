@@ -15,11 +15,12 @@ project:
   title: "Deep Learning Accelerator (DLA) Engine"   # Project title (e.g. "Simple CPU", "PLL", "ADC")
   team: "FindingSRAM"                               # Your Team name
   discord: "mpa216"                                 # Optional: Discord username (for support / communication)
-  description: "Area-optimized INT8 systolic DLA (eight SRAM macros, register-file result buffer) running a pretrained MNIST GAN generator on GF180MCU, single-supply 3.3 V, wrapped behind a 4-wire serial bridge and hardened into the A56/ACV project block via the open LibreLane flow"  # Short one-line description
+  description: "Area-optimized INT8 systolic DLA (eight SRAM macros, register-file result buffer) running a pretrained MNIST GAN generator on GF180MCU, single-supply 3.3 V, wrapped behind a 4-wire serial bridge with an optional 3-lane LVDS host link (lvds_rx_x3 receiver macro, LINK_SEL strap), hardened into the A56/ACV project block via the open LibreLane flow"  # Short one-line description
   lvs_config: "lvs_config.json"                     # relative path (from repo root) to the lvs_config.json file
   gf_def_ready: true            # data ready for def generation with global foundries' pad frame
   ws_def_ready: false           # data ready for def generation with wafer space pad frame (no WS frame for ACV yet)
-  drc_ready: true               # data ready for integration and DRC
+  drc_ready: false              # data ready for integration and DRC -- LVDS version: false until its 2 open
+                                #   antenna nets are closed (DRC/LVS/XOR otherwise clean, signoff/A56_lvds_phase2/)
   lvs_ready: true               # data ready for integrated LVS
   export_control: "Export_control/Export_Control_GF_Rev8.2.docx"   # Required export control document
   # Post-silicon test plan: TEST_PLAN.md (repo root)
@@ -67,7 +68,8 @@ project:
 #   Note: secondary_esd flag is ignored
 
 # ======================================================
-# A56 / ACV pin list (11 pads signed off + 7 LVDS on branch lvds-integration). The accelerator's 53-bit interface is wrapped
+# A56 / ACV pin list: 18 pads = the 11 of the signed-off all-digital chip + 7 for the optional LVDS
+# link (LINK_SEL low or unbonded = the all-digital chip). The accelerator's 53-bit interface is wrapped
 # behind a 4-wire serial bridge, so only 9 digital signals + supplies leave the
 # block. Order below = the auditor's generated padframe (A56_ACV.def, 2026-08-31):
 # pin 1 lands on slot W12 (bottom of the west edge), then upward. Every control

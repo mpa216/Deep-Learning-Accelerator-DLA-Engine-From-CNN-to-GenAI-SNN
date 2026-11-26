@@ -2,15 +2,18 @@
 
 The hardened, power-welded ACV block with the `lvds_rx_x3` receiver macro, built 2026-11-26 on the
 **provisional** frame template (`librelane/A56_ACV_lvds.def`, derived from the existing frame until the organizers
-send the official one). This is the phase-2 result of `analog/lvds_rx/LVDS_INTEGRATION.md`; it is not a submission.
-The submission files at the repo root (`gds/`, `verilog/`) are still the signed-off chip without the receiver; they
-change in phase 3, after the official template, and the signed-off reports stay in `signoff/A56/`.
+send the official one). This is the phase-2 result of `analog/lvds_rx/LVDS_INTEGRATION.md`. On branch `lvds-integration` the submission
+files at the repo root are this layout (`gds/dla_engine_chip.gds` = the GDS below, `verilog/dla_engine_chip.nl.v` =
+its netlist, copied 2026-11-26), so the branch can replace `main`; `main` keeps the signed-off all-digital chip,
+whose reports stay in `signoff/A56/`.
 
-- **GDS:** `librelane/runs/acv_lvds2/final/gds/dla_engine_chip.gds` (not tracked; `runs/` is git-ignored),
+- **GDS:** `gds/dla_engine_chip.gds` on this branch (a copy of `librelane/runs/acv_lvds2/final/gds/dla_engine_chip.gds`;
+  `runs/` is git-ignored),
   22,633,684 bytes, SHA-256 `51323bd9f5a5f8a2aad9f50f572a64fd27a1b9d74397ed376bc1587fb0b37af2`.
 - **Welded database:** `librelane/runs/acv_lvds2/final/odb/_connected.odb` (`final/odb/dla_engine_chip.odb` next to it
   is a stale pre-weld copy, as in the signed-off `acv_ring6`; every sign-off step read the welded one).
-- **Netlist:** `librelane/runs/acv_lvds2/final/nl/dla_engine_chip.nl.v` (SHA-256 `5f9d8625c34b6959...`).
+- **Netlist:** `verilog/dla_engine_chip.nl.v` on this branch (= `librelane/runs/acv_lvds2/final/nl/dla_engine_chip.nl.v`,
+  SHA-256 `5f9d8625c34b6959...`).
 
 ## Results: expected against actual
 

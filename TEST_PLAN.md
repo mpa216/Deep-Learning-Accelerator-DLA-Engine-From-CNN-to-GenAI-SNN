@@ -3,7 +3,8 @@
 Chipathon 2026 · team FindingSRAM · GF180MCU · single-supply 3.3 V
 
 This is the plan for testing the manufactured `dla_engine_chip` (the eight-SRAM INT8 accelerator
-behind a 4-wire serial bridge, in the 11-pad ACV block). It covers the equipment, the
+behind a 4-wire serial bridge, in the ACV block: 11 pads, plus 7 for the optional LVDS host link of
+the LVDS version, §1 and T14–T18). It covers the equipment, the
 step-by-step bring-up, pass/fail criteria, and how the results are recorded. The same frame
 sequences have already been checked pre-silicon on the taped-out gate-level netlist (§7), so
 every silicon result has a known bit-exact expected value.
@@ -25,13 +26,19 @@ every silicon result has a known bit-exact expected value.
 | W20 | `wb_done` | out | `bi_24t`, OE=1 | Write-back finished; stays high until the next START |
 | W21 | `DVDD` | power | `dvdd` | 3.3 V |
 | W22 | `DVSS` | ground | `dvss` | 0 V |
+| N01 | `LINK_SEL` | in | `in_c`, pull-down **on** | LVDS version: 0 or unconnected = the CMOS serial pins W14–W16; 1 = the LVDS lanes |
+| N02 / N03 | `LVDS_SCLK_P` / `_N` | in, differential | `asig_5p0` | SCLK as an LVDS pair → receiver lane 0 |
+| N04 / N05 | `LVDS_MOSI_P` / `_N` | in, differential | `asig_5p0` | MOSI as an LVDS pair → lane 1 |
+| N06 / N07 | `LVDS_CSN_P` / `_N` | in, differential | `asig_5p0` | CS_N as an LVDS pair → lane 2 |
 
-All pad pull-ups and pull-downs are **disabled** (tied low in `rtl/dla_engine_chip.sv`), so the
-host must actively drive every input. Never leave `clk`, `rst_n`, `SCLK`, `MOSI` or `CS_N`
+All pad pull-ups and pull-downs are **disabled** (tied low in `rtl/dla_engine_chip.sv`), except the
+pull-down of `LINK_SEL`, which is on, so an unconnected `LINK_SEL` selects the CMOS link and the chip
+behaves exactly like the all-digital one. Otherwise the host must actively drive every input. Never leave `clk`, `rst_n`, `SCLK`, `MOSI` or `CS_N`
 floating. Outputs are 24 mA push-pull at 3.3 V CMOS levels.
 
 Expected power from sign-off: about 125 mW at 25 MHz (typical corner, SPEF-annotated). The design
-is dynamic-dominated, so at a 1 MHz bring-up clock expect only a few mA.
+is dynamic-dominated, so at a 1 MHz bring-up clock expect only a few mA. The LVDS receiver adds about
+2.4 mA (typical; at most 3.5 mA) while `LINK_SEL` = 1, and about 0.1 µA while it is off.
 
 ## 2. Equipment
 
@@ -44,6 +51,7 @@ is dynamic-dominated, so at a 1 MHz bring-up clock expect only a few mA.
 | DMM | Supply current and pad voltages |
 | Test board | Socket or breakout for the delivered package; 100 nF decoupling at each DVDD pad plus 10 µF bulk; series resistors (~33 Ω) on the MCU→chip lines |
 | ESD mat and wrist strap | Handling |
+| LVDS driver (a 3-channel LVDS transmitter IC, or an FPGA's LVDS outputs) and a 100 Ω differential termination at the chip end of each pair | LVDS link tests T14–T18 only: 100–450 mV differential, common mode 0.05–2.35 V. The chip has no on-die termination |
 
 Use GPIO bit-banging rather than a hardware SPI peripheral: frames are not byte multiples, and
 READ_C needs a turnaround.
@@ -69,6 +77,13 @@ Rules:
 - Address maps: **A: `addr = row*256 + k`**, **B: `addr = k*4 + col`**, READ_C:
   `addr[3:0] = row*4 + col` (N = 4, K = 256).
 
+**Over the LVDS link** (`LINK_SEL` = 1) the same frames go out on the three LVDS pairs (P carries the
+signal, N its complement); MISO still comes back on W17. The receiver adds at most 5 ns (8 ns at
+100 mV), which the SCLK ≤ clk/8 rule already covers. Change `LINK_SEL` only between frames (CS_N
+high on both links), and after raising it wait at least 67 `clk` cycles (3 for the synchroniser +
+64 of receiver wake time; 2.7 µs at 25 MHz) before the first LVDS frame. The receiver has no
+failsafe: while `LINK_SEL` = 1, the host must drive all three pairs.
+
 The host driver is a direct port of the pad-level testbench `tb/dla_engine_chip_tb.sv`. That
 testbench drives the pads exactly as the MCU will, so its frame sequences are the reference
 implementation.
@@ -93,8 +108,14 @@ Run the steps in order. Stop at the first failure and debug before going on.
 | T11 | Frequency shmoo | Repeat T6 at clk = 1, 5, 10, 15, 20, 25, 30, 35 MHz (SCLK = clk/8) | Pass up to at least 25 MHz (signed-off speed). Record the first failing frequency |
 | T12 | Voltage shmoo | Repeat T6 at 25 MHz with DVDD = 3.0, 3.15, 3.3, 3.45, 3.6 V | Pass over 3.0–3.6 V (the STA corner range) |
 | T13 | Robustness | 10⁴ back-to-back T6 iterations with random A/B data checked against a Python model; abort a frame mid-stream with `CS_N` and confirm the next frame is correct | 0 mismatches |
+| T14 | LVDS version: default link | `LINK_SEL` unconnected; repeat T6 over the CMOS pins with the LVDS pairs idle or unconnected | Bit-exact; I_DD as in T6 (receiver off) |
+| T15 | Receiver wake | Between frames, drive the LVDS pairs idle (CS_N pair high), then set `LINK_SEL` = 1 | I_DD rises by about 2.4 mA |
+| T16 | d3004n4 over LVDS | After ≥ 67 clk, send T6's frames on the LVDS pairs, CMOS SCLK/MOSI/CS_N held idle | **−34139, 59877, −36996, −23021**, bit-exact |
+| T17 | Switch back | Set `LINK_SEL` = 0 between frames; repeat T6 over CMOS | Bit-exact; I_DD back to the T6 value |
+| T18 | LVDS margins | Repeat T16 at 350 / 200 / 100 mV differential and common mode 0.2 / 1.2 / 2.2 V; then T9 (full GAN) over LVDS | Pass across 100–450 mV and 0.05–2.35 V; record any failing point |
 
-T4–T6 are the "does the die compute" gate. T9 is the end-to-end demonstration.
+T4–T6 are the "does the die compute" gate. T9 is the end-to-end demonstration. T14–T18 run only
+after T6 passes: the LVDS link is optional, and a failure there does not affect the CMOS link.
 
 ## 5. Samples and records
 
@@ -114,6 +135,7 @@ T4–T6 are the "does the die compute" gate. T9 is the end-to-end demonstration.
 | Wrong values with a power-of-two pattern | Frame misalignment (bit count) or the wrong A/B address map (see §3) |
 | T6 passes but T7 fails at specific addresses | SRAM macro defect. Map it to macro (A row / B column) and address |
 | Passes at 1 MHz, fails at speed | Measure the shmoo edge and compare with the STA margin (+14.98 ns setup @ 40 ns) |
+| CMOS passes, LVDS fails | `LINK_SEL` really high (it has a pull-down), wake time (≥ 67 clk), missing 100 Ω terminations, P/N swapped, differential or common mode outside 100–450 mV / 0.05–2.35 V |
 
 ## 7. Pre-silicon evidence (what the expected values rest on)
 
@@ -125,9 +147,17 @@ All on `main`, all bit-exact against Python goldens:
   k-induction on the controller (`formal/`). X-propagation testbench.
 - Physical sign-off (`signoff/A56/`): Magic DRC 0, KLayout foundry DRC 0, LVS match, antenna 0,
   STA setup +14.98 ns / hold +0.117 ns over 9 corners at 40 ns.
+- LVDS version (branch `lvds-integration`): CMOS → LVDS → CMOS on one chip, 12/12 bit-exact at RTL
+  and on the routed netlist (`tb/dla_engine_chip_lvds_tb.sv`); full GAN 784/784 over the LVDS link at
+  RTL (`tb/dla_engine_chip_gan_tb.sv`, `+define+LVDS_LINK`); formal proof of the link select
+  (`formal/dla_link_sel.sby`); the receiver's own verification over 45 corners and Monte Carlo, before
+  and after layout (`analog/lvds_rx/LVDS_RX_DESIGN_RECORD.md`); layout reports in
+  `signoff/A56_lvds_phase2/`.
 
 ## 8. Open dependencies
 
+- LVDS version: the organizers' regenerated 18-pin template, and an LVDS driver plus terminations
+  on the board (§2).
 - Package and board: depends on what the shuttle returns. The board in §2 is designed once the
   package and pinout are known.
 - Host firmware/scripts (`host/`): to be written before the chips return, ported 1:1 from
