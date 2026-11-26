@@ -13,6 +13,11 @@ Checks (each prints expected vs actual):
   7. (routed designs) each LVDS_* net is a short drop under its own pad.
   8. (routed designs) no foreign signal wire inside the macro obstructions, and no switching net on Metal1-3 beside its RX
      input strips (top margin); all other crossings reported per layer and side.
+  9. every pin against the organizers' OFFICIAL template (layout_announcement/A56.def_2026-11-26): same pin set;
+     a one-rectangle pin has exactly the official box; a multi-finger signal pin (the analog pads) is ONE box equal
+     to the bounding box of its official fingers; the power pins carry every official rectangle.
+ 10. the footprint: the die area is the official one, and everything in the block (cells, macros, the PDN ring,
+     wires, pins) lies inside it.
 """
 import json
 import re
@@ -26,6 +31,8 @@ MACRO = "u_lvds"
 ORIGIN_UM = (121.05, 875.80)
 HALO_UM = 10.0
 TEMPLATE = __file__.replace("lvds/check_integration.py", "A56_ACV_lvds.def")
+OFFICIAL = __file__.replace("librelane/lvds/check_integration.py",
+                            "layout_announcement/A56.def_2026-11-26/A56/project_defs/ACV/A56_ACV.def")
 LVDS_PORTS = {"LVDS_SCLK_P": "RX0_P", "LVDS_SCLK_N": "RX0_N", "LVDS_MOSI_P": "RX1_P",
               "LVDS_MOSI_N": "RX1_N", "LVDS_CSN_P": "RX2_P", "LVDS_CSN_N": "RX2_N"}
 
@@ -318,6 +325,65 @@ if routed:
             "crossings_by_layer_and_side": info})
 else:
     print("[SKIP] lvds_routes, over_macro_routing: the LVDS nets carry no routing yet")
+
+# 9. every pin against the official template
+off = open(OFFICIAL).read()
+odbu = int(re.search(r"UNITS DISTANCE MICRONS (\d+)", off).group(1))
+opins = {}
+for blk in off.split("\nPINS ", 1)[1].split("END PINS")[0].split(" ;\n"):
+    m = re.search(r"-\s+(\S+)\s+\+\s+NET\s+\S+.*?\+\s+USE\s+(\w+)", blk, re.S)
+    if m:
+        opins[m.group(1)] = (m.group(2), sorted(
+            (l, round(int(a) * dbu / odbu), round(int(b) * dbu / odbu), round(int(c) * dbu / odbu),
+             round(int(d) * dbu / odbu))
+            for l, a, b, c, d in re.findall(r"LAYER\s+(\S+)\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)", blk)))
+dpins = {}
+for n, bt in bterms.items():
+    dpins[n] = sorted((bx.getTechLayer().getName(), bx.xMin(), bx.yMin(), bx.xMax(), bx.yMax())
+                      for bp in bt.getBPins() for bx in bp.getBoxes())
+o_missing = sorted(n for n in opins if n not in dpins)
+o_extra = sorted(n for n in dpins if n not in opins)
+o_bad, n_exact, n_bar, n_power = [], 0, 0, 0
+for n, (use, rects) in opins.items():
+    if n not in dpins:
+        continue
+    got = dpins[n]
+    if use in ("POWER", "GROUND"):
+        ok = all(r in got for r in rects)
+        n_power += ok
+    elif len(rects) > 1:
+        bar = [(rects[0][0], min(r[1] for r in rects), min(r[2] for r in rects),
+                max(r[3] for r in rects), max(r[4] for r in rects))]
+        ok = got == bar
+        n_bar += ok
+    else:
+        ok = got == rects
+        n_exact += ok
+    if not ok:
+        o_bad.append(n)
+report("official_template", not o_missing and not o_extra and not o_bad,
+       f"the {len(opins)} pins of the official template, no other pin: one-rectangle pins with exactly the official "
+       "box, each multi-finger analog pin as ONE box = the bounding box of its official fingers, the power pins "
+       "carrying every official rectangle",
+       f"{len(opins) - len(o_missing)} of {len(opins)} present (missing {o_missing}, extra {o_extra}); exact "
+       f"{n_exact}, analog bars {n_bar}, power pins complete {n_power}; mismatches {o_bad}")
+
+# 10. footprint inside the official die
+die = block.getDieArea()
+odie = [round(int(v) * dbu / odbu) for v in re.search(
+    r"DIEAREA\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)", off).groups()]
+bb = block.getBBox()
+inst_x = max(i.getBBox().xMax() for i in block.getInsts())
+inst_y = max(i.getBBox().yMax() for i in block.getInsts())
+sw = [b for n in block.getNets() if n.isSpecial() for s in n.getSWires() for b in s.getWires()]
+sw_x = max(b.xMax() for b in sw) if sw else 0
+inside = (bb.xMin() >= odie[0] and bb.yMin() >= odie[1] and bb.xMax() <= odie[2] and bb.yMax() <= odie[3])
+report("footprint", [die.xMin(), die.yMin(), die.xMax(), die.yMax()] == odie and inside,
+       f"die = the official {um(odie[2]):g} x {um(odie[3]):g} um, and the bounding box of everything in the block "
+       "inside it",
+       f"die {um(die.xMax()):g} x {um(die.yMax()):g} um; block bounding box x {um(bb.xMin()):.2f}-{um(bb.xMax()):.2f}, "
+       f"y {um(bb.yMin()):.2f}-{um(bb.yMax()):.2f} um; furthest cell or macro edge x {um(inst_x):.2f} / "
+       f"y {um(inst_y):.2f} um; furthest power wire x {um(sw_x):.2f} um")
 
 print(f"INTEGRATION_CHECKS {'PASS' if fails == 0 else 'FAIL'} ({fails} failed)")
 if OUT:

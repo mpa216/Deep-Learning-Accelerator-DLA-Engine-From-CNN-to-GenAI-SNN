@@ -1,0 +1,14 @@
+main exit 0 (994 s)
+antenna exit 1 (429 s)
+density exit 1 (47 s)
+via-array exit 0
+/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/integ/kdrc_acv_lvds7b/antenna/acv_lvds7b_antenna.lyrdb: 0 items in 0 of 11 categories
+/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/integ/kdrc_acv_lvds7b/density/acv_lvds7b_density.lyrdb: 6 items in 6 of 6 categories
+         1  M1.4
+         1  M2.4
+         1  M3.4
+         1  M4.4
+         1  M5.4
+         1  MT.3
+/foss/designs/.claude/worktrees/lvds-rx/analog/lvds_rx/.scratch/integ/kdrc_acv_lvds7b/main/acv_lvds7b_main.lyrdb: 0 items in 0 of 660 categories
+KDRC_DONE

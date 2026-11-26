@@ -12,6 +12,7 @@
 #
 # Run inside apic_headless:
 #   docker exec apic_headless bash -lc 'cd /foss/designs/.claude/worktrees/lvds-rx/librelane && bash lvds/build_acv_lvds_connected.sh acv_lvds1'
+# SKIP_HARDEN=1 bash lvds/build_acv_lvds_connected.sh <tag> resumes an existing run at the weld (step 2).
 # Any further arguments go to BOTH librelane calls (e.g. -c KEY=VALUE overrides), so the harden and
 # the sign-off resume always run with the same settings.
 # ---------------------------------------------------------------------------
@@ -23,7 +24,10 @@ EXTRA=("$@")
 CFG=config_acv_lvds.yaml
 
 # 1) everything up to fill insertion + cell tables; stop BEFORE streamout
-librelane "$CFG" --run-tag "$TAG" --to Odb.CellFrequencyTables "${EXTRA[@]}"
+#    (SKIP_HARDEN=1 resumes an existing run at step 2, e.g. after the weld refused to write)
+if [ "${SKIP_HARDEN:-0}" != 1 ]; then
+    librelane "$CFG" --run-tag "$TAG" --to Odb.CellFrequencyTables "${EXTRA[@]}"
+fi
 
 RUN="runs/$TAG"
 CLEAN_ODB=$(ls "$RUN"/*-odb-cellfrequencytables/dla_engine_chip.odb)   # pristine, pre-streamout

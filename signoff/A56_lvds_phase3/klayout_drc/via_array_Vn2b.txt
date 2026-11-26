@@ -1,0 +1,9 @@
+Via1 [design (SRAM IP excluded)]: cuts=107026 clusters=79459 big=0 VIOLATIONS=0
+Via1 [incl. SRAM IP]: cuts=315458 clusters=152259 big=0 VIOLATIONS=0
+Via2 [design (SRAM IP excluded)]: cuts=87574 clusters=60052 big=4 VIOLATIONS=0
+Via2 [incl. SRAM IP]: cuts=213966 clusters=106828 big=4 VIOLATIONS=0
+Via3 [design (SRAM IP excluded)]: cuts=40524 clusters=13968 big=0 VIOLATIONS=0
+Via3 [incl. SRAM IP]: cuts=40524 clusters=13968 big=0 VIOLATIONS=0
+Via4 [design (SRAM IP excluded)]: cuts=44088 clusters=40384 big=0 VIOLATIONS=0
+Via4 [incl. SRAM IP]: cuts=44088 clusters=40384 big=0 VIOLATIONS=0
+Via5: layer 82/0 not present

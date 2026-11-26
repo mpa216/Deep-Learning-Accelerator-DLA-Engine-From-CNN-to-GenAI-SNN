@@ -1,31 +1,35 @@
 #!/usr/bin/env python3
-"""Derive the ACV block template (FP_DEF_TEMPLATE) for the LVDS integration from
-the EXISTING ACV frame -- a PROVISIONAL stand-in until the organizers regenerate
-the official template from the updated info.yaml.
+"""Write the ACV block template for the flow (FP_DEF_TEMPLATE = librelane/A56_ACV_lvds.def) from the
+organizers' OFFICIAL 18-pin template (A56.def.tgz of 2026-11-26, unpacked in
+layout_announcement/A56.def_2026-11-26/; macOS metadata files removed, nothing else changed).
 
-How the organizers build a block template (read off their files, then verified
-below): every user pin is the set of Metal2 shapes of its pad-cell terminal that
-reach the pad's core-side edge, projected 1 um into the block (DEF units 200/um),
-in the block's coordinates (origin = the block's lower-left corner in the padring).
+How the organizers build a block template (read off their files, verified by step 1): every user pin
+is the set of Metal2 shapes of its pad-cell terminal that reach the pad's core-side edge, projected
+1 um into the block (DEF units 200/um), in the block's coordinates (origin = the block's lower-left
+corner in the padring).
 
-  1. SELF-CHECK: regenerate every pin of the signed-off A56_ACV.def from the pad
-     map + padring DEF + the gf180mcu_fd_io LEFs and require an EXACT match
-     (pin order, names, directions, uses, every rectangle).
-  2. Append the pins that info.yaml lists after the signed-off ones, on the free
-     north slots N01, N02, ... in order (the frame already holds asig_5p0 pads
-     there), and write librelane/A56_ACV_lvds.def plus a pin report.
-  3. ONE deviation from the rule, for the new analog pins only (see merge_comb):
-     a signal terminal with several fingers on the core edge (asig_5p0 ASIG5V: 8)
-     is written as ONE rectangle, the bounding box of its finger projections.
-     LibreLane's relocate_pins turns every template rectangle into its own pin,
-     and the detailed router rejects a signal terminal with several pins
-     (TritonRoute DRT-0302 "Unsupported multiple pins on bterm", run acv_lvds1,
-     2026-11-26). The organizers' A56_ACV.def has no such pin (only DVDD/DVSS
-     have several rectangles, and power pins are allowed several).
+  1. SELF-CHECK: derive every pin from the official frame (pad map + padring DEF + interface + the
+     gf180mcu_fd_io LEFs) and require an EXACT match with the official A56_ACV.def: pin order, names,
+     directions, uses and every rectangle, all 73 pins (the 7 new pads included). Also: the pad map
+     lists exactly info.yaml's pins, each slot holds the pad cell its pin type needs, the die area is
+     the interface's size, and the file has no BLOCKAGES (ApplyDEFTemplate would ignore them).
+  2. Write the flow template = the official file with ONE change, for the analog pins only (see
+     merge_comb): a signal terminal with several fingers on the core edge (asig_5p0 ASIG5V: 8) becomes
+     ONE rectangle, the bounding box of its fingers. LibreLane's relocate_pins turns every template
+     rectangle into its own pin, and the detailed router rejects a signal terminal with several pins
+     (TritonRoute DRT-0302, run acv_lvds1, 2026-11-26). It is the same node (the fingers are one
+     terminal, joined inside the pad); the bar keeps every foreign wire off all the fingers, and its
+     clearance to the pad's other Metal2 (LEF pins + OBS) is checked. Every other line is copied
+     byte for byte; the written file is read back and compared.
+
+Before 2026-11-26 this script derived a PROVISIONAL template from the 11-pin frame in
+layout_announcement/A56.def/ (1675 um wide) by appending the 9 new pins on the free north slots; runs
+acv_lvds1..acv_lvds5b used it (that version of the script and its template: commit 108d3a9).
 
 Run inside apic_headless (needs the PDK LEFs), from anywhere:
     python3 librelane/lvds/make_template.py
 """
+import hashlib
 import json
 import pathlib
 import re
@@ -34,18 +38,19 @@ import sys
 import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-FRAME = ROOT / "layout_announcement/A56.def/A56/project_defs/ACV"
+FRAME = ROOT / "layout_announcement/A56.def_2026-11-26/A56/project_defs/ACV"
+OFFICIAL_DEF = FRAME / "A56_ACV.def"
 PADRING_DEF = FRAME / "A56_ACV_padring.def"
 PAD_MAP = FRAME / "A56_ACV_pad_map.yaml"
 IFACE = FRAME / "A56_ACV_interface.yaml"
-BASE_DEF = ROOT / "librelane/A56_ACV.def"          # the flow's copy (auditor's file minus BLOCKAGES)
 OUT_DEF = ROOT / "librelane/A56_ACV_lvds.def"
 OUT_REPORT = ROOT / "librelane/lvds/A56_ACV_lvds_pins.json"
 INFO = ROOT / "info.yaml"
 LEFDIR = pathlib.Path("/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/lef")
 DBU = 200            # template DEF units per micron
-EXTEND_UM = 1.0      # the auditor projects each terminal 1 um into the block
+EXTEND_UM = 1.0      # the organizers project each terminal 1 um into the block
 M2_SPACING = 0.28    # gf180mcu Metal2 minimum spacing (M2.2a), um
+SIGNED_OFF = 11      # info.yaml pins of the signed-off all-digital chip; the rest are the LVDS integration's
 
 CELL = {
     "input_cmos": "gf180mcu_fd_io__in_c",
@@ -55,7 +60,7 @@ CELL = {
     "ground": "gf180mcu_fd_io__dvss",
     "analog": "gf180mcu_fd_io__asig_5p0",
 }
-# (cell terminal, user pin name), in the auditor's per-pad order
+# (cell terminal, user pin name), in the organizers' per-pad order
 TERMS = {
     "input_cmos": [("PU", "{n}_PU"), ("PD", "{n}_PD"), ("Y", "{n}")],
     "input_schmitt": [("PU", "{n}_PU"), ("PD", "{n}_PD"), ("Y", "{n}")],
@@ -146,9 +151,8 @@ def build_pins(pin_list, slots, padring, lefs, origin, block_h):
     for (name, io_type), slot in zip(pin_list, slots):
         cell = CELL[io_type]
         place = padring[slot]
-        if place[0] != cell and io_type != "analog":
-            # the frame holds an asig_5p0 filler on free slots; a digital pin changes that pad
-            pass
+        if place[0] != cell:
+            raise RuntimeError(f"{name}: slot {slot} holds {place[0]}, the pin needs {cell}")
         lefpins, size, _ = lefs[cell]
         for term, pat in TERMS[io_type]:
             lp = lefpins[term]
@@ -214,6 +218,10 @@ def def_text(p):
     return "\n".join(lines)
 
 
+def um_rects(rects):
+    return [[r[1] / DBU, r[2] / DBU, r[3] / DBU, r[4] / DBU] for r in rects]
+
+
 def main():
     pad_map = yaml.safe_load(PAD_MAP.read_text())
     iface = yaml.safe_load(IFACE.read_text())
@@ -222,69 +230,96 @@ def main():
     origin = tuple(float(v) for v in iface["origin_microns"])
     block_w, block_h = (float(v) for v in iface["size_microns"])
     lefs = {c: parse_lef(LEFDIR / f"{c}.lef") for c in set(CELL.values())}
+    official_text = OFFICIAL_DEF.read_text()
+    sha = hashlib.sha256(OFFICIAL_DEF.read_bytes()).hexdigest()
 
-    # slot order of the block: the pad map's W slots, then the free N slots
-    used = [p for p in pad_map["pads"] if "pin_name" in p]
-    free = [p["slot"] for p in pad_map["pads"] if "pin_name" not in p]
-    signed = [(p["pin_name"], p["io_type"]) for p in used]
-    signed_slots = [p["slot"] for p in used]
-
-    # ---- 1. self-check against the auditor's template --------------------------------
-    base_text = BASE_DEF.read_text()
-    auditor = parse_def_pins(base_text)
-    mine = build_pins(signed, signed_slots, padring, lefs, origin, block_h)
+    # ---- 1. self-check against the official template ----------------------------------
     problems = []
-    if [p["name"] for p in mine] != [p["name"] for p in auditor]:
+    die = tuple(int(v) for v in re.search(
+        r"DIEAREA\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)", official_text).groups())
+    if die != (0, 0, to_dbu(block_w), to_dbu(block_h)):
+        problems.append(f"DIEAREA {die} is not the interface size {block_w} x {block_h} um")
+    if re.search(r"^\s*BLOCKAGES\b", official_text, re.M):
+        problems.append("the official template has BLOCKAGES (enforce them as ROUTING_OBSTRUCTIONS first)")
+    used = [p for p in pad_map["pads"] if "pin_name" in p]
+    pin_list = [(p["pin_name"], p["io_type"]) for p in used]
+    if pin_list != [(p["name"], p["io_type"]) for p in info["pins"]]:
+        problems.append("the pad map does not list info.yaml's pins in order (template from another info.yaml?)")
+    official = parse_def_pins(official_text)
+    try:
+        mine = build_pins(pin_list, [p["slot"] for p in used], padring, lefs, origin, block_h)
+    except RuntimeError as e:
+        sys.exit(f"self-check failed: {e}")
+    if [p["name"] for p in mine] != [p["name"] for p in official]:
         problems.append("pin order / names differ")
-    for a, b in zip(auditor, mine):
+    for a, b in zip(official, mine):
         for k in ("direction", "use", "rects"):
             if a[k] != b[k]:
-                problems.append(f"{a['name']}: {k} auditor={a[k]} derived={b[k]}")
-    print(f"self-check: {len(mine)} derived pins vs {len(auditor)} in {BASE_DEF.name}: "
+                problems.append(f"{a['name']}: {k} official={a[k]} derived={b[k]}")
+    print(f"self-check: {len(mine)} pins derived from the official frame vs {len(official)} in "
+          f"{OFFICIAL_DEF.relative_to(ROOT)} (sha256 {sha[:8]}): "
           + ("EXACT MATCH" if not problems else f"{len(problems)} DIFFERENCES"))
     for p in problems[:20]:
         print("   ", p)
     if problems:
-        sys.exit("self-check failed: the derivation rule does not reproduce the auditor's template")
+        sys.exit("self-check failed: the derivation rule does not reproduce the official template")
 
-    # ---- 2. append the new info.yaml pins on the free north slots ------------------
-    all_pins = [(p["name"], p["io_type"]) for p in info["pins"]]
-    if all_pins[:len(signed)] != signed:
-        sys.exit("info.yaml no longer starts with the signed-off pins in the pad-map order")
-    new = all_pins[len(signed):]
-    new_slots = free[:len(new)]
-    added = [merge_comb(p, lefs) for p in build_pins(new, new_slots, padring, lefs, origin, block_h)]
-
-    header = ("# PROVISIONAL block template for the LVDS integration (branch lvds-integration).\n"
-              "# Derived by librelane/lvds/make_template.py from the existing ACV frame: the signed-off\n"
-              f"# {len(auditor)} pins are byte-for-byte the auditor's A56_ACV.def (self-check: exact match);\n"
-              f"# {len(added)} pins appended for {', '.join(n for n, _ in new)}\n"
-              f"# on slots {', '.join(new_slots)}. Each analog pin is ONE rectangle spanning its pad's 8 ASIG5V\n"
-              "# fingers (LibreLane makes one pin per rectangle; the router rejects multi-pin signal\n"
-              "# terminals, DRT-0302). Replace with the organizers' regenerated template.\n")
-    out = base_text.replace(f"PINS {len(auditor)} ;", f"PINS {len(auditor) + len(added)} ;", 1)
-    out = out.replace("END PINS", "\n".join(def_text(p) for p in added) + "\nEND PINS", 1)
+    # ---- 2. the flow template: the official file, each multi-finger signal pin as one bar -----
+    merged = [merge_comb(p, lefs) for p in mine if p["use"] == "SIGNAL" and len(p["rects"]) > 1]
+    out = official_text
+    for p in merged:
+        pat = re.compile(rf"^- {re.escape(p['name'])} \+ NET .*? ;\n", re.M | re.S)
+        out, n = pat.subn(lambda _m, p=p: def_text(p) + "\n", out, count=1)
+        if n != 1:
+            sys.exit(f"{p['name']}: pin block not found in the official file")
+    header = ("# Flow template of the LVDS-integrated ACV block (FP_DEF_TEMPLATE), written by\n"
+              "# librelane/lvds/make_template.py from the organizers' official template\n"
+              f"# {OFFICIAL_DEF.relative_to(ROOT)}\n"
+              f"# (2026-11-26, sha256 {sha[:16]}, {len(official)} pins, {block_w:g} x {block_h:g} um).\n"
+              f"# Self-check: all {len(official)} pins re-derived from the official frame, exact match.\n"
+              f"# ONE change: each analog pin ({', '.join(p['name'] for p in merged)}) is ONE rectangle,\n"
+              "# the bounding box of its pad's 8 ASIG5V fingers (LibreLane makes one pin per rectangle and\n"
+              "# the router rejects multi-pin signal terminals, DRT-0302). All else is the official file.\n")
     OUT_DEF.write_text(header + out)
 
+    # read back: identical to the official file except the merged pins, which are their bounding box
+    back = {p["name"]: p for p in parse_def_pins(OUT_DEF.read_text())}
+    bars = {p["name"]: p["rects"] for p in merged}
+    for a in official:
+        b = back.get(a["name"])
+        want = bars.get(a["name"], a["rects"])
+        if b is None or (b["direction"], b["use"], b["rects"]) != (a["direction"], a["use"], want):
+            sys.exit(f"read-back mismatch on {a['name']}")
+    if len(back) != len(official) or out.count(";") != official_text.count(";"):
+        sys.exit("read-back: pin count or statement count changed")
+
+    new_names = {n for n, _ in pin_list[SIGNED_OFF:]}
+    bar_of = {p["name"]: p for p in merged}
     rep = []
-    for p in added:
-        xs = [r[1] / DBU for r in p["rects"]] + [r[3] / DBU for r in p["rects"]]
+    for p in mine:
+        if p["user_pin"] not in new_names:
+            continue
+        q = bar_of.get(p["name"], p)
+        xs = [r[1] / DBU for r in q["rects"]] + [r[3] / DBU for r in q["rects"]]
         rep.append({k: p[k] for k in ("name", "user_pin", "slot", "cell", "terminal", "direction", "use")}
-                   | {"n_rects": len(p["rects"]), "x_um": [min(xs), max(xs)],
-                      "y_um": [p["rects"][0][2] / DBU, p["rects"][0][4] / DBU],
-                      "rects_um": [[r[1] / DBU, r[2] / DBU, r[3] / DBU, r[4] / DBU] for r in p["rects"]]}
-                   | ({"merged_from_fingers_um": [[r[1] / DBU, r[2] / DBU, r[3] / DBU, r[4] / DBU]
-                                                  for r in p["fingers"]],
-                       "pad_metal_clearance_um": p["pad_metal_clearance_um"]} if "fingers" in p else {}))
-    OUT_REPORT.write_text(json.dumps({"base": str(BASE_DEF.relative_to(ROOT)), "self_check": "exact match",
-                                      "signed_off_pins": len(auditor), "added_pins": rep}, indent=1))
-    print(f"wrote {OUT_DEF.relative_to(ROOT)} ({len(auditor) + len(added)} pins) and {OUT_REPORT.relative_to(ROOT)}")
+                   | {"n_rects": len(q["rects"]), "x_um": [min(xs), max(xs)],
+                      "y_um": [q["rects"][0][2] / DBU, q["rects"][0][4] / DBU], "rects_um": um_rects(q["rects"])}
+                   | ({"merged_from_fingers_um": um_rects(q["fingers"]),
+                       "pad_metal_clearance_um": q["pad_metal_clearance_um"]} if "fingers" in q else {}))
+    OUT_REPORT.write_text(json.dumps({
+        "official_template": str(OFFICIAL_DEF.relative_to(ROOT)), "official_sha256": sha,
+        "die_um": [block_w, block_h], "pins": len(official),
+        "self_check": f"exact match, all {len(official)} pins derived from the official frame",
+        "change": "each multi-finger signal pin written as one bar (bounding box of its fingers)",
+        "merged_pins": [p["name"] for p in merged], "added_pins": rep}, indent=1))
+    print(f"wrote {OUT_DEF.relative_to(ROOT)} ({len(official)} pins, {block_w:g} x {block_h:g} um; "
+          f"{len(merged)} analog pins as one bar each) and {OUT_REPORT.relative_to(ROOT)}")
     for r in rep:
-        merged = (f"  (bar over {len(r['merged_from_fingers_um'])} fingers, pad Metal2 "
-                  f"{r['pad_metal_clearance_um']:.2f} um away)" if "merged_from_fingers_um" in r else "")
+        m = (f"  (bar over {len(r['merged_from_fingers_um'])} fingers, pad Metal2 "
+             f"{r['pad_metal_clearance_um']:.2f} um away)" if "merged_from_fingers_um" in r else "")
         print(f"  {r['slot']}  {r['name']:<12} {r['cell'].split('__')[1]:<9} {r['terminal']:<6} "
               f"{r['direction']:<6} {r['n_rects']} rect(s)  x {r['x_um'][0]:.2f}-{r['x_um'][1]:.2f}  "
-              f"y {r['y_um'][0]:.0f}-{r['y_um'][1]:.0f} um{merged}")
+              f"y {r['y_um'][0]:.0f}-{r['y_um'][1]:.0f} um{m}")
 
 
 if __name__ == "__main__":

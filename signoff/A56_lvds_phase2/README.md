@@ -1,5 +1,11 @@
 # A56 / ACV with the LVDS receiver: layout reports (`dla_engine_chip`, branch `lvds-integration`)
 
+> **Superseded 2026-11-26 by phase 3** ([`../A56_lvds_phase3/`](../A56_lvds_phase3/): run `acv_lvds7b` on the
+> organizers' official template, 1620 x 1110 um). Kept as the phase-2 record; the GDS and netlist named below are no
+> longer the files in `gds/` and `verilog/`. One correction: the max-cap / max-slew flags in the timing row are not
+> only pad-load flags; most sit on internal high-fanout and clock nets, as on the signed-off chip
+> (`analog/lvds_rx/LVDS_INTEGRATION.md` section 6, phase 3).
+
 The hardened, power-welded ACV block with the `lvds_rx_x3` receiver macro, built 2026-11-26 on the
 **provisional** frame template (`librelane/A56_ACV_lvds.def`, derived from the existing frame until the organizers
 send the official one). This is the phase-2 result of `analog/lvds_rx/LVDS_INTEGRATION.md`. On branch

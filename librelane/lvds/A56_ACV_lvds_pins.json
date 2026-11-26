@@ -1,7 +1,21 @@
 {
- "base": "librelane/A56_ACV.def",
- "self_check": "exact match",
- "signed_off_pins": 64,
+ "official_template": "layout_announcement/A56.def_2026-11-26/A56/project_defs/ACV/A56_ACV.def",
+ "official_sha256": "e81cd44dabb78adfbbe143a5fb593ebcea0cebbf03d5b96635ab39f41c76ee2c",
+ "die_um": [
+  1620.0,
+  1110.0
+ ],
+ "pins": 73,
+ "self_check": "exact match, all 73 pins derived from the official frame",
+ "change": "each multi-finger signal pin written as one bar (bounding box of its fingers)",
+ "merged_pins": [
+  "LVDS_SCLK_P",
+  "LVDS_SCLK_N",
+  "LVDS_MOSI_P",
+  "LVDS_MOSI_N",
+  "LVDS_CSN_P",
+  "LVDS_CSN_N"
+ ],
  "added_pins": [
   {
    "name": "LINK_SEL_PU",

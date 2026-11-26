@@ -1,0 +1,252 @@
+{
+ "odb": "librelane/runs/acv_lvds7b/final/odb/_connected.odb",
+ "checks": {
+  "macro_placed": {
+   "ok": true,
+   "expected": "origin (121.05, 875.8) um, R0, fixed, 650 x 194.2 um",
+   "actual": "origin (121.050, 875.800) um, R0, FIRM, 650.0 x 194.2 um, master lvds_rx_x3"
+  },
+  "template_pins": {
+   "ok": true,
+   "expected": "all 73 template pins present; the 9 new ones with the template's boxes (1 per pin; an analog pin is one bar under its pad's 8 fingers)",
+   "actual": "73 present (missing []); new-pin geometry mismatches []; boxes per analog pin [1, 1, 1, 1, 1, 1]"
+  },
+  "analog_nets_clean": {
+   "ok": true,
+   "expected": "each LVDS_* net = its port + exactly one u_lvds pin (RX0_P..RX2_N), nothing else",
+   "actual": "all six clean"
+  },
+  "macro_power": {
+   "ok": true,
+   "expected": "VDD->DVDD, VSS->DVSS, PDN vias landing on the macro's Metal3 straps for both nets",
+   "actual": "pins {'VDD': 'DVDD', 'VSS': 'DVSS'}; Metal3 straps VDD 3 / VSS 5; PDN vias on them: VDD 44, VSS 64"
+  },
+  "cut_respected": {
+   "ok": true,
+   "expected": "no standard cell inside the macro + 10 um halo, x 111.05-781.05, y 865.80-1080.00 um",
+   "actual": "0 of 77342 cells inside"
+  },
+  "macro_outputs_buffered": {
+   "ok": true,
+   "expected": "each RXk_O net: >= 1 load, half-perimeter < 120 um (about 30 fF with the load); EN connected",
+   "actual": {
+    "EN": {
+     "net": "net867",
+     "other_pins": 1,
+     "cells": [
+      "clkbuff_12"
+     ],
+     "hpwl_um": 38.6
+    },
+    "RX0_O": {
+     "net": "rx_sclk",
+     "other_pins": 1,
+     "cells": [
+      "mux2_2"
+     ],
+     "hpwl_um": 37.3
+    },
+    "RX1_O": {
+     "net": "rx_mosi",
+     "other_pins": 1,
+     "cells": [
+      "mux2_2"
+     ],
+     "hpwl_um": 41.5
+    },
+    "RX2_O": {
+     "net": "rx_cs_n",
+     "other_pins": 1,
+     "cells": [
+      "mux2_2"
+     ],
+     "hpwl_um": 43.4
+    }
+   }
+  },
+  "lvds_routes": {
+   "ok": true,
+   "expected": "each LVDS_* net routed as a short drop (< 100 um; the pad row is 39 um above the macro top) that stays under its own pad (x within the pad's pin span +- 5 um)",
+   "actual": {
+    "LVDS_SCLK_P": {
+     "length_um": 43.4,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      167.72,
+      171.36
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_SCLK_N": {
+     "length_um": 42.0,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      268.52,
+      270.76
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_MOSI_P": {
+     "length_um": 41.7,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      369.32,
+      371.28
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_MOSI_N": {
+     "length_um": 40.3,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      470.12,
+      470.68
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_CSN_P": {
+     "length_um": 40.2,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      570.92,
+      571.35
+     ],
+     "under_own_pad": true
+    },
+    "LVDS_CSN_N": {
+     "length_um": 39.9,
+     "layers": [
+      "Metal2",
+      "Metal3"
+     ],
+     "vias": 1,
+     "x_um": [
+      670.6,
+      670.75
+     ],
+     "under_own_pad": true
+    }
+   }
+  },
+  "over_macro_routing": {
+   "ok": true,
+   "expected": "no foreign signal wire inside the receiver's LEF obstructions (Metal1-3 over its core), and no switching net on Metal1-3 in its top margin beside the six RX input strips (the static link-select nets LINK_SEL / lvds_en are listed, not graded); other crossings (the bottom and side margins, Metal4/5) are allowed and only reported",
+   "actual": {
+    "inside_obstructions": [],
+    "metal1_3_top_margin": [],
+    "static_nets_in_top_margin_um": {},
+    "crossings_by_layer_and_side": {
+     "Metal2 bottom": {
+      "um": 176.0,
+      "nets": [
+       "_01536_",
+       "_04068_",
+       "_08400_",
+       "cs_n_src",
+       "mosi_src"
+      ]
+     },
+     "Metal2 left": {
+      "um": 224.9,
+      "nets": [
+       "_04068_",
+       "lvds_en"
+      ]
+     },
+     "Metal2 right": {
+      "um": 380.1,
+      "nets": [
+       "clknet_3_3__leaf_clk_regs",
+       "net1012",
+       "sclk_src"
+      ]
+     },
+     "Metal3 bottom": {
+      "um": 2189.5,
+      "nets": [
+       "_01536_",
+       "_04068_",
+       "_08400_",
+       "cs_n_src",
+       "mosi_src"
+      ]
+     },
+     "Metal3 left": {
+      "um": 66.8,
+      "nets": [
+       "_04068_",
+       "lvds_en",
+       "u_dla.c_bus\\[141\\]",
+       "u_dla.c_bus\\[142\\]",
+       "u_dla.c_bus\\[143\\]"
+      ]
+     },
+     "Metal3 right": {
+      "um": 39.8,
+      "nets": [
+       "clknet_3_3__leaf_clk_regs",
+       "net1012",
+       "sclk_src"
+      ]
+     },
+     "Metal4 bottom": {
+      "um": 6.5,
+      "nets": [
+       "net402",
+       "net542"
+      ]
+     },
+     "Metal4 left": {
+      "um": 0.5,
+      "nets": [
+       "u_dla.c_bus\\[142\\]"
+      ]
+     },
+     "Metal5 bottom": {
+      "um": 890.5,
+      "nets": [
+       "net542",
+       "net6"
+      ]
+     },
+     "Metal5 left": {
+      "um": 3.0,
+      "nets": [
+       "u_dla.c_bus\\[142\\]"
+      ]
+     }
+    }
+   }
+  },
+  "official_template": {
+   "ok": true,
+   "expected": "the 73 pins of the official template, no other pin: one-rectangle pins with exactly the official box, each multi-finger analog pin as ONE box = the bounding box of its official fingers, the power pins carrying every official rectangle",
+   "actual": "73 of 73 present (missing [], extra []); exact 65, analog bars 6, power pins complete 2; mismatches []"
+  },
+  "footprint": {
+   "ok": true,
+   "expected": "die = the official 1620 x 1110 um, and the bounding box of everything in the block inside it",
+   "actual": "die 1620 x 1110 um; block bounding box x 0.00-1597.03, y 8.76-1110.00 um; furthest cell or macro edge x 1579.76 / y 1070.00 um; furthest power wire x 1590.66 um"
+  }
+ }
+}

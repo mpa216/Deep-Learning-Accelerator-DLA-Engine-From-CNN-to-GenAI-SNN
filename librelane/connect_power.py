@@ -123,12 +123,37 @@ def via_cuts(v):
     return {n: r for n, r in via_boxes(v).items()
             if n not in L and str(tech.findLayer(n).getType()).upper().endswith("CUT")}
 def area(r): return (r[2]-r[0]) * (r[3]-r[1])
+# The preferred masters are generated vias that the PDN happens to create where its shapes cross;
+# a different floorplan may create none of them (run acv_lvds6a, 2026-11-26: neither 2500x1200
+# master existed, the old fallback -- the smallest other master -- took longer vias, and the weld
+# got 44 stacks instead of 89 with one DVSS finger short). So a missing preferred master is CREATED
+# from its signed-off parameters (read off acv_lvds5b, the same masters as acv_ring6): the weld
+# geometry no longer depends on what the PDN generated.
+#   name: (generate rule, cut layer, cut size um, cut spacing um, bottom enclosure (x, y) um,
+#          top enclosure (x, y) um, cut rows, cut cols)
+PREFER_PARAMS = {
+    "via2_3_2500_1200_1_2_1040_1040": ("Via2_GEN_HH", "Via2", 0.26, 0.26, (0.01, 0.06), (0.06, 0.01), 1, 2),
+    "via3_4_2500_1200_1_2_1040_1040": ("Via3_GEN_HH", "Via3", 0.26, 0.26, (0.06, 0.01), (0.235, 0.06), 1, 2),
+    "via4_5_3200_3200_3_3_1040_1040": ("Via4_GEN_HH", "Via4", 0.26, 0.26, (0.15, 0.06), (0.06, 0.15), 3, 3),
+}
+CREATED = []
+def make_via(name, lo, hi):
+    rule, cut, cs, sp, eb, et, rows, cols = PREFER_PARAMS[name]
+    p = odb.dbViaParams()
+    p.setCutLayer(tech.findLayer(cut)); p.setBottomLayer(L[lo]); p.setTopLayer(L[hi])
+    p.setXCutSize(UM(cs)); p.setYCutSize(UM(cs)); p.setXCutSpacing(UM(sp)); p.setYCutSpacing(UM(sp))
+    p.setXBottomEnclosure(UM(eb[0])); p.setYBottomEnclosure(UM(eb[1]))
+    p.setXTopEnclosure(UM(et[0])); p.setYTopEnclosure(UM(et[1]))
+    p.setNumCutRows(rows); p.setNumCutCols(cols)
+    v = odb.dbVia.create(block, name)
+    v.setViaParams(p)
+    g = tech.findViaGenerateRule(rule)
+    if g: v.setViaGenerateRule(g)
+    CREATED.append(name)
+    return v
 def find_via(lo, hi):
     v = block.findVia(PREFER[(lo, hi)])
-    if v: return v
-    cand = [vv for vv in block.getVias()                # fallback: the SMALLEST master lo->hi
-            if {vv.getBottomLayer().getName(), vv.getTopLayer().getName()} == {lo, hi}]
-    return min(cand, key=lambda vv: max(area(r) for r in via_pads(vv).values())) if cand else None
+    return v if v else make_via(PREFER[(lo, hi)], lo, hi)
 VIA = {}
 for lo, hi in zip(MET, MET[1:]):
     VIA[(lo, hi)] = find_via(lo, hi)
@@ -434,6 +459,8 @@ print(f"{'net':5} edge  finger(um along edge)   stacks  bridge  min-clear(um)")
 for r in report:
     print(f"{r[0]:5} {r[1]:>4}  [{r[2]:>9}, {r[3]:>9}]  {r[4]:>6}  {r[5]:>6}  {r[6]}  {'OK' if r[7] else 'BAD'}")
 print(f"\nfingers={len(report)}  via_stacks={len(stacks_all)}  failures={len(fail)}")
+print("via masters: " + ", ".join(VIA[k].getName() + (" (created)" if VIA[k].getName() in CREATED else "")
+                                  for k in sorted(VIA)))
 if fail:
     for m in fail: print("!!", m)
     print("!! NOT writing outputs"); sys.exit(2)

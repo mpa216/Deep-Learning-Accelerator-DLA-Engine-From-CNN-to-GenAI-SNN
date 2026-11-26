@@ -1,16 +1,17 @@
-# PROVISIONAL block template for the LVDS integration (branch lvds-integration).
-# Derived by librelane/lvds/make_template.py from the existing ACV frame: the signed-off
-# 64 pins are byte-for-byte the auditor's A56_ACV.def (self-check: exact match);
-# 9 pins appended for LINK_SEL, LVDS_SCLK_P, LVDS_SCLK_N, LVDS_MOSI_P, LVDS_MOSI_N, LVDS_CSN_P, LVDS_CSN_N
-# on slots N01, N02, N03, N04, N05, N06, N07. Each analog pin is ONE rectangle spanning its pad's 8 ASIG5V
-# fingers (LibreLane makes one pin per rectangle; the router rejects multi-pin signal
-# terminals, DRT-0302). Replace with the organizers' regenerated template.
+# Flow template of the LVDS-integrated ACV block (FP_DEF_TEMPLATE), written by
+# librelane/lvds/make_template.py from the organizers' official template
+# layout_announcement/A56.def_2026-11-26/A56/project_defs/ACV/A56_ACV.def
+# (2026-11-26, sha256 e81cd44dabb78adf, 73 pins, 1620 x 1110 um).
+# Self-check: all 73 pins re-derived from the official frame, exact match.
+# ONE change: each analog pin (LVDS_SCLK_P, LVDS_SCLK_N, LVDS_MOSI_P, LVDS_MOSI_N, LVDS_CSN_P, LVDS_CSN_N) is ONE rectangle,
+# the bounding box of its pad's 8 ASIG5V fingers (LibreLane makes one pin per rectangle and
+# the router rejects multi-pin signal terminals, DRT-0302). All else is the official file.
 VERSION 5.8 ;
 DIVIDERCHAR "/" ;
 BUSBITCHARS "[]" ;
 DESIGN A56_ACV ;
 UNITS DISTANCE MICRONS 200 ;
-DIEAREA ( 0 0 ) ( 335000 222000 ) ;
+DIEAREA ( 0 0 ) ( 324000 222000 ) ;
 PINS 73 ;
 - clk_PU + NET clk_PU + DIRECTION OUTPUT + USE SIGNAL
   + LAYER Metal2 ( 0 14731 ) ( 200 14807 )

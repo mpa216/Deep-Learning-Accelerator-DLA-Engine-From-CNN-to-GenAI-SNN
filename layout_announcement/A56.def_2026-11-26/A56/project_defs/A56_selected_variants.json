@@ -1,0 +1,410 @@
+{
+  "project_size": {
+    "source_gds": "/Users/kanobailey/chipathon/2026/data2/A56/gds/dla_engine_chip.gds",
+    "top_cell": "dla_engine_chip",
+    "block_type": "analog",
+    "layout_dbu_microns": 0.001,
+    "physical_bbox_dbu": [
+      40600,
+      43240,
+      1634360,
+      1066120
+    ],
+    "physical_bbox_microns": [
+      "40.6",
+      "43.24",
+      "1634.36",
+      "1066.12"
+    ],
+    "prboundary_dbu": [
+      0,
+      0,
+      1675000,
+      1110000
+    ],
+    "prboundary_microns": [
+      "0",
+      "0",
+      "1675",
+      "1110"
+    ],
+    "width_microns": "1593.76",
+    "height_microns": "1022.88",
+    "top_cell_text": [
+      {
+        "text": "CS_N_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "CS_N_SL",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVDD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVDD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVDD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVDD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVDD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVDD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVSS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVSS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVSS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVSS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVSS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "DVSS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MISO_SL",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "MOSI_SL",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "SCLK_SL",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "busy_SL",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "clk",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "clk_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "clk_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "done_SL",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "rst_n",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "rst_n_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "rst_n_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_CS",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_IE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_IN",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_OE",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_OUT",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_PD",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_PU",
+        "layer": 36,
+        "datatype": 10
+      },
+      {
+        "text": "wb_done_SL",
+        "layer": 36,
+        "datatype": 10
+      }
+    ]
+  },
+  "participant_pin_count": 18,
+  "selected_variants": [
+    "ACV"
+  ]
+}

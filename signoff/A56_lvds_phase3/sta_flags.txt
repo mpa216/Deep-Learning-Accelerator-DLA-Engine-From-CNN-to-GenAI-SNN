@@ -1,0 +1,46 @@
+== acv_lvds7b
+  max slew: 1443 flags -> cell 381 flags / 168 pins, worst slack -0.549, corners ss_125C,ss_125C,ss_125C,tt_025C; diode 1062 flags / 452 pins, worst slack -0.549, corners ss_125C,ss_125C,ss_125C,tt_025C
+      cell pins: ['_11789_/A', '_11789_/B', '_11790_/A', '_11791_/A', '_11793_/A', '_11795_/A', '_11842_/A', '_11842_/B'] ...
+  max cap: 1983 flags -> cell 1923 flags / 281 pins, worst slack -1.263, corners ff_n40C,ff_n40C,ff_n40C,ss_125C,ss_125C,ss_125C,tt_025C,tt_025C,tt_025C; port 60 flags / 7 pins, worst slack -0.157, corners ff_n40C,ff_n40C,ff_n40C,ss_125C,ss_125C,ss_125C,tt_025C,tt_025C,tt_025C
+      cell pins: ['_11765_/Y', '_11766_/Y', '_11769_/Y', '_11851_/Y', '_11852_/Y', '_11862_/Y', '_11872_/Y', '_11893_/Y'] ...
+
+[INFO] Final PATH variable: /foss/tools/bin:/foss/tools/sak:/usr/local/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/foss/tools/kactus2:/foss/tools/klayout:/foss/tools/osic-multitool
+[INFO] Final PYTHONPATH variable: /usr/lib/python312.zip:/usr/lib/python3.12:/usr/lib/python3.12/lib-dynload:/headless/.local/lib/python3.12/site-packages:/usr/local/lib/python3.12/dist-packages:/usr/lib/python3/dist-packages:/foss/tools/ngspyce/local/lib/python3.12/dist-packages:/foss/tools/openems/local/lib/python3.12/dist-packages:/foss/tools/pyopus/local/lib/python3.12/dist-packages:/foss/tools/yosys/share/yosys/python3:/foss/tools/klayout/pymod:/foss/tools/vacask/lib/vacask/python
+max slew: 620 flagged pins on 28 nets: 6 nets reach a port, 22 do not
+   port net LVDS_SCLK_P                  pins   1 fanout   1 worst -0.407 ports ['LVDS_SCLK_P']
+   port net LVDS_MOSI_P                  pins   1 fanout   1 worst -0.406 ports ['LVDS_MOSI_P']
+   port net LVDS_CSN_P                   pins   1 fanout   1 worst -0.406 ports ['LVDS_CSN_P']
+   port net LVDS_SCLK_N                  pins   1 fanout   1 worst -0.302 ports ['LVDS_SCLK_N']
+   port net LVDS_MOSI_N                  pins   1 fanout   1 worst -0.302 ports ['LVDS_MOSI_N']
+   port net LVDS_CSN_N                   pins   1 fanout   1 worst -0.301 ports ['LVDS_CSN_N']
+   OTHER    net1689                      pins  58 fanout  58 worst -0.549
+   OTHER    net1694                      pins  66 fanout  66 worst -0.544
+   OTHER    net1686                      pins  31 fanout  31 worst -0.505
+   OTHER    net878                       pins  30 fanout  30 worst -0.424
+   OTHER    _04117_                      pins  20 fanout  20 worst -0.417
+   OTHER    net1691                      pins  42 fanout  42 worst -0.272
+   OTHER    _05007_                      pins  26 fanout  26 worst -0.252
+   OTHER    net876                       pins  33 fanout  33 worst -0.237
+   OTHER    net882                       pins  38 fanout  38 worst -0.230
+   OTHER    _04123_                      pins  20 fanout  20 worst -0.229
+   OTHER    net557                       pins  14 fanout  14 worst -0.211
+   OTHER    net399                       pins  38 fanout  38 worst -0.177
+max cap: 288 flagged pins on 271 nets: 7 nets reach a port, 264 do not
+   port net LVDS_SCLK_P                  pins   2 fanout   1 worst -0.157 ports ['LVDS_SCLK_P']
+   port net LVDS_MOSI_P                  pins   2 fanout   1 worst -0.157 ports ['LVDS_MOSI_P']
+   port net LVDS_CSN_P                   pins   2 fanout   1 worst -0.157 ports ['LVDS_CSN_P']
+   port net LVDS_SCLK_N                  pins   2 fanout   1 worst -0.131 ports ['LVDS_SCLK_N']
+   port net LVDS_MOSI_N                  pins   2 fanout   1 worst -0.131 ports ['LVDS_MOSI_N']
+   port net LVDS_CSN_N                   pins   2 fanout   1 worst -0.131 ports ['LVDS_CSN_N']
+   OTHER    clknet_1_1__leaf_clk         pins   1 fanout  10 worst -1.263
+   OTHER    clknet_1_0__leaf_clk         pins   1 fanout  10 worst -1.254
+   OTHER    clknet_3_3__leaf_clk_regs    pins   1 fanout  14 worst -0.339
+   OTHER    net1686                      pins   1 fanout  31 worst -0.295
+   OTHER    net1689                      pins   1 fanout  58 worst -0.285
+   OTHER    net1694                      pins   1 fanout  66 worst -0.270
+   OTHER    net878                       pins   1 fanout  30 worst -0.258
+   OTHER    net1691                      pins   1 fanout  42 worst -0.231
+   OTHER    net876                       pins   1 fanout  33 worst -0.230
+   OTHER    net882                       pins   1 fanout  38 worst -0.221
+   OTHER    net884                       pins   1 fanout  26 worst -0.219
+   OTHER    _05007_                      pins   1 fanout  26 worst -0.218
